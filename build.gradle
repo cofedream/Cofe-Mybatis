@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.1'
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+
+group 'tk.cofedream.plugin'
+version '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+intellij {
+    pluginName 'Intellij-mybatis'
+    version '2018.3.2'
+    type "IU"
+    plugins 'Spring','DatabaseTools'
+    sandboxDirectory = "$projectDir.path/.idea-sandbox"
+}
+patchPluginXml {
+    changeNotes """
+      Plugin init.<br>
+      <em>nothing</em>"""
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

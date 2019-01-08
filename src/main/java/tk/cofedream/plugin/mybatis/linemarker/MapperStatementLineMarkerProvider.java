@@ -1,0 +1,61 @@
+package tk.cofedream.plugin.mybatis.linemarker;
+
+import com.intellij.codeHighlighting.Pass;
+import com.intellij.codeInsight.daemon.LineMarkerInfo;
+import com.intellij.codeInsight.daemon.LineMarkerProvider;
+import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.pom.Navigatable;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.xml.DomUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
+import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
+import tk.cofedream.plugin.mybatis.service.JavaPsiService;
+import tk.cofedream.plugin.mybatis.utils.MapperUtils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Mapper Xml 行标记
+ * @author : zhengrf
+ * @date : 2019-01-04
+ */
+public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
+
+    @Nullable
+    @Override
+    public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+        if (!isTarget(element)) {
+            return null;
+        }
+        ClassElement domElement = (ClassElement) DomUtil.getDomElement(element);
+        if (domElement == null) {
+            return null;
+        }
+        Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findMethod(domElement);
+        return method.map(psiMethods -> new LineMarkerInfo<>(
+                (XmlTag) element,
+                element.getTextRange(),
+                MybatisIcons.NavigateToMethod,
+                Pass.LINE_MARKERS,
+                from -> "Navigate to method",
+                (e, from) -> ((Navigatable) psiMethods[0].getNavigationElement()).navigate(true),
+                GutterIconRenderer.Alignment.CENTER
+        )).orElse(null);
+    }
+
+    @Override
+    public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
+
+    }
+
+    private boolean isTarget(@NotNull PsiElement element) {
+        return element instanceof XmlTag && MapperUtils.isElementWithMapperXMLFile(element) && MapperUtils.isBaseStatementElement(element);
+    }
+
+}
