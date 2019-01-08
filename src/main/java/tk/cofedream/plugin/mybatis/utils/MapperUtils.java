@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
@@ -13,7 +13,7 @@ import tk.cofedream.plugin.mybatis.service.MapperService;
  * @date : 2019-01-07
  */
 public class MapperUtils {
-    public static boolean isElementWithMapperXMLFile(@NotNull PsiElement element) {
+    public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
         return element instanceof XmlElement && MapperService.isMapperXmlFile(element.getContainingFile());
     }
 

@@ -46,4 +46,5 @@ public class StatementToMethodImplementationsSearch implements QueryExecutor<Psi
                 }));
         return false;
     }
+
 }

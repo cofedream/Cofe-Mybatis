@@ -29,7 +29,7 @@ public class MapperXmlUsageSearcher extends CustomUsageSearcher {
             return;
         }
         DumbService.getInstance(element.getProject()).runReadActionInSmartMode(() -> {
-            //if (!element.getLanguage().is(Language.findInstance(XMLLanguage.class))) {
+            //if (!element.getLanguage().is(XMLLanguage.INSTANCE)) {
             //    return;
             //}
             //if (MapperUtils.isMapperXmlFile(element.getContainingFile())) {

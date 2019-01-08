@@ -1,6 +1,5 @@
 package tk.cofedream.plugin.mybatis.referencessearch;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.application.QueryExecutorBase;
 import com.intellij.openapi.project.Project;
@@ -36,7 +35,7 @@ public class MybatisReferencesSearch extends QueryExecutorBase<PsiReference, Ref
     public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
         PsiElement elementToSearch = queryParameters.getElementToSearch();
         Project project = queryParameters.getProject();
-        if (!elementToSearch.getLanguage().is(Language.findInstance(XMLLanguage.class))) {
+        if (!elementToSearch.getLanguage().is(XMLLanguage.INSTANCE)) {
             return;
         }
         if (!MapperService.isMapperXmlFile(elementToSearch.getContainingFile())) {

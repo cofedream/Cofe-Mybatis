@@ -53,10 +53,11 @@
         <!--<java.elementFinder implementation=""-->
         <methodReferencesSearch implementation="tk.cofedream.plugin.mybatis.search.MybatisMethodReferencesSearch"/>
         <psi.referenceContributor language="XML" implementation="tk.cofedream.plugin.mybatis.reference.MapperXmlReferenceContributor"/>
-        <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MybatisCompletionContributor"/>-->
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>
 
+        <!--代码完成-->
+        <completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlTagCompletionContributor"/>
     </extensions>
 
     <actions>

@@ -35,7 +35,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2018-12-31
  */
-public class MyBatisBeansProvider extends SpringMyBatisBeansProvider {
+public class MyBatisBeansInjectProvider extends SpringMyBatisBeansProvider {
     @NonNls
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";
     private static final String TK_MAPPER_SCANNER_CONFIGURER = "tk.mybatis.spring.mapper.MapperScannerConfigurer";
@@ -90,9 +90,9 @@ public class MyBatisBeansProvider extends SpringMyBatisBeansProvider {
                 GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, ProjectRootsUtil.isInTestSource(config.getContainingFile()));
                 JavaPsiFacade facade = JavaPsiFacade.getInstance(config.getProject());
                 annotation.getAttributes().forEach(attribute -> {
-                    String attributeName = attribute.getAttributeName();
                     JvmAnnotationAttributeValue attributeValue = attribute.getAttributeValue();
                     if (attributeValue != null) {
+                        String attributeName = attribute.getAttributeName();
                         PsiClass psiClass;
                         switch (attributeName) {
                             case "value":
@@ -149,90 +149,6 @@ public class MyBatisBeansProvider extends SpringMyBatisBeansProvider {
         }
         return null;
     }
-
-    //public void collectMappers(@NotNull LocalXmlModel springModel, Module module, Collection<CommonSpringBean> myBatisMappers, String className) {
-    //    PsiClass mapperFactoryBeanClass = SpringCommonUtils.findLibraryClass(module, className);
-    //    if (mapperFactoryBeanClass != null) {
-    //        VirtualFile configFile = springModel.getConfig().getVirtualFile();
-    //        if (configFile != null) {
-    //            Project project = module.getProject();
-    //            SpringBeanSearchParameters.BeanClass params = SpringBeanSearchParameters.byClass(project, SpringModelSearchParameters.byClass(mapperFactoryBeanClass));
-    //            params.setVirtualFile(configFile);
-    //            CollectProcessor<SpringBeanPointer> processor = new CollectProcessor<>();
-    //            SpringXmlBeansIndex.processBeansByClass(params, processor);
-    //            GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, ProjectRootsUtil.isInTestSource(configFile, project));
-    //            JavaPsiFacade facade = JavaPsiFacade.getInstance(project);
-    //            processor.getResults().forEach(springBaseBeanPointer -> {
-    //                processBasePackages(myBatisMappers, facade, scope, springBaseBeanPointer);
-    //                processMarkerInterface(myBatisMappers, facade, scope, springBaseBeanPointer);
-    //                processCustomAnnotations(myBatisMappers, facade, scope, springBaseBeanPointer);
-    //            });
-    //        }
-    //    }
-    //}
-    //
-    //private static void processMarkerInterface(@NotNull Collection<CommonSpringBean> mappers, @NotNull JavaPsiFacade facade, @NotNull GlobalSearchScope scope, @NotNull SpringBeanPointer pointer) {
-    //    processMarkerInterface(mappers, facade, scope, getPropertyNameByName(pointer, "markerInterface"));
-    //    processMarkerInterface(mappers, facade, scope, getPropertyNameByName(pointer, "mapperInterface"));
-    //}
-    //
-    //private static void processMarkerInterface(@NotNull Collection<CommonSpringBean> mappers, @NotNull JavaPsiFacade facade, @NotNull GlobalSearchScope scope, @Nullable SpringPropertyDefinition markerInterface) {
-    //    if (markerInterface != null) {
-    //        String value = markerInterface.getValueAsString();
-    //        if (value != null) {
-    //            PsiClass aClass = facade.findClass(value, scope);
-    //            if (aClass != null) {
-    //                mappers.add(new CustomSpringComponent(aClass));
-    //                ClassInheritorsSearch.search(aClass, scope, true).findAll().forEach(psiClass -> mappers.add(new CustomSpringComponent(psiClass)));
-    //            }
-    //        }
-    //    }
-    //
-    //}
-    //
-    //private static void processCustomAnnotations(@NotNull Collection<CommonSpringBean> mappers, @NotNull JavaPsiFacade facade, @NotNull GlobalSearchScope scope, @NotNull SpringBeanPointer pointer) {
-    //    SpringPropertyDefinition annotationClass = getPropertyNameByName(pointer, "annotationClass");
-    //    if (annotationClass != null) {
-    //        String value = annotationClass.getValueAsString();
-    //        if (value != null) {
-    //            PsiClass aClass = facade.findClass(value, scope);
-    //            if (aClass != null && aClass.isAnnotationType()) {
-    //                AnnotatedElementsSearch.searchPsiClasses(aClass, scope).findAll().forEach(psiClass -> mappers.add(new CustomSpringComponent(psiClass)));
-    //            }
-    //        }
-    //    }
-    //
-    //}
-    //
-    //private static void processBasePackages(@NotNull final Collection<CommonSpringBean> myBatisMappers, @NotNull final JavaPsiFacade facade, @NotNull final GlobalSearchScope scope, @NotNull SpringBeanPointer springBaseBeanPointer) {
-    //    SpringPropertyDefinition basePackages = getPropertyNameByName(springBaseBeanPointer, "basePackage");
-    //    if (basePackages != null) {
-    //        final String value = basePackages.getValueAsString();
-    //        if (value != null) {
-    //            (new DelimitedListProcessor(" ,") {
-    //                protected void processToken(int start, int end, boolean delimitersOnly) {
-    //                    String packageName = value.substring(start, end);
-    //                    PsiPackage aPackage = facade.findPackage(packageName.trim());
-    //                    if (aPackage != null) {
-    //                        processBasePackage(scope, aPackage, myBatisMappers);
-    //                    }
-    //
-    //                }
-    //            }).processText(value);
-    //        }
-    //    }
-    //
-    //}
-    //
-    //@Nullable
-    //private static SpringPropertyDefinition getPropertyNameByName(@NotNull SpringBeanPointer springBaseBeanPointer, @NotNull String propertyName) {
-    //    for (SpringPropertyDefinition property : SpringPropertyUtils.getProperties(springBaseBeanPointer.getSpringBean())) {
-    //        if (propertyName.equals(property.getPropertyName())) {
-    //            return property;
-    //        }
-    //    }
-    //    return null;
-    //}
 
     @NotNull
     private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, JvmAnnotationArrayValue attributeValue) {

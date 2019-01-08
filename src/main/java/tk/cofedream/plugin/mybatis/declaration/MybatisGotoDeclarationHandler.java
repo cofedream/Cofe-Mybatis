@@ -1,21 +1,20 @@
 package tk.cofedream.plugin.mybatis.declaration;
 
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase;
-import com.intellij.lang.Language;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlToken;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
+import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 
 import java.util.Optional;
 
@@ -27,8 +26,12 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
     @Nullable
     @Override
     public PsiElement getGotoDeclarationTarget(@Nullable PsiElement sourceElement, Editor editor) {
-        return Statement.parse(sourceElement).map(statement -> {
-            if (sourceElement.getLanguage().is(Language.findInstance(XMLLanguage.class))) {
+        if (!MapperUtils.isElementWithMapperXMLFile(sourceElement)) {
+            return null;
+        }
+        XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);
+        return xmlAttribute == null ? null : StatementAttribute.parse(xmlAttribute).map(statement -> {
+            if (sourceElement.getLanguage().is(XMLLanguage.INSTANCE)) {
                 if (MapperService.isMapperXmlFile(sourceElement.getContainingFile())) {
                     return statement.process(sourceElement).orElse(null);
                 }
@@ -37,7 +40,7 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
         }).orElse(null);
     }
 
-    private enum Statement {
+    private enum StatementAttribute {
         ID("id") {
             @Override
             Optional<? extends PsiElement> process(PsiElement element) {
@@ -58,28 +61,14 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
 
         private String value;
 
-        Statement(String attributeValue) {
+        StatementAttribute(String attributeValue) {
             this.value = attributeValue;
         }
 
         @NotNull
-        public static Optional<Statement> parse(@Nullable PsiElement sourceElement) {
-            if (sourceElement == null) {
-                return Optional.empty();
-            }
-            if (!(sourceElement instanceof XmlToken)) {
-                return Optional.empty();
-            }
-            PsiElement xmlAttributeValue = sourceElement.getParent();
-            if (!(xmlAttributeValue instanceof XmlAttributeValue)) {
-                return Optional.empty();
-            }
-            PsiElement xmlAttribute = xmlAttributeValue.getParent();
-            if (!(xmlAttribute instanceof XmlAttribute)) {
-                return Optional.empty();
-            }
-            for (Statement attribute : values()) {
-                if (attribute.getValue().equals(((XmlAttribute) xmlAttribute).getName())) {
+        public static Optional<StatementAttribute> parse(@NotNull XmlAttribute xmlAttribute) {
+            for (StatementAttribute attribute : values()) {
+                if (attribute.getValue().equals(xmlAttribute.getName())) {
                     return Optional.of(attribute);
                 }
             }
