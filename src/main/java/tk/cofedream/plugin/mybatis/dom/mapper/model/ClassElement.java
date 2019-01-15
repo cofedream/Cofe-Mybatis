@@ -38,6 +38,6 @@ public interface ClassElement extends DomElement {
     }
 
     default Optional<String> getNamespaceValue() {
-        return Optional.ofNullable(DomUtil.getParentOfType(this, MapperXml.class, true)).flatMap(MapperXml::getNamespaceValue);
+        return Optional.ofNullable(DomUtil.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 }

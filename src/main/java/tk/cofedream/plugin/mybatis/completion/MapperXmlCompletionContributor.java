@@ -123,6 +123,12 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                 result.stopHere();
             }
         },
+        JDBC_TYPE("jdbcType "){
+            @Override
+            void process(XmlTag xmlTag, CompletionResultSet resultSet) {
+
+            }
+        }
         ;
 
         private String value;

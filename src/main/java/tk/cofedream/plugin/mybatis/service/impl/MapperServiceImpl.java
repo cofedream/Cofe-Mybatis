@@ -3,7 +3,7 @@ package tk.cofedream.plugin.mybatis.service.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 import tk.cofedream.plugin.mybatis.service.DomService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
@@ -25,13 +25,13 @@ public class MapperServiceImpl extends MapperService {
 
     @NotNull
     @Override
-    public Collection<MapperXml> findAllMappers() {
-        return domService.findDomElements(MapperXml.class);
+    public Collection<Mapper> findAllMappers() {
+        return domService.findDomElements(Mapper.class);
     }
 
     @NotNull
     @Override
-    public Collection<MapperXml> findMapperXmls(@NotNull PsiClass mapperClass) {
+    public Collection<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
         return findAllMappers().stream().filter(mapperXml -> mapperXml.getNamespaceValue().orElse("").equals(mapperClass.getQualifiedName())).collect(Collectors.toList());
     }
 }

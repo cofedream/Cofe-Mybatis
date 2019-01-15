@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.declaration;
+package tk.cofedream.plugin.mybatis.navigation;
 
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase;
 import com.intellij.lang.xml.XMLLanguage;

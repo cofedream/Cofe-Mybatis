@@ -9,7 +9,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 import tk.cofedream.plugin.mybatis.reference.MapperXmlReferenceContributor;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
@@ -31,8 +31,8 @@ public class MybatisMethodReferencesSearch extends QueryExecutorBase<PsiReferenc
     public void processQuery(@NotNull MethodReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
         PsiMethod method = queryParameters.getMethod();
         if (method.getContainingClass() != null) {
-            Collection<MapperXml> mapperXmls = MapperService.getInstance(queryParameters.getProject()).findMapperXmls(method.getContainingClass());
-            mapperXmls.forEach(mapperXml -> mapperXml.getClassElements().forEach(element -> {
+            Collection<Mapper> mappers = MapperService.getInstance(queryParameters.getProject()).findMapperXmls(method.getContainingClass());
+            mappers.forEach(mapperXml -> mapperXml.getClassElements().forEach(element -> {
                 if (element.getIdValue().map(id -> id.equals(method.getName())).orElse(false)) {
                     Optional.of(element)
                             .map(ClassElement::getId)

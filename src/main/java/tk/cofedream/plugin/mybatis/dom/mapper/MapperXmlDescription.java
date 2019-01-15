@@ -4,7 +4,7 @@ import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
 
 import javax.swing.*;
@@ -14,10 +14,10 @@ import javax.swing.*;
  * @author : zhengrf
  * @date : 2019-01-02
  */
-public class MapperXmlDescription extends DomFileDescription<MapperXml> {
+public class MapperXmlDescription extends DomFileDescription<Mapper> {
 
     public MapperXmlDescription() {
-        super(MapperXml.class, MapperXml.TAG_NAME);
+        super(Mapper.class, Mapper.TAG_NAME);
     }
 
     @Override

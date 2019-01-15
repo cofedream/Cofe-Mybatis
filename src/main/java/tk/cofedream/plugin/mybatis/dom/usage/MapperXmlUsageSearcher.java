@@ -47,7 +47,7 @@ public class MapperXmlUsageSearcher extends CustomUsageSearcher {
             //    }
             //    //PsiElement parent = context.getParent();
             //    //PsiFile containingFile = element.getContainingFile();
-            //    //MapperXml parentOfType = DomUtil.getParentOfType(domElement, MapperXml.class, true);
+            //    //Mapper parentOfType = DomUtil.getParentOfType(domElement, Mapper.class, true);
             //}
         });
     }

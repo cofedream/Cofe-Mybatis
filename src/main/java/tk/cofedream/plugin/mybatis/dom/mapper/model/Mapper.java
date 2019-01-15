@@ -21,7 +21,7 @@ import java.util.Optional;
  * @date : 2019-01-01
  */
 @Namespace(MyBatisDomConstants.MAPPER_NAMESPACE_KEY)
-public interface MapperXml extends DomElement {
+public interface Mapper extends DomElement {
     String TAG_NAME = "mapper";
 
     @Required

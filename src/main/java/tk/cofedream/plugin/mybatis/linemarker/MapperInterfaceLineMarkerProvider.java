@@ -13,7 +13,7 @@ import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.JavaPsiUtils;
@@ -57,9 +57,9 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      * @param result      标记结果
      */
     private void markerMethod(PsiClass mapperClass, @NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-        Collection<MapperXml> mapperXmls = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
-        if (!mapperXmls.isEmpty()) {
-            List<ClassElement> collect = mapperXmls.stream().flatMap(mapperXml -> mapperXml.getClassElements().stream()).collect(Collectors.toList());
+        Collection<Mapper> mappers = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
+        if (!mappers.isEmpty()) {
+            List<ClassElement> collect = mappers.stream().flatMap(mapperXml -> mapperXml.getClassElements().stream()).collect(Collectors.toList());
             PsiMethod method = (PsiMethod) element;
             List<XmlTag> xmlMethods = collect.stream().filter(classElement -> classElement.getIdValue().map(id -> id.equals(method.getName())).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
@@ -80,11 +80,11 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      */
     private void markerInterface(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
         PsiClass mapperClass = (PsiClass) element;
-        Collection<MapperXml> mapperXmls = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
-        if (!mapperXmls.isEmpty()) {
+        Collection<Mapper> mappers = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
+        if (!mappers.isEmpty()) {
             NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
                     .setAlignment(GutterIconRenderer.Alignment.CENTER)
-                    .setTargets(mapperXmls.stream().map(mapperXml -> mapperXml.getNamespace().getXmlTag()).collect(Collectors.toList()))
+                    .setTargets(mappers.stream().map(mapperXml -> mapperXml.getNamespace().getXmlTag()).collect(Collectors.toList()))
                     .setTooltipTitle("Navigate to the Mapper XML");
             PsiIdentifier nameIdentifier = mapperClass.getNameIdentifier();
             if (nameIdentifier != null) {

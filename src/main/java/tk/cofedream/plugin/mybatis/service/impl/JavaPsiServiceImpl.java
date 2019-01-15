@@ -10,7 +10,7 @@ import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
@@ -55,7 +55,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         }));
     }
 
-    public void process(@NotNull PsiClass psiClass, @NotNull Processor<MapperXml> processor) {
+    public void process(@NotNull PsiClass psiClass, @NotNull Processor<Mapper> processor) {
         mapperService.findMapperXmls(psiClass).forEach(mapperXml -> mapperXml.getNamespaceValue().ifPresent(qualifiedName -> {
             if (qualifiedName.equals(psiClass.getQualifiedName())) {
                 processor.process(mapperXml);

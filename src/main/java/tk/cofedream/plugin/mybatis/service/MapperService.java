@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,8 +25,8 @@ public abstract class MapperService {
     }
 
     @NotNull
-    public static Optional<MapperXml> findMapperXml(@NotNull ClassElement element) {
-        return Optional.ofNullable(DomUtil.getParentOfType(element, MapperXml.class, true));
+    public static Optional<Mapper> findMapperXml(@NotNull ClassElement element) {
+        return Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
     }
 
     /**
@@ -42,17 +42,17 @@ public abstract class MapperService {
     }
 
     /**
-     * 判断 MapperInterface 是否存在与之对应的 MapperXml 文件
+     * 判断 MapperInterface 是否存在与之对应的 Mapper 文件
      * @param mapperClass MapperInterface
-     * @return 匹配到的 MapperXml Xml 文件
+     * @return 匹配到的 Mapper Xml 文件
      */
     @NotNull
-    public abstract Collection<MapperXml> findMapperXmls(@NotNull PsiClass mapperClass);
+    public abstract Collection<Mapper> findMapperXmls(@NotNull PsiClass mapperClass);
 
     /**
      * 获取Mapper Dom 文件
      * @return Mapper文件
      */
     @NotNull
-    public abstract Collection<MapperXml> findAllMappers();
+    public abstract Collection<Mapper> findAllMappers();
 }
