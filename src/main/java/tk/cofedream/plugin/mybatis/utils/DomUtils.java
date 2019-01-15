@@ -27,7 +27,6 @@ public class DomUtils {
     }
 
 
-
     //public static <T extends DomElement> Optional<String> getNamespaces(Class<T> elementClass) {
     //    return Optional.ofNullable(DomReflectionUtil.findAnnotationDFS(elementClass, Namespace.class)).flatMap(namespace -> Optional.of(namespace.value()));
     //}

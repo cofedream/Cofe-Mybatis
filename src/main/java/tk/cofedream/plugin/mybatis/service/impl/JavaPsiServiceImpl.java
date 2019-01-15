@@ -62,11 +62,13 @@ public class JavaPsiServiceImpl implements JavaPsiService {
             }
         }));
     }
+
     @NonNull
     @Override
     public Optional<PsiClass> getPsiClass(@NotNull String qualifiedName) {
         return Optional.ofNullable(javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project)));
     }
+
     @NotNull
     @Override
     public Optional<PsiMethod[]> findMethod(@NotNull ClassElement element) {

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class MapperServiceImpl extends MapperService {
     private final Project project;
     private final DomService domService;
+
     public MapperServiceImpl(Project project) {
         this.project = project;
         this.domService = DomService.getInstance(project);

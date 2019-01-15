@@ -2,25 +2,13 @@ package tk.cofedream.plugin.mybatis.linemarker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.MapperXml;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
-import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.JavaPsiUtils;
 
 import javax.swing.*;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf

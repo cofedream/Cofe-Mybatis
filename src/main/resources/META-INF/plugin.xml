@@ -57,7 +57,7 @@
         <renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>
 
         <!--代码完成-->
-        <completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlTagCompletionContributor"/>
+        <completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
     </extensions>
 
     <actions>

@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author : zhengrf
@@ -15,7 +14,7 @@ public class PsiTypeUtil {
 
     private static final Collection<String> BASE_TYPE = Arrays.asList("byte", "short", "int", "long", "float", "double", "boolean", "char");
     private static final Collection<String> BOXED_BASE_TYPE = Arrays.asList("Byte", "Short", "Integer", "Long", "Float", "Double", "Boolean", "Character");
-    private static final Collection<String> OTHER_TYPE = Arrays.asList("String","Date","Bigdecimal","Object","Map","Hashmap","List","ArrayList","Collection","Iterator");
+    private static final Collection<String> OTHER_TYPE = Arrays.asList("String", "Date", "Bigdecimal", "Object", "Map", "Hashmap", "List", "ArrayList", "Collection", "Iterator");
 
     public static boolean notCustomType(@NotNull PsiType psiType) {
         // 获取显示的文本内容 Boolean/List<String>

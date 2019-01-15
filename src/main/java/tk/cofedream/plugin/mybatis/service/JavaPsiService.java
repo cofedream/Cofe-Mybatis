@@ -2,11 +2,9 @@ package tk.cofedream.plugin.mybatis.service;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -24,10 +22,10 @@ public interface JavaPsiService {
     }
 
     @NotNull
-    Optional<PsiClass> findClass(@NotNull ClassElement element) ;
+    Optional<PsiClass> findClass(@NotNull ClassElement element);
 
     @NotNull
-    Optional<PsiMethod[]> findMethod(@NotNull ClassElement element) ;
+    Optional<PsiMethod[]> findMethod(@NotNull ClassElement element);
 
     @NonNull
     Optional<PsiClass> getPsiClass(@NotNull String qualifiedName);

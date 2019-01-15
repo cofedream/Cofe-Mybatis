@@ -17,6 +17,7 @@ import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;
+import tk.cofedream.plugin.mybatis.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,12 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class MapperXmlTagCompletionContributor extends CompletionContributor {
+public class MapperXmlCompletionContributor extends CompletionContributor {
+
+    private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
+        return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
+    }
+
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         PsiElement position = parameters.getPosition();
@@ -96,19 +102,19 @@ public class MapperXmlTagCompletionContributor extends CompletionContributor {
                     if (type == null) {
                         return;
                     }
-                    String canonicalText = type.getCanonicalText();
-                    String presentableText = type.getPresentableText();
-                    String internalCanonicalText = type.getInternalCanonicalText();
                     if (PsiTypeUtil.notCustomType(type)) {
                         result.addAllElements(notCustomType.get(type.getPresentableText()));
                     } else {
                         if (type instanceof PsiClassReferenceType) {
                             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
                             String referenceName = reference.getReferenceName();
+                            if (StringUtils.isBlank(referenceName)) {
+                                return;
+                            }
                             if (PsiTypeUtil.notCustomType(referenceName)) {
                                 result.addAllElements(notCustomType.get(referenceName));
                             } else {
-                                result.addElement(createLookupElementBuilder(reference.getQualifiedName(),reference.getQualifiedName(),referenceName));
+                                result.addElement(createLookupElementBuilder(reference.getQualifiedName(), reference.getQualifiedName(), referenceName));
                             }
                         }
                     }
@@ -140,9 +146,5 @@ public class MapperXmlTagCompletionContributor extends CompletionContributor {
         public String getValue() {
             return value;
         }
-    }
-
-    private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
-        return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
     }
 }
