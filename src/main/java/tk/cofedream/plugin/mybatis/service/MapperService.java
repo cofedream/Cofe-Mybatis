@@ -9,8 +9,8 @@ import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 
 import java.util.Collection;
 import java.util.Optional;

@@ -8,8 +8,8 @@ import com.intellij.psi.search.searches.MethodReferencesSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.reference.MapperXmlReferenceContributor;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 

@@ -13,7 +13,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;

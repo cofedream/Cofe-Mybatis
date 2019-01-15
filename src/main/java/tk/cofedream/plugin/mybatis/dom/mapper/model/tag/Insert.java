@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.dom.mapper.model;
+package tk.cofedream.plugin.mybatis.dom.mapper.model.tag;
 
 /**
  * @author : zhengrf

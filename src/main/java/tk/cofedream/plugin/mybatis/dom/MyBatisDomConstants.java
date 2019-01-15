@@ -1,11 +1,11 @@
 package tk.cofedream.plugin.mybatis.dom;
 
 import org.jetbrains.annotations.NonNls;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Delete;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Insert;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Select;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Update;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Delete;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Update;
 
 import java.util.Arrays;
 import java.util.Collections;

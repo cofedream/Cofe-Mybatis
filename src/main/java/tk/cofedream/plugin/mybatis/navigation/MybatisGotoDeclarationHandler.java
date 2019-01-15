@@ -11,7 +11,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;

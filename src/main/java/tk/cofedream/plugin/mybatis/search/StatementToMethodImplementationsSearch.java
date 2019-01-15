@@ -11,7 +11,7 @@ import com.intellij.util.QueryExecutor;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomTarget;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 
 /**

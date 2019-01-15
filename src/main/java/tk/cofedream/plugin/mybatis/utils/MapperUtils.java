@@ -6,6 +6,10 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Delete;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Update;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
 /**
@@ -21,10 +25,10 @@ public class MapperUtils {
      * 基础 增删拆改操作
      * @param element 元素
      * @return 判断是否增删查该操作标签内的元素
-     * @see tk.cofedream.plugin.mybatis.dom.mapper.model.Select
-     * @see tk.cofedream.plugin.mybatis.dom.mapper.model.Update
-     * @see tk.cofedream.plugin.mybatis.dom.mapper.model.Delete
-     * @see tk.cofedream.plugin.mybatis.dom.mapper.model.Insert
+     * @see Select
+     * @see Update
+     * @see Delete
+     * @see Insert
      */
     public static boolean isBaseStatementElement(final PsiElement element) {
         if (element == null) {

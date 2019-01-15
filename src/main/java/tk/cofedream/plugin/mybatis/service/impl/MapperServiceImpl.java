@@ -3,7 +3,7 @@ package tk.cofedream.plugin.mybatis.service.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.service.DomService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 

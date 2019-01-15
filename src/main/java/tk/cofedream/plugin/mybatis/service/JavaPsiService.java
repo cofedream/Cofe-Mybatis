@@ -8,7 +8,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 
 import java.util.Optional;
 

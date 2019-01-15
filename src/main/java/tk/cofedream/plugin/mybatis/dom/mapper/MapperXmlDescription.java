@@ -4,7 +4,7 @@ import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
-import tk.cofedream.plugin.mybatis.dom.mapper.model.Mapper;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
 
 import javax.swing.*;
