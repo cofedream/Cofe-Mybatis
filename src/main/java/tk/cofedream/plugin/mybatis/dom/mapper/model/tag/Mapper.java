@@ -40,6 +40,9 @@ public interface Mapper extends DomElement {
         return Optional.ofNullable(StringUtils.isBlank(value) ? null : value);
     }
 
+    @SubTagList("resultMap")
+    List<ResultMap> getResultMaps();
+
     @NonNull
     default List<ClassElement> getClassElements() {
         List<ClassElement> classElements = new LinkedList<>();
