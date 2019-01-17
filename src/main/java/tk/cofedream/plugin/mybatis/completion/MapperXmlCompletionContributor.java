@@ -6,6 +6,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -14,7 +15,9 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.enums.AttributeEnums;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
+import tk.cofedream.plugin.mybatis.utils.EnumUtil;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;
 import tk.cofedream.plugin.mybatis.utils.StringUtils;
@@ -50,10 +53,10 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         if (xmlTag == null) {
             return;
         }
-        StatementAttribute.parse(xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
+        EnumUtil.parse(StatementAttribute.values(),xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
     }
 
-    private enum StatementAttribute {
+    private enum StatementAttribute implements AttributeEnums {
         RESULT_TYPE("resultType") {
             private final Map<String, List<LookupElementBuilder>> notCustomType = Collections.unmodifiableMap(new HashMap<String, List<LookupElementBuilder>>() {{
                 this.put("byte", Collections.singletonList(createLookupElementBuilder("_byte", "byte", "byte")));
@@ -134,16 +137,6 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
 
         StatementAttribute(String attributeValue) {
             this.value = attributeValue;
-        }
-
-        @NotNull
-        public static Optional<StatementAttribute> parse(@NotNull XmlAttribute xmlAttribute) {
-            for (StatementAttribute attribute : values()) {
-                if (attribute.getValue().equals(xmlAttribute.getName())) {
-                    return Optional.of(attribute);
-                }
-            }
-            return Optional.empty();
         }
 
         abstract void process(XmlTag xmlTag, CompletionResultSet resultSet);

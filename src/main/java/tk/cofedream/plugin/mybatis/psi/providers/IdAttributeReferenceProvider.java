@@ -11,7 +11,7 @@ import tk.cofedream.plugin.mybatis.psi.references.IdAttributeReference;
  * @author : zhengrf
  * @date : 2019-01-17
  */
-public class ClassElementIdReferenceProvider extends PsiReferenceProvider {
+public class IdAttributeReferenceProvider extends PsiReferenceProvider {
     @NotNull
     @Override
     public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
