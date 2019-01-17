@@ -14,6 +14,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor;
 import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
@@ -21,6 +22,7 @@ import java.util.Collections;
 /**
  * @author : zhengrf
  * @date : 2019-01-05
+ * @see MapperXmlReferenceContributor
  */
 public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> implements PsiPolyVariantReference {
 
@@ -31,8 +33,7 @@ public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> impl
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        PsiElementResolveResult resolveResult = new PsiElementResolveResult(myElement);
-        return new ResolveResult[] {resolveResult};
+        return new ResolveResult[] {new PsiElementResolveResult(myElement)};
     }
 
     @Nullable
@@ -48,6 +49,9 @@ public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> impl
         return new TextRange(1, myElement.getTextLength());
     }
 
+    /**
+     * 处理元素重命名
+     */
     @Override
     public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
         PsiElement element = myElement.getParent();

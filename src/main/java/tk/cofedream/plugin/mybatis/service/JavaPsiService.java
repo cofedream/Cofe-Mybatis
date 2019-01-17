@@ -8,6 +8,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 
@@ -26,7 +27,7 @@ public interface JavaPsiService {
     Optional<PsiClass> findClass(@NotNull ClassElement element);
 
     @NotNull
-    Optional<PsiMethod[]> findMethod(@NotNull ClassElement element);
+    Optional<PsiMethod[]> findMethod(@Nullable ClassElement element);
 
     @NotNull
     Optional<PsiMethod[]> findMethod(@NotNull Mapper mapper, String methodName);

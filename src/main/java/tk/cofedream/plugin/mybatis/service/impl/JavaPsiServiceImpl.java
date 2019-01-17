@@ -9,6 +9,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
@@ -71,8 +72,8 @@ public class JavaPsiServiceImpl implements JavaPsiService {
 
     @NotNull
     @Override
-    public Optional<PsiMethod[]> findMethod(@NotNull ClassElement element) {
-        if (!element.getIdValue().isPresent()) {
+    public Optional<PsiMethod[]> findMethod(@Nullable ClassElement element) {
+        if (element == null || !element.getIdValue().isPresent()) {
             return Optional.empty();
         }
         return element.getNamespaceValue().flatMap(qualifiedName ->

@@ -24,8 +24,8 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class ClassElementReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
-    public ClassElementReference(@NotNull PsiElement element) {
+public class IdAttributeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+    public IdAttributeReference(@NotNull PsiElement element) {
         super(element);
     }
 
@@ -36,17 +36,16 @@ public class ClassElementReference extends PsiReferenceBase<PsiElement> implemen
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
         if (MapperUtils.isBaseStatementElement(tag)) {
             Project project = myElement.getProject();
-            ClassElement classElement = (ClassElement) DomUtil.getDomElement(tag);
-            if (classElement != null) {
-                JavaPsiService.getInstance(project).findMethod(classElement).ifPresent(psiMethods -> {
-                    for (PsiMethod psiMethod : psiMethods) {
-                        result.add(new PsiElementResolveResult(psiMethod));
-                    }
-                });
-            }
+            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtil.getDomElement(tag)).ifPresent(psiMethods -> {
+                for (PsiMethod psiMethod : psiMethods) {
+                    result.add(new PsiElementResolveResult(psiMethod));
+                }
+            });
         }
-        ResolveResult[] resolveResults = new ResolveResult[result.size()];
-        return result.toArray(resolveResults);
+        if (result.isEmpty()) {
+            result.add(new PsiElementResolveResult(myElement));
+        }
+        return result.toArray(new ResolveResult[0]);
     }
 
     @Nullable

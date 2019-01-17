@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor;
-import tk.cofedream.plugin.mybatis.psi.references.ClassElementReference;
+import tk.cofedream.plugin.mybatis.psi.references.IdAttributeReference;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class MybatisMethodReferencesSearch extends QueryExecutorBase<PsiReferenc
                                 if (xmlAttributeValue == null) {
                                     return null;
                                 }
-                                return new ClassElementReference(xmlAttributeValue);
+                                return new IdAttributeReference(xmlAttributeValue);
                             })
                             .ifPresent(consumer::process);
                 }
