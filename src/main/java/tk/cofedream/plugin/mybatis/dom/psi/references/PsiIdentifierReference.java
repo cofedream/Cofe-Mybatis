@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.psi.references;
+package tk.cofedream.plugin.mybatis.dom.psi.references;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -14,7 +14,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
 import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;

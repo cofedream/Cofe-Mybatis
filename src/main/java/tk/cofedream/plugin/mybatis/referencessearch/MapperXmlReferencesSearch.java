@@ -14,8 +14,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
-import tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor;
-import tk.cofedream.plugin.mybatis.psi.references.PsiIdentifierReference;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;
@@ -26,10 +26,12 @@ import java.util.Optional;
  * 从 XML标签定位到接口方法
  * @author : zhengrf
  * @date : 2019-01-05
+ * @deprecated 使用 {@link MapperXmlReferenceContributor}
  * @see MapperXmlReferenceContributor
  */
-public class MybatisReferencesSearch extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
-    public MybatisReferencesSearch() {
+@Deprecated
+public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
+    public MapperXmlReferencesSearch() {
         super(true);
     }
 

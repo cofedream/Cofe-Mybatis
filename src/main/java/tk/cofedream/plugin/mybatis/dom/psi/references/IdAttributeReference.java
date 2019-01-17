@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.psi.references;
+package tk.cofedream.plugin.mybatis.dom.psi.references;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;

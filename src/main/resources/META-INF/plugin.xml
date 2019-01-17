@@ -47,15 +47,14 @@
         <!--<lang.findUsagesProvider language="XML" implementationClass="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesProvider"/>-->
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
-        <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MybatisReferencesSearch"/>-->
         <!--<gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
         <!--<targetElementEvaluator language="XML" implementationClass="tk.cofedream.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
         <!--<java.elementFinder implementation=""-->
         <methodReferencesSearch implementation="tk.cofedream.plugin.mybatis.search.MybatisMethodReferencesSearch"/>
 
+        <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
         <psi.referenceContributor language="XML"
-                                  implementation="tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor"/>
-        <!--<psi.referenceContributor language="JAVA" implementation="tk.cofedream.plugin.mybatis.psi.PsiMethodReferenceContributor"/>-->
+                                  implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor"/>
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 

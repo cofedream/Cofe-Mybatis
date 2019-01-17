@@ -9,8 +9,8 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
-import tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor;
-import tk.cofedream.plugin.mybatis.psi.references.IdAttributeReference;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.references.IdAttributeReference;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;

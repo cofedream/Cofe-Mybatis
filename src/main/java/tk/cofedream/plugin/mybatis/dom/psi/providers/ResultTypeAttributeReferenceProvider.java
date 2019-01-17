@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.psi.providers;
+package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;

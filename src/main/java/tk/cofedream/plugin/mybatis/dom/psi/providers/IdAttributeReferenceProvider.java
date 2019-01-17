@@ -1,11 +1,11 @@
-package tk.cofedream.plugin.mybatis.psi.providers;
+package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.psi.references.IdAttributeReference;
+import tk.cofedream.plugin.mybatis.dom.psi.references.IdAttributeReference;
 
 /**
  * @author : zhengrf

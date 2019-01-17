@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.psi;
+package tk.cofedream.plugin.mybatis.dom.psi;
 
 import com.intellij.patterns.XmlAttributeValuePattern;
 import com.intellij.patterns.XmlNamedElementPattern;
@@ -7,8 +7,8 @@ import com.intellij.patterns.XmlTagPattern;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
 import org.jetbrains.annotations.NotNull;
-import tk.cofedream.plugin.mybatis.psi.providers.ResultTypeAttributeReferenceProvider;
-import tk.cofedream.plugin.mybatis.psi.providers.IdAttributeReferenceProvider;
+import tk.cofedream.plugin.mybatis.dom.psi.providers.ResultTypeAttributeReferenceProvider;
+import tk.cofedream.plugin.mybatis.dom.psi.providers.IdAttributeReferenceProvider;
 
 /**
  * 注册 Xml Attribute 引用
