@@ -14,20 +14,21 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-15
  */
-public interface IdAttribute extends DomElement {
+public interface TypeAttirbute extends DomElement {
 
     @Required
     @NameValue
     @Nullable
     @Attribute("id")
-    GenericAttributeValue<String> getId();
+    GenericAttributeValue<String> getType();
 
     /**
      * 获取Id值
      * @return Id 值 如果为Null 则返回 ""
      */
     @NotNull
-    default Optional<String> getIdValue() {
-        return BaseAttribute.getAttributeVlaue(getId());
+    default Optional<String> getTypeValue() {
+        return BaseAttribute.getAttributeVlaue(getType());
     }
+
 }

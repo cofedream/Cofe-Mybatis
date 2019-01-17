@@ -9,7 +9,7 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-15
  */
-interface BaseAttribute {
+public interface BaseAttribute {
     static Optional<String> getAttributeVlaue(GenericAttributeValue<String> attributeValue) {
         if (attributeValue == null) {
             return Optional.empty();

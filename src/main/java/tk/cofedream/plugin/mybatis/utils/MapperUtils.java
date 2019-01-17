@@ -4,13 +4,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Delete;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Update;
 import tk.cofedream.plugin.mybatis.service.MapperService;
+
+import java.util.Optional;
 
 /**
  * @author : zhengrf
@@ -41,5 +46,17 @@ public class MapperUtils {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @NotNull
+    @NonNls
+    public static Mapper getMapper(@NotNull DomElement element) {
+        Optional<Mapper> mapper = Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
+        if (mapper.isPresent()) {
+            return mapper.get();
+        } else {
+            throw new IllegalArgumentException("Unknown element");
+        }
     }
 }

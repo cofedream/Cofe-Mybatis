@@ -14,7 +14,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
-import tk.cofedream.plugin.mybatis.psi.PsiIdentifierReference;
+import tk.cofedream.plugin.mybatis.psi.references.PsiIdentifierReference;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.MapperUtils;

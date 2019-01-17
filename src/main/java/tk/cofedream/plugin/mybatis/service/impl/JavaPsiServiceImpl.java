@@ -83,6 +83,12 @@ public class JavaPsiServiceImpl implements JavaPsiService {
 
     @NotNull
     @Override
+    public Optional<PsiMethod[]> findMethod(@NotNull Mapper mapper, String methodName) {
+        return mapper.getNamespaceValue().flatMap(namespace -> getPsiClass(namespace).flatMap(psiClass -> Optional.of(psiClass.findMethodsByName(methodName, false))));
+    }
+
+    @NotNull
+    @Override
     public Optional<PsiClass> findClass(@NotNull ClassElement element) {
         return element.getNamespaceValue().flatMap(this::getPsiClass);
     }

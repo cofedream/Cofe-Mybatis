@@ -1,32 +1,28 @@
-package tk.cofedream.plugin.mybatis.psi;
+package tk.cofedream.plugin.mybatis.psi.references;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiIdentifier;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
+import com.intellij.refactoring.rename.RenamePsiElementProcessor;
+import com.intellij.refactoring.rename.RenameUtil;
+import com.intellij.usageView.UsageInfo;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
+
+import java.util.Collections;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-05
  */
 public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> implements PsiPolyVariantReference {
-    public PsiIdentifierReference(@NotNull PsiIdentifier element, TextRange rangeInElement, boolean soft) {
-        super(element, rangeInElement, soft);
-    }
-
-    public PsiIdentifierReference(@NotNull PsiIdentifier element, TextRange rangeInElement) {
-        super(element, rangeInElement);
-    }
-
-    public PsiIdentifierReference(@NotNull PsiIdentifier element, boolean soft) {
-        super(element, soft);
-    }
 
     public PsiIdentifierReference(@NotNull PsiIdentifier element) {
         super(element);
@@ -49,19 +45,20 @@ public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> impl
     @NotNull
     @Override
     public TextRange getRangeInElement() {
-        //TextRange textRange = myElement.getTextRange();
-        //TextRange textRangeInParent = myElement.getTextRangeInParent();
-        //return myElement.getParent().getTextRange();
-        //return super.getRangeInElement();
-        TextRange textRange = new TextRange(1, myElement.getTextLength());
-        return textRange;
+        return new TextRange(1, myElement.getTextLength());
     }
 
-    @NotNull
     @Override
-    public Object[] getVariants() {
-        LookupElementBuilder typeText = LookupElementBuilder.create(myElement).
-                withTypeText(myElement.getContainingFile().getName());
-        return new Object[] {typeText};
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+        PsiElement element = myElement.getParent();
+        if (element instanceof PsiMethod) {
+            PsiMethod psiMethod = (PsiMethod) element;
+            UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newElementName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));
+            if (!CollectionUtils.isEmpty(methodUsage)) {
+                RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(psiMethod);
+                processor.renameElement(psiMethod, newElementName, methodUsage, null);
+            }
+        }
+        return element;
     }
 }

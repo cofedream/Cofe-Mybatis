@@ -38,15 +38,19 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
             return null;
         }
         Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findMethod(domElement);
-        return method.map(psiMethods -> new LineMarkerInfo<>(
-                (XmlTag) element,
-                element.getTextRange(),
-                MybatisIcons.NavigateToMethod,
-                Pass.LINE_MARKERS,
-                from -> "Navigate to method",
-                (e, from) -> ((Navigatable) psiMethods[0].getNavigationElement()).navigate(true),
-                GutterIconRenderer.Alignment.CENTER
-        )).orElse(null);
+        return method.map(psiMethods -> {
+            if (psiMethods.length == 0) {
+                return null;
+            }
+            return new LineMarkerInfo<>(
+                    (XmlTag) element,
+                    element.getTextRange(),
+                    MybatisIcons.NavigateToMethod,
+                    Pass.UPDATE_ALL,
+                    from -> "Navigate to method",
+                    (e, from) -> ((Navigatable) psiMethods[0].getNavigationElement()).navigate(true),
+                    GutterIconRenderer.Alignment.CENTER);
+        }).orElse(null);
     }
 
     @Override

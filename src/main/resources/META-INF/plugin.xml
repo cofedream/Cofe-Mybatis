@@ -14,7 +14,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
-    <!--<depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>-->
+    <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofedream.plugin.mybatis.service.DomService"
@@ -34,7 +34,7 @@
         <!--<definitionsSearch implementation="tk.cofedream.plugin.mybatis.search.MapperDefinitionSearch"/>-->
         <!--实现一致-->
         <definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.MethodToStatementImplementationsSearch"/>
-        <!--<definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.StatementToMethodImplementationsSearch" order="last" />-->
+        <!--<definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.StatementToMethodImplementationsSearch"/>-->
         <!-- Add your extensions here -->
 
         <codeInsight.lineMarkerProvider language="JAVA"
@@ -48,13 +48,16 @@
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
         <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MybatisReferencesSearch"/>-->
-        <gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>
+        <!--<gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
         <!--<targetElementEvaluator language="XML" implementationClass="tk.cofedream.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
         <!--<java.elementFinder implementation=""-->
         <methodReferencesSearch implementation="tk.cofedream.plugin.mybatis.search.MybatisMethodReferencesSearch"/>
-        <psi.referenceContributor language="XML" implementation="tk.cofedream.plugin.mybatis.reference.MapperXmlReferenceContributor"/>
+
+        <psi.referenceContributor language="XML"
+                                  implementation="tk.cofedream.plugin.mybatis.psi.MapperXmlReferenceContributor"/>
+        <!--<psi.referenceContributor language="JAVA" implementation="tk.cofedream.plugin.mybatis.psi.PsiMethodReferenceContributor"/>-->
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
-        <renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>
+        <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <!--代码完成-->
         <completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>

@@ -23,8 +23,8 @@ public interface ResultAttribute extends DomElement {
     GenericAttributeValue<String> getResult();
 
     /**
-     * 获取Id值
-     * @return Id 值 如果为Null 则返回 ""
+     * 获取result值
+     * @return result 值 如果为Null 则返回 ""
      */
     @NotNull
     default Optional<String> getResultValue() {
