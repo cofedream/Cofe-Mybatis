@@ -18,7 +18,6 @@ import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
 import tk.cofedream.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 
 import java.util.Optional;
 
@@ -47,7 +46,7 @@ public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, R
             return;
         }
         XmlTag tag = PsiTreeUtil.getParentOfType(elementToSearch.getContext(), XmlTag.class, true);
-        if (MapperUtils.isBaseStatementElement(tag)) {
+        if (MapperService.isBaseStatementElement(tag)) {
             ClassElement classElement = (ClassElement) DomUtil.getDomElement(tag);
             Optional.ofNullable(classElement).ifPresent(element -> element.getNamespaceValue().ifPresent(qualifiedName ->
                     JavaPsiService.getInstance(project).getPsiClass(qualifiedName).ifPresent(psiClass -> {

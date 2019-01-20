@@ -16,7 +16,6 @@ import tk.cofedream.plugin.mybatis.enums.AttributeEnums;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.EnumUtil;
-import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 
 import java.util.Optional;
 
@@ -28,7 +27,7 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
     @Nullable
     @Override
     public PsiElement getGotoDeclarationTarget(@Nullable PsiElement sourceElement, Editor editor) {
-        if (!MapperUtils.isElementWithMapperXMLFile(sourceElement)) {
+        if (!MapperService.isElementWithMapperXMLFile(sourceElement)) {
             return null;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);

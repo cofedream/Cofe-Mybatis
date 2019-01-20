@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
-import tk.cofedream.plugin.mybatis.utils.MapperUtils;
+import tk.cofedream.plugin.mybatis.service.MapperService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class IdAttributeReference extends PsiReferenceBase<PsiElement> implement
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         List<ResolveResult> result = new ArrayList<>();
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
-        if (MapperUtils.isBaseStatementElement(tag)) {
+        if (MapperService.isBaseStatementElement(tag)) {
             Project project = myElement.getProject();
             JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtil.getDomElement(tag)).ifPresent(psiMethods -> {
                 for (PsiMethod psiMethod : psiMethods) {

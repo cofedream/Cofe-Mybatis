@@ -23,44 +23,5 @@ import java.util.Optional;
  * @date : 2019-01-07
  */
 public class MapperUtils {
-    public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
-        return element instanceof XmlElement && MapperService.isMapperXmlFile(element.getContainingFile());
-    }
 
-    /**
-     * 基础 增删拆改操作
-     * @param xmlElement 元素
-     * @return 判断是否增删查该操作标签内的元素
-     * @see Select
-     * @see Update
-     * @see Delete
-     * @see Insert
-     */
-    public static boolean isBaseStatementElement(final XmlElement xmlElement) {
-        if (xmlElement == null) {
-            return false;
-        }
-        Optional<DomElement> domElement = DomService.getInstance(xmlElement.getProject()).getDomElement(xmlElement);
-        if (!domElement.isPresent()) {
-            return false;
-        }
-        for (Class<?> clazz : MyBatisDomConstants.BASIC_OPERATION) {
-            if (clazz.isInstance(domElement.get())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @SuppressWarnings("unchecked")
-    @NotNull
-    @NonNls
-    public static Mapper getMapper(@NotNull DomElement element) {
-        Optional<Mapper> mapper = Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
-        if (mapper.isPresent()) {
-            return mapper.get();
-        } else {
-            throw new IllegalArgumentException("Unknown element");
-        }
-    }
 }

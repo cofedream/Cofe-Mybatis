@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ public class MybatisFindUsagesProvider implements FindUsagesProvider {
         if (MapperService.isMapperXmlFile(psiElement.getContainingFile())) {
             PsiElement context = psiElement.getContext();
             XmlTag tag = PsiTreeUtil.getParentOfType(context, XmlTag.class, true);
-            if (MapperUtils.isBaseStatementElement(tag)) {
+            if (MapperService.isBaseStatementElement(tag)) {
                 ClassElement classElement = (ClassElement) DomUtil.getDomElement(tag);
                 Optional<PsiMethod[]> method = JavaPsiService.getInstance(psiElement.getProject()).findMethod(classElement);
                 return method.isPresent();

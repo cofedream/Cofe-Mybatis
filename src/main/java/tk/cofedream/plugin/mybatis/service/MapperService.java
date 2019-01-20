@@ -3,14 +3,26 @@ package tk.cofedream.plugin.mybatis.service;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.DomFileElement;
+import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.DomUtil;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
+import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Delete;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Update;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,8 +37,18 @@ public abstract class MapperService {
     }
 
     @NotNull
-    public static Optional<Mapper> findMapperXml(@NotNull ClassElement element) {
+    public static Optional<Mapper> getMapper(@NotNull DomElement element) {
         return Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
+    }
+
+    @NotNull
+    public static Optional<Mapper> getMapper(@NotNull XmlElement element) {
+        DomManager domManager = DomManager.getDomManager(element.getProject());
+        DomFileElement<Mapper> fileElement = domManager.getFileElement(((XmlFile) element.getContainingFile()), Mapper.class);
+        if (fileElement == null) {
+            return Optional.empty();
+        }
+        return Optional.of(fileElement.getRootElement());
     }
 
     /**
@@ -39,6 +61,35 @@ public abstract class MapperService {
             return false;
         }
         return DomService.getInstance(file.getProject()).isTargetXml(((XmlFile) file), MybatisConstants.MAPPER_DTDS);
+    }
+
+    public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
+        return element instanceof XmlElement && isMapperXmlFile(element.getContainingFile());
+    }
+
+    /**
+     * 基础 增删拆改操作
+     * @param xmlElement 元素
+     * @return 判断是否增删查该操作标签内的元素
+     * @see Select
+     * @see Update
+     * @see Delete
+     * @see Insert
+     */
+    public static boolean isBaseStatementElement(final XmlElement xmlElement) {
+        if (xmlElement == null) {
+            return false;
+        }
+        Optional<DomElement> domElement = DomService.getInstance(xmlElement.getProject()).getDomElement(xmlElement);
+        if (!domElement.isPresent()) {
+            return false;
+        }
+        for (Class<?> clazz : MyBatisDomConstants.BASIC_OPERATION) {
+            if (clazz.isInstance(domElement.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

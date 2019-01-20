@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
-import tk.cofedream.plugin.mybatis.utils.MapperUtils;
+import tk.cofedream.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +62,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean isTarget(@NotNull PsiElement element) {
-        return element instanceof XmlTag && MapperUtils.isElementWithMapperXMLFile(element) && MapperUtils.isBaseStatementElement((XmlElement) element);
+        return element instanceof XmlTag && MapperService.isElementWithMapperXMLFile(element) && MapperService.isBaseStatementElement((XmlElement) element);
     }
 
 }
