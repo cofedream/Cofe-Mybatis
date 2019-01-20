@@ -14,7 +14,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.Collections;
 /**
  * @author : zhengrf
  * @date : 2019-01-05
- * @see MapperXmlReferenceContributor
+ * @see MapperReferenceContributor
  */
 public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> implements PsiPolyVariantReference {
 

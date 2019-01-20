@@ -34,8 +34,6 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
-        System.out.println("=======");
-        System.out.println(element.getText());
         ClassElement domElement = (ClassElement) DomUtil.getDomElement(element);
         if (domElement == null) {
             return null;

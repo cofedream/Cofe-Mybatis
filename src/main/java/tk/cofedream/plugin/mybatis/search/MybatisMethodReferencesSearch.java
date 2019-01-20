@@ -9,7 +9,7 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
-import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofedream.plugin.mybatis.dom.psi.references.IdAttributeReference;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
  * 接口方法定位到XML标签 Ctrl+B
  * @author : zhengrf
  * @date : 2019-01-05
- * @see MapperXmlReferenceContributor
+ * @see MapperReferenceContributor
  */
 public class MybatisMethodReferencesSearch extends QueryExecutorBase<PsiReference, MethodReferencesSearch.SearchParameters> {
     public MybatisMethodReferencesSearch() {
@@ -38,10 +38,7 @@ public class MybatisMethodReferencesSearch extends QueryExecutorBase<PsiReferenc
                             .map(ClassElement::getId)
                             .map(attributeValue -> {
                                 XmlAttributeValue xmlAttributeValue = attributeValue.getXmlAttributeValue();
-                                if (xmlAttributeValue == null) {
-                                    return null;
-                                }
-                                return new IdAttributeReference(xmlAttributeValue);
+                                return xmlAttributeValue == null ? null : new IdAttributeReference(xmlAttributeValue);
                             })
                             .ifPresent(consumer::process);
                 }

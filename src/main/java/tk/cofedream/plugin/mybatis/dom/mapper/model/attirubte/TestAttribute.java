@@ -23,8 +23,8 @@ public interface TestAttribute extends DomElement {
     GenericAttributeValue<String> getTest();
 
     /**
-     * 获取Id值
-     * @return Id 值 如果为Null 则返回 ""
+     * 获取 test 值
+     * @return test 值 如果为Null 则返回 ""
      */
     @NotNull
     default Optional<String> getIdValue() {

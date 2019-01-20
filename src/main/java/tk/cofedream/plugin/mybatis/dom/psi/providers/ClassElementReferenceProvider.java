@@ -11,11 +11,14 @@ import tk.cofedream.plugin.mybatis.dom.psi.references.IdAttributeReference;
  * @author : zhengrf
  * @date : 2019-01-17
  */
-public class ClassElementIdAttributeReferenceProvider extends PsiReferenceProvider {
-    @NotNull
-    @Override
-    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-        return new PsiReference[] {new IdAttributeReference(element)};
+public class ClassElementReferenceProvider {
+
+    public static class Id extends PsiReferenceProvider {
+        @NotNull
+        @Override
+        public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+            return new PsiReference[] {new IdAttributeReference(element)};
+        }
     }
 
 }

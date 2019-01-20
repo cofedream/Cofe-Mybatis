@@ -2,17 +2,13 @@ package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.xml.DomFileElement;
-import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +43,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @NotNull
         @Override
         public ResolveResult[] multiResolve(boolean incompleteCode) {
-            XmlAttributeValue originalElement = (XmlAttributeValue) myElement.getOriginalElement();
+            XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
             Optional<Mapper> mapper = MapperService.getMapper(originalElement);
             if (!mapper.isPresent()) {
                 return new ResolveResult[0];
@@ -74,7 +70,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @NotNull
         @Override
         public Object[] getVariants() {
-            return MapperService.getMapper(((XmlAttributeValue) myElement.getOriginalElement()))
+            return MapperService.getMapper(((XmlAttributeValue) myElement))
                     .map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getSqls()))
                     .orElseGet(() -> new Object[0]);
         }

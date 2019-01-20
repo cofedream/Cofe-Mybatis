@@ -14,7 +14,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
-import tk.cofedream.plugin.mybatis.dom.psi.MapperXmlReferenceContributor;
+import tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofedream.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
@@ -26,8 +26,8 @@ import java.util.Optional;
  * 仅可引用，如果要重命名则需另外编写
  * @author : zhengrf
  * @date : 2019-01-05
- * @deprecated 使用 {@link MapperXmlReferenceContributor}
- * @see MapperXmlReferenceContributor
+ * @deprecated 使用 {@link MapperReferenceContributor}
+ * @see MapperReferenceContributor
  */
 @Deprecated
 public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {

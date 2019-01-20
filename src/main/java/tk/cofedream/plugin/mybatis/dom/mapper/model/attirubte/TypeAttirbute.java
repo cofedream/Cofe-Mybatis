@@ -19,12 +19,12 @@ public interface TypeAttirbute extends DomElement {
     @Required
     @NameValue
     @Nullable
-    @Attribute("id")
+    @Attribute("type")
     GenericAttributeValue<String> getType();
 
     /**
-     * 获取Id值
-     * @return Id 值 如果为Null 则返回 ""
+     * 获取 type 值
+     * @return type 值 如果为Null 则返回 ""
      */
     @NotNull
     default Optional<String> getTypeValue() {
