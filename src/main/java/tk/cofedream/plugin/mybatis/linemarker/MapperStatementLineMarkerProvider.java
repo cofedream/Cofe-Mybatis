@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,8 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
+        System.out.println("=======");
+        System.out.println(element.getText());
         ClassElement domElement = (ClassElement) DomUtil.getDomElement(element);
         if (domElement == null) {
             return null;
@@ -59,7 +62,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean isTarget(@NotNull PsiElement element) {
-        return element instanceof XmlTag && MapperUtils.isElementWithMapperXMLFile(element) && MapperUtils.isBaseStatementElement(element);
+        return element instanceof XmlTag && MapperUtils.isElementWithMapperXMLFile(element) && MapperUtils.isBaseStatementElement((XmlElement) element);
     }
 
 }

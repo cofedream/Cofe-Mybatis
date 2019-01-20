@@ -24,6 +24,8 @@ import java.util.Optional;
 public interface Mapper extends DomElement {
     String TAG_NAME = "mapper";
 
+    // get
+
     @Required
     @NameValue
     @NotNull
@@ -60,17 +62,6 @@ public interface Mapper extends DomElement {
         }
         return classElements;
     }
-    // https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#children-collections
-    //@SubTagsList({"insert", "update", "delete", "select"})
-    //List<ClassElement> getClassElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "insert")
-    //ClassElement addInsertElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "update")
-    //ClassElement addUpdateElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "delete")
-    //ClassElement addDeleteElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "select")
-    //ClassElement addSelectElements();
 
     @SubTagList("insert")
     List<Insert> getInserts();
@@ -84,6 +75,11 @@ public interface Mapper extends DomElement {
     @SubTagList("select")
     List<Select> getSelects();
 
+    @SubTagList("sql")
+    List<Sql> getSqls();
+
+    // add
+
     @SubTagList("select")
     Select addSelect();
 
@@ -96,4 +92,17 @@ public interface Mapper extends DomElement {
     @SubTagList("delete")
     Delete addDelete();
 
+
+
+    // https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#children-collections
+    //@SubTagsList({"insert", "update", "delete", "select"})
+    //List<ClassElement> getClassElements();
+    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "insert")
+    //ClassElement addInsertElements();
+    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "update")
+    //ClassElement addUpdateElements();
+    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "delete")
+    //ClassElement addDeleteElements();
+    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "select")
+    //ClassElement addSelectElements();
 }

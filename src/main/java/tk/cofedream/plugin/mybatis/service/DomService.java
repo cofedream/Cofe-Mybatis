@@ -2,11 +2,13 @@ package tk.cofedream.plugin.mybatis.service;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author : zhengrf
@@ -26,4 +28,11 @@ public interface DomService {
      * @return 匹配的Dom文件
      */
     <T extends DomElement> Collection<T> findDomElements(@NotNull Class<T> clazz);
+
+    /**
+     * 根据Xml元素获取Dom元素
+     * @param xmlElement xml元素
+     * @return 对应的Dom元素
+     */
+    Optional<DomElement> getDomElement(@NotNull XmlElement xmlElement);
 }

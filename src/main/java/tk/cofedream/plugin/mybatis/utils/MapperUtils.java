@@ -13,6 +13,7 @@ import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Update;
+import tk.cofedream.plugin.mybatis.service.DomService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 
 import java.util.Optional;
@@ -28,20 +29,23 @@ public class MapperUtils {
 
     /**
      * 基础 增删拆改操作
-     * @param element 元素
+     * @param xmlElement 元素
      * @return 判断是否增删查该操作标签内的元素
      * @see Select
      * @see Update
      * @see Delete
      * @see Insert
      */
-    public static boolean isBaseStatementElement(final PsiElement element) {
-        if (element == null) {
+    public static boolean isBaseStatementElement(final XmlElement xmlElement) {
+        if (xmlElement == null) {
             return false;
         }
-        DomElement domElement = DomUtil.getDomElement(element);
+        Optional<DomElement> domElement = DomService.getInstance(xmlElement.getProject()).getDomElement(xmlElement);
+        if (!domElement.isPresent()) {
+            return false;
+        }
         for (Class<?> clazz : MyBatisDomConstants.BASIC_OPERATION) {
-            if (clazz.isInstance(domElement)) {
+            if (clazz.isInstance(domElement.get())) {
                 return true;
             }
         }

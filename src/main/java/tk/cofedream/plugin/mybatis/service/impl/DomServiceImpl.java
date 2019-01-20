@@ -2,16 +2,22 @@ package tk.cofedream.plugin.mybatis.service.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
+import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.XmlFileHeader;
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.ObjPtr;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.service.DomService;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +37,17 @@ public class DomServiceImpl implements DomService {
     @Override
     public <T extends DomElement> Collection<T> findDomElements(@NotNull Class<T> clazz) {
         return domService.getFileElements(clazz, project, GlobalSearchScope.projectScope(project)).stream().map(DomFileElement::getRootElement).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<DomElement> getDomElement(@NotNull XmlElement xmlElement) {
+        if (xmlElement instanceof XmlTag) {
+            return Optional.ofNullable(DomManager.getDomManager(xmlElement.getProject()).getDomElement(((XmlTag) xmlElement)));
+        } else if (xmlElement instanceof XmlAttribute) {
+            return Optional.ofNullable(DomManager.getDomManager(xmlElement.getProject()).getDomElement(((XmlAttribute) xmlElement)));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
