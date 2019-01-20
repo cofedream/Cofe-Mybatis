@@ -6,7 +6,6 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -27,9 +26,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
+ * 代码完成,无需指向引用
  * @author : zhengrf
  * @date : 2019-01-05
  */
@@ -53,7 +52,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         if (xmlTag == null) {
             return;
         }
-        EnumUtil.parse(StatementAttribute.values(),xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
+        EnumUtil.parse(StatementAttribute.values(), xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
     }
 
     private enum StatementAttribute implements AttributeEnums {

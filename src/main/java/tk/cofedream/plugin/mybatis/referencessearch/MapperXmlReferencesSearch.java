@@ -23,7 +23,8 @@ import tk.cofedream.plugin.mybatis.utils.MapperUtils;
 import java.util.Optional;
 
 /**
- * 从 XML标签定位到接口方法
+ * 从 XML标签定位到接口方法<br/>
+ * 仅可引用，如果要重命名则需另外编写
  * @author : zhengrf
  * @date : 2019-01-05
  * @deprecated 使用 {@link MapperXmlReferenceContributor}

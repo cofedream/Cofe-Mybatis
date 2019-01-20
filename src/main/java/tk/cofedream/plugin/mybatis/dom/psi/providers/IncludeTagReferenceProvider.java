@@ -1,12 +1,13 @@
 package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.ResolveResult;
-import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * @author : zhengrf
  * @date : 2019-01-17
  */
-public class ResultTypeAttributeReferenceProvider extends PsiReferenceProvider {
+public class IncludeTagReferenceProvider extends PsiReferenceProvider {
     @NotNull
     @Override
     public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
@@ -23,7 +24,6 @@ public class ResultTypeAttributeReferenceProvider extends PsiReferenceProvider {
     }
 
     /**
-     * Xml Attribute 引用
      * @author : zhengrf
      * @date : 2019-01-05
      */
@@ -35,7 +35,7 @@ public class ResultTypeAttributeReferenceProvider extends PsiReferenceProvider {
         @NotNull
         @Override
         public ResolveResult[] multiResolve(boolean incompleteCode) {
-            //return new ResolveResult[] {new PsiElementResolveResult(myElement)};
+            PsiElement originalElement = myElement.getOriginalElement();
             return new ResolveResult[0];
         }
 
@@ -46,9 +46,14 @@ public class ResultTypeAttributeReferenceProvider extends PsiReferenceProvider {
             return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
         }
 
+        @NotNull
         @Override
-        public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
-            return super.handleElementRename(newElementName);
+        public Object[] getVariants() {
+            //LookupElementBuilder typeText = LookupElementBuilder.create(myElement).
+                    //withIcon(SimpleIcons.FILE).
+                    //        withTypeText(myElement.getContainingFile().getName());
+            //return new Object[] {typeText};
+            return new Object[0];
         }
     }
 
