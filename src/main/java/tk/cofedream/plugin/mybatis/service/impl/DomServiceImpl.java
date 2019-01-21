@@ -10,7 +10,6 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.XmlFileHeader;
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.ObjPtr;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.service.DomService;
 

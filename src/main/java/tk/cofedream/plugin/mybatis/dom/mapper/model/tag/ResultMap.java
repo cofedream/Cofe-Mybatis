@@ -4,7 +4,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Referencing;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
@@ -21,8 +20,7 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @Nullable
     @Attribute("extends")
-    //@Convert(ResultMapConverter.class)
-    //@Referencing(ResultMapConverter.class)
+    @Convert(ResultMapConverter.class)
     GenericAttributeValue<XmlAttributeValue> getExtends();
 
     /**

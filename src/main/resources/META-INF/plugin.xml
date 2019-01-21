@@ -27,6 +27,10 @@
         please use extension point com.intellij.dom.fileMetaData instead and specify rootTagName and domVersion/stubVersion in plugin.xml-->
         <dom.fileDescription implementation="tk.cofedream.plugin.mybatis.dom.mapper.MapperXmlDescription"/>
         <dom.fileDescription implementation="tk.cofedream.plugin.mybatis.dom.config.ConfigurationXmlDescription"/>
+        <dom.converter interfaceClass="tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter"
+                       implementationClass="tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter"/>
+        <dom.converter interfaceClass="tk.cofedream.plugin.mybatis.dom.mapper.converter.IncludeConverter"
+                       implementationClass="tk.cofedream.plugin.mybatis.dom.mapper.converter.IncludeConverter"/>
         <!--参考
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206110419-How-to-implement-go-to-to-implementation-
@@ -59,7 +63,14 @@
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <!--代码完成,无需指向引用-->
-        <completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
+        <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
+
+        <!--代码检查-->
+        <localInspection language="XML" shortName="MapperIncludeInspection" applyToDialects="false"
+                         bundle="MybatisBundle" key="mapper.inspection.display.name"
+                         groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"
+                         enabledByDefault="true" level="ERROR"
+                         implementationClass="tk.cofedream.plugin.mybatis.dom.inspection.MapperIncludeInspection"/>
     </extensions>
 
     <actions>

@@ -15,6 +15,7 @@ import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ResultMap;
 import tk.cofedream.plugin.mybatis.service.MapperService;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class ResultMapReferenceProvider {
     /**
      * Extends 属性引用
+     * @see ResultMapConverter
      */
     public static class Extends extends PsiReferenceProvider {
 
@@ -97,6 +99,7 @@ public class ResultMapReferenceProvider {
             }
         }
     }
+
     /**
      * Extends 属性引用
      */
@@ -128,7 +131,7 @@ public class ResultMapReferenceProvider {
                 List<ResolveResult> result = new ArrayList<>();
                 MapperService.getMapper((XmlAttributeValue) myElement).ifPresent(mapper -> {
                     mapper.getResultMaps().forEach(resultMap -> {
-                        resultMap.getExtendsValue().ifPresent(extendsValue->{
+                        resultMap.getExtendsValue().ifPresent(extendsValue -> {
                             if (extendsValue.equals(idValue.get())) {
                                 //result.add(new PsiElementResolveResult(resultMap.getExtends().getXmlAttributeValue()));
                                 result.add(new PsiElementResolveResult(resultMap.getXmlElement()));

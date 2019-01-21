@@ -7,8 +7,6 @@ import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.psi.providers.ClassElementReferenceProvider;
-import tk.cofedream.plugin.mybatis.dom.psi.providers.IncludeTagReferenceProvider;
-import tk.cofedream.plugin.mybatis.dom.psi.providers.ResultMapReferenceProvider;
 
 /**
  * 注册 Xml Attribute 引用<br/>
@@ -37,9 +35,9 @@ public class MapperReferenceContributor extends PsiReferenceContributor {
                                 .withParent(CLASS_ELEMENT_PATTERN))
                 , new ClassElementReferenceProvider.Id());
         // <include refid=""></include> 标签匹配
-        registrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue()
-                .withParent(XmlPatterns.xmlAttribute("refid")
-                        .withParent(XmlPatterns.xmlTag().withLocalName("include"))), new IncludeTagReferenceProvider());
+        //registrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue()
+        //        .withParent(XmlPatterns.xmlAttribute("refid")
+        //                .withParent(XmlPatterns.xmlTag().withLocalName("include"))), new IncludeTagReferenceProvider());
         // <result extends=""> 匹配
         //registrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue()
         //        .withParent(XmlPatterns.xmlAttribute("extends")
