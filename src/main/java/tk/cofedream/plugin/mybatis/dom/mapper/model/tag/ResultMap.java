@@ -4,12 +4,14 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.TypeAttirbute;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,4 +39,10 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
         }
         return Optional.empty();
     }
+
+    @SubTagList("id")
+    List<Id> getIds();
+
+    @SubTagList("result")
+    List<Result> getResults();
 }

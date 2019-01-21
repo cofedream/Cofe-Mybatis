@@ -8,21 +8,18 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : zhengrf
- * @date : 2019-01-20
+ * @date : 2019-01-21
  */
-public interface Foreach extends DomElement {
+public interface Bind extends DomElement {
 
-    @Nullable
     @NameValue
-    @Attribute("collection")
-    GenericAttributeValue<String> getCollection();
     @Nullable
+    @Attribute("name")
+    GenericAttributeValue<String> getName();
+
     @NameValue
-    @Attribute("item")
-    GenericAttributeValue<String> getItem();
     @Nullable
-    @NameValue
-    @Attribute("index")
-    GenericAttributeValue<String> getIndex();
+    @Attribute("value")
+    GenericAttributeValue<String> getValue();
 
 }

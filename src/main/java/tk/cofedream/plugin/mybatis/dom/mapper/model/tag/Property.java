@@ -4,7 +4,7 @@ import com.intellij.util.xml.DomElement;
 
 /**
  * @author : zhengrf
- * @date : 2019-01-20
+ * @date : 2019-01-21
  */
-public interface Where extends DynamicSql,DomElement {
+public interface Property extends DomElement {
 }

@@ -2,7 +2,6 @@ package tk.cofedream.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
@@ -30,7 +29,6 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
     protected boolean isTarget(@NotNull ConvertContext selfContext) {
         return selfContext.getInvocationElement().getParent() instanceof Include;
     }
-
 
     @Override
     protected List<? extends IdAttribute> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
