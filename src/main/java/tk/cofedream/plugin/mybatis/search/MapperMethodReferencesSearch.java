@@ -22,13 +22,13 @@ import java.util.Optional;
  * @date : 2019-01-05
  * @see MapperReferenceContributor
  */
-public class MybatisMethodReferencesSearch extends QueryExecutorBase<PsiReference, MethodReferencesSearch.SearchParameters> {
-    public MybatisMethodReferencesSearch() {
+public class MapperMethodReferencesSearch extends QueryExecutorBase<PsiReference, com.intellij.psi.search.searches.MethodReferencesSearch.SearchParameters> {
+    public MapperMethodReferencesSearch() {
         super(true);
     }
 
     @Override
-    public void processQuery(@NotNull MethodReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
+    public void processQuery(@NotNull com.intellij.psi.search.searches.MethodReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
         PsiMethod method = queryParameters.getMethod();
         if (method.getContainingClass() != null) {
             Collection<Mapper> mappers = MapperService.getInstance(queryParameters.getProject()).findMapperXmls(method.getContainingClass());

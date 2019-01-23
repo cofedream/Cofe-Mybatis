@@ -1,10 +1,12 @@
 package tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte;
 
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import tk.cofedream.plugin.mybatis.dom.mapper.converter.attribute.PropertyConverter;
 
 /**
  * @author : zhengrf
@@ -12,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface PropertyAttribute extends DomElement {
 
-    @Nullable
+    @NotNull
     @Attribute("property")
-    GenericAttributeValue<String> getProperty();
+    @Convert(PropertyConverter.class)
+    GenericAttributeValue<XmlAttributeValue> getProperty();
 }

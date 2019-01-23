@@ -24,7 +24,7 @@ import java.util.Collections;
  * @date : 2019-01-05
  * @see MapperReferenceContributor
  */
-public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> implements PsiPolyVariantReference {
+public class PsiIdentifierReference extends PsiReferenceBase.Poly<PsiIdentifier> {
 
     public PsiIdentifierReference(@NotNull PsiIdentifier element) {
         super(element);
@@ -34,13 +34,6 @@ public class PsiIdentifierReference extends PsiReferenceBase<PsiIdentifier> impl
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         return new ResolveResult[] {new PsiElementResolveResult(myElement)};
-    }
-
-    @Nullable
-    @Override
-    public PsiElement resolve() {
-        ResolveResult[] resolveResults = multiResolve(false);
-        return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
     }
 
     @NotNull

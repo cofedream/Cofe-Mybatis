@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
+import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class IdAttributeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
     public IdAttributeReference(@NotNull PsiElement element) {
         super(element);
     }
@@ -45,24 +46,7 @@ public class IdAttributeReference extends PsiReferenceBase<PsiElement> implement
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));
         }
-        return result.toArray(new ResolveResult[0]);
+        return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
     }
 
-    @Nullable
-    @Override
-    public PsiElement resolve() {
-        ResolveResult[] resolveResults = multiResolve(false);
-        return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-    }
-
-    //@NotNull
-    //@Override
-    //public Object[] getVariants() {
-    //    ////List<LookupElement> variants = new ArrayList<LookupElement>();
-    //    //LookupElementBuilder typeText = LookupElementBuilder.create(myElement).
-    //    //        //withIcon(SimpleIcons.FILE).
-    //    //                withTypeText(myElement.getContainingFile().getName());
-    //    //return new Object[] {typeText};
-    //    return new Object[0];
-    //}
 }

@@ -22,7 +22,7 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @Nullable
     @Attribute("extends")
-    @Convert(ResultMapConverter.class)
+    @Convert(ResultMapConverter.Extends.class)
     GenericAttributeValue<XmlAttributeValue> getExtends();
 
     /**

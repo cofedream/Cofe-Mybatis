@@ -40,7 +40,6 @@ public class MapperXmlUsageSearcher extends CustomUsageSearcher {
             //        Optional<PsiMethod[]> method = JavaPsiUtils.findMethod(element.getProject(), classElement);
             //        PsiMethod psiMethod = method.get()[0];
             //
-            //        System.out.println(psiMethod.getName());
             //        //processor.process(new MyUsage(psiMethod));
             //        //processor.process();
             //        // 是增删拆改中的元素

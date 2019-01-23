@@ -2,7 +2,6 @@ package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.PsiReferenceProvider;
@@ -11,10 +10,10 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Sql;
 import tk.cofedream.plugin.mybatis.service.MapperService;
+import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
      * @author : zhengrf
      * @date : 2019-01-05
      */
-    private static class ResultTypeAttributeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+    private static class ResultTypeAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         ResultTypeAttributeReference(@NotNull PsiElement element) {
             super(element);
         }
@@ -46,7 +45,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
             Optional<Mapper> mapper = MapperService.getMapper(originalElement);
             if (!mapper.isPresent()) {
-                return new ResolveResult[0];
+                return EmptyUtil.EMPTY_RESOLVE_RESULTS;
             }
             List<Sql> sqls = mapper.get().getSqls();
             List<ResolveResult> result = new ArrayList<>();
@@ -57,14 +56,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
                     }
                 }
             }));
-            return result.toArray(new ResolveResult[0]);
-        }
-
-        @Nullable
-        @Override
-        public PsiElement resolve() {
-            ResolveResult[] resolveResults = multiResolve(false);
-            return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+            return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
         }
 
         @NotNull
@@ -72,7 +64,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         public Object[] getVariants() {
             return MapperService.getMapper(((XmlAttributeValue) myElement))
                     .map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getSqls()))
-                    .orElseGet(() -> new Object[0]);
+                    .orElse(new Object[0]);
         }
 
     }

@@ -2,7 +2,6 @@ package tk.cofedream.plugin.mybatis.dom.psi.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.PsiReferenceProvider;
@@ -14,11 +13,11 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ResultMap;
 import tk.cofedream.plugin.mybatis.service.MapperService;
+import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class ResultMapReferenceProvider {
             return new PsiReference[] {new Reference(element)};
         }
 
-        public static class Reference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+        public static class Reference extends PsiReferenceBase.Poly<PsiElement> {
 
             public Reference(@NotNull PsiElement element) {
                 super(element);
@@ -54,15 +53,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return new ResolveResult[0];
+                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
                 }
                 Optional<String> extendsValue = domElement.getExtendsValue();
                 if (!extendsValue.isPresent()) {
-                    return new ResolveResult[0];
+                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
                 }
                 Optional<Mapper> mapper = MapperService.getMapper((XmlAttributeValue) myElement);
                 if (!mapper.isPresent()) {
-                    return new ResolveResult[0];
+                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.get().getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
@@ -70,14 +69,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
-                return result.toArray(new ResolveResult[0]);
-            }
-
-            @Nullable
-            @Override
-            public PsiElement resolve() {
-                ResolveResult[] resolveResults = multiResolve(false);
-                return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+                return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
             }
 
             @NotNull
@@ -111,7 +103,7 @@ public class ResultMapReferenceProvider {
             return new PsiReference[] {new Reference(element)};
         }
 
-        public static class Reference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference {
+        public static class Reference extends PsiReferenceBase.Poly<PsiElement>{
 
             public Reference(@NotNull PsiElement element) {
                 super(element);
@@ -122,33 +114,26 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return new ResolveResult[0];
+                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
                 }
                 Optional<String> idValue = domElement.getIdValue();
                 if (!idValue.isPresent()) {
-                    return new ResolveResult[0];
+                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 MapperService.getMapper((XmlAttributeValue) myElement).ifPresent(mapper -> {
                     mapper.getResultMaps().forEach(resultMap -> {
                         resultMap.getExtendsValue().ifPresent(extendsValue -> {
                             if (extendsValue.equals(idValue.get())) {
-                                //result.add(new PsiElementResolveResult(resultMap.getExtends().getXmlAttributeValue()));
                                 result.add(new PsiElementResolveResult(resultMap.getXmlElement()));
 
                             }
                         });
                     });
                 });
-                return result.toArray(new ResolveResult[0]);
+                return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
             }
 
-            @Nullable
-            @Override
-            public PsiElement resolve() {
-                ResolveResult[] resolveResults = multiResolve(false);
-                return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-            }
         }
     }
 }
