@@ -14,9 +14,9 @@ public class EnumUtil {
 
     /**
      * 解析标签
-     * @param targetEnums 目标属性枚举
+     * @param targetEnums  目标属性枚举
      * @param xmlAttribute 需要解析的属性
-     * @param <T> 目标属性
+     * @param <T>          目标属性
      * @return 解析结果
      */
     public static <T extends AttributeEnums> Optional<T> parse(@NotNull T[] targetEnums, @NotNull XmlAttribute xmlAttribute) {

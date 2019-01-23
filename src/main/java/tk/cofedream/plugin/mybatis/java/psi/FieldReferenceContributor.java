@@ -16,7 +16,7 @@ public class FieldReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
         PsiFieldPattern pattern = PsiJavaPatterns.psiField();
-        registrar.registerReferenceProvider(pattern,new FieldReferenceProvider());
+        registrar.registerReferenceProvider(pattern, new FieldReferenceProvider());
     }
 
 }

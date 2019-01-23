@@ -93,7 +93,6 @@ public interface Mapper extends DomElement {
     Delete addDelete();
 
 
-
     // https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#children-collections
     //@SubTagsList({"insert", "update", "delete", "select"})
     //List<ClassElement> getClassElements();

@@ -103,7 +103,7 @@ public class ResultMapReferenceProvider {
             return new PsiReference[] {new Reference(element)};
         }
 
-        public static class Reference extends PsiReferenceBase.Poly<PsiElement>{
+        public static class Reference extends PsiReferenceBase.Poly<PsiElement> {
 
             public Reference(@NotNull PsiElement element) {
                 super(element);

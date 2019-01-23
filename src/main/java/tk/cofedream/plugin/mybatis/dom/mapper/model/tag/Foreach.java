@@ -16,10 +16,12 @@ public interface Foreach extends DomElement {
     @NameValue
     @Attribute("collection")
     GenericAttributeValue<String> getCollection();
+
     @Nullable
     @NameValue
     @Attribute("item")
     GenericAttributeValue<String> getItem();
+
     @Nullable
     @NameValue
     @Attribute("index")

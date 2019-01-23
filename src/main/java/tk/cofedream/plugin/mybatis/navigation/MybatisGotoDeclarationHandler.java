@@ -31,7 +31,7 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
             return null;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);
-        return xmlAttribute == null ? null : EnumUtil.parse(StatementAttribute.values(),xmlAttribute).map(statement -> {
+        return xmlAttribute == null ? null : EnumUtil.parse(StatementAttribute.values(), xmlAttribute).map(statement -> {
             if (sourceElement.getLanguage().is(XMLLanguage.INSTANCE)) {
                 if (MapperService.isMapperXmlFile(sourceElement.getContainingFile())) {
                     return statement.process(sourceElement).orElse(null);

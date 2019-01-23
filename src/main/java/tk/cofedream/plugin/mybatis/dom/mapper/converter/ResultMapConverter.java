@@ -2,7 +2,6 @@ package tk.cofedream.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +23,7 @@ public class ResultMapConverter {
     /**
      * extends 属性
      */
-    public static class Extends extends XmlAttributeValueConverter<ResultMap>{
+    public static class Extends extends XmlAttributeValueConverter<ResultMap> {
         @Nullable
         @Override
         public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {

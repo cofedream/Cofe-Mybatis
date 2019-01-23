@@ -11,7 +11,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofedream.plugin.mybatis.dom.psi.references.XmlAttributeValueReference;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.StringUtils;

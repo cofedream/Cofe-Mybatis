@@ -26,8 +26,8 @@ import java.util.Optional;
  * 仅可引用，如果要重命名则需另外编写
  * @author : zhengrf
  * @date : 2019-01-05
- * @deprecated 使用 {@link MapperReferenceContributor}
  * @see MapperReferenceContributor
+ * @deprecated 使用 {@link MapperReferenceContributor}
  */
 @Deprecated
 public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {

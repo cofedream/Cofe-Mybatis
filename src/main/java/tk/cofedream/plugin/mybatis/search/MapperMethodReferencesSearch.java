@@ -3,7 +3,6 @@ package tk.cofedream.plugin.mybatis.search;
 import com.intellij.openapi.application.QueryExecutorBase;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.MethodReferencesSearch;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;

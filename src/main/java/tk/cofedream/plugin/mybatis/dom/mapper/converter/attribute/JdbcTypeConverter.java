@@ -15,6 +15,13 @@ import java.util.Set;
  * @date : 2019-01-21
  */
 public class JdbcTypeConverter extends ResolvingConverter<String> {
+    private static final Set<String> JdbcType = new HashSet<>(Arrays.asList(
+            "BIT", "FLOAT", "CHAR", "TIMESTAMP", "OTHER", "UNDEFINED",
+            "TINYINT", "REAL", "VARCHAR", "BINARY", "BLOB", "NVARCHAR",
+            "SMALLINT", "DOUBLE", "LONGVARCHAR", "VARBINARY", "CLOB", "NCHAR",
+            "INTEGER", "NUMERIC", "DATE", "LONGVARBINARY", "BOOLEAN", "NCLOB",
+            "BIGINT", "DECIMAL", "TIME", "NULL", "CURSOR", "ARRAY"));
+
     @NotNull
     @Override
     public Collection<? extends String> getVariants(ConvertContext context) {
@@ -35,11 +42,4 @@ public class JdbcTypeConverter extends ResolvingConverter<String> {
     public String toString(@Nullable String s, ConvertContext context) {
         return s;
     }
-
-    private static final Set<String> JdbcType = new HashSet<>(Arrays.asList(
-            "BIT", "FLOAT", "CHAR", "TIMESTAMP", "OTHER", "UNDEFINED",
-            "TINYINT", "REAL", "VARCHAR", "BINARY", "BLOB", "NVARCHAR",
-            "SMALLINT", "DOUBLE", "LONGVARCHAR", "VARBINARY", "CLOB", "NCHAR",
-            "INTEGER", "NUMERIC", "DATE", "LONGVARBINARY", "BOOLEAN", "NCLOB",
-            "BIGINT", "DECIMAL", "TIME", "NULL", "CURSOR", "ARRAY"));
 }

@@ -34,66 +34,6 @@ public class SelectTagConverter {
 
     public static class ResultType extends ResolvingConverter<String> {
 
-        @NotNull
-        @Override
-        public Collection<? extends String> getVariants(ConvertContext context) {
-            Select select = (Select) DomUtil.getDomElement(context.getTag());
-            ArrayList<String> result = new ArrayList<>();
-            JavaPsiService.getInstance(context.getProject()).findMethod(select).ifPresent(psiMethods -> {
-                PsiType type = psiMethods[0].getReturnType();
-                if (type == null) {
-                    return;
-                }
-                if (PsiTypeUtil.notCustomType(type)) {
-                    result.addAll(BaseType.get(type.getPresentableText()));
-                } else {
-                    if (type instanceof PsiClassReferenceType) {
-                        PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                        String referenceName = reference.getReferenceName();
-                        if (StringUtils.isBlank(referenceName)) {
-                            return;
-                        }
-                        if (PsiTypeUtil.notCustomType(referenceName)) {
-                            result.addAll(BaseType.get(referenceName));
-                        } else {
-                            result.add(reference.getQualifiedName());
-                        }
-                    }
-                }
-            });
-            return result;
-        }
-
-        @Nullable
-        @Override
-        public String fromString(@Nullable String s, ConvertContext context) {
-            return s;
-        }
-
-        @Nullable
-        @Override
-        public String toString(@Nullable String s, ConvertContext context) {
-            return s;
-        }
-
-        @Nullable
-        @Override
-        public LookupElement createLookupElement(String s) {
-            LookupElementBuilder builder = notCustomType.get(s);
-            if (builder != null) {
-                return builder;
-            }
-            String shortName = s;
-            if (s.lastIndexOf(".") > 0) {
-                shortName = s.substring(s.lastIndexOf(".") + 1);
-            }
-            return createLookupElementBuilder(s, s, shortName);
-        }
-
-        private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
-            return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
-        }
-
         private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
             this.put("byte", Collections.singletonList("_byte"));
             this.put("long", Collections.singletonList("_long"));
@@ -158,6 +98,66 @@ public class SelectTagConverter {
             this.put("Collection", createLookupElementBuilder("collection", "Collection", "collection"));
             this.put("Iterator", createLookupElementBuilder("iterator", "Iterator", "iterator"));
         }});
+
+        private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
+            return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
+        }
+
+        @NotNull
+        @Override
+        public Collection<? extends String> getVariants(ConvertContext context) {
+            Select select = (Select) DomUtil.getDomElement(context.getTag());
+            ArrayList<String> result = new ArrayList<>();
+            JavaPsiService.getInstance(context.getProject()).findMethod(select).ifPresent(psiMethods -> {
+                PsiType type = psiMethods[0].getReturnType();
+                if (type == null) {
+                    return;
+                }
+                if (PsiTypeUtil.notCustomType(type)) {
+                    result.addAll(BaseType.get(type.getPresentableText()));
+                } else {
+                    if (type instanceof PsiClassReferenceType) {
+                        PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+                        String referenceName = reference.getReferenceName();
+                        if (StringUtils.isBlank(referenceName)) {
+                            return;
+                        }
+                        if (PsiTypeUtil.notCustomType(referenceName)) {
+                            result.addAll(BaseType.get(referenceName));
+                        } else {
+                            result.add(reference.getQualifiedName());
+                        }
+                    }
+                }
+            });
+            return result;
+        }
+
+        @Nullable
+        @Override
+        public String fromString(@Nullable String s, ConvertContext context) {
+            return s;
+        }
+
+        @Nullable
+        @Override
+        public String toString(@Nullable String s, ConvertContext context) {
+            return s;
+        }
+
+        @Nullable
+        @Override
+        public LookupElement createLookupElement(String s) {
+            LookupElementBuilder builder = notCustomType.get(s);
+            if (builder != null) {
+                return builder;
+            }
+            String shortName = s;
+            if (s.lastIndexOf(".") > 0) {
+                shortName = s.substring(s.lastIndexOf(".") + 1);
+            }
+            return createLookupElementBuilder(s, s, shortName);
+        }
     }
 
     public static class ResultMap extends XmlAttributeValueConverter<tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ResultMap> {

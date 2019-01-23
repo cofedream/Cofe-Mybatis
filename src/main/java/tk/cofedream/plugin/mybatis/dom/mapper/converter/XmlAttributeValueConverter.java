@@ -20,9 +20,9 @@ import java.util.List;
 
 /**
  * XmlAttribute 基础转换器
+ * @param <T> 目标 DOm 元素
  * @author : zhengrf
  * @date : 2019-01-21
- * @param <T> 目标 DOm 元素
  */
 public abstract class XmlAttributeValueConverter<T extends DomElement> extends ResolvingConverter<XmlAttributeValue> {
 
@@ -54,7 +54,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
             return null;
         }
         if (isTarget(selfContext)) {
-            return MapperService.getMapper(selfContext.getInvocationElement()).map(mapper -> findTargetElement(selfValue,selfContext,mapper)).orElse(null);
+            return MapperService.getMapper(selfContext.getInvocationElement()).map(mapper -> findTargetElement(selfValue, selfContext, mapper)).orElse(null);
         }
         return null;
     }
@@ -67,8 +67,8 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 找到当前元素值引用的目标源元素
-     * @param selfValue 值
-     * @param selfContext 当前元素
+     * @param selfValue     值
+     * @param selfContext   当前元素
      * @param currentMapper 当前MapperXMl
      * @return 目标元素
      */
@@ -76,16 +76,16 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     @SuppressWarnings("unchecked")
     private XmlAttributeValue findTargetElement(@NotNull String selfValue, @NotNull ConvertContext selfContext, @NotNull Mapper currentMapper) {
         return getReferenceDomElements(selfValue, selfContext, currentMapper).stream()
-                .filter(targetDom -> filterDomElement(((T) targetDom),selfValue))
+                .filter(targetDom -> filterDomElement(((T) targetDom), selfValue))
                 .findFirst()
                 .map(target -> getTargetElement(((T) target))).orElse(null);
     }
 
     /**
      * 获取可能引用的 Dom 元素
-     * @param value 值
+     * @param value   值
      * @param context 当前元素
-     * @param mapper 当前MapperXMl
+     * @param mapper  当前MapperXMl
      * @return Id属性列表
      */
     protected abstract List<? extends DomElement> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper);
@@ -93,7 +93,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     /**
      * 判断是否为目标元素
      * @param targetDomElement 目标元素
-     * @param selfValue 当前值
+     * @param selfValue        当前值
      * @return {@code true} 则为目标元素
      */
     protected abstract boolean filterDomElement(@NotNull T targetDomElement, @NotNull String selfValue);

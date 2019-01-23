@@ -6,6 +6,6 @@ import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.KeyPropertyAttribu
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Insert extends KeyPropertyAttribute,ClassElement {
+public interface Insert extends KeyPropertyAttribute, ClassElement {
 
 }
