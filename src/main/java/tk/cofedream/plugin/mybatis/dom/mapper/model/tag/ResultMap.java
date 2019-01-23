@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.PropertyAttribute;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.TypeAttirbute;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +47,12 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @SubTagList("result")
     List<Result> getResults();
+
+    @NotNull
+    default List<PropertyAttribute> getPropertyAttributes(){
+        return new ArrayList<PropertyAttribute>(){{
+            this.addAll(getIds());
+            this.addAll(getResults());
+        }};
+    }
 }

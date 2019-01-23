@@ -11,9 +11,13 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte.PropertyAttribute;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author : zhengrf
@@ -44,15 +48,19 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         MapperService.getInstance(queryParameters.getProject()).findAllMappers().forEach(mapper -> mapper.getResultMaps().forEach(resultMap -> {
             resultMap.getTypeValue().ifPresent(type -> javaPsiService.getPsiClass(type).ifPresent(typeClass -> {
                 if (isTarget(psiClass, classQualifiedName)) {
-                    resultMap.getIds().forEach(id -> {
-                        XmlAttributeValue xmlAttributeValue = id.getProperty().getXmlAttributeValue();
-                        if (xmlAttributeValue != null) {
-                            consumer.process(new PsiReferenceBase.Immediate<>(xmlAttributeValue, xmlAttributeValue));
-                        }
-                    });
+                    process(resultMap.getPropertyAttributes(), psiField, consumer);
                 }
             }));
         }));
+    }
+
+    private void process(@NotNull List<? extends PropertyAttribute> attributes, @NotNull PsiField psiField, @NotNull Processor<? super PsiReference> consumer) {
+        attributes.forEach(id -> {
+            XmlAttributeValue xmlAttributeValue = id.getProperty().getXmlAttributeValue();
+            if (xmlAttributeValue != null && Objects.equals(psiField.getName(), xmlAttributeValue.getValue())) {
+                consumer.process(new PsiReferenceBase.Immediate<>(xmlAttributeValue, xmlAttributeValue));
+            }
+        });
     }
 
     private boolean isTarget(@Nullable PsiClass targetClass, @NotNull String currentClassQualifiedName) {

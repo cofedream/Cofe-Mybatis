@@ -56,8 +56,8 @@
         <!--<psi.referenceContributor language="JAVA"-->
                                   <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
         <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
-        <psi.referenceContributor language="XML"
-                                  implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor"/>
+        <!--<psi.referenceContributor language="XML"-->
+                                  <!--implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 

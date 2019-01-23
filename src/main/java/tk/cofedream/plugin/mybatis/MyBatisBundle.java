@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class MyBatisBundle extends AbstractBundle {
     private static final String PATH_TO_BUNDLE = "MybatisBundle.properties";
     private static final MyBatisBundle ourInstance = new MyBatisBundle();
+
     protected MyBatisBundle() {
         super(PATH_TO_BUNDLE);
     }

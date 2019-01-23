@@ -28,7 +28,8 @@ patchPluginXml {
     changeNotes """
       1.修复Xml导航到方法的Bug.<br>
       2.新增<include>片段导航至<sql>.<br>
-      3.新增<resultMap extends="">导航至对应的<resultMap id="">.<br>
+      3.<resultMap extends="">导航.<br>
+        <id><result>标签导航,'property'参考导航,'jdbcType'属性参考<br>
       4.新增<select resultMap="">导航至对应的<resultMap id="">.<br>
       <em>功能新增,Bug修复</em>"""
 }
