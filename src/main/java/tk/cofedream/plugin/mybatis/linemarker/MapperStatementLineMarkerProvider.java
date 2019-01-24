@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,11 +36,11 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
-        ClassElement domElement = (ClassElement) DomUtil.getDomElement(element);
-        if (domElement == null) {
+        DomElement domElement = DomManager.getDomManager(element.getProject()).getDomElement(((XmlTag) element));
+        if (!(domElement instanceof ClassElement)) {
             return null;
         }
-        Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findMethod(domElement);
+        Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findMethod(((ClassElement) domElement));
         return method.map(psiMethods -> {
             if (psiMethods.length == 0) {
                 return null;
