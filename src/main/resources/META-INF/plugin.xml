@@ -63,6 +63,7 @@
 
         <!--代码完成,无需指向引用-->
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
+        <completion.contributor language="SQL" implementationClass="tk.cofedream.plugin.mybatis.completion.SqlParameterCompletionContributor" order="first"/>
 
         <!--代码检查-->
         <localInspection language="XML" shortName="MapperIncludeInspection" applyToDialects="false"

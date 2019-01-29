@@ -27,7 +27,10 @@ public interface JavaPsiService {
     Optional<PsiClass> findClass(@NotNull ClassElement element);
 
     @NotNull
-    Optional<PsiMethod[]> findMethod(@Nullable ClassElement element);
+    Optional<PsiMethod> findMethod(@Nullable ClassElement element);
+
+    @NotNull
+    Optional<PsiMethod[]> findMethods(@Nullable ClassElement element);
 
     @NotNull
     Optional<PsiMethod[]> findMethod(@NotNull Mapper mapper, String methodName);

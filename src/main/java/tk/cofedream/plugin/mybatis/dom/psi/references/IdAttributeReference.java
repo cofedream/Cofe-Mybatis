@@ -3,7 +3,6 @@ package tk.cofedream.plugin.mybatis.dom.psi.references;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -35,16 +34,12 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
         if (MapperService.isBaseStatementElement(tag)) {
             Project project = myElement.getProject();
-            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtil.getDomElement(tag)).ifPresent(psiMethods -> {
-                for (PsiMethod psiMethod : psiMethods) {
-                    result.add(new PsiElementResolveResult(psiMethod));
-                }
-            });
+            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtil.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
         }
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));
         }
-        return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
+        return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
     }
 
 }

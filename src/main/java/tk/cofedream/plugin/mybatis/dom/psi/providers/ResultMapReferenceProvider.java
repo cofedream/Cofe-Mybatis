@@ -53,15 +53,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                    return EmptyUtil.Array.RESOLVE_RESULT;
                 }
                 Optional<String> extendsValue = domElement.getExtendsValue();
                 if (!extendsValue.isPresent()) {
-                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                    return EmptyUtil.Array.RESOLVE_RESULT;
                 }
                 Optional<Mapper> mapper = MapperService.getMapper((XmlAttributeValue) myElement);
                 if (!mapper.isPresent()) {
-                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                    return EmptyUtil.Array.RESOLVE_RESULT;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.get().getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
@@ -69,7 +69,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
-                return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
+                return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
             }
 
             @NotNull
@@ -114,11 +114,11 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                    return EmptyUtil.Array.RESOLVE_RESULT;
                 }
                 Optional<String> idValue = domElement.getIdValue();
                 if (!idValue.isPresent()) {
-                    return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                    return EmptyUtil.Array.RESOLVE_RESULT;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 MapperService.getMapper((XmlAttributeValue) myElement).ifPresent(mapper -> {
@@ -131,7 +131,7 @@ public class ResultMapReferenceProvider {
                         });
                     });
                 });
-                return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
+                return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
             }
 
         }

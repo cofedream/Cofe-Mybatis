@@ -108,8 +108,8 @@ public class SelectTagConverter {
         public Collection<? extends String> getVariants(ConvertContext context) {
             Select select = (Select) DomUtil.getDomElement(context.getTag());
             ArrayList<String> result = new ArrayList<>();
-            JavaPsiService.getInstance(context.getProject()).findMethod(select).ifPresent(psiMethods -> {
-                PsiType type = psiMethods[0].getReturnType();
+            JavaPsiService.getInstance(context.getProject()).findMethod(select).ifPresent(psiMethod -> {
+                PsiType type = psiMethod.getReturnType();
                 if (type == null) {
                     return;
                 }

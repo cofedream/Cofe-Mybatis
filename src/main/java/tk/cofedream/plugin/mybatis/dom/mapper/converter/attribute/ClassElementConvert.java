@@ -34,11 +34,9 @@ public class ClassElementConvert {
                 return null;
             }
             ClassElement classElement = DomUtil.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
-            return JavaPsiService.getInstance(context.getProject()).findMethod(classElement).map(psiMethods -> {
-                for (PsiMethod psiMethod : psiMethods) {
-                    if (methodName.equals(psiMethod.getName())) {
-                        return psiMethod;
-                    }
+            return JavaPsiService.getInstance(context.getProject()).findMethod(classElement).map(psiMethod -> {
+                if (methodName.equals(psiMethod.getName())) {
+                    return psiMethod;
                 }
                 return null;
             }).orElse(null);

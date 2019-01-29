@@ -8,6 +8,12 @@ import com.intellij.psi.ResolveResult;
  */
 public class EmptyUtil {
 
-    public static final ResolveResult[] EMPTY_RESOLVE_RESULTS = new ResolveResult[0];
+    public static class Array {
+
+        public static final ResolveResult[] RESOLVE_RESULT = new ResolveResult[0];
+        public static final String[] STRING = new String[0];
+
+    }
+
 
 }

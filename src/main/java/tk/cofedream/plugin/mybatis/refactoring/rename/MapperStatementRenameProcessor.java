@@ -44,7 +44,7 @@ public class MapperStatementRenameProcessor extends RenamePsiElementProcessor {
     public void renameElement(@NotNull PsiElement element, @NotNull String newName, @NotNull UsageInfo[] usages, @Nullable RefactoringElementListener listener) throws IncorrectOperationException {
         DomUtils.resolveToDomTarget(element).ifPresent(domTarget -> {
             ClassElement domElement = (ClassElement) domTarget.getDomElement();
-            JavaPsiService.getInstance(element.getProject()).findMethod(domElement).ifPresent(psiMethods -> {
+            JavaPsiService.getInstance(element.getProject()).findMethods(domElement).ifPresent(psiMethods -> {
                 for (PsiMethod psiMethod : psiMethods) {
                     if (domElement.getIdValue().map(id -> id.equals(psiMethod.getName())).orElse(false)) {
                         UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));

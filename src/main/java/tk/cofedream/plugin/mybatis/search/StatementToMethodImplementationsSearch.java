@@ -37,7 +37,7 @@ public class StatementToMethodImplementationsSearch implements QueryExecutor<Psi
             if (classElement == null) {
                 return;
             }
-            JavaPsiService.getInstance(element.getProject()).findMethod(classElement).ifPresent(psiMethods -> {
+            JavaPsiService.getInstance(element.getProject()).findMethods(classElement).ifPresent(psiMethods -> {
                 for (PsiMethod psiMethod : psiMethods) {
                     if ((classElement).getIdValue().map(id -> id.equals(psiMethod.getName())).orElse(false)) {
                         consumer.process(psiMethod);

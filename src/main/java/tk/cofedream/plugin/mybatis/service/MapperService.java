@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.constants.MybatisConstants;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
+import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Delete;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Insert;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
@@ -77,12 +78,13 @@ public abstract class MapperService {
         if (xmlElement == null) {
             return false;
         }
-        Optional<DomElement> domElement = DomService.getInstance(xmlElement.getProject()).getDomElement(xmlElement);
-        if (!domElement.isPresent()) {
+        // todo 下面两个判断可以合并
+        DomElement domElement = DomUtil.getDomElement(xmlElement);
+        if (!(domElement instanceof ClassElement)) {
             return false;
         }
         for (Class<?> clazz : MyBatisDomConstants.BASIC_OPERATION) {
-            if (clazz.isInstance(domElement.get())) {
+            if (clazz.isInstance(domElement)) {
                 return true;
             }
         }

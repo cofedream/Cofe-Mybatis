@@ -48,7 +48,7 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
                 Project project = element.getProject();
                 Optional<ClassElement> domElement = Optional.ofNullable(DomUtil.findDomElement(element, ClassElement.class));
                 JavaPsiService instance = JavaPsiService.getInstance(project);
-                return domElement.flatMap(targetElement -> instance.findMethod(targetElement).map(psiMethods -> {
+                return domElement.flatMap(targetElement -> instance.findMethods(targetElement).map(psiMethods -> {
                     for (PsiMethod psiMethod : psiMethods) {
                         if (targetElement.getIdValue().map(id -> id.equals(psiMethod.getName())).orElse(false)) {
                             return psiMethod;

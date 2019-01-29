@@ -45,7 +45,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
             Optional<Mapper> mapper = MapperService.getMapper(originalElement);
             if (!mapper.isPresent()) {
-                return EmptyUtil.EMPTY_RESOLVE_RESULTS;
+                return EmptyUtil.Array.RESOLVE_RESULT;
             }
             List<Sql> sqls = mapper.get().getSqls();
             List<ResolveResult> result = new ArrayList<>();
@@ -56,7 +56,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
                     }
                 }
             }));
-            return result.toArray(EmptyUtil.EMPTY_RESOLVE_RESULTS);
+            return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
         }
 
         @NotNull

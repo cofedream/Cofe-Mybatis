@@ -10,6 +10,7 @@ import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.tukaani.xz.rangecoder.RangeEncoderToBuffer;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
@@ -72,14 +73,19 @@ public class JavaPsiServiceImpl implements JavaPsiService {
 
     @NotNull
     @Override
-    public Optional<PsiMethod[]> findMethod(@Nullable ClassElement element) {
+    public Optional<PsiMethod> findMethod(@Nullable ClassElement element) {
+        return findMethods(element).flatMap(psiMethods -> Optional.of(psiMethods[0]));
+    }
+
+    @NotNull
+    @Override
+    public Optional<PsiMethod[]> findMethods(@Nullable ClassElement element) {
         if (element == null || !element.getIdValue().isPresent()) {
             return Optional.empty();
         }
         return element.getNamespaceValue().flatMap(qualifiedName ->
                 getPsiClass(qualifiedName).flatMap(psiClass ->
-                        element.getIdValue().flatMap(id ->
-                                Optional.of(psiClass.findMethodsByName(id, false)))));
+                        element.getIdValue().flatMap(id -> Optional.of(psiClass.findMethodsByName(id, false)))));
     }
 
     @NotNull

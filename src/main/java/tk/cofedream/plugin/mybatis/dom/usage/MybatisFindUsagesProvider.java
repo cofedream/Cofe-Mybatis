@@ -33,7 +33,7 @@ public class MybatisFindUsagesProvider implements FindUsagesProvider {
             XmlTag tag = PsiTreeUtil.getParentOfType(context, XmlTag.class, true);
             if (MapperService.isBaseStatementElement(tag)) {
                 ClassElement classElement = (ClassElement) DomUtil.getDomElement(tag);
-                Optional<PsiMethod[]> method = JavaPsiService.getInstance(psiElement.getProject()).findMethod(classElement);
+                Optional<PsiMethod[]> method = JavaPsiService.getInstance(psiElement.getProject()).findMethods(classElement);
                 return method.isPresent();
             }
         }
