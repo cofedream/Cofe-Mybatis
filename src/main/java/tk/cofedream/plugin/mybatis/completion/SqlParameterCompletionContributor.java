@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -25,10 +26,10 @@ import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofedream.plugin.mybatis.enums.JavaTypeEnum;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
 import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
-import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;
 import tk.cofedream.plugin.mybatis.utils.StringUtils;
 
 import javax.swing.*;
@@ -60,14 +61,12 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         if (!MapperService.isMapperXmlFile(xmlFile)) {
             return;
         }
-        if (prepareProcess(parameters)) {
+        if (isSupport(parameters)) {
             PsiElement elementAt = xmlFile.findElementAt(injectedLanguageManager.injectedToHost(position, position.getTextOffset()));
             ClassElement classElement = DomUtil.getParentOfType(DomUtil.getDomElement(elementAt), ClassElement.class, true);
             if (classElement != null) {
                 JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
-                javaPsiService.findMethod(classElement).ifPresent(psiMethod -> {
-                    process(javaPsiService, psiMethod, result, getPrefix(parameters));
-                });
+                javaPsiService.findMethod(classElement).ifPresent(psiMethod -> process(javaPsiService, psiMethod, result, getPrefix(result)));
             }
         }
     }
@@ -103,21 +102,6 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         result.stopHere();
     }
 
-    private String getLookupString(@NotNull String[] prefixArr, @NotNull String suffix) {
-        return String.join(".", prefixArr) + "." + suffix;
-    }
-
-    @Nullable
-    private Integer getPrefixNum(String prefix) {
-        if (prefix.startsWith("param")) {
-            return Integer.parseInt(prefix.substring(5));
-        }
-        if (prefix.startsWith("arg")) {
-            return Integer.parseInt(prefix.substring(3)) + 1;
-        }
-        return null;
-    }
-
     private void process(@NonNull JavaPsiService javaPsiService, PsiParameter[] psiParameters, @NotNull CompletionResultSet result) {
         for (int i = 0; i < psiParameters.length; i++) {
             PsiParameter parameter = psiParameters[i];
@@ -128,7 +112,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
                 result.addElement(createLookupElement(annotationValue, typeText, PlatformIcons.PARAMETER_ICON));
                 result.addElement(createLookupElement("param" + (i + 1), typeText, null, PlatformIcons.PARAMETER_ICON, PRIORITY - i));
             } else {
-                if (PsiTypeUtil.notCustomType(parameterType)) {
+                if (JavaTypeEnum.parse(parameterType) == JavaTypeEnum.Custom) {
                     // todo 处理集合
                     result.addElement(createLookupElement("param" + (i + 1), typeText, null, PlatformIcons.PARAMETER_ICON, PRIORITY - i));
                 } else {
@@ -156,19 +140,6 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         });
     }
 
-    private boolean isTargetMethod(PsiMethod method) {
-        PsiType returnType = method.getReturnType();
-        return returnType != null && !returnType.equalsToText("void") && method.getName().startsWith("get") && !method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
-    }
-
-    private boolean isTargetMethod(PsiMethod method, String name) {
-        if (!isTargetMethod(method)) {
-            return false;
-        }
-        String methodName = method.getName();
-        return name.equals(Character.toLowerCase(methodName.charAt(4)) + methodName.substring(5));
-    }
-
     /**
      * 获取引用
      * @param psiParameters 方法参数
@@ -178,11 +149,11 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
     @Nullable
     private PsiClassReferenceType getPrefixReferenceType(@NotNull JavaPsiService javaPsiService, @NotNull PsiParameter[] psiParameters, @NotNull String referenceKey) {
         Integer prefixNum = getPrefixNum(referenceKey);
+        // todo 集合
         if (prefixNum != null) {
             if (psiParameters.length <= prefixNum) {
                 PsiType type = psiParameters[prefixNum - 1].getType();
-                // todo 集合
-                if (PsiTypeUtil.isCustomType(type) && type instanceof PsiClassReferenceType) {
+                if (JavaTypeEnum.parse(type) == JavaTypeEnum.Custom) {
                     return ((PsiClassReferenceType) type);
                 }
             }
@@ -190,14 +161,11 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
             for (PsiParameter parameter : psiParameters) {
                 String annotationValue = getParamAnnotationValue(parameter);
                 PsiType type = parameter.getType();
-                if (type instanceof PsiClassReferenceType) {
-                    // todo 集合判断
-                    if (StringUtils.isBlank(annotationValue) && PsiTypeUtil.isCustomType(type)) {
+                if (JavaTypeEnum.parse(type) == JavaTypeEnum.Custom) {
+                    if (StringUtils.isBlank(annotationValue)) {
                         return getPrefixReferenceType(javaPsiService, ((PsiClassReferenceType) type), referenceKey);
                     } else if (referenceKey.equals(annotationValue)) {
-                        if (PsiTypeUtil.isCustomType(type)) {
-                            return ((PsiClassReferenceType) type);
-                        }
+                        return ((PsiClassReferenceType) type);
                     }
                 }
             }
@@ -215,17 +183,45 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
     private PsiClassReferenceType getPrefixReferenceType(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType prefixReferenceType, @NotNull String referenceKey) {
         return javaPsiService.getPsiClass((prefixReferenceType).getReference().getQualifiedName()).map(psiClass -> {
             for (PsiField field : psiClass.getAllFields()) {
-                if (referenceKey.equals(field.getName()) && PsiTypeUtil.isCustomType(field.getType())) {
+                if (referenceKey.equals(field.getName()) && JavaTypeEnum.parse(field.getType()) == JavaTypeEnum.Custom) {
                     return ((PsiClassReferenceType) field.getType());
                 }
             }
             for (PsiMethod method : psiClass.getAllMethods()) {
-                if (isTargetMethod(method, referenceKey) && PsiTypeUtil.isCustomType(method.getReturnType())) {
+                if (isTargetMethod(method, referenceKey) && JavaTypeEnum.parse(method.getReturnType()) == JavaTypeEnum.Custom) {
                     return ((PsiClassReferenceType) method.getReturnType());
                 }
             }
             return null;
         }).orElse(null);
+    }
+
+    private boolean isTargetMethod(PsiMethod method) {
+        PsiType returnType = method.getReturnType();
+        return returnType != null && !returnType.equalsToText("void") && method.getName().startsWith("get") && !method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
+    }
+
+    private boolean isTargetMethod(PsiMethod method, String name) {
+        if (!isTargetMethod(method)) {
+            return false;
+        }
+        String methodName = method.getName();
+        return name.equals(Character.toLowerCase(methodName.charAt(4)) + methodName.substring(5));
+    }
+
+    private String getLookupString(@NotNull String[] prefixArr, @NotNull String postfix) {
+        return String.join(".", prefixArr) + "." + postfix;
+    }
+
+    @Nullable
+    private Integer getPrefixNum(String prefix) {
+        if (prefix.startsWith("param")) {
+            return Integer.parseInt(prefix.substring(5));
+        }
+        if (prefix.startsWith("arg")) {
+            return Integer.parseInt(prefix.substring(3)) + 1;
+        }
+        return null;
     }
 
     /**
@@ -262,28 +258,37 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         return null;
     }
 
+    //@NotNull
+    //private String[] getPrefix(@NotNull CompletionParameters parameters) {
+    //    // 获取前缀
+    //    String text = parameters.getOriginalFile().getText();
+    //    // 当前光标的前一个位置
+    //    String prifiex = null;
+    //    for (int i = parameters.getOffset() - 1; i > 0; i--) {
+    //        if (text.charAt(i) == '{') {
+    //            prifiex = text.substring(i + 1, parameters.getOffset());
+    //            break;
+    //        }
+    //    }
+    //    if (prifiex == null) {
+    //        return EmptyUtil.Array.STRING;
+    //    }
+    //    int indexOf = prifiex.lastIndexOf(".");
+    //    if (indexOf > 0) {
+    //        return prifiex.substring(0, indexOf).split("\\.");
+    //    }
+    //    return EmptyUtil.Array.STRING;
+    //}
+
     @NotNull
-    private String[] getPrefix(@NotNull CompletionParameters parameters) {
-        // 获取前缀
-        String text = parameters.getOriginalFile().getText();
-        // 当前光标的前一个位置
-        String prifiex = null;
-        for (int i = parameters.getOffset() - 1; i > 0; i--) {
-            if (text.charAt(i) == '{') {
-                prifiex = text.substring(i + 1, parameters.getOffset());
-            }
-        }
-        if (prifiex == null) {
-            return EmptyUtil.Array.STRING;
-        }
-        int indexOf = prifiex.lastIndexOf(".");
-        if (indexOf > 0) {
-            return prifiex.substring(0, indexOf).split("\\.");
-        }
-        return EmptyUtil.Array.STRING;
+    private String[] getPrefix(@NotNull CompletionResultSet result) {
+        return result.getPrefixMatcher().getPrefix().split("\\.");
     }
 
-    private boolean prepareProcess(@NotNull CompletionParameters parameters) {
+    /**
+     * 判断是否支持代码完成
+     */
+    private boolean isSupport(@NotNull CompletionParameters parameters) {
         String text = parameters.getOriginalFile().getText();
         for (int i = parameters.getOffset() - 1; i > 0; i--) {
             char c = text.charAt(i);
