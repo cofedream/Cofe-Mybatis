@@ -44,7 +44,8 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
-        <!--<lang.findUsagesProvider language="JAVA" implementationClass=""-->
+        <customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>
+        <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsagesProvider"/>-->
         <!--<lang.findUsagesProvider language="XML" implementationClass="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesProvider"/>-->
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
