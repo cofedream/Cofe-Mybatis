@@ -17,41 +17,42 @@
     <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceInterface="tk.cofedream.plugin.mybatis.service.DomService"
-                        serviceImplementation="tk.cofedream.plugin.mybatis.service.impl.DomServiceImpl"/>
-        <projectService serviceInterface="tk.cofedream.plugin.mybatis.service.MapperService"
-                        serviceImplementation="tk.cofedream.plugin.mybatis.service.impl.MapperServiceImpl"/>
-        <projectService serviceInterface="tk.cofedream.plugin.mybatis.service.JavaPsiService"
-                        serviceImplementation="tk.cofedream.plugin.mybatis.service.impl.JavaPsiServiceImpl"/>
+        <projectService serviceInterface="tk.cofe.plugin.mybatis.service.DomService"
+                        serviceImplementation="tk.cofe.plugin.mybatis.service.impl.DomServiceImpl"/>
+        <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
+                        serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
+        <projectService serviceInterface="tk.cofe.plugin.mybatis.service.JavaPsiService"
+                        serviceImplementation="tk.cofe.plugin.mybatis.service.impl.JavaPsiServiceImpl"/>
         <!--If your plugin targets 2019.1 or later,
         please use extension point com.intellij.dom.fileMetaData instead and specify rootTagName and domVersion/stubVersion in plugin.xml-->
-        <dom.fileDescription implementation="tk.cofedream.plugin.mybatis.dom.mapper.MapperXmlDescription"/>
-        <dom.fileDescription implementation="tk.cofedream.plugin.mybatis.dom.config.ConfigurationXmlDescription"/>
+        <dom.fileDescription implementation="tk.cofe.plugin.mybatis.dom.mapper.MapperXmlDescription"/>
+        <dom.fileDescription implementation="tk.cofe.plugin.mybatis.dom.config.ConfigurationXmlDescription"/>
         <!--参考
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206110419-How-to-implement-go-to-to-implementation-
         -->
         <!--<definitionsSearch implementation="tk.cofedream.plugin.mybatis.search.MapperDefinitionSearch"/>-->
         <!--实现一致-->
-        <definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.MethodToStatementImplementationsSearch"/>
+        <definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.MethodToStatementImplementationsSearch"/>
         <!--<definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.StatementToMethodImplementationsSearch"/>-->
         <!-- Add your extensions here -->
 
         <codeInsight.lineMarkerProvider language="JAVA"
-                                        implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
+                                        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
         <!--<codeInsight.lineMarkerProvider language="JAVA"-->
                                         <!--implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
         <codeInsight.lineMarkerProvider language="XML"
-                                        implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
+                                        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
+        <!--<lang.findUsagesProvider language="JAVA" implementationClass=""-->
         <!--<lang.findUsagesProvider language="XML" implementationClass="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesProvider"/>-->
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
         <!--<gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
         <!--<targetElementEvaluator language="XML" implementationClass="tk.cofedream.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
         <!--<java.elementFinder implementation=""-->
-        <referencesSearch implementation="tk.cofedream.plugin.mybatis.search.FieldReferenceSearch"/>
-        <methodReferencesSearch implementation="tk.cofedream.plugin.mybatis.search.MapperMethodReferencesSearch"/>
+        <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
+        <methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>
         <!--<lang.findUsagesProvider-->
         <!--<psi.referenceContributor language="JAVA"-->
                                   <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
@@ -63,14 +64,14 @@
 
         <!--代码完成,无需指向引用-->
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-        <completion.contributor language="SQL" implementationClass="tk.cofedream.plugin.mybatis.completion.SqlParameterCompletionContributor" order="first"/>
+        <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.SqlParameterCompletionContributor" order="first"/>
 
         <!--代码检查-->
         <localInspection language="XML" shortName="MapperIncludeInspection" applyToDialects="false"
                          bundle="MybatisBundle" key="mapper.inspection.display.name"
                          groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"
                          enabledByDefault="true" level="ERROR"
-                         implementationClass="tk.cofedream.plugin.mybatis.dom.inspection.MapperIncludeInspection"/>
+                         implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperIncludeInspection"/>
     </extensions>
 
     <actions>
