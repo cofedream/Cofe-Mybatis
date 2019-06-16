@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.1'
+    id 'org.jetbrains.intellij' version '0.4.8'
 }
 
 apply plugin: 'idea'
@@ -18,12 +18,13 @@ repositories {
 }
 
 intellij {
-    pluginName 'Intellij-mybatis'
+    pluginName 'Cofe-mybatis'
     version '2018.3.2'
     type "IU"
     plugins 'Spring','DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
 }
+
 patchPluginXml {
     changeNotes """
       1.修复Xml导航到方法的Bug.<br>

@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>tk.cofedream.plugin.mybatis</id>
-    <name>IntelliJ-Mybatis</name>
+    <name>Cofe-Mybatis</name>
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
     <description><![CDATA[
