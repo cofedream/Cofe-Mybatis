@@ -13,7 +13,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor;
-import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
+import tk.cofedream.plugin.mybatis.util.CollectionUtils;
 
 import java.util.Collections;
 

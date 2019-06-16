@@ -49,8 +49,8 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
     List<Result> getResults();
 
     @NotNull
-    default List<PropertyAttribute> getPropertyAttributes(){
-        return new ArrayList<PropertyAttribute>(){{
+    default List<PropertyAttribute> getPropertyAttributes() {
+        return new ArrayList<PropertyAttribute>() {{
             this.addAll(getIds());
             this.addAll(getResults());
         }};

@@ -1,7 +1,7 @@
 package tk.cofedream.plugin.mybatis.dom.mapper.model.attirubte;
 
 import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.Optional;
 

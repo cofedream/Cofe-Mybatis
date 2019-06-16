@@ -17,9 +17,9 @@ import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.enums.AttributeEnums;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.EnumUtil;
-import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.EnumUtils;
+import tk.cofedream.plugin.mybatis.util.PsiTypeUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +52,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         if (xmlTag == null) {
             return;
         }
-        EnumUtil.parse(StatementAttribute.values(), xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
+        EnumUtils.parse(StatementAttribute.values(), xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
     }
 
     private enum StatementAttribute implements AttributeEnums {
@@ -104,7 +104,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                     if (type == null) {
                         return;
                     }
-                    if (PsiTypeUtil.notCustomType(type)) {
+                    if (PsiTypeUtils.notCustomType(type)) {
                         result.addAllElements(notCustomType.get(type.getPresentableText()));
                     } else {
                         if (type instanceof PsiClassReferenceType) {
@@ -113,7 +113,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                             if (StringUtils.isBlank(referenceName)) {
                                 return;
                             }
-                            if (PsiTypeUtil.notCustomType(referenceName)) {
+                            if (PsiTypeUtils.notCustomType(referenceName)) {
                                 result.addAllElements(notCustomType.get(referenceName));
                             } else {
                                 result.addElement(createLookupElementBuilder(reference.getQualifiedName(), reference.getQualifiedName(), referenceName));

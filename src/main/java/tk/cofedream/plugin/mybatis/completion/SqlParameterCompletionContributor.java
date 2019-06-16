@@ -5,7 +5,6 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -21,18 +20,16 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.util.PlatformIcons;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomUtil;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofedream.plugin.mybatis.constants.Empty;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.enums.JavaTypeEnum;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.DomUtils;
-import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.DomUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import javax.swing.*;
 
@@ -76,7 +73,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
     private void process(@NonNull JavaPsiService javaPsiService, @NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixArr) {
         PsiParameter[] psiParameters = psiMethod.getParameterList().getParameters();
         //if (prefixArr.length == 0) {
-            process(javaPsiService, psiParameters, result);
+        process(javaPsiService, psiParameters, result);
         //} else {
         //    // 处理第一个前缀
         //    PsiClassReferenceType prefixReferenceType = getPrefixReferenceType(javaPsiService, psiParameters, prefixArr[0]);
@@ -286,7 +283,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
     private String[] getPrefix(@NotNull CompletionResultSet result) {
         String prefix = result.getPrefixMatcher().getPrefix();
         if (StringUtils.isBlank(prefix)) {
-            return EmptyUtil.Array.STRING;
+            return Empty.Array.STRING;
         }
         return prefix.split("\\.");
     }

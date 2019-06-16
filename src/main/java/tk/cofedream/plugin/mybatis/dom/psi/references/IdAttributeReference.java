@@ -9,10 +9,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
+import tk.cofedream.plugin.mybatis.constants.Empty;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));
         }
-        return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
+        return result.toArray(Empty.Array.RESOLVE_RESULT);
     }
 
 }

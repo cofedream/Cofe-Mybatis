@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.utils;
+package tk.cofedream.plugin.mybatis.util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * @author : zhengrf
  * @date : 2019-01-01
  */
-public class JavaPsiUtils {
+public final class JavaPsiUtils {
 
     /**
      * 判断 PsiElement 是否为接口

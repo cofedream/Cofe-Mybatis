@@ -1,4 +1,4 @@
-package tk.cofedream.plugin.mybatis.utils;
+package tk.cofedream.plugin.mybatis.util;
 
 import java.util.Collection;
 
@@ -6,7 +6,8 @@ import java.util.Collection;
  * @author : zhengrf
  * @date : 2019-01-04
  */
-public class CollectionUtils {
+public final class CollectionUtils {
+
     public static boolean isEmpty(Object[] objects) {
         return objects == null || objects.length == 0;
     }

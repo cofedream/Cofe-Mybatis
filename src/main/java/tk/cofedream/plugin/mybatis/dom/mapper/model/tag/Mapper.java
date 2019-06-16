@@ -10,7 +10,7 @@ import com.intellij.util.xml.SubTagList;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import tk.cofedream.plugin.mybatis.dom.MyBatisDomConstants;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;

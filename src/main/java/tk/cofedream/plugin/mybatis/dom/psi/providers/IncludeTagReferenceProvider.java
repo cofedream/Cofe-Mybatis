@@ -10,10 +10,10 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
+import tk.cofedream.plugin.mybatis.constants.Empty;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Sql;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
             Optional<Mapper> mapper = MapperService.getMapper(originalElement);
             if (!mapper.isPresent()) {
-                return EmptyUtil.Array.RESOLVE_RESULT;
+                return Empty.Array.RESOLVE_RESULT;
             }
             List<Sql> sqls = mapper.get().getSqls();
             List<ResolveResult> result = new ArrayList<>();
@@ -56,7 +56,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
                     }
                 }
             }));
-            return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
+            return result.toArray(Empty.Array.RESOLVE_RESULT);
         }
 
         @NotNull

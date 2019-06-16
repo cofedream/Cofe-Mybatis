@@ -16,7 +16,7 @@ import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.icons.MybatisIcons;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.JavaPsiUtils;
+import tk.cofedream.plugin.mybatis.util.JavaPsiUtils;
 
 import javax.swing.*;
 import java.util.Collection;

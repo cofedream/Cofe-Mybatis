@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.8'
+    id 'org.jetbrains.intellij' version '0.4.9'
 }
 
 apply plugin: 'idea'
@@ -21,18 +21,14 @@ intellij {
     pluginName 'Cofe-mybatis'
     version '2018.3.2'
     type "IU"
-    plugins 'Spring','DatabaseTools'
+    plugins 'Spring', 'DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
 }
 
 patchPluginXml {
     changeNotes """
-      1.修复Xml导航到方法的Bug.<br>
-      2.新增<include>片段导航至<sql>.<br>
-      3.<resultMap extends="">导航.<br>
-        <id><result>标签导航,'property'参考导航,'jdbcType'属性参考<br>
-      4.新增<select resultMap="">导航至对应的<resultMap id="">.<br>
-      <em>功能新增,Bug修复</em>"""
+
+    """
 }
 
 tasks.withType(JavaCompile) {

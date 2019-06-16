@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
-import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
-import tk.cofedream.plugin.mybatis.utils.DomUtils;
+import tk.cofedream.plugin.mybatis.util.CollectionUtils;
+import tk.cofedream.plugin.mybatis.util.DomUtils;
 
 import java.util.Collections;
 

@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.CollectionUtils;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.CollectionUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

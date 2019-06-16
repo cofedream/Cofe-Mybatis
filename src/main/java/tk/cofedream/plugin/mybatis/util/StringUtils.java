@@ -1,10 +1,10 @@
-package tk.cofedream.plugin.mybatis.utils;
+package tk.cofedream.plugin.mybatis.util;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-08
  */
-public class StringUtils {
+public final class StringUtils {
 
     /**
      * 字符串不为空

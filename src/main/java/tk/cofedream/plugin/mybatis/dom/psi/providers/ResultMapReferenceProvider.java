@@ -13,11 +13,11 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
+import tk.cofedream.plugin.mybatis.constants.Empty;
 import tk.cofedream.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ResultMap;
 import tk.cofedream.plugin.mybatis.service.MapperService;
-import tk.cofedream.plugin.mybatis.utils.EmptyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +53,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return EmptyUtil.Array.RESOLVE_RESULT;
+                    return Empty.Array.RESOLVE_RESULT;
                 }
                 Optional<String> extendsValue = domElement.getExtendsValue();
                 if (!extendsValue.isPresent()) {
-                    return EmptyUtil.Array.RESOLVE_RESULT;
+                    return Empty.Array.RESOLVE_RESULT;
                 }
                 Optional<Mapper> mapper = MapperService.getMapper((XmlAttributeValue) myElement);
                 if (!mapper.isPresent()) {
-                    return EmptyUtil.Array.RESOLVE_RESULT;
+                    return Empty.Array.RESOLVE_RESULT;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.get().getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
@@ -69,7 +69,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
-                return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
+                return result.toArray(Empty.Array.RESOLVE_RESULT);
             }
 
             @NotNull
@@ -114,11 +114,11 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return EmptyUtil.Array.RESOLVE_RESULT;
+                    return Empty.Array.RESOLVE_RESULT;
                 }
                 Optional<String> idValue = domElement.getIdValue();
                 if (!idValue.isPresent()) {
-                    return EmptyUtil.Array.RESOLVE_RESULT;
+                    return Empty.Array.RESOLVE_RESULT;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 MapperService.getMapper((XmlAttributeValue) myElement).ifPresent(mapper -> {
@@ -131,7 +131,7 @@ public class ResultMapReferenceProvider {
                         });
                     });
                 });
-                return result.toArray(EmptyUtil.Array.RESOLVE_RESULT);
+                return result.toArray(Empty.Array.RESOLVE_RESULT);
             }
 
         }

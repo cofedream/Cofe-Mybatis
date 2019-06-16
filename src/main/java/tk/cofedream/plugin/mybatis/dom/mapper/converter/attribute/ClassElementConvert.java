@@ -1,7 +1,6 @@
 package tk.cofedream.plugin.mybatis.dom.mapper.converter.attribute;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ResolvingConverter;
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofedream.plugin.mybatis.dom.mapper.model.tag.Select;
 import tk.cofedream.plugin.mybatis.service.JavaPsiService;
-import tk.cofedream.plugin.mybatis.utils.PsiTypeUtil;
-import tk.cofedream.plugin.mybatis.utils.StringUtils;
+import tk.cofedream.plugin.mybatis.util.PsiTypeUtils;
+import tk.cofedream.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,7 +113,7 @@ public class SelectTagConverter {
                 if (type == null) {
                     return;
                 }
-                if (PsiTypeUtil.notCustomType(type)) {
+                if (PsiTypeUtils.notCustomType(type)) {
                     result.addAll(BaseType.get(type.getPresentableText()));
                 } else {
                     if (type instanceof PsiClassReferenceType) {
@@ -122,7 +122,7 @@ public class SelectTagConverter {
                         if (StringUtils.isBlank(referenceName)) {
                             return;
                         }
-                        if (PsiTypeUtil.notCustomType(referenceName)) {
+                        if (PsiTypeUtils.notCustomType(referenceName)) {
                             result.addAll(BaseType.get(referenceName));
                         } else {
                             result.add(reference.getQualifiedName());
