@@ -11,9 +11,9 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.List;
@@ -32,6 +32,9 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
     @Override
     public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
         PsiElement fieldElement = queryParameters.getElementToSearch();
+        //System.out.println("FieldReferenceSearch===============");
+        //System.out.println(fieldElement.getText());
+        //System.out.println("FieldReferenceSearch===============");
         if (!(fieldElement instanceof PsiField)) {
             return;
         }

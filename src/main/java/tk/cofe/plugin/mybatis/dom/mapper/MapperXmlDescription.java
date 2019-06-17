@@ -3,14 +3,14 @@ package tk.cofe.plugin.mybatis.dom.mapper;
 import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
+import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
-import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
 
 import javax.swing.*;
 
 /**
- * 标注 mybatis mapper XML 文件
+ * 标注 mybatis mapper XML 文件,并提供值参考
  * @author : zhengrf
  * @date : 2019-01-02
  */

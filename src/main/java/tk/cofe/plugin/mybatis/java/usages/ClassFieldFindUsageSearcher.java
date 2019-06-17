@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 public class ClassFieldFindUsageSearcher extends CustomUsageSearcher {
     @Override
     public void processElementUsages(@NotNull PsiElement element, @NotNull Processor<Usage> processor, @NotNull FindUsagesOptions options) {
-        System.out.println(element.getText());
+        //System.out.println("ClassFieldFindUsageSearcher====================");
+        //System.out.println(element.getText());
+        //System.out.println("ClassFieldFindUsageSearcher====================");
     }
 }
