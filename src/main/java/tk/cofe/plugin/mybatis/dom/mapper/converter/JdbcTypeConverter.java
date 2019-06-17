@@ -1,4 +1,4 @@
-package tk.cofe.plugin.mybatis.dom.mapper.converter.attribute;
+package tk.cofe.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;

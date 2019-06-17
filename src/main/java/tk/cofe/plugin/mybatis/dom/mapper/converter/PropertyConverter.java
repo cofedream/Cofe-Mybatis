@@ -1,4 +1,4 @@
-package tk.cofe.plugin.mybatis.dom.mapper.converter.attribute;
+package tk.cofe.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;

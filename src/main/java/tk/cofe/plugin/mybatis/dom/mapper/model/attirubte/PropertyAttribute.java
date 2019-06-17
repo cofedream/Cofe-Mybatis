@@ -5,7 +5,7 @@ import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.mapper.converter.attribute.PropertyConverter;
+import tk.cofe.plugin.mybatis.dom.mapper.converter.PropertyConverter;
 
 /**
  * 字段属性

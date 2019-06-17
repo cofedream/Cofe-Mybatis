@@ -6,7 +6,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.converter.attribute.ClassElementConvert;
+import tk.cofe.plugin.mybatis.dom.mapper.converter.ClassElementConvert;
 import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 

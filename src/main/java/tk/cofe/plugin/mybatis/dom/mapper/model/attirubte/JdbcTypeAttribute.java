@@ -5,7 +5,7 @@ import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.converter.attribute.JdbcTypeConverter;
+import tk.cofe.plugin.mybatis.dom.mapper.converter.JdbcTypeConverter;
 
 /**
  * @author : zhengrf
