@@ -24,8 +24,6 @@ import java.util.Optional;
 public interface Mapper extends DomElement {
     String TAG_NAME = "mapper";
 
-    // get
-
     @Required
     @NameValue
     @NotNull

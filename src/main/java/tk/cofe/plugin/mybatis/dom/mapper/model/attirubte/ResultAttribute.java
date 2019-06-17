@@ -28,6 +28,6 @@ public interface ResultAttribute extends DomElement {
      */
     @NotNull
     default Optional<String> getResultValue() {
-        return BaseAttribute.getAttributeVlaue(getResult());
+        return AttributeUtils.getAttributeVlaue(getResult());
     }
 }

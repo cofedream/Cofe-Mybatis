@@ -28,7 +28,7 @@ public interface TypeAttirbute extends DomElement {
      */
     @NotNull
     default Optional<String> getTypeValue() {
-        return BaseAttribute.getAttributeVlaue(getType());
+        return AttributeUtils.getAttributeVlaue(getType());
     }
 
 }

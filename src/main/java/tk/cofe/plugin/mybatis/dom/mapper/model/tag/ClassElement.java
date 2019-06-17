@@ -28,4 +28,5 @@ public interface ClassElement extends IdAttribute, DynamicSql {
     default Optional<String> getNamespaceValue() {
         return Optional.ofNullable(DomUtils.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
+
 }

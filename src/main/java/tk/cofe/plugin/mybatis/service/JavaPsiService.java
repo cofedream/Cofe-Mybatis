@@ -24,19 +24,19 @@ public interface JavaPsiService {
     }
 
     @NotNull
-    Optional<PsiClass> findClass(@NotNull ClassElement element);
+    Optional<PsiClass> findPsiClass(@NotNull ClassElement element);
 
     @NotNull
-    Optional<PsiMethod> findMethod(@Nullable ClassElement element);
+    Optional<PsiMethod> findPsiMethod(@Nullable ClassElement element);
 
     @NotNull
-    Optional<PsiMethod[]> findMethods(@Nullable ClassElement element);
+    Optional<PsiMethod[]> findPsiMethods(@Nullable ClassElement element);
 
     @NotNull
-    Optional<PsiMethod[]> findMethod(@NotNull Mapper mapper, String methodName);
+    Optional<PsiMethod[]> findPsiMethod(@NotNull Mapper mapper, String methodName);
 
     @NonNull
-    Optional<PsiClass> getPsiClass(@NotNull String qualifiedName);
+    Optional<PsiClass> findPsiClass(@NotNull String qualifiedName);
 
     void process(@NotNull PsiElement target, @NotNull Processor processor);
 }

@@ -28,6 +28,6 @@ public interface IdAttribute extends DomElement {
      */
     @NotNull
     default Optional<String> getIdValue() {
-        return BaseAttribute.getAttributeVlaue(getId());
+        return AttributeUtils.getAttributeVlaue(getId());
     }
 }

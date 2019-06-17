@@ -65,7 +65,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
             ClassElement classElement = DomUtils.getTargetElement(elementAt, ClassElement.class);
             if (classElement != null) {
                 JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
-                javaPsiService.findMethod(classElement).ifPresent(psiMethod -> process(javaPsiService, psiMethod, result, getPrefix(result)));
+                javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(javaPsiService, psiMethod, result, getPrefix(result)));
             }
         }
     }
@@ -83,7 +83,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         //    }
         //    if (prefixReferenceType != null) {
         //        String qualifiedName = prefixReferenceType.getReference().getQualifiedName();
-        //        javaPsiService.getPsiClass(qualifiedName).ifPresent(psiClass -> {
+        //        javaPsiService.findPsiClass(qualifiedName).ifPresent(psiClass -> {
         //            String tailText = getTailText(psiClass);
         //            for (PsiField field : psiClass.getAllFields()) {
         //                String join = getLookupString(prefixArr, field.getName());
@@ -126,7 +126,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
 
     private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType referenceType, @NotNull CompletionResultSet result) {
         String qualifiedName = referenceType.getReference().getQualifiedName();
-        javaPsiService.getPsiClass(qualifiedName).ifPresent(psiClass -> {
+        javaPsiService.findPsiClass(qualifiedName).ifPresent(psiClass -> {
             String tailText = getTailText(psiClass);
             for (PsiField field : psiClass.getAllFields()) {
                 result.addElement(createLookupElement(field.getName(), field.getType().getPresentableText(), tailText, PlatformIcons.FIELD_ICON));
@@ -180,7 +180,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
      */
     @Nullable
     private PsiClassReferenceType getPrefixReferenceType(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType prefixReferenceType, @NotNull String referenceKey) {
-        return javaPsiService.getPsiClass((prefixReferenceType).getReference().getQualifiedName()).map(psiClass -> {
+        return javaPsiService.findPsiClass((prefixReferenceType).getReference().getQualifiedName()).map(psiClass -> {
             for (PsiField field : psiClass.getAllFields()) {
                 if (referenceKey.equals(field.getName()) && JavaTypeEnum.parse(field.getType()) == JavaTypeEnum.Custom) {
                     return ((PsiClassReferenceType) field.getType());

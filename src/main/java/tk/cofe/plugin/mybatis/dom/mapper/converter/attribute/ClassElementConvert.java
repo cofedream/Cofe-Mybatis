@@ -31,7 +31,7 @@ public class ClassElementConvert {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findClass(classElement).map(psiClass -> {
+            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement).map(psiClass -> {
                 Collection<String> res = new HashSet<>();
                 for (PsiMethod method : psiClass.getMethods()) {
                     res.add(method.getName());
@@ -47,7 +47,7 @@ public class ClassElementConvert {
                 return null;
             }
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
-            return JavaPsiService.getInstance(context.getProject()).findMethod(classElement).map(psiMethod -> {
+            return JavaPsiService.getInstance(context.getProject()).findPsiMethod(classElement).map(psiMethod -> {
                 if (methodName.equals(psiMethod.getName())) {
                     return psiMethod;
                 }

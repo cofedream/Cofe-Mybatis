@@ -49,7 +49,7 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         }
         JavaPsiService javaPsiService = JavaPsiService.getInstance(queryParameters.getProject());
         MapperService.getInstance(queryParameters.getProject()).findAllMappers().forEach(mapper -> mapper.getResultMaps().forEach(resultMap -> {
-            resultMap.getTypeValue().ifPresent(type -> javaPsiService.getPsiClass(type).ifPresent(typeClass -> {
+            resultMap.getTypeValue().ifPresent(type -> javaPsiService.findPsiClass(type).ifPresent(typeClass -> {
                 if (isTarget(psiClass, classQualifiedName)) {
                     process(resultMap.getPropertyAttributes(), psiField, consumer);
                 }

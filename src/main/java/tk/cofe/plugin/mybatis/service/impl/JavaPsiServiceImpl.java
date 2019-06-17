@@ -66,37 +66,37 @@ public class JavaPsiServiceImpl implements JavaPsiService {
 
     @NonNull
     @Override
-    public Optional<PsiClass> getPsiClass(@NotNull String qualifiedName) {
+    public Optional<PsiClass> findPsiClass(@NotNull String qualifiedName) {
         return Optional.ofNullable(javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project)));
     }
 
     @NotNull
     @Override
-    public Optional<PsiMethod> findMethod(@Nullable ClassElement element) {
+    public Optional<PsiMethod> findPsiMethod(@Nullable ClassElement element) {
         // todo PsiClassImplUtil.findMethodsByName()
-        return findMethods(element).flatMap(psiMethods -> psiMethods.length > 0 ? Optional.of(psiMethods[0]) : Optional.empty());
+        return findPsiMethods(element).flatMap(psiMethods -> psiMethods.length > 0 ? Optional.of(psiMethods[0]) : Optional.empty());
     }
 
     @NotNull
     @Override
-    public Optional<PsiMethod[]> findMethods(@Nullable ClassElement element) {
+    public Optional<PsiMethod[]> findPsiMethods(@Nullable ClassElement element) {
         if (element == null || !element.getIdValue().isPresent()) {
             return Optional.empty();
         }
         return element.getNamespaceValue().flatMap(qualifiedName ->
-                getPsiClass(qualifiedName).flatMap(psiClass ->
+                findPsiClass(qualifiedName).flatMap(psiClass ->
                         element.getIdValue().flatMap(id -> Optional.of(psiClass.findMethodsByName(id, false)))));
     }
 
     @NotNull
     @Override
-    public Optional<PsiMethod[]> findMethod(@NotNull Mapper mapper, String methodName) {
-        return mapper.getNamespaceValue().flatMap(namespace -> getPsiClass(namespace).flatMap(psiClass -> Optional.of(psiClass.findMethodsByName(methodName, false))));
+    public Optional<PsiMethod[]> findPsiMethod(@NotNull Mapper mapper, String methodName) {
+        return mapper.getNamespaceValue().flatMap(namespace -> findPsiClass(namespace).flatMap(psiClass -> Optional.of(psiClass.findMethodsByName(methodName, false))));
     }
 
     @NotNull
     @Override
-    public Optional<PsiClass> findClass(@NotNull ClassElement element) {
-        return element.getNamespaceValue().flatMap(this::getPsiClass);
+    public Optional<PsiClass> findPsiClass(@NotNull ClassElement element) {
+        return element.getNamespaceValue().flatMap(this::findPsiClass);
     }
 }

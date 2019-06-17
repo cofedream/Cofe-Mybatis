@@ -34,7 +34,7 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
         if (MapperService.isBaseStatementElement(tag)) {
             Project project = myElement.getProject();
-            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtils.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
+            JavaPsiService.getInstance(project).findPsiMethod((ClassElement) DomUtils.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
         }
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));

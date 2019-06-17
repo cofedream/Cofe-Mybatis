@@ -39,7 +39,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!(domElement instanceof ClassElement)) {
             return null;
         }
-        Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findMethods(((ClassElement) domElement));
+        Optional<PsiMethod[]> method = JavaPsiService.getInstance(element.getProject()).findPsiMethods(((ClassElement) domElement));
         return method.map(psiMethods -> {
             if (psiMethods.length == 0) {
                 return null;

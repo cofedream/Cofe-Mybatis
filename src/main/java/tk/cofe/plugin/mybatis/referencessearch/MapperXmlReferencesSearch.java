@@ -47,9 +47,8 @@ public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, R
         }
         XmlTag tag = PsiTreeUtil.getParentOfType(elementToSearch.getContext(), XmlTag.class, true);
         if (MapperService.isBaseStatementElement(tag)) {
-            ClassElement classElement = (ClassElement) DomUtils.getDomElement(tag);
-            Optional.ofNullable(classElement).ifPresent(element -> element.getNamespaceValue().ifPresent(qualifiedName ->
-                    JavaPsiService.getInstance(project).getPsiClass(qualifiedName).ifPresent(psiClass -> {
+            Optional.ofNullable((ClassElement) DomUtils.getDomElement(tag)).ifPresent(element -> element.getNamespaceValue().ifPresent(qualifiedName ->
+                    JavaPsiService.getInstance(project).findPsiClass(qualifiedName).ifPresent(psiClass -> {
                         PsiMethod[] methods = psiClass.getMethods();
                         for (PsiMethod method : methods) {
                             PsiIdentifier nameIdentifier = method.getNameIdentifier();

@@ -30,7 +30,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
         if (resultMap == null) {
             return Collections.emptyList();
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).getPsiClass(type).map(psiClass -> {
+        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type).map(psiClass -> {
             Collection<String> result = new ArrayList<>();
             for (PsiField field : psiClass.getAllFields()) {
                 if (!field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC)) {
@@ -57,7 +57,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
         if (resultMap == null) {
             return null;
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).getPsiClass(type).map(psiClass -> {
+        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type).map(psiClass -> {
             for (PsiField field : psiClass.getAllFields()) {
                 if (o.equals(field.getName())) {
                     return field;
