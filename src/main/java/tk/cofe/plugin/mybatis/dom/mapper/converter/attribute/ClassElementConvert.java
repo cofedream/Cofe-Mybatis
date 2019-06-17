@@ -1,9 +1,9 @@
 package tk.cofe.plugin.mybatis.dom.mapper.converter.attribute;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +14,7 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * @author : zhengrf
@@ -25,14 +26,18 @@ public class ClassElementConvert {
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
-            //DomElement invocationElement = context.getInvocationElement();
-            //ClassElement classElement = DomUtils.getParentOfType(invocationElement, ClassElement.class, true);
-            //if (classElement == null) {
-            //    return Collections.emptyList();
-            //}
-            //GenericAttributeValue<String> classElementId = classElement.getId();
-            // todo ID值提示
-            return Collections.emptyList();
+            DomElement currentElement = context.getInvocationElement();
+            ClassElement classElement = DomUtils.getParentOfType(currentElement, ClassElement.class, true);
+            if (classElement == null) {
+                return Collections.emptyList();
+            }
+            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findClass(classElement).map(psiClass -> {
+                Collection<String> res = new HashSet<>();
+                for (PsiMethod method : psiClass.getMethods()) {
+                    res.add(method.getName());
+                }
+                return res;
+            }).orElse(Collections.emptyList())).orElse(Collections.emptyList());
         }
 
         @Nullable

@@ -73,7 +73,8 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     @NotNull
     @Override
     public Optional<PsiMethod> findMethod(@Nullable ClassElement element) {
-        return findMethods(element).flatMap(psiMethods -> Optional.of(psiMethods[0]));
+        // todo PsiClassImplUtil.findMethodsByName()
+        return findMethods(element).flatMap(psiMethods -> psiMethods.length > 0 ? Optional.of(psiMethods[0]) : Optional.empty());
     }
 
     @NotNull
