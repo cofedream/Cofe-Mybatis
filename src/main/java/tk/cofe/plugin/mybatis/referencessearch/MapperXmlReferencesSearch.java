@@ -11,13 +11,13 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofe.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 
@@ -47,7 +47,7 @@ public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, R
         }
         XmlTag tag = PsiTreeUtil.getParentOfType(elementToSearch.getContext(), XmlTag.class, true);
         if (MapperService.isBaseStatementElement(tag)) {
-            ClassElement classElement = (ClassElement) DomUtil.getDomElement(tag);
+            ClassElement classElement = (ClassElement) DomUtils.getDomElement(tag);
             Optional.ofNullable(classElement).ifPresent(element -> element.getNamespaceValue().ifPresent(qualifiedName ->
                     JavaPsiService.getInstance(project).getPsiClass(qualifiedName).ifPresent(psiClass -> {
                         PsiMethod[] methods = psiClass.getMethods();

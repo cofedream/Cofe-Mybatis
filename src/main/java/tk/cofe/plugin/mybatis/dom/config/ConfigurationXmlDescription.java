@@ -3,9 +3,9 @@ package tk.cofe.plugin.mybatis.dom.config;
 import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
+import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofe.plugin.mybatis.dom.config.model.ConfigurationXml;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
-import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
 
 import javax.swing.*;
 

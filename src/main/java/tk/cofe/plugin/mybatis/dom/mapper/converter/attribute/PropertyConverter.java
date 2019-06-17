@@ -6,12 +6,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
     @NotNull
     @Override
     public Collection<? extends String> getVariants(ConvertContext context) {
-        ResultMap resultMap = DomUtil.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
+        ResultMap resultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
         if (resultMap == null) {
             return Collections.emptyList();
         }
@@ -53,7 +53,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
     @Nullable
     @Override
     public PsiElement resolve(String o, ConvertContext context) {
-        ResultMap resultMap = DomUtil.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
+        ResultMap resultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
         if (resultMap == null) {
             return null;
         }

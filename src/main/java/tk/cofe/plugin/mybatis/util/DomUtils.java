@@ -15,7 +15,7 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-01
  */
-public final class DomUtils {
+public final class DomUtils extends DomUtil {
 
     public static Optional<DomTarget> resolveToDomTarget(@NotNull PsiElement element) {
         if (element instanceof DomTarget) {
@@ -31,11 +31,11 @@ public final class DomUtils {
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T> T getTargetElement(PsiElement element, final Class<T> requiredClass) {
-        DomElement domElement = DomUtil.getDomElement(element);
+        DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return ((T) domElement);
         }
-        return DomUtil.getParentOfType(domElement, requiredClass, true);
+        return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
 }

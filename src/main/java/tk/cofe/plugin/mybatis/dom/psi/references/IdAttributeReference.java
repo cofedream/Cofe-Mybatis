@@ -7,12 +7,12 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
         if (MapperService.isBaseStatementElement(tag)) {
             Project project = myElement.getProject();
-            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtil.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
+            JavaPsiService.getInstance(project).findMethod((ClassElement) DomUtils.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
         }
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));

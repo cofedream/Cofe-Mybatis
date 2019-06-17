@@ -11,12 +11,12 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -95,7 +95,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
 
             @Override
             void process(XmlTag xmlTag, CompletionResultSet result) {
-                ClassElement classElement = (ClassElement) DomUtil.getDomElement(xmlTag);
+                ClassElement classElement = (ClassElement) DomUtils.getDomElement(xmlTag);
                 if (classElement == null) {
                     return;
                 }

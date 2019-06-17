@@ -8,10 +8,10 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -12,8 +12,8 @@ import com.intellij.refactoring.rename.RenameUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
+import tk.cofe.plugin.mybatis.util.CollectionUtils;
 
 import java.util.Collections;
 

@@ -10,7 +10,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
@@ -18,6 +17,7 @@ import tk.cofe.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class ResultMapReferenceProvider {
             @NotNull
             @Override
             public ResolveResult[] multiResolve(boolean incompleteCode) {
-                ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
+                ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
@@ -75,7 +75,7 @@ public class ResultMapReferenceProvider {
             @NotNull
             @Override
             public Object[] getVariants() {
-                ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
+                ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
                     return new Object[0];
                 }
@@ -112,7 +112,7 @@ public class ResultMapReferenceProvider {
             @NotNull
             @Override
             public ResolveResult[] multiResolve(boolean incompleteCode) {
-                ResultMap domElement = (ResultMap) DomUtil.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
+                ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
                     return Empty.Array.RESOLVE_RESULT;
                 }

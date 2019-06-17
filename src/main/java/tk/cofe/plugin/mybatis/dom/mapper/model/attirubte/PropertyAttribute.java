@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.mapper.converter.attribute.PropertyConverter;
 
 /**
+ * 字段属性
  * @author : zhengrf
  * @date : 2019-01-21
  */

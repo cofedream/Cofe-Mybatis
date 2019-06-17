@@ -2,12 +2,12 @@ package tk.cofe.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class ResultMapConverter {
         @Nullable
         @Override
         public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
-            ResultMap domElement = (ResultMap) DomUtil.getDomElement(context.getTag());
+            ResultMap domElement = (ResultMap) DomUtils.getDomElement(context.getTag());
             if (domElement == null) {
                 return Collections.emptyList();
             }

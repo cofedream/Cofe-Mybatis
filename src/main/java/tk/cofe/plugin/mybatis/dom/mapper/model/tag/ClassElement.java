@@ -2,13 +2,13 @@ package tk.cofe.plugin.mybatis.dom.mapper.model.tag;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
-import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.mapper.converter.attribute.ClassElementConvert;
 import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 
@@ -26,6 +26,6 @@ public interface ClassElement extends IdAttribute, DynamicSql {
     GenericAttributeValue<String> getId();
 
     default Optional<String> getNamespaceValue() {
-        return Optional.ofNullable(DomUtil.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
+        return Optional.ofNullable(DomUtils.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 }

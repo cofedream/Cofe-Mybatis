@@ -8,15 +8,15 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Select;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
+import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,7 +106,7 @@ public class SelectTagConverter {
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
-            Select select = (Select) DomUtil.getDomElement(context.getTag());
+            Select select = (Select) DomUtils.getDomElement(context.getTag());
             ArrayList<String> result = new ArrayList<>();
             JavaPsiService.getInstance(context.getProject()).findMethod(select).ifPresent(psiMethod -> {
                 PsiType type = psiMethod.getReturnType();

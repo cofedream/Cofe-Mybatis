@@ -8,11 +8,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,7 +33,7 @@ public class StatementToMethodImplementationsSearch implements QueryExecutor<Psi
             if (!MapperService.isBaseStatementElement(xmlTag)) {
                 return;
             }
-            ClassElement classElement = (ClassElement) DomUtil.getDomElement(xmlTag);
+            ClassElement classElement = (ClassElement) DomUtils.getDomElement(xmlTag);
             if (classElement == null) {
                 return;
             }

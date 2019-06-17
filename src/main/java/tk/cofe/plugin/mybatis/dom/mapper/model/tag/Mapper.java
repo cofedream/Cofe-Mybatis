@@ -9,8 +9,8 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
+import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;

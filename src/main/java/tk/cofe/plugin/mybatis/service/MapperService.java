@@ -10,7 +10,6 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
@@ -21,6 +20,7 @@ import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Update;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public abstract class MapperService {
 
     @NotNull
     public static Optional<Mapper> getMapper(@NotNull DomElement element) {
-        return Optional.ofNullable(DomUtil.getParentOfType(element, Mapper.class, true));
+        return Optional.ofNullable(DomUtils.getParentOfType(element, Mapper.class, true));
     }
 
     @NotNull
@@ -79,7 +79,7 @@ public abstract class MapperService {
             return false;
         }
         // todo 下面两个判断可以合并
-        DomElement domElement = DomUtil.getDomElement(xmlElement);
+        DomElement domElement = DomUtils.getDomElement(xmlElement);
         if (!(domElement instanceof ClassElement)) {
             return false;
         }

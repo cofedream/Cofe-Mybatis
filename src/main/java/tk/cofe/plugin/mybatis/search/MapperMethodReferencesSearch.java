@@ -6,11 +6,11 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofe.plugin.mybatis.dom.psi.references.IdAttributeReference;
+import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
 import java.util.Optional;

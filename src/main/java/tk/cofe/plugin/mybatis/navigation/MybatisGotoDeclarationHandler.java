@@ -8,13 +8,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
 
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
             @Override
             Optional<? extends PsiElement> process(PsiElement element) {
                 Project project = element.getProject();
-                Optional<ClassElement> domElement = Optional.ofNullable(DomUtil.findDomElement(element, ClassElement.class));
+                Optional<ClassElement> domElement = Optional.ofNullable(DomUtils.findDomElement(element, ClassElement.class));
                 JavaPsiService instance = JavaPsiService.getInstance(project);
                 return domElement.flatMap(targetElement -> instance.findMethods(targetElement).map(psiMethods -> {
                     for (PsiMethod psiMethod : psiMethods) {
