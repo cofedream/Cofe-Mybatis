@@ -50,9 +50,13 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @NotNull
     default List<PropertyAttribute> getPropertyAttributes() {
-        return new ArrayList<PropertyAttribute>() {{
-            this.addAll(getIds());
-            this.addAll(getResults());
-        }};
+        return new ArrayList<PropertyAttribute>() {
+            private static final long serialVersionUID = 3671821261060933651L;
+
+            {
+                this.addAll(getIds());
+                this.addAll(getResults());
+            }
+        };
     }
 }

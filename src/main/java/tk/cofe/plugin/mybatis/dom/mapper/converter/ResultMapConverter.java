@@ -4,7 +4,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -32,17 +31,19 @@ public class ResultMapConverter {
                 return Collections.emptyList();
             }
             return mapper.getResultMaps().stream()
-                    .filter(resultMap -> domElement.getIdValue().map(selfId -> !selfId.equals(resultMap.getIdValue().orElse(""))).orElse(false))
-                    .map(resultMap -> resultMap.getId().getXmlAttributeValue()).collect(Collectors.toList());
+                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
+                    .map(resultMap -> resultMap.getId() == null ? null : resultMap.getId().getXmlAttributeValue())
+                    .collect(Collectors.toList());
         }
 
         @Override
-        protected boolean isTarget(@NotNull ConvertContext selfContext) {
-            return selfContext.getInvocationElement().getParent() instanceof ResultMap;
+        protected boolean isTarget(@NotNull ConvertContext context) {
+            return context.getInvocationElement().getParent() instanceof ResultMap;
         }
 
+        @NotNull
         @Override
-        protected List<? extends IdAttribute> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+        protected List<ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
             return mapper.getResultMaps();
         }
 
@@ -51,9 +52,10 @@ public class ResultMapConverter {
             return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
         }
 
+        @Nullable
         @Override
         protected XmlAttributeValue getTargetElement(@NotNull ResultMap targetDomElement) {
-            return targetDomElement.getId().getXmlAttributeValue();
+            return targetDomElement.getId() == null ? null : targetDomElement.getId().getXmlAttributeValue();
         }
     }
 }

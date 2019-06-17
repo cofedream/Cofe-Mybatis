@@ -4,7 +4,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Include;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Sql;
@@ -31,8 +30,9 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
         return selfContext.getInvocationElement().getParent() instanceof Include;
     }
 
+    @NotNull
     @Override
-    protected List<? extends IdAttribute> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+    protected List<Sql> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
         return mapper.getSqls();
     }
 
@@ -41,6 +41,7 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
         return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
     }
 
+    @Nullable
     @Override
     protected XmlAttributeValue getTargetElement(@NotNull Sql targetDomElement) {
         return targetDomElement.getId().getXmlAttributeValue();

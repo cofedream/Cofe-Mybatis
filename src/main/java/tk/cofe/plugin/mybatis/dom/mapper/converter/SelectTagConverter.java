@@ -7,7 +7,6 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -172,8 +171,9 @@ public class SelectTagConverter {
             return selfContext.getInvocationElement().getParent() instanceof Select;
         }
 
+        @NotNull
         @Override
-        protected List<? extends DomElement> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+        protected List<tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
             return mapper.getResultMaps();
         }
 
@@ -182,6 +182,7 @@ public class SelectTagConverter {
             return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
         }
 
+        @Nullable
         @Override
         protected XmlAttributeValue getTargetElement(@NotNull tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap targetDomElement) {
             return targetDomElement.getId().getXmlAttributeValue();

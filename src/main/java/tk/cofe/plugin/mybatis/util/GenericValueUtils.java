@@ -1,9 +1,8 @@
-package tk.cofe.plugin.mybatis.dom.mapper.model.attirubte;
+package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Optional;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-15
  */
-final class AttributeUtils {
+public final class GenericValueUtils {
 
     @NotNull
     public static Optional<String> getAttributeVlaue(@Nullable GenericAttributeValue<String> attributeValue) {

@@ -31,7 +31,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     public Collection<? extends XmlAttributeValue> getVariants(ConvertContext context) {
         return MapperService.getMapper(context.getInvocationElement()).map(mapper -> {
             Collection<XmlAttributeValue> variants = getVariants(context, mapper);
-            if (!CollectionUtils.isEmpty(variants)) {
+            if (CollectionUtils.notEmpty(variants)) {
                 return variants;
             }
             return new ArrayList<XmlAttributeValue>();
@@ -43,18 +43,18 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 根据字符串值转成目标元素
-     * @param selfValue   字符值
-     * @param selfContext 字符元素
+     * @param value   字符值
+     * @param context 字符元素
      * @return 目标元素
      */
     @Nullable
     @Override
-    public XmlAttributeValue fromString(@Nullable String selfValue, ConvertContext selfContext) {
-        if (StringUtils.isBlank(selfValue) || selfContext == null) {
+    public XmlAttributeValue fromString(@Nullable String value, ConvertContext context) {
+        if (StringUtils.isBlank(value) || context == null) {
             return null;
         }
-        if (isTarget(selfContext)) {
-            return MapperService.getMapper(selfContext.getInvocationElement()).map(mapper -> findTargetElement(selfValue, selfContext, mapper)).orElse(null);
+        if (isTarget(context)) {
+            return MapperService.getMapper(context.getInvocationElement()).map(mapper -> findTargetElement(value, context, mapper)).orElse(null);
         }
         return null;
     }
@@ -67,18 +67,17 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 找到当前元素值引用的目标源元素
-     * @param selfValue     值
-     * @param selfContext   当前元素
+     * @param value         值
+     * @param context       当前元素
      * @param currentMapper 当前MapperXMl
      * @return 目标元素
      */
     @Nullable
-    @SuppressWarnings("unchecked")
-    private XmlAttributeValue findTargetElement(@NotNull String selfValue, @NotNull ConvertContext selfContext, @NotNull Mapper currentMapper) {
-        return getReferenceDomElements(selfValue, selfContext, currentMapper).stream()
-                .filter(targetDom -> filterDomElement(((T) targetDom), selfValue))
+    private XmlAttributeValue findTargetElement(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper currentMapper) {
+        return getReferenceDomElements(value, context, currentMapper).stream()
+                .filter(targetDom -> filterDomElement(targetDom, value))
                 .findFirst()
-                .map(target -> getTargetElement(((T) target))).orElse(null);
+                .map(this::getTargetElement).orElse(null);
     }
 
     /**
@@ -88,7 +87,8 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * @param mapper  当前MapperXMl
      * @return Id属性列表
      */
-    protected abstract List<? extends DomElement> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper);
+    @NotNull
+    protected abstract List<T> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper);
 
     /**
      * 判断是否为目标元素
@@ -103,6 +103,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * @param targetDomElement 目标元素
      * @return 目标节点
      */
+    @Nullable
     protected abstract XmlAttributeValue getTargetElement(@NotNull T targetDomElement);
 
     @Nullable
