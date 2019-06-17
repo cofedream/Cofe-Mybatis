@@ -76,8 +76,6 @@ public interface Mapper extends DomElement {
     @SubTagList("sql")
     List<Sql> getSqls();
 
-    // add
-
     @SubTagList("select")
     Select addSelect();
 

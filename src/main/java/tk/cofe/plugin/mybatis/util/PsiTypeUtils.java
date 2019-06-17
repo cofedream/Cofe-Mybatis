@@ -20,9 +20,9 @@ public final class PsiTypeUtils {
             "Set", "HashSet", "TreeSet"
             , "Collection");
 
-    public static boolean notCustomType(@NotNull PsiType psiType) {
+    public static boolean isJavaBuiltInType(@NotNull PsiType psiType) {
         // 获取显示的文本内容 Boolean/List<String>
-        return notCustomType(psiType.getPresentableText());
+        return isJavaBuiltInType(psiType.getPresentableText());
     }
 
     /**
@@ -31,10 +31,14 @@ public final class PsiTypeUtils {
      * @return {@code true} 是自定义 JavaBean
      */
     public static boolean isCustomType(@NotNull PsiType psiType) {
-        return !notCustomType(psiType);
+        return !isJavaBuiltInType(psiType);
     }
 
-    public static boolean notCustomType(@NotNull String psiType) {
+    /**
+     * Java内置类型
+     * @param psiType 类型
+     */
+    public static boolean isJavaBuiltInType(@NotNull String psiType) {
         return BASE_TYPE.contains(psiType) || BOXED_BASE_TYPE.contains(psiType) || OTHER_TYPE.contains(psiType) || COLLECTION_TYPE.contains(psiType);
     }
 

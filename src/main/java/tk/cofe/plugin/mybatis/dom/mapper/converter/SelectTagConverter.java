@@ -26,77 +26,100 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * Select 标签相关转换
  * @author : zhengrf
  * @date : 2019-01-21
  */
 public class SelectTagConverter {
 
+    private static final List<String> EMPTY = Collections.emptyList();
+
     public static class ResultType extends ResolvingConverter<String> {
 
-        private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {{
-            this.put("byte", Collections.singletonList("_byte"));
-            this.put("long", Collections.singletonList("_long"));
-            this.put("short", Collections.singletonList("_short"));
-            this.put("int", new ArrayList<String>(2) {{
-                this.add("_int");
-                this.add("_integer");
-            }});
-            this.put("double", Collections.singletonList("_double"));
-            this.put("float", Collections.singletonList("_float"));
-            this.put("boolean", Collections.singletonList("_boolean"));
-            this.put("String", Collections.singletonList("string"));
-            this.put("Byte", Collections.singletonList("byte"));
-            this.put("Long", Collections.singletonList("long"));
-            this.put("Short", Collections.singletonList("short"));
-            this.put("Integer", new ArrayList<String>(2) {{
-                this.add("int");
-                this.add("integer");
-            }});
-            this.put("Double", Collections.singletonList("double"));
-            this.put("Float", Collections.singletonList("float"));
-            this.put("Boolean", Collections.singletonList("boolean"));
-            this.put("Date", Collections.singletonList("date"));
-            this.put("Bigdecimal", new ArrayList<String>(2) {{
-                this.add("decimal");
-                this.add("bigdecimal");
-            }});
-            this.put("Object", Collections.singletonList("object"));
-            this.put("Map", Collections.singletonList("map"));
-            this.put("Hashmap", Collections.singletonList("hashmap"));
-            this.put("List", Collections.singletonList("list"));
-            this.put("Arraylist", Collections.singletonList("arraylist"));
-            this.put("Collection", Collections.singletonList("collection"));
-            this.put("Iterator", Collections.singletonList("iterator"));
-        }});
-        private final Map<String, LookupElementBuilder> notCustomType = Collections.unmodifiableMap(new HashMap<String, LookupElementBuilder>() {{
-            this.put("_byte", createLookupElementBuilder("_byte", "byte", "byte"));
-            this.put("_long", createLookupElementBuilder("_long", "long", "long"));
-            this.put("_short", createLookupElementBuilder("_short", "short", "short"));
-            this.put("_int", createLookupElementBuilder("_int", "int", "int"));
-            this.put("_integer", createLookupElementBuilder("_integer", "int", "int"));
-            this.put("_double", createLookupElementBuilder("_double", "double", "double"));
-            this.put("_float", createLookupElementBuilder("_float", "float", "float"));
-            this.put("_boolean", createLookupElementBuilder("_boolean", "boolean", "boolean"));
-            this.put("string", createLookupElementBuilder("string", "String", "string"));
-            this.put("byte", createLookupElementBuilder("byte", "Byte", "byte"));
-            this.put("long", createLookupElementBuilder("long", "Long", "long"));
-            this.put("short", createLookupElementBuilder("short", "Short", "short"));
-            this.put("int", createLookupElementBuilder("int", "Integer", "int"));
-            this.put("integer", createLookupElementBuilder("integer", "Integer", "int"));
-            this.put("Double", createLookupElementBuilder("double", "Double", "double"));
-            this.put("Float", createLookupElementBuilder("float", "Float", "float"));
-            this.put("Boolean", createLookupElementBuilder("boolean", "Boolean", "boolean"));
-            this.put("Date", createLookupElementBuilder("date", "Date", "date"));
-            this.put("decimal", createLookupElementBuilder("decimal", "Bigdecimal", "decimal"));
-            this.put("bigdecimal", createLookupElementBuilder("bigdecimal", "Bigdecimal", "decimal"));
-            this.put("Object", createLookupElementBuilder("object", "Object", "object"));
-            this.put("Map", createLookupElementBuilder("map", "Map", "map"));
-            this.put("Hashmap", createLookupElementBuilder("hashmap", "Hashmap", "hashmap"));
-            this.put("List", createLookupElementBuilder("list", "List", "list"));
-            this.put("Arraylist", createLookupElementBuilder("arraylist", "Arraylist", "arraylist"));
-            this.put("Collection", createLookupElementBuilder("collection", "Collection", "collection"));
-            this.put("Iterator", createLookupElementBuilder("iterator", "Iterator", "iterator"));
-        }});
+        private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
+            private static final long serialVersionUID = -7375291625150519393L;
+
+            {
+                this.put("byte", Collections.singletonList("_byte"));
+                this.put("long", Collections.singletonList("_long"));
+                this.put("short", Collections.singletonList("_short"));
+                this.put("int", new ArrayList<String>(2) {
+                    private static final long serialVersionUID = -4321456431687868856L;
+
+                    {
+                        this.add("_int");
+                        this.add("_integer");
+                    }
+                });
+                this.put("double", Collections.singletonList("_double"));
+                this.put("float", Collections.singletonList("_float"));
+                this.put("boolean", Collections.singletonList("_boolean"));
+                this.put("String", Collections.singletonList("string"));
+                this.put("Byte", Collections.singletonList("byte"));
+                this.put("Long", Collections.singletonList("long"));
+                this.put("Short", Collections.singletonList("short"));
+                this.put("Integer", new ArrayList<String>(2) {
+                    private static final long serialVersionUID = -1451201046250936934L;
+
+                    {
+                        this.add("int");
+                        this.add("integer");
+                    }
+                });
+                this.put("Double", Collections.singletonList("double"));
+                this.put("Float", Collections.singletonList("float"));
+                this.put("Boolean", Collections.singletonList("boolean"));
+                this.put("Date", Collections.singletonList("date"));
+                this.put("Bigdecimal", new ArrayList<String>(2) {
+                    private static final long serialVersionUID = -304742509443073751L;
+
+                    {
+                        this.add("decimal");
+                        this.add("bigdecimal");
+                    }
+                });
+                this.put("Object", Collections.singletonList("object"));
+                this.put("Map", Collections.singletonList("map"));
+                this.put("Hashmap", Collections.singletonList("hashmap"));
+                this.put("List", Collections.singletonList("list"));
+                this.put("Arraylist", Collections.singletonList("arraylist"));
+                this.put("Collection", Collections.singletonList("collection"));
+                this.put("Iterator", Collections.singletonList("iterator"));
+            }
+        });
+        private final Map<String, LookupElementBuilder> notCustomType = Collections.unmodifiableMap(new HashMap<String, LookupElementBuilder>() {
+            private static final long serialVersionUID = 4402307158708442334L;
+
+            {
+                this.put("_byte", createLookupElementBuilder("_byte", "byte", "byte"));
+                this.put("_long", createLookupElementBuilder("_long", "long", "long"));
+                this.put("_short", createLookupElementBuilder("_short", "short", "short"));
+                this.put("_int", createLookupElementBuilder("_int", "int", "int"));
+                this.put("_integer", createLookupElementBuilder("_integer", "int", "int"));
+                this.put("_double", createLookupElementBuilder("_double", "double", "double"));
+                this.put("_float", createLookupElementBuilder("_float", "float", "float"));
+                this.put("_boolean", createLookupElementBuilder("_boolean", "boolean", "boolean"));
+                this.put("string", createLookupElementBuilder("string", "String", "string"));
+                this.put("byte", createLookupElementBuilder("byte", "Byte", "byte"));
+                this.put("long", createLookupElementBuilder("long", "Long", "long"));
+                this.put("short", createLookupElementBuilder("short", "Short", "short"));
+                this.put("int", createLookupElementBuilder("int", "Integer", "int"));
+                this.put("integer", createLookupElementBuilder("integer", "Integer", "int"));
+                this.put("Double", createLookupElementBuilder("double", "Double", "double"));
+                this.put("Float", createLookupElementBuilder("float", "Float", "float"));
+                this.put("Boolean", createLookupElementBuilder("boolean", "Boolean", "boolean"));
+                this.put("Date", createLookupElementBuilder("date", "Date", "date"));
+                this.put("decimal", createLookupElementBuilder("decimal", "Bigdecimal", "decimal"));
+                this.put("bigdecimal", createLookupElementBuilder("bigdecimal", "Bigdecimal", "decimal"));
+                this.put("Object", createLookupElementBuilder("object", "Object", "object"));
+                this.put("Map", createLookupElementBuilder("map", "Map", "map"));
+                this.put("Hashmap", createLookupElementBuilder("hashmap", "Hashmap", "hashmap"));
+                this.put("List", createLookupElementBuilder("list", "List", "list"));
+                this.put("Arraylist", createLookupElementBuilder("arraylist", "Arraylist", "arraylist"));
+                this.put("Collection", createLookupElementBuilder("collection", "Collection", "collection"));
+                this.put("Iterator", createLookupElementBuilder("iterator", "Iterator", "iterator"));
+            }
+        });
 
         private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
             return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
@@ -105,31 +128,21 @@ public class SelectTagConverter {
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
-            Select select = (Select) DomUtils.getDomElement(context.getTag());
-            ArrayList<String> result = new ArrayList<>();
-            JavaPsiService.getInstance(context.getProject()).findPsiMethod(select).ifPresent(psiMethod -> {
+            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> {
                 PsiType type = psiMethod.getReturnType();
                 if (type == null) {
-                    return;
+                    return EMPTY;
                 }
-                if (PsiTypeUtils.notCustomType(type)) {
-                    result.addAll(BaseType.get(type.getPresentableText()));
+                if (PsiTypeUtils.isJavaBuiltInType(type)) {
+                    return BaseType.get(type.getPresentableText());
                 } else {
-                    if (type instanceof PsiClassReferenceType) {
-                        PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                        String referenceName = reference.getReferenceName();
-                        if (StringUtils.isBlank(referenceName)) {
-                            return;
-                        }
-                        if (PsiTypeUtils.notCustomType(referenceName)) {
-                            result.addAll(BaseType.get(referenceName));
-                        } else {
-                            result.add(reference.getQualifiedName());
-                        }
+                    PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+                    if (StringUtils.isBlank(reference.getReferenceName())) {
+                        return EMPTY;
                     }
+                    return Collections.singletonList(reference.getQualifiedName());
                 }
-            });
-            return result;
+            }).orElse(EMPTY);
         }
 
         @Nullable
