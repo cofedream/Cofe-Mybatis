@@ -4,7 +4,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
@@ -14,6 +17,7 @@ import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.JavaPsiUtils;
 
 import java.util.Optional;
 
@@ -42,6 +46,21 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         }
     }
 
+    @Override
+    public void importClass(PsiJavaFile file, String qualifiedName) {
+        if (!JavaPsiUtils.hasImportClass(file, qualifiedName)) {
+            findPsiClass(qualifiedName).ifPresent(psiClass -> JavaPsiUtils.importClass(file, psiClass));
+        }
+    }
+
+    @Override
+    public void addAnnotation(PsiModifierListOwner psiModifierListOwner, String annotationText) {
+        PsiModifierList modifierList = psiModifierListOwner.getModifierList();
+        if (modifierList != null) {
+            modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotationText, psiModifierListOwner));
+        }
+    }
+
     public void process(@NotNull PsiMethod psiMethod, @NotNull Processor<ClassElement> processor) {
         PsiClass psiClass = psiMethod.getContainingClass();
         if (psiClass == null) {
@@ -67,7 +86,8 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     @NonNull
     @Override
     public Optional<PsiClass> findPsiClass(@NotNull String qualifiedName) {
-        return Optional.ofNullable(javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project)));
+        PsiClass aClass = javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project));
+        return Optional.ofNullable(aClass == null ? javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.allScope(project)) : aClass);
     }
 
     @NotNull

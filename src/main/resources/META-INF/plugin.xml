@@ -67,11 +67,22 @@
         <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.SqlParameterCompletionContributor" order="first"/>
 
         <!--代码检查-->
+        <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->
+        <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
+        <!--                 groupBundle="MybatisBundle" groupKey="inspection.group.java" groupPath="Mybatis"-->
+        <!--                 enabledByDefault="true" level="ERROR"-->
+        <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperMethodInspection"/>-->
         <localInspection language="XML" shortName="MapperIncludeInspection" applyToDialects="false"
                          bundle="MybatisBundle" key="mapper.inspection.display.name"
                          groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"
                          enabledByDefault="true" level="ERROR"
                          implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperIncludeInspection"/>
+        <intentionAction>
+            <className>tk.cofe.plugin.mybatis.intention.GenerateParamAnnotationIntention</className>
+        </intentionAction>
+        <!--<intentionAction>-->
+        <!--    <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>-->
+        <!--</intentionAction>-->
     </extensions>
 
     <actions>

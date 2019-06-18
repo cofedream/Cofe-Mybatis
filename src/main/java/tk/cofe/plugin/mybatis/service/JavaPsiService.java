@@ -4,7 +4,9 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +37,27 @@ public interface JavaPsiService {
     @NotNull
     Optional<PsiMethod[]> findPsiMethod(@NotNull Mapper mapper, String methodName);
 
+    /**
+     * 查找PsiClass
+     * @param qualifiedName 类全限定名
+     * @return PsiClass
+     */
     @NonNull
     Optional<PsiClass> findPsiClass(@NotNull String qualifiedName);
 
     void process(@NotNull PsiElement target, @NotNull Processor processor);
+
+    /**
+     * 导包
+     * @param file          Java类文件
+     * @param qualifiedName 包名
+     */
+    void importClass(PsiJavaFile file, String qualifiedName);
+
+    /**
+     * 给元素添加注解
+     * @param psiModifierListOwner 目标元素
+     * @param annotationText       注解文本
+     */
+    void addAnnotation(PsiModifierListOwner psiModifierListOwner, String annotationText);
 }

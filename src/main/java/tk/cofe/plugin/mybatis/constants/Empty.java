@@ -1,5 +1,6 @@
 package tk.cofe.plugin.mybatis.constants;
 
+import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.psi.ResolveResult;
 
 /**
@@ -10,5 +11,6 @@ public final class Empty {
     public static class Array {
         public static final ResolveResult[] RESOLVE_RESULT = new ResolveResult[0];
         public static final String[] STRING = new String[0];
+        public static final ProblemDescriptor[] PROBLEM_DESCRIPTOR = new ProblemDescriptor[0];
     }
 }

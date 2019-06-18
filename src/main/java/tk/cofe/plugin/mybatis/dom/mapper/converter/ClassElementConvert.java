@@ -1,6 +1,8 @@
 package tk.cofe.plugin.mybatis.dom.mapper.converter;
 
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
@@ -59,8 +61,7 @@ public class ClassElementConvert {
         @Nullable
         @Override
         public LookupElement createLookupElement(String s) {
-            // todo 显示调整
-            return super.createLookupElement(s);
+            return LookupElementBuilder.create(s).withIcon(AllIcons.Nodes.Method);
         }
     }
 }
