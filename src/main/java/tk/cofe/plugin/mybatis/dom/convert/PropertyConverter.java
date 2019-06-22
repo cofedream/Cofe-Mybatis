@@ -2,8 +2,8 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
@@ -13,9 +13,10 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -30,24 +31,19 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
         if (resultMap == null) {
             return Collections.emptyList();
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type).map(psiClass -> {
-            Collection<String> result = new ArrayList<>();
-            for (PsiField field : psiClass.getAllFields()) {
-                if (!field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC)) {
-                    result.add(field.getName());
-                }
-            }
-            return result;
-        }).orElse(Collections.emptyList())).orElse(Collections.emptyList());
+        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+                .map(psiClass -> Arrays.stream(psiClass.getAllFields())
+                        .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
+                        .map(NavigationItem::getName)
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList()))
+                .orElse(Collections.emptyList());
     }
 
     @Nullable
     @Override
     public LookupElement createLookupElement(String property) {
-        if (property == null) {
-            return null;
-        }
-        return LookupElementBuilder.create(property);
+        return property == null ? null : LookupElementBuilder.create(property);
     }
 
     @Nullable
@@ -57,13 +53,8 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
         if (resultMap == null) {
             return null;
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type).map(psiClass -> {
-            for (PsiField field : psiClass.getAllFields()) {
-                if (o.equals(field.getName())) {
-                    return field;
-                }
-            }
-            return null;
-        }).orElse(null)).orElse(null);
+        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> o.equals(field.getName())).findFirst().orElse(null)).orElse(null))
+                .orElse(null);
     }
 }

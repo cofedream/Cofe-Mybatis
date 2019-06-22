@@ -9,7 +9,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +27,9 @@ public class ResultMapConverter {
         public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
             ResultMap domElement = (ResultMap) DomUtils.getDomElement(context.getTag());
             if (domElement == null) {
-                return Collections.emptyList();
+                return null;
             }
-            return mapper.getResultMaps().stream()
-                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
+            return mapper.getResultMaps().stream().filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
                     .map(resultMap -> resultMap.getId() == null ? null : resultMap.getId().getXmlAttributeValue())
                     .collect(Collectors.toList());
         }

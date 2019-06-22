@@ -2,6 +2,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
+import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Include;
@@ -10,6 +11,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Sql;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +24,7 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
     @Nullable
     @Override
     public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
-        return mapper.getSqls().stream().map(sql -> sql.getId().getXmlAttributeValue()).collect(Collectors.toList());
+        return mapper.getSqls().stream().filter(sql -> sql.getId() != null).map(sql -> sql.getId().getXmlAttributeValue()).collect(Collectors.toList());
     }
 
     @Override
@@ -44,6 +46,6 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
     @Nullable
     @Override
     protected XmlAttributeValue getTargetElement(@NotNull Sql targetDomElement) {
-        return targetDomElement.getId().getXmlAttributeValue();
+        return Optional.ofNullable(targetDomElement.getId()).map(GenericAttributeValue::getXmlAttributeValue).orElse(null);
     }
 }

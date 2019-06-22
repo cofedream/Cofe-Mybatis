@@ -6,7 +6,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,9 +14,10 @@ import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -29,18 +29,16 @@ public class ClassElementConverter {
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
-            DomElement currentElement = context.getInvocationElement();
-            ClassElement classElement = DomUtils.getParentOfType(currentElement, ClassElement.class, true);
+            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement).map(psiClass -> {
-                Collection<String> res = new HashSet<>();
-                for (PsiMethod method : psiClass.getMethods()) {
-                    res.add(method.getName());
-                }
-                return res;
-            }).orElse(Collections.emptyList())).orElse(Collections.emptyList());
+            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement)
+                    .map(psiClass -> Arrays.stream(psiClass.getMethods())
+                            .map(PsiMethod::getName)
+                            .collect(Collectors.toList()))
+                    .orElse(Collections.emptyList()))
+                    .orElse(Collections.emptyList());
         }
 
         @Nullable
@@ -49,13 +47,10 @@ public class ClassElementConverter {
             if (StringUtils.isBlank(methodName)) {
                 return null;
             }
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
-            return JavaPsiService.getInstance(context.getProject()).findPsiMethod(classElement).map(psiMethod -> {
-                if (methodName.equals(psiMethod.getName())) {
-                    return psiMethod;
-                }
-                return null;
-            }).orElse(null);
+            return JavaPsiService.getInstance(context.getProject())
+                    .findPsiMethod(DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true))
+                    .filter(psiMethod -> methodName.equals(psiMethod.getName()))
+                    .orElse(null);
         }
 
         @Nullable

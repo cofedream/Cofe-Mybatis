@@ -7,9 +7,11 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
+import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
@@ -23,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +34,6 @@ import java.util.stream.Collectors;
  * @date : 2019-01-21
  */
 public class SelectTagConverter {
-
-    private static final List<String> EMPTY = Collections.emptyList();
 
     public static class ResultType extends ResolvingConverter<String> {
 
@@ -122,7 +123,7 @@ public class SelectTagConverter {
         });
 
         private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
-            return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
+            return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText(Empty.STRING).appendTailText(tailText, true);
         }
 
         @NotNull
@@ -131,18 +132,18 @@ public class SelectTagConverter {
             return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> {
                 PsiType type = psiMethod.getReturnType();
                 if (type == null) {
-                    return EMPTY;
+                    return Collections.<String>emptyList();
                 }
                 if (PsiTypeUtils.isJavaBuiltInType(type)) {
                     return BaseType.get(type.getPresentableText());
                 } else {
                     PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
                     if (StringUtils.isBlank(reference.getReferenceName())) {
-                        return EMPTY;
+                        return Collections.<String>emptyList();
                     }
                     return Collections.singletonList(reference.getQualifiedName());
                 }
-            }).orElse(EMPTY);
+            }).orElse(Collections.emptyList());
         }
 
         @Nullable
@@ -176,7 +177,7 @@ public class SelectTagConverter {
         @Nullable
         @Override
         protected Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
-            return mapper.getResultMaps().stream().map(resultMap -> resultMap.getId().getXmlAttributeValue()).collect(Collectors.toList());
+            return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).map(resultMap -> resultMap.getId().getXmlAttributeValue()).collect(Collectors.toList());
         }
 
         @Override
@@ -198,7 +199,7 @@ public class SelectTagConverter {
         @Nullable
         @Override
         protected XmlAttributeValue getTargetElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement) {
-            return targetDomElement.getId().getXmlAttributeValue();
+            return Optional.ofNullable(targetDomElement.getId()).map(GenericAttributeValue::getXmlAttributeValue).orElse(null);
         }
     }
 }
