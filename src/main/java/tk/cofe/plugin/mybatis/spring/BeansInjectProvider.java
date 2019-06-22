@@ -22,7 +22,6 @@ import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.containers.hash.HashSet;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,16 +35,12 @@ import java.util.List;
  * @date : 2018-12-31
  */
 public class BeansInjectProvider extends SpringMyBatisBeansProvider {
-    @NonNls
+    // tk 相关类
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";
     private static final String TK_MAPPER_SCANNER_CONFIGURER = "tk.mybatis.spring.mapper.MapperScannerConfigurer";
-    /**
-     * tk.mybatis 的接口
-     */
     private static final String TK_MAPPER_SCAN = "tk.mybatis.spring.annotation.MapperScan";
-    /**
-     * 原生mybatis的接口
-     */
+
+    // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
 
     private static void processBasePackage(@NotNull GlobalSearchScope scope, @NotNull PsiPackage aPackage, @NotNull Collection<CommonSpringBean> myBatisMappers) {
@@ -152,9 +147,13 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
 
     @NotNull
     private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, JvmAnnotationArrayValue attributeValue) {
-        return new LinkedList<PsiPackage>() {{
-            attributeValue.getValues().forEach(attr -> this.add(facade.findPackage(attr.toString().trim())));
-        }};
+        return new LinkedList<PsiPackage>() {
+            private static final long serialVersionUID = -1708489054592091090L;
+
+            {
+                attributeValue.getValues().forEach(attr -> this.add(facade.findPackage(attr.toString().trim())));
+            }
+        };
     }
 }
 
