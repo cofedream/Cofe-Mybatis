@@ -11,8 +11,8 @@ import com.intellij.util.Processor;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 
 import java.util.Optional;
 

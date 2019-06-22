@@ -13,13 +13,12 @@ import com.intellij.util.xml.DomManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
-import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Update;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collection;
@@ -58,7 +57,7 @@ public abstract class MapperService {
         if (!(file instanceof XmlFile)) {
             return false;
         }
-        return DomService.getInstance(file.getProject()).isTargetXml(((XmlFile) file), Mybatis.MAPPER_DTDS);
+        return DomService.getInstance(file.getProject()).isTargetXml(((XmlFile) file), Mybatis.Mapper.DTDS);
     }
 
     public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
@@ -74,7 +73,7 @@ public abstract class MapperService {
      * @see Delete
      * @see Insert
      */
-    public static boolean isBaseStatementElement(final XmlElement xmlElement) {
+    public static boolean isBaseStatementElement(@Nullable final XmlElement xmlElement) {
         if (xmlElement == null) {
             return false;
         }
@@ -83,12 +82,7 @@ public abstract class MapperService {
         if (!(domElement instanceof ClassElement)) {
             return false;
         }
-        for (Class<?> clazz : MyBatisDomConstants.BASIC_OPERATION) {
-            if (clazz.isInstance(domElement)) {
-                return true;
-            }
-        }
-        return false;
+        return Mapper.BASIC_OPERATION.stream().anyMatch(clazz -> clazz.isInstance(domElement));
     }
 
     /**

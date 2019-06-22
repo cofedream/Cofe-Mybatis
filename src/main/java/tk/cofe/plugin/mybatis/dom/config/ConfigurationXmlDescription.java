@@ -3,7 +3,6 @@ package tk.cofe.plugin.mybatis.dom.config;
 import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
-import tk.cofe.plugin.mybatis.dom.MyBatisDomConstants;
 import tk.cofe.plugin.mybatis.dom.config.model.ConfigurationXml;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 
@@ -22,7 +21,7 @@ public class ConfigurationXmlDescription extends DomFileDescription<Configuratio
 
     @Override
     protected void initializeFileDescription() {
-        registerNamespacePolicy(MyBatisDomConstants.CONFIG_NAMESPACE_KEY, Mybatis.CONFIG_DTDS);
+        registerNamespacePolicy(Mybatis.Config.NAMESPACE_KEY, Mybatis.Config.DTDS);
     }
 
     @Nullable

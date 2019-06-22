@@ -11,7 +11,7 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.mapper.model.attirubte.PropertyAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.StringUtils;

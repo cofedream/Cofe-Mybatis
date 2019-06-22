@@ -3,7 +3,7 @@ package tk.cofe.plugin.mybatis.service.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.service.DomService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 

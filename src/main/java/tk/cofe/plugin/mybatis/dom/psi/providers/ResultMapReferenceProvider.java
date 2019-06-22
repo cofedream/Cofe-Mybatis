@@ -13,9 +13,9 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
-import tk.cofe.plugin.mybatis.dom.mapper.converter.ResultMapConverter;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.Mapper;
-import tk.cofe.plugin.mybatis.dom.mapper.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
