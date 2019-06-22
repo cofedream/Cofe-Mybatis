@@ -21,14 +21,17 @@ import com.intellij.spring.model.CommonSpringBean;
 import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
-import com.intellij.util.containers.hash.HashSet;
+import com.intellij.util.Query;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -43,42 +46,27 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
     // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
 
-    private static void processBasePackage(@NotNull GlobalSearchScope scope, @NotNull PsiPackage aPackage, @NotNull Collection<CommonSpringBean> myBatisMappers) {
-        PsiClass[] psiClasses = aPackage.getClasses(scope);
-        for (PsiClass aClass : psiClasses) {
-            if (aClass.isInterface()) {
-                myBatisMappers.add(new CustomSpringComponent(aClass));
-            }
-        }
-        PsiPackage[] subPackages = aPackage.getSubPackages(scope);
-        for (PsiPackage psiPackage : subPackages) {
-            processBasePackage(scope, psiPackage, myBatisMappers);
-        }
-
-    }
-
     @NotNull
     @Override
     public Collection<CommonSpringBean> getCustomComponents(@NotNull LocalModel springModel) {
         Module module = springModel.getModule();
         if (module != null && !DumbService.isDumb(module.getProject())) {
-            Collection<CommonSpringBean> myBatisMappers = new HashSet<>();
+            Collection<CommonSpringBean> mappers = new LinkedList<>();
             if (springModel instanceof LocalXmlModel) {
-                super.collectMappers((LocalXmlModel) springModel, module, myBatisMappers, TK_MAPPER_FACTORY_BEAN);
-                super.collectMappers((LocalXmlModel) springModel, module, myBatisMappers, TK_MAPPER_SCANNER_CONFIGURER);
+                super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_FACTORY_BEAN);
+                super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_SCANNER_CONFIGURER);
             } else if (springModel instanceof LocalAnnotationModel) {
-                this.collectMappers((LocalAnnotationModel) springModel, module, myBatisMappers, TK_MAPPER_SCAN);
-                this.collectMappers((LocalAnnotationModel) springModel, module, myBatisMappers, ORG_MAPPER_SCAN);
+                this.collectMappers((LocalAnnotationModel) springModel, module, mappers, TK_MAPPER_SCAN);
+                this.collectMappers((LocalAnnotationModel) springModel, module, mappers, ORG_MAPPER_SCAN);
             }
-            return myBatisMappers;
+            return mappers;
         } else {
             return Collections.emptyList();
         }
     }
 
-    private void collectMappers(@NotNull LocalAnnotationModel springModel, Module module, Collection<CommonSpringBean> myBatisMappers, String annotationClassName) {
-        PsiClass libraryClass = SpringCommonUtils.findLibraryClass(module, annotationClassName);
-        if (libraryClass != null) {
+    private void collectMappers(@NotNull LocalAnnotationModel springModel, Module module, Collection<CommonSpringBean> mappers, String annotationClassName) {
+        if (SpringCommonUtils.findLibraryClass(module, annotationClassName) != null) {
             PsiClass config = springModel.getConfig();
             PsiAnnotation annotation = config.getAnnotation(annotationClassName);
             if (annotation != null) {
@@ -86,74 +74,81 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 JavaPsiFacade facade = JavaPsiFacade.getInstance(config.getProject());
                 annotation.getAttributes().forEach(attribute -> {
                     JvmAnnotationAttributeValue attributeValue = attribute.getAttributeValue();
-                    if (attributeValue != null) {
-                        String attributeName = attribute.getAttributeName();
-                        PsiClass psiClass;
-                        switch (attributeName) {
-                            case "value":
-                            case "basePackages":
-                                if (attributeValue instanceof JvmAnnotationConstantValue) {
-                                    PsiPackage psiPackage = getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue));
-                                    if (psiPackage != null) {
-                                        processBasePackage(scope, psiPackage, myBatisMappers);
-                                    }
-                                } else if (attributeValue instanceof JvmAnnotationArrayValue) {
-                                    getPsiPackage(facade, (JvmAnnotationArrayValue) attributeValue).forEach(psiPackage -> processBasePackage(scope, psiPackage, myBatisMappers));
+                    if (attributeValue == null) {
+                        return;
+                    }
+                    PsiClass psiClass;
+                    switch (attribute.getAttributeName()) {
+                        case "value":
+                        case "basePackages":
+                            if (attributeValue instanceof JvmAnnotationConstantValue) {
+                                PsiPackage psiPackage = getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue));
+                                if (psiPackage != null) {
+                                    processBasePackage(scope, psiPackage, mappers);
                                 }
-                                break;
-                            case "basePackageClasses":
-                                psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                                if (psiClass != null) {
-                                    String classQualifiedName = psiClass.getQualifiedName();
-                                    processBasePackage(scope, facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf("."))), myBatisMappers);
+                            } else if (attributeValue instanceof JvmAnnotationArrayValue) {
+                                getPsiPackage(facade, (JvmAnnotationArrayValue) attributeValue).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
+                            }
+                            break;
+                        case "basePackageClasses":
+                            psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
+                            if (psiClass != null) {
+                                String classQualifiedName = psiClass.getQualifiedName();
+                                if (StringUtils.isBlank(classQualifiedName)) {
+                                    return;
                                 }
-                                break;
-                            case "annotationClass":
-                                psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                                if (psiClass != null) {
-                                    ClassesWithAnnotatedMembersSearch.search(psiClass, GlobalSearchScope.projectScope(config.getProject())).findAll().forEach(aClass -> {
-                                        if (aClass.isInterface()) {
-                                            myBatisMappers.add(new CustomSpringComponent(aClass));
-                                        }
-                                    });
+                                PsiPackage psiPackage = facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf(".")));
+                                if (psiPackage == null) {
+                                    return;
                                 }
-                                break;
-                            case "markerInterface":
-                                psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                                if (psiClass != null) {
-                                    ClassInheritorsSearch.search(psiClass).findAll().forEach(aClass -> {
-                                        if (aClass.isInterface()) {
-                                            myBatisMappers.add(new CustomSpringComponent(aClass));
-                                        }
-                                    });
-                                }
-                            default:
-                                break;
-                        }
+                                processBasePackage(scope, psiPackage, mappers);
+                            }
+                            break;
+                        case "annotationClass":
+                            psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
+                            if (psiClass != null) {
+                                processQueryPsiClass(ClassesWithAnnotatedMembersSearch.search(psiClass, GlobalSearchScope.projectScope(config.getProject())), mappers);
+                            }
+                            break;
+                        case "markerInterface":
+                            psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
+                            if (psiClass != null) {
+                                processQueryPsiClass(ClassInheritorsSearch.search(psiClass), mappers);
+                            }
+                        default:
+                            break;
                     }
                 });
             }
         }
     }
 
+    private void processQueryPsiClass(@NotNull Query<PsiClass> search, @NotNull Collection<CommonSpringBean> mappers) {
+        search.findAll().forEach(aClass -> {
+            if (aClass.isInterface()) {
+                mappers.add(new CustomSpringComponent(aClass));
+            }
+        });
+    }
+
+    private static void processBasePackage(@NotNull GlobalSearchScope scope, @NotNull PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
+        Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
+            if (psiClass.isInterface()) {
+                mappers.add(new CustomSpringComponent(psiClass));
+            }
+        });
+        Arrays.stream(psiPackage.getSubPackages(scope)).forEach(p -> processBasePackage(scope, p, mappers));
+    }
+
     @Nullable
-    private PsiPackage getPsiPackage(JavaPsiFacade facade, JvmAnnotationConstantValue attributeValue) {
-        Object constantValue = attributeValue.getConstantValue();
-        if (constantValue != null) {
-            return facade.findPackage(constantValue.toString().trim());
-        }
-        return null;
+    private PsiPackage getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationConstantValue attributeValue) {
+        Object value = attributeValue.getConstantValue();
+        return value == null ? null : facade.findPackage(value.toString().trim());
     }
 
     @NotNull
-    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, JvmAnnotationArrayValue attributeValue) {
-        return new LinkedList<PsiPackage>() {
-            private static final long serialVersionUID = -1708489054592091090L;
-
-            {
-                attributeValue.getValues().forEach(attr -> this.add(facade.findPackage(attr.toString().trim())));
-            }
-        };
+    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationArrayValue attributeValue) {
+        return attributeValue.getValues().stream().map(attr -> facade.findPackage(attr.toString().trim())).collect(Collectors.toList());
     }
 }
 
