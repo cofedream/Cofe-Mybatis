@@ -1,5 +1,6 @@
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiImportList;
@@ -8,16 +9,19 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
+
+import java.util.Collection;
 
 /**
  * JavaPsi工具
  * @author : zhengrf
  * @date : 2019-01-01
  */
-public final class JavaPsiUtils {
+public final class PsiJavaUtils {
 
     /**
      * 判断 PsiElement 是否为接口
@@ -57,6 +61,16 @@ public final class JavaPsiUtils {
     }
 
     /**
+     * 判断是否有指定注解
+     * @param target     目标元素
+     * @param annotations 目标注解集合
+     * @return true 有指定注解，false 没有指定注解
+     */
+    public static boolean hasAnnotations(@NotNull PsiModifierListOwner target, @NotNull Collection<Annotation> annotations) {
+        return annotations.stream().anyMatch(annotation -> hasAnnotation(target, annotation));
+    }
+
+    /**
      * 判断是否已经导入目标类
      * @param file          Java类文件
      * @param qualifiedName 类全限定名
@@ -77,6 +91,31 @@ public final class JavaPsiUtils {
      */
     public static void importClass(@NotNull PsiJavaFile file, @NotNull PsiClass psiClass) {
         file.importClass(psiClass);
+    }
+
+    /**
+     * 从当前编辑框获取当前光标所在元素
+     * @param editor 编辑框
+     * @return 当前光标所在元素
+     */
+    @Nullable
+    public static PsiElement getElement(@NotNull Editor editor) {
+        return PsiUtilBase.getElementAtCaret(editor);
+    }
+
+    /**
+     * 从当前编辑框获取当前光标所在目标元素
+     * @param editor 编辑框
+     * @param target 目标元素
+     * @return 当前光标所在元素
+     */
+    @Nullable
+    public static <T extends PsiElement> T getElement(@NotNull Editor editor, @NotNull Class<T> target) {
+        PsiElement element = PsiUtilBase.getElementAtCaret(editor);
+        if (element == null) {
+            return null;
+        }
+        return PsiTreeUtil.getParentOfType(element, target);
     }
 
 }

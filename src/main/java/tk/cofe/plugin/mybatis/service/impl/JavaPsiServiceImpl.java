@@ -17,7 +17,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.JavaPsiUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import java.util.Optional;
 
@@ -36,6 +36,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         this.javaPsiFacade = JavaPsiFacade.getInstance(project);
     }
 
+    // todo 调整
     @Override
     @SuppressWarnings("unchecked")
     public void process(@NotNull PsiElement target, @NotNull Processor processor) {
@@ -48,8 +49,8 @@ public class JavaPsiServiceImpl implements JavaPsiService {
 
     @Override
     public void importClass(PsiJavaFile file, String qualifiedName) {
-        if (!JavaPsiUtils.hasImportClass(file, qualifiedName)) {
-            findPsiClass(qualifiedName).ifPresent(psiClass -> JavaPsiUtils.importClass(file, psiClass));
+        if (!PsiJavaUtils.hasImportClass(file, qualifiedName)) {
+            findPsiClass(qualifiedName).ifPresent(psiClass -> PsiJavaUtils.importClass(file, psiClass));
         }
     }
 

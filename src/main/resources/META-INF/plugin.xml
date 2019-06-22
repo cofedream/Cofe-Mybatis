@@ -80,9 +80,9 @@
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.GenerateParamAnnotationIntention</className>
         </intentionAction>
-        <!--<intentionAction>-->
-        <!--    <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>-->
-        <!--</intentionAction>-->
+        <intentionAction>
+            <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>
+        </intentionAction>
     </extensions>
 
     <actions>

@@ -28,7 +28,7 @@ public class MapperMethodLineMarkerProvider extends RelatedItemLineMarkerProvide
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-        //if (JavaPsiUtils.isInterfaceMethod(element)) {
+        //if (PsiJavaUtils.isInterfaceMethod(element)) {
         //    PsiClass mapperClass = (PsiClass) element.getParent();
         //    Collection<Mapper> mapperXmls = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
         //    if (!mapperXmls.isEmpty()) {

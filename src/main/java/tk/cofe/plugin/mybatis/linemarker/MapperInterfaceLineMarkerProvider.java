@@ -16,7 +16,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.JavaPsiUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -42,9 +42,9 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-        if (JavaPsiUtils.isInterface(element)) {
+        if (PsiJavaUtils.isInterface(element)) {
             markerInterface(element, result);
-        } else if (JavaPsiUtils.isInterfaceMethod(element)) {
+        } else if (PsiJavaUtils.isInterfaceMethod(element)) {
             PsiClass mapperClass = (PsiClass) element.getParent();
             markerMethod(mapperClass, element, result);
         }

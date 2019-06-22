@@ -1,14 +1,14 @@
 package tk.cofe.plugin.mybatis.annotation;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Mybatis相关注解
@@ -33,7 +33,7 @@ public class Annotation implements Cloneable {
 
     public static final Annotation RESOURCE = new Annotation("@Resource", "javax.annotation.Resource");
 
-    public static final Set<Annotation> STATEMENT_SYMMETRIES = ImmutableSet.of(SELECT, UPDATE, INSERT, DELETE);
+    public static final List<Annotation> STATEMENT_ANNOTATIONS = Arrays.asList(SELECT, UPDATE, INSERT, DELETE);
 
     private final String label;
 

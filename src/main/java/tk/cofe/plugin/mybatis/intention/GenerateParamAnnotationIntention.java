@@ -14,8 +14,10 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.util.JavaPsiUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
+
+import java.util.Arrays;
 
 /**
  * 生成 @Param 注解
@@ -42,20 +44,11 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
         if (!(file instanceof PsiJavaFile)) {
             return false;
         }
-        PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
-        if (element == null) {
-            return false;
-        }
-        PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+        PsiMethod method = PsiJavaUtils.getElement(editor, PsiMethod.class);
         if (method == null || method.getParameterList().isEmpty()) {
             return false;
         }
-        for (PsiParameter parameter : method.getParameterList().getParameters()) {
-            if (!JavaPsiUtils.hasAnnotation(parameter, Annotation.PARAM)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(method.getParameterList().getParameters()).anyMatch(psiParameter -> !PsiJavaUtils.hasAnnotation(psiParameter, Annotation.PARAM));
     }
 
     @Override
@@ -67,7 +60,7 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
         }
         for (PsiParameter parameter : method.getParameterList().getParameters()) {
             // 有 @Param 则跳过
-            if (JavaPsiUtils.hasAnnotation(parameter, Annotation.PARAM)) {
+            if (PsiJavaUtils.hasAnnotation(parameter, Annotation.PARAM)) {
                 continue;
             }
             String name = parameter.getName();
