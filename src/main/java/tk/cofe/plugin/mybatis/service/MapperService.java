@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,22 +26,22 @@ public interface MapperService {
      * @return 匹配到的 Mapper Xml 文件
      */
     @NotNull
-    Collection<Mapper> findMapperXmls(@NotNull PsiClass mapperClass);
+    List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass);
 
     /**
      * 获取Mapper Dom 文件
      * @return Mapper文件
      */
     @NotNull
-    Collection<Mapper> findAllMappers();
+    List<Mapper> findAllMappers();
 
     /**
      * 查找 Dom 文件
-     * @param clazz Domm描述类 {@code extends DomElement}
      * @param <T>   {@code T extends DomElement}
+     * @param clazz Domm描述类 {@code extends DomElement}
      * @return 匹配的Dom文件
      */
-    <T extends DomElement> Collection<T> findDomElements(@NotNull Class<T> clazz);
+    <T extends DomElement> List<T> findDomElements(@NotNull Class<T> clazz);
 
     /**
      * 找到 PsiMethod 对应的Mapper Statement

@@ -5,6 +5,7 @@ import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
+import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
@@ -28,5 +29,11 @@ public interface ClassElement extends IdAttribute, DynamicSql {
     default Optional<String> getNamespaceValue() {
         return Optional.ofNullable(DomUtils.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
+
+    @TagValue
+    String getValue();
+
+    @TagValue
+    void setValue(String content);
 
 }

@@ -1,20 +1,22 @@
 package tk.cofe.plugin.mybatis.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.PopupStep;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
-import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 /**
@@ -45,31 +47,31 @@ public class GenerateStatementIntention implements IntentionAction {
         if (method == null) {
             return false;
         }
-        PsiClass psiClass = PsiJavaUtils.getElement(editor, PsiClass.class);
-        if (psiClass == null) {
-            return false;
-        }
         if (PsiJavaUtils.hasAnnotations(method, Annotation.STATEMENT_ANNOTATIONS)) {
             return false;
         }
-        CommonProcessors.FindFirstProcessor<PsiElement> methodProcessor = new CommonProcessors.FindFirstProcessor<>();
-        JavaPsiService.getInstance(project).process(method, methodProcessor);
-        PsiElement methodFound = methodProcessor.getFoundValue();
-        if (methodFound != null) {
-            return false;
-        }
-        CommonProcessors.FindFirstProcessor<Mapper> classProcessor = new CommonProcessors.FindFirstProcessor<>();
-        JavaPsiService.getInstance(project).process(psiClass, classProcessor);
-        Mapper classFount = classProcessor.getFoundValue();
-        if (classFount == null) {
-            return false;
-        }
-        return true;
+        return CollectionUtils.isEmpty(MapperService.getInstance(project).findStatement(method));
     }
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-
+        PsiMethod method = PsiJavaUtils.getElement(editor, PsiMethod.class);
+        if (null == method) {
+            return;
+        }
+        // todo 面板显示
+        JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<StatementTypeEnum>("Generate for: " + method.getName(), StatementTypeEnum.values()) {
+            @Override
+            public PopupStep onChosen(StatementTypeEnum selectedValue, boolean finalChoice) {
+                return doFinalStep(() -> WriteCommandAction.writeCommandAction(project, file).run(() -> {
+                    PsiClass psiClass = method.getContainingClass();
+                    if (null == psiClass) {
+                        return;
+                    }
+                    MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> selectedValue.processCreateStatement(mapper, method, project));
+                }));
+            }
+        }).showInFocusCenter();
     }
 
     @Override

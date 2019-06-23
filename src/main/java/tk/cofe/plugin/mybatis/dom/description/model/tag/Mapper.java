@@ -79,15 +79,19 @@ public interface Mapper extends DomElement {
     @SubTagList("sql")
     List<Sql> getSqls();
 
+    @NotNull
     @SubTagList("select")
     Select addSelect();
 
+    @NotNull
     @SubTagList("update")
     Update addUpdate();
 
+    @NotNull
     @SubTagList("insert")
     Insert addInsert();
 
+    @NotNull
     @SubTagList("delete")
     Delete addDelete();
 

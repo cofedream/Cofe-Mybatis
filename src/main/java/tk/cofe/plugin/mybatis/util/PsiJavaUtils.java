@@ -3,6 +3,7 @@ package tk.cofe.plugin.mybatis.util;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
@@ -62,7 +63,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否有指定注解
-     * @param target     目标元素
+     * @param target      目标元素
      * @param annotations 目标注解集合
      * @return true 有指定注解，false 没有指定注解
      */
@@ -101,6 +102,16 @@ public final class PsiJavaUtils {
     @Nullable
     public static PsiElement getElement(@NotNull Editor editor) {
         return PsiUtilBase.getElementAtCaret(editor);
+    }
+
+    /**
+     * 从当前编辑框获取当前光标所在元素
+     * @param editor 编辑框
+     * @return 当前光标所在元素
+     */
+    @Nullable
+    public static PsiElement getElement(@NotNull Editor editor, @NotNull PsiFile psiFile) {
+        return psiFile.findElementAt(editor.getCaretModel().getOffset());
     }
 
     /**

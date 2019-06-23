@@ -12,7 +12,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,18 +31,18 @@ public class MapperServiceImpl implements MapperService {
 
     @NotNull
     @Override
-    public Collection<Mapper> findAllMappers() {
+    public List<Mapper> findAllMappers() {
         return findDomElements(Mapper.class);
     }
 
     @NotNull
     @Override
-    public Collection<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
+    public List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
         return findAllMappers().stream().filter(mapperXml -> mapperXml.getNamespaceValue().orElse("").equals(mapperClass.getQualifiedName())).collect(Collectors.toList());
     }
 
     @Override
-    public <T extends DomElement> Collection<T> findDomElements(@NotNull Class<T> clazz) {
+    public <T extends DomElement> List<T> findDomElements(@NotNull Class<T> clazz) {
         return domService.getFileElements(clazz, project, GlobalSearchScope.projectScope(project)).stream().map(DomFileElement::getRootElement).collect(Collectors.toList());
     }
 

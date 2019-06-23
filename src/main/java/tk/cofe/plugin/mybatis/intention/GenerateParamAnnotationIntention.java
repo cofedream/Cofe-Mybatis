@@ -53,7 +53,7 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+        PsiElement element = PsiJavaUtils.getElement(editor, file);
         PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
         if (method == null) {
             return;
