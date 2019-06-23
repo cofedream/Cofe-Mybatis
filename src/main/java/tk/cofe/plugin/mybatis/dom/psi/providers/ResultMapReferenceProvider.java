@@ -16,8 +16,8 @@ import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +59,13 @@ public class ResultMapReferenceProvider {
                 if (!extendsValue.isPresent()) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
-                Optional<Mapper> mapper = MapperService.getMapper((XmlAttributeValue) myElement);
-                if (!mapper.isPresent()) {
+                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                if (mapper == null) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
                 List<ResolveResult> result = new ArrayList<>();
-                mapper.get().getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
-                    if (id.equals(extendsValue.get())) {
+                mapper.getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
+                    if (id.equals(extendsValue.get()) && resultMap.getId() != null && resultMap.getId().getXmlAttributeValue() != null) {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
@@ -77,17 +77,19 @@ public class ResultMapReferenceProvider {
             public Object[] getVariants() {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return new Object[0];
+                    return Empty.Array.OBJECTS;
                 }
-                return MapperService.getMapper((XmlAttributeValue) myElement)
-                        .map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getResultMaps()
-                                .stream().filter(resultMap -> resultMap.getIdValue()
-                                        .map(otherId -> domElement.getIdValue()
-                                                .map(selfId -> !otherId.equals(selfId))
-                                                .orElse(false))
+                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                if (mapper == null) {
+                    return Empty.Array.OBJECTS;
+                }
+                return ElementPresentationManager.getInstance().createVariants(mapper.getResultMaps()
+                        .stream().filter(resultMap -> resultMap.getIdValue()
+                                .map(otherId -> domElement.getIdValue()
+                                        .map(selfId -> !otherId.equals(selfId))
                                         .orElse(false))
-                                .collect(Collectors.toList())))
-                        .orElseGet(() -> new Object[0]);
+                                .orElse(false))
+                        .collect(Collectors.toList()));
             }
         }
     }
@@ -120,17 +122,16 @@ public class ResultMapReferenceProvider {
                 if (!idValue.isPresent()) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
+                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                if (mapper == null) {
+                    return Empty.Array.RESOLVE_RESULT;
+                }
                 List<ResolveResult> result = new ArrayList<>();
-                MapperService.getMapper((XmlAttributeValue) myElement).ifPresent(mapper -> {
-                    mapper.getResultMaps().forEach(resultMap -> {
-                        resultMap.getExtendsValue().ifPresent(extendsValue -> {
-                            if (extendsValue.equals(idValue.get())) {
-                                result.add(new PsiElementResolveResult(resultMap.getXmlElement()));
-
-                            }
-                        });
-                    });
-                });
+                mapper.getResultMaps().forEach(resultMap -> resultMap.getExtendsValue().ifPresent(extendsValue -> {
+                    if (extendsValue.equals(idValue.get()) && resultMap.getXmlElement() != null) {
+                        result.add(new PsiElementResolveResult(resultMap.getXmlElement()));
+                    }
+                }));
                 return result.toArray(Empty.Array.RESOLVE_RESULT);
             }
 

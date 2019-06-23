@@ -27,8 +27,8 @@ import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.JavaTypeEnum;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import javax.swing.*;
@@ -57,7 +57,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         PsiElement position = parameters.getPosition();
         InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(position.getProject());
         PsiFile xmlFile = injectedLanguageManager.getTopLevelFile(position);
-        if (!MapperService.isMapperXmlFile(xmlFile)) {
+        if (!PsiMybatisUtils.isMapperXmlFile(xmlFile)) {
             return;
         }
         if (isSupport(parameters)) {

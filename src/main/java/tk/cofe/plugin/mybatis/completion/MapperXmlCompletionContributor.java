@@ -15,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
@@ -41,7 +41,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         PsiElement position = parameters.getPosition();
-        if (!MapperService.isElementWithMapperXMLFile(position)) {
+        if (!PsiMybatisUtils.isElementWithMapperXMLFile(position)) {
             return;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(position, XmlAttribute.class);

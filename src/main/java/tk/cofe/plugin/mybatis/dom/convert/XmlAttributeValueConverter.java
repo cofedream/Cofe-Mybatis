@@ -9,13 +9,12 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
-import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * XmlAttribute 基础转换器
@@ -28,7 +27,12 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     @NotNull
     @Override
     public Collection<? extends XmlAttributeValue> getVariants(ConvertContext context) {
-        return MapperService.getMapper(context.getInvocationElement()).map(mapper -> Optional.ofNullable(getVariants(context, mapper)).orElse(Collections.emptyList())).orElse(Collections.emptyList());
+        Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
+        if (mapper == null) {
+            return Collections.emptyList();
+        }
+        Collection<XmlAttributeValue> variants = getVariants(context, mapper);
+        return variants == null ? Collections.emptyList() : variants;
     }
 
     @Nullable
@@ -46,7 +50,11 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (StringUtils.isBlank(value) || context == null) {
             return null;
         }
-        return isTarget(context) ? MapperService.getMapper(context.getInvocationElement()).map(mapper -> findTargetElement(value, context, mapper)).orElse(null) : null;
+        if (!isTarget(context)) {
+            return null;
+        }
+        Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
+        return mapper == null ? null : findTargetElement(value, context, mapper);
     }
 
     /**

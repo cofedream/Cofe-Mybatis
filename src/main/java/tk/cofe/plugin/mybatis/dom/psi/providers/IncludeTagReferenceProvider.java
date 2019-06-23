@@ -13,11 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Sql;
-import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author : zhengrf
@@ -43,11 +42,11 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @Override
         public ResolveResult[] multiResolve(boolean incompleteCode) {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
-            Optional<Mapper> mapper = MapperService.getMapper(originalElement);
-            if (!mapper.isPresent()) {
+            Mapper mapper = PsiMybatisUtils.getMapper(originalElement);
+            if (mapper == null) {
                 return Empty.Array.RESOLVE_RESULT;
             }
-            List<Sql> sqls = mapper.get().getSqls();
+            List<Sql> sqls = mapper.getSqls();
             List<ResolveResult> result = new ArrayList<>();
             sqls.forEach(sql -> sql.getIdValue().ifPresent(id -> {
                 if (id.equals(originalElement.getValue())) {
@@ -62,9 +61,11 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @NotNull
         @Override
         public Object[] getVariants() {
-            return MapperService.getMapper(((XmlAttributeValue) myElement))
-                    .map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getSqls()))
-                    .orElse(new Object[0]);
+            Mapper mapper = PsiMybatisUtils.getMapper(((XmlAttributeValue) myElement));
+            if (mapper == null) {
+                return Empty.Array.OBJECTS;
+            }
+            return ElementPresentationManager.getInstance().createVariants(mapper.getSqls());
         }
 
     }

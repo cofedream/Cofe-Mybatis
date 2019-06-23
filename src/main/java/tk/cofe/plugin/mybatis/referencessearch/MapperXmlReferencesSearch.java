@@ -16,8 +16,8 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
 import tk.cofe.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.Optional;
 
@@ -42,11 +42,11 @@ public class MapperXmlReferencesSearch extends QueryExecutorBase<PsiReference, R
         if (!elementToSearch.getLanguage().is(XMLLanguage.INSTANCE)) {
             return;
         }
-        if (!MapperService.isMapperXmlFile(elementToSearch.getContainingFile())) {
+        if (!PsiMybatisUtils.isMapperXmlFile(elementToSearch.getContainingFile())) {
             return;
         }
         XmlTag tag = PsiTreeUtil.getParentOfType(elementToSearch.getContext(), XmlTag.class, true);
-        if (MapperService.isBaseStatementElement(tag)) {
+        if (PsiMybatisUtils.isBaseStatementElement(tag)) {
             Optional.ofNullable((ClassElement) DomUtils.getDomElement(tag)).ifPresent(element -> element.getNamespaceValue().ifPresent(qualifiedName ->
                     JavaPsiService.getInstance(project).findPsiClass(qualifiedName).ifPresent(psiClass -> {
                         PsiMethod[] methods = psiClass.getMethods();

@@ -17,8 +17,6 @@
     <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceInterface="tk.cofe.plugin.mybatis.service.DomService"
-                        serviceImplementation="tk.cofe.plugin.mybatis.service.impl.DomServiceImpl"/>
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.JavaPsiService"

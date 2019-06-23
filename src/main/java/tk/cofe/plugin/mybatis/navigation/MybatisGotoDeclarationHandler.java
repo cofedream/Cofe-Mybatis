@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.Optional;
 
@@ -27,13 +27,13 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
     @Nullable
     @Override
     public PsiElement getGotoDeclarationTarget(@Nullable PsiElement sourceElement, Editor editor) {
-        if (!MapperService.isElementWithMapperXMLFile(sourceElement)) {
+        if (!PsiMybatisUtils.isElementWithMapperXMLFile(sourceElement)) {
             return null;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);
         return xmlAttribute == null ? null : EnumUtils.parse(StatementAttribute.values(), xmlAttribute).map(statement -> {
             if (sourceElement.getLanguage().is(XMLLanguage.INSTANCE)) {
-                if (MapperService.isMapperXmlFile(sourceElement.getContainingFile())) {
+                if (PsiMybatisUtils.isMapperXmlFile(sourceElement.getContainingFile())) {
                     return statement.process(sourceElement).orElse(null);
                 }
             }

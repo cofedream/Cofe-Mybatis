@@ -1,0 +1,3 @@
+public interface DemoMapper {
+  void update(Demo demo);
+}

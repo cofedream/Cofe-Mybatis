@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +61,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean isTarget(@NotNull PsiElement element) {
-        return element instanceof XmlTag && MapperService.isElementWithMapperXMLFile(element) && MapperService.isBaseStatementElement((XmlElement) element);
+        return element instanceof XmlTag && PsiMybatisUtils.isElementWithMapperXMLFile(element) && PsiMybatisUtils.isBaseStatementElement((XmlElement) element);
     }
 
 }

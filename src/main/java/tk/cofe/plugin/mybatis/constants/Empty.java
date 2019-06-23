@@ -14,8 +14,9 @@ public final class Empty {
     public static final String STRING = "";
 
     public static final class Array {
-        public static final ResolveResult[] RESOLVE_RESULT = new ResolveResult[0];
+        public static final Object[] OBJECTS = new Object[0];
         public static final String[] STRING = new String[0];
+        public static final ResolveResult[] RESOLVE_RESULT = new ResolveResult[0];
         public static final ProblemDescriptor[] PROBLEM_DESCRIPTOR = new ProblemDescriptor[0];
     }
 }
