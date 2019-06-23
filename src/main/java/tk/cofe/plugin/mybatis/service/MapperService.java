@@ -3,11 +3,14 @@ package tk.cofe.plugin.mybatis.service;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author : zhengrf
@@ -40,5 +43,13 @@ public interface MapperService {
      * @return 匹配的Dom文件
      */
     <T extends DomElement> Collection<T> findDomElements(@NotNull Class<T> clazz);
+
+    /**
+     * 找到 PsiMethod 对应的Mapper Statement
+     * @param method 方法
+     * @return Statement 集合
+     */
+    @NotNull
+    List<ClassElement> findStatement(@NotNull PsiMethod method);
 
 }

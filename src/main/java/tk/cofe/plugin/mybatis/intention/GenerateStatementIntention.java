@@ -64,15 +64,6 @@ public class GenerateStatementIntention implements IntentionAction {
         if (classFount == null) {
             return false;
         }
-        //if (!()) {
-        //    return false;
-        //}
-        //PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-        //PsiClass clazz = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-        //return null != method && null != clazz &&
-        //        !JavaUtils.isAnyAnnotationPresent(method, Annotation.STATEMENT_ANNOTATIONS) &&
-        //        !isTargetPresentInXml(method) &&
-        //        isTargetPresentInXml(clazz);
         return true;
     }
 
