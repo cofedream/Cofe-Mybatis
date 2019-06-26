@@ -2,9 +2,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -17,9 +15,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,57 +33,6 @@ public class SelectTagConverter {
 
     public static class ResultType extends ResolvingConverter<String> {
 
-        private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
-            private static final long serialVersionUID = -7375291625150519393L;
-
-            {
-                this.put("byte", Collections.singletonList("_byte"));
-                this.put("long", Collections.singletonList("_long"));
-                this.put("short", Collections.singletonList("_short"));
-                this.put("int", new ArrayList<String>(2) {
-                    private static final long serialVersionUID = -4321456431687868856L;
-
-                    {
-                        this.add("_int");
-                        this.add("_integer");
-                    }
-                });
-                this.put("double", Collections.singletonList("_double"));
-                this.put("float", Collections.singletonList("_float"));
-                this.put("boolean", Collections.singletonList("_boolean"));
-                this.put("String", Collections.singletonList("string"));
-                this.put("Byte", Collections.singletonList("byte"));
-                this.put("Long", Collections.singletonList("long"));
-                this.put("Short", Collections.singletonList("short"));
-                this.put("Integer", new ArrayList<String>(2) {
-                    private static final long serialVersionUID = -1451201046250936934L;
-
-                    {
-                        this.add("int");
-                        this.add("integer");
-                    }
-                });
-                this.put("Double", Collections.singletonList("double"));
-                this.put("Float", Collections.singletonList("float"));
-                this.put("Boolean", Collections.singletonList("boolean"));
-                this.put("Date", Collections.singletonList("date"));
-                this.put("Bigdecimal", new ArrayList<String>(2) {
-                    private static final long serialVersionUID = -304742509443073751L;
-
-                    {
-                        this.add("decimal");
-                        this.add("bigdecimal");
-                    }
-                });
-                this.put("Object", Collections.singletonList("object"));
-                this.put("Map", Collections.singletonList("map"));
-                this.put("Hashmap", Collections.singletonList("hashmap"));
-                this.put("List", Collections.singletonList("list"));
-                this.put("Arraylist", Collections.singletonList("arraylist"));
-                this.put("Collection", Collections.singletonList("collection"));
-                this.put("Iterator", Collections.singletonList("iterator"));
-            }
-        });
         private final Map<String, LookupElementBuilder> notCustomType = Collections.unmodifiableMap(new HashMap<String, LookupElementBuilder>() {
             private static final long serialVersionUID = 4402307158708442334L;
 
@@ -129,21 +74,7 @@ public class SelectTagConverter {
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
-            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> {
-                PsiType type = psiMethod.getReturnType();
-                if (type == null) {
-                    return Collections.<String>emptyList();
-                }
-                if (PsiTypeUtils.isJavaBuiltInType(type)) {
-                    return BaseType.get(type.getPresentableText());
-                } else {
-                    PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                    if (StringUtils.isBlank(reference.getReferenceName())) {
-                        return Collections.<String>emptyList();
-                    }
-                    return Collections.singletonList(reference.getQualifiedName());
-                }
-            }).orElse(Collections.emptyList());
+            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> PsiTypeUtils.getResultType(psiMethod.getReturnType())).orElse(Collections.emptyList());
         }
 
         @Nullable

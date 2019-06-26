@@ -15,6 +15,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
+import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 /**
  * 声明类型
@@ -26,7 +27,10 @@ enum StatementTypeEnum {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
-            // todo 处理ResultType
+            GenericAttributeValue<String> resultType = select.getResultType();
+            if (resultType != null) {
+                resultType.setStringValue(PsiTypeUtils.getResultType(method.getReturnType()).get(0));
+            }
             return select;
         }
     },
