@@ -23,7 +23,7 @@ import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
  * @date : 2019-06-23
  */
 enum StatementTypeEnum {
-    SELECT {
+    SELECT("Select") {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
@@ -33,24 +33,33 @@ enum StatementTypeEnum {
             }
             return select;
         }
-    },
-    INSERT {
+    }, INSERT("Insert") {
         @Override
         public Insert addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addInsert();
         }
-    }, UPDATE {
+    }, UPDATE("Update") {
         @Override
         public Update addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addUpdate();
         }
-    }, DELETE {
+    }, DELETE("Delete") {
         @Override
         public Delete addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addDelete();
         }
     },
     ;
+
+    private String desc;
+
+    StatementTypeEnum(String desc) {
+        this.desc = desc;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 
     /**
      * 执行创建元素动作,并返回创建的元素

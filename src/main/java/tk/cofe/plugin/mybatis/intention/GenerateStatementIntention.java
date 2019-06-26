@@ -24,6 +24,9 @@ import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
  * @date : 2019-06-18
  */
 public class GenerateStatementIntention implements IntentionAction {
+
+    private static final String STATEMENT_TYPE = "Statement Type";
+
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
     @Override
@@ -59,8 +62,15 @@ public class GenerateStatementIntention implements IntentionAction {
         if (null == method) {
             return;
         }
-        // todo 面板显示
-        JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<StatementTypeEnum>("Generate for: " + method.getName(), StatementTypeEnum.values()) {
+        // todo 添加 ICON
+        JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<StatementTypeEnum>(STATEMENT_TYPE, StatementTypeEnum.values()) {
+
+            @NotNull
+            @Override
+            public String getTextFor(StatementTypeEnum value) {
+                return value.getDesc();
+            }
+
             @Override
             public PopupStep onChosen(StatementTypeEnum selectedValue, boolean finalChoice) {
                 return doFinalStep(() -> WriteCommandAction.writeCommandAction(project, file).run(() -> {
