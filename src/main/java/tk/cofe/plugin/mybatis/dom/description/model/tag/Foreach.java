@@ -1,10 +1,12 @@
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
 import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.convert.ForeachConverter;
 
 /**
  * @author : zhengrf
@@ -15,6 +17,7 @@ public interface Foreach extends DomElement {
     @Nullable
     @NameValue
     @Attribute("collection")
+    @Convert(ForeachConverter.Collection.class)
     GenericAttributeValue<String> getCollection();
 
     @Nullable

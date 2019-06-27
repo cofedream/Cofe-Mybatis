@@ -54,7 +54,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
             return null;
         }
         return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
-                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> o.equals(field.getName())).findFirst().orElse(null)).orElse(null))
-                .orElse(null);
+                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> o.equals(field.getName())).findFirst()
+                        .orElse(null)).orElse(null)).orElse(null);
     }
 }

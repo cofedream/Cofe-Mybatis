@@ -1,5 +1,7 @@
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.lang.jvm.JvmAnnotation;
+import com.intellij.lang.jvm.JvmParameter;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
@@ -127,6 +129,22 @@ public final class PsiJavaUtils {
             return null;
         }
         return PsiTreeUtil.getParentOfType(element, target);
+    }
+
+    /**
+     * 获取指定注解
+     * @param parameter  目标对象
+     * @param annotation 需要获取的注解类型
+     * @return 注解
+     */
+    @Nullable
+    public static JvmAnnotation getAnnotation(JvmParameter parameter, tk.cofe.plugin.mybatis.enums.Annotation annotation) {
+        JvmAnnotation jvmAnnotation = parameter.getAnnotation(annotation.getQualifiedName());
+        if (jvmAnnotation != null) {
+            // todo 注解包装
+            annotation
+        }
+        return jvmAnnotation;
     }
 
 }

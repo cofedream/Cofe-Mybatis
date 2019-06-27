@@ -2,7 +2,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.PsiType;
+import com.intellij.icons.AllIcons;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -91,16 +91,16 @@ public class SelectTagConverter {
 
         @Nullable
         @Override
-        public LookupElement createLookupElement(String s) {
-            LookupElementBuilder builder = notCustomType.get(s);
+        public LookupElement createLookupElement(String text) {
+            LookupElementBuilder builder = notCustomType.get(text);
             if (builder != null) {
                 return builder;
             }
-            String shortName = s;
-            if (s.lastIndexOf(".") > 0) {
-                shortName = s.substring(s.lastIndexOf(".") + 1);
+            String shortName = text;
+            if (text.lastIndexOf(".") > 0) {
+                shortName = text.substring(text.lastIndexOf(".") + 1);
             }
-            return createLookupElementBuilder(s, s, shortName);
+            return createLookupElementBuilder(text, text, shortName).withIcon(AllIcons.Nodes.Class);
         }
     }
 
@@ -132,5 +132,6 @@ public class SelectTagConverter {
         protected XmlAttributeValue getTargetElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement) {
             return Optional.ofNullable(targetDomElement.getId()).map(GenericAttributeValue::getXmlAttributeValue).orElse(null);
         }
+
     }
 }
