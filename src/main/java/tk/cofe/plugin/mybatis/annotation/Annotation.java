@@ -1,9 +1,14 @@
 package tk.cofe.plugin.mybatis.annotation;
 
+import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiParameter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Mybatis相关注解
@@ -56,6 +61,24 @@ public class Annotation implements Cloneable {
         return qualifiedName;
     }
 
+    @Nullable
+    public Value getValue(@NotNull PsiParameter psiParameter) {
+        PsiAnnotation annotation = psiParameter.getAnnotation(this.qualifiedName);
+        if (annotation != null) {
+            String value = AnnotationUtil.getStringAttributeValue(annotation, Value.getName());
+            if (value != null) {
+                return new Value(value);
+            }
+        }
+        return null;
+    }
+
+    @NotNull
+    public Value getValue(@NotNull PsiParameter psiParameter, @NotNull Supplier<String> defaultValue) {
+        Value value = getValue(psiParameter);
+        return value == null ? new Value(defaultValue.get()) : value;
+    }
+
     @Override
     protected Annotation clone() {
         Annotation annotation = null;
@@ -67,12 +90,21 @@ public class Annotation implements Cloneable {
         return annotation;
     }
 
-    private static class Value {
+    public static class Value {
 
         private String value;
 
-        Value(@NotNull String value) {
+        private Value(@NotNull String value) {
             this.value = value;
+        }
+
+        public static String getName() {
+            return "value";
+        }
+
+        @NotNull
+        public String getValue() {
+            return value;
         }
 
         @Override

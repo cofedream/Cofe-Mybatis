@@ -3,6 +3,7 @@ package tk.cofe.plugin.mybatis.util;
 import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.lang.jvm.JvmParameter;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -11,6 +12,7 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NotNull;
@@ -149,13 +151,8 @@ public final class PsiJavaUtils {
      * @return 注解
      */
     @Nullable
-    public static JvmAnnotation getAnnotation(JvmParameter parameter, Annotation annotation) {
-        JvmAnnotation jvmAnnotation = parameter.getAnnotation(annotation.getQualifiedName());
-        if (jvmAnnotation != null) {
-            // todo 注解包装
-            //annotation
-        }
-        return jvmAnnotation;
+    public static PsiAnnotation getAnnotation(PsiParameter parameter, Annotation annotation) {
+        return parameter.getAnnotation(annotation.getQualifiedName());
     }
 
 }
