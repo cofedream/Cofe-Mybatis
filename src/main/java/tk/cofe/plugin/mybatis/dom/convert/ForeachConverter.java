@@ -3,17 +3,14 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.jvm.JvmAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.enums.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
