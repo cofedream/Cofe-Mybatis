@@ -21,6 +21,7 @@ import java.util.Collection;
 
 /**
  * JavaPsi工具
+ *
  * @author : zhengrf
  * @date : 2019-01-01
  */
@@ -28,6 +29,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断 PsiElement 是否为接口
+     *
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
@@ -37,6 +39,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断 PsiElement 是否为类方法
+     *
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
@@ -54,6 +57,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否有指定注解
+     *
      * @param target     目标元素
      * @param annotation 目标注解
      * @return true 有指定注解，false 没有指定注解
@@ -65,6 +69,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否有指定注解
+     *
      * @param target      目标元素
      * @param annotations 目标注解集合
      * @return true 有指定注解，false 没有指定注解
@@ -75,6 +80,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否已经导入目标类
+     *
      * @param file          Java类文件
      * @param qualifiedName 类全限定名
      * @return true 已导入，false 未导入
@@ -89,6 +95,7 @@ public final class PsiJavaUtils {
 
     /**
      * 导入类到指定Java文件
+     *
      * @param file     Java文件
      * @param psiClass 要导入的类
      */
@@ -98,6 +105,7 @@ public final class PsiJavaUtils {
 
     /**
      * 从当前编辑框获取当前光标所在元素
+     *
      * @param editor 编辑框
      * @return 当前光标所在元素
      */
@@ -108,6 +116,7 @@ public final class PsiJavaUtils {
 
     /**
      * 从当前编辑框获取当前光标所在元素
+     *
      * @param editor 编辑框
      * @return 当前光标所在元素
      */
@@ -118,6 +127,7 @@ public final class PsiJavaUtils {
 
     /**
      * 从当前编辑框获取当前光标所在目标元素
+     *
      * @param editor 编辑框
      * @param target 目标元素
      * @return 当前光标所在元素
@@ -133,16 +143,17 @@ public final class PsiJavaUtils {
 
     /**
      * 获取指定注解
+     *
      * @param parameter  目标对象
      * @param annotation 需要获取的注解类型
      * @return 注解
      */
     @Nullable
-    public static JvmAnnotation getAnnotation(JvmParameter parameter, tk.cofe.plugin.mybatis.enums.Annotation annotation) {
+    public static JvmAnnotation getAnnotation(JvmParameter parameter, Annotation annotation) {
         JvmAnnotation jvmAnnotation = parameter.getAnnotation(annotation.getQualifiedName());
         if (jvmAnnotation != null) {
             // todo 注解包装
-            annotation
+            //annotation
         }
         return jvmAnnotation;
     }
