@@ -13,8 +13,8 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
-    <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
-    <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
+    <depends config-file="mybatis-spring.xml">com.intellij.spring</depends>
+    <depends config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
@@ -62,7 +62,6 @@
 
         <!--代码完成,无需指向引用-->
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-        <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.SqlParameterCompletionContributor" order="first"/>
 
         <!--代码检查-->
         <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->

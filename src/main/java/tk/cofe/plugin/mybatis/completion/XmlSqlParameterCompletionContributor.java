@@ -8,6 +8,7 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
@@ -20,7 +21,6 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.util.PlatformIcons;
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
@@ -35,11 +35,11 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 import javax.swing.*;
 
 /**
- * 代码完成,无需指向引用
+ * XML 文件中的SQL 参数完成
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class SqlParameterCompletionContributor extends CompletionContributor {
+public class XmlSqlParameterCompletionContributor extends CompletionContributor {
 
     /**
      * 权重
@@ -71,7 +71,7 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         }
     }
 
-    private void process(@NonNull JavaPsiService javaPsiService, @NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixArr) {
+    private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixArr) {
         PsiParameter[] psiParameters = psiMethod.getParameterList().getParameters();
         //if (prefixArr.length == 0) {
         process(javaPsiService, psiParameters, result);
@@ -102,19 +102,19 @@ public class SqlParameterCompletionContributor extends CompletionContributor {
         result.stopHere();
     }
 
-    private void process(@NonNull JavaPsiService javaPsiService, PsiParameter[] psiParameters, @NotNull CompletionResultSet result) {
+    private void process(@NotNull JavaPsiService javaPsiService, PsiParameter[] psiParameters, @NotNull CompletionResultSet result) {
         for (int i = 0; i < psiParameters.length; i++) {
             PsiParameter parameter = psiParameters[i];
             PsiType parameterType = parameter.getType();
             String typeText = parameterType.getPresentableText();
             String annotationValue = getParamAnnotationValue(parameter);
             if (annotationValue != null) {
-                result.addElement(createLookupElement(annotationValue, typeText, PlatformIcons.PARAMETER_ICON));
-                result.addElement(createLookupElement("param" + (i + 1), typeText, null, PlatformIcons.PARAMETER_ICON, PRIORITY - i));
+                result.addElement(createLookupElement(annotationValue, typeText, AllIcons.Nodes.Parameter));
+                result.addElement(createLookupElement("param" + (i + 1), typeText, null, AllIcons.Nodes.Parameter, PRIORITY - i));
             } else {
                 if (JavaTypeEnum.parse(parameterType) == JavaTypeEnum.Custom) {
                     // todo 处理集合
-                    result.addElement(createLookupElement("param" + (i + 1), typeText, null, PlatformIcons.PARAMETER_ICON, PRIORITY - i));
+                    result.addElement(createLookupElement("param" + (i + 1), typeText, null, AllIcons.Nodes.Parameter, PRIORITY - i));
                 } else {
                     // 自定义类型
                     if (parameterType instanceof PsiClassReferenceType) {

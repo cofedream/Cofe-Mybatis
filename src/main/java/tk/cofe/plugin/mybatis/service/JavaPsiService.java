@@ -8,7 +8,6 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.util.Processor;
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
@@ -42,7 +41,7 @@ public interface JavaPsiService {
      * @param qualifiedName 类全限定名
      * @return PsiClass
      */
-    @NonNull
+    @NotNull
     Optional<PsiClass> findPsiClass(@NotNull String qualifiedName);
 
     void process(@NotNull PsiElement target, @NotNull Processor processor);

@@ -7,7 +7,6 @@ import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Namespace;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
-import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -46,7 +45,7 @@ public interface Mapper extends DomElement {
     @SubTagList("resultMap")
     List<ResultMap> getResultMaps();
 
-    @NonNull
+    @NotNull
     default List<ClassElement> getClassElements() {
         List<ClassElement> classElements = new LinkedList<>();
         if (getInserts() != null) {
