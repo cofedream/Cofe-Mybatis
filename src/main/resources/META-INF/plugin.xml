@@ -13,8 +13,16 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
+    <!-- Optional dependency on another plugin.
+       If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
+       (the format of this file conforms to the format of plugin.xml) will be loaded. -->
     <depends config-file="mybatis-spring.xml">com.intellij.spring</depends>
     <depends config-file="mybatis-database.xml">com.intellij.database</depends>
+
+    <!-- Resource bundle (/messages/MyPluginBundle.properties) to be used
+       with `key` attributes in extension points and implicit keys like
+       `action.[pluginID].[ActionID].text` -->
+    <resource-bundle>MybatisBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
@@ -62,7 +70,7 @@
 
         <!--代码完成,无需指向引用-->
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-
+        <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor" order="first"/>
         <!--代码检查-->
         <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->
         <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->

@@ -22,8 +22,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * mybatis Psi工具类
@@ -80,11 +79,11 @@ public class PsiMybatisUtils {
         return Mapper.BASIC_OPERATION.stream().anyMatch(clazz -> clazz.isInstance(domElement));
     }
 
-    public static boolean isTargetXml(@NotNull XmlFile xmlFile, String... namespaces) {
+    public static boolean isTargetXml(@NotNull XmlFile xmlFile, @Nullable String... namespaces) {
         if (namespaces == null || namespaces.length == 0) {
             return false;
         }
-        Set<String> namespacesSet = new HashSet<>(Arrays.asList(namespaces));
+        Collection<String> namespacesSet = Arrays.asList(namespaces);
         XmlFileHeader header = DomService.getInstance().getXmlFileHeader(xmlFile);
         return namespacesSet.contains(header.getPublicId()) || namespacesSet.contains(header.getSystemId()) || namespacesSet.contains(header.getRootTagNamespace());
     }

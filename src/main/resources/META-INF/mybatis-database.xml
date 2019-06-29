@@ -2,8 +2,7 @@
 
 <idea-plugin>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor" order="first"/>
+  <extensions defaultExtensionNs="com.intellij.database">
   </extensions>
 
 </idea-plugin>

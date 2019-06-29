@@ -1,9 +1,11 @@
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +40,7 @@ public final class PsiTypeUtils {
      * @return {@code true} 是自定义 JavaBean
      */
     public static boolean isCustomType(@NotNull PsiType psiType) {
-        return !isJavaBuiltInType(psiType);
+        return JavaTypeEnum.Custom == JavaTypeEnum.parse(psiType);
     }
 
     /**
@@ -142,4 +144,209 @@ public final class PsiTypeUtils {
         }
     });
 
+    /**
+     * Java 类型枚举
+     * @author : zhengrf
+     * @date : 2019-01-29
+     */
+    private enum JavaTypeEnum {
+        // 空
+        VOID() {
+            @Override
+            java.lang.String getKey() {
+                return "void";
+            }
+        },
+        // 基本类型
+        BOOLEAN() {
+            @Override
+            java.lang.String getKey() {
+                return "boolean";
+            }
+        },
+        BYTE() {
+            @Override
+            java.lang.String getKey() {
+                return "byte";
+            }
+        },
+        CHAR() {
+            @Override
+            java.lang.String getKey() {
+                return "char";
+            }
+        },
+        DOUBLE() {
+            @Override
+            java.lang.String getKey() {
+                return "double";
+            }
+        },
+        FLOAT() {
+            @Override
+            java.lang.String getKey() {
+                return "float";
+            }
+        },
+        INT() {
+            @Override
+            java.lang.String getKey() {
+                return "int";
+            }
+        },
+        LONG() {
+            @Override
+            java.lang.String getKey() {
+                return "int";
+            }
+        },
+        SHORT() {
+            @Override
+            java.lang.String getKey() {
+                return "short";
+            }
+        },
+        // 包装类
+        Boolean() {
+            @Override
+            java.lang.String getKey() {
+                return "boolean";
+            }
+        },
+        Byte() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Byte.class;
+            }
+        },
+        Character() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Character.class;
+            }
+        },
+        Double() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Double.class;
+            }
+        },
+        Float() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Float.class;
+            }
+        },
+        Integer() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Integer.class;
+            }
+        },
+        Long() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Long.class;
+            }
+        },
+        Short() {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Short.class;
+            }
+        },
+        // 其他Java内置类
+        Object {
+            @Override
+            Class getTypeClass() {
+                return java.lang.Object.class;
+            }
+        },
+        String {
+            @Override
+            Class getTypeClass() {
+                return java.lang.String.class;
+            }
+        },
+        Date {
+            @Override
+            boolean checkInstance(@NotNull PsiClass psiClass) {
+                return false;
+            }
+        },
+        Bigdecimal {
+            @Override
+            Class getTypeClass() {
+                return java.math.BigDecimal.class;
+            }
+        },
+        // 集合类型
+        Map {
+            @Override
+            Class getTypeClass() {
+                return java.util.Map.class;
+            }
+        },
+        List {
+            @Override
+            Class getTypeClass() {
+                return java.util.List.class;
+            }
+        },
+        Set {
+            @Override
+            Class getTypeClass() {
+                return java.util.Set.class;
+            }
+        },
+        // 自定义类型
+        Custom() {},
+        ;
+
+        @NotNull
+        public static JavaTypeEnum parse(@NotNull PsiType psiType) {
+            for (JavaTypeEnum typeEnum : JavaTypeEnum.values()) {
+                if (typeEnum.support(psiType)) {
+                    return typeEnum;
+                }
+            }
+            return Custom;
+        }
+
+        boolean support(@NotNull PsiType psiType) {
+            if (psiType.getPresentableText().equals(getKey())) {
+                return true;
+            }
+            if (psiType instanceof PsiClassReferenceType) {
+                PsiClass psiClass = ((PsiClassReferenceType) psiType).resolve();
+                if (psiClass == null) {
+                    return false;
+                }
+                return checkInstance(psiClass);
+            }
+            return false;
+        }
+
+        @Nullable
+        String getKey() {
+            return null;
+        }
+
+        boolean checkInstance(@NotNull PsiClass psiClass) {
+            Class typeClass = getTypeClass();
+            if (typeClass != null) {
+                for (PsiClass aSuper : psiClass.getSupers()) {
+                    if (typeClass.getTypeName().equals(aSuper.getQualifiedName())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Nullable
+        Class getTypeClass() {
+            return null;
+        }
+    }
 }
