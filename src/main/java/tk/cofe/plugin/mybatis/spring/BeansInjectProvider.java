@@ -82,10 +82,7 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                         case "value":
                         case "basePackages":
                             if (attributeValue instanceof JvmAnnotationConstantValue) {
-                                PsiPackage psiPackage = getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue));
-                                if (psiPackage != null) {
-                                    processBasePackage(scope, psiPackage, mappers);
-                                }
+                                processBasePackage(scope, getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue)), mappers);
                             } else if (attributeValue instanceof JvmAnnotationArrayValue) {
                                 getPsiPackage(facade, (JvmAnnotationArrayValue) attributeValue).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
                             }
@@ -97,11 +94,7 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                                 if (StringUtils.isBlank(classQualifiedName)) {
                                     return;
                                 }
-                                PsiPackage psiPackage = facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf(".")));
-                                if (psiPackage == null) {
-                                    return;
-                                }
-                                processBasePackage(scope, psiPackage, mappers);
+                                processBasePackage(scope, facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf("."))), mappers);
                             }
                             break;
                         case "annotationClass":
@@ -131,7 +124,10 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
         });
     }
 
-    private static void processBasePackage(@NotNull GlobalSearchScope scope, @NotNull PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
+    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
+        if (psiPackage == null) {
+            return;
+        }
         Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
             if (psiClass.isInterface()) {
                 mappers.add(new CustomSpringComponent(psiClass));
