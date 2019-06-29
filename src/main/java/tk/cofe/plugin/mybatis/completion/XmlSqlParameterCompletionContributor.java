@@ -15,6 +15,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
@@ -33,6 +34,13 @@ import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * XML 文件中的SQL 参数完成
@@ -82,22 +90,87 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             if (psiParameters.length == 1) {
                 Annotation.Value value = Annotation.PARAM.getValue(psiParameters[0]);
                 if (value == null) {
-
+                    // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+                    if (PsiTypeUtils.isCustomType(psiParameters[0].getType()) && psiParameters[0].getType() instanceof PsiClassReferenceType) {
+                        process(javaPsiService, ((PsiClassReferenceType) psiParameters[0].getType()), result, prefixs);
+                    }
                 } else {
                     result.addElement(createLookupElement(value.getValue(), psiParameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
                 }
             } else {
-
+                for (PsiParameter psiParameter : psiParameters) {
+                    Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
+                }
             }
         } else {
-
-        }
-
-        // todo 提取为单独方法
-        if (prefixs.length == 0) {
+            Map<String, PsiParameter> psiParameterMap = new HashMap<>();
             for (int i = 0; i < psiParameters.length; i++) {
-                result.addElement(createLookupElement("param" + (i + 1), psiParameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
+                Annotation.Value value = Annotation.PARAM.getValue(psiParameters[i]);
+                if (value != null) {
+                    psiParameterMap.put(value.getValue(), psiParameters[i]);
+                }
+                psiParameterMap.put("param" + (i + 1), psiParameters[i]);
             }
+            PsiParameter psiParameter = psiParameterMap.get(prefixs[0]);
+            // 自定义类类型则取字段和方法
+            if (psiParameter.getType() instanceof PsiClassReferenceType) {
+                // todo 判断是否自定义类型
+                PsiClassReferenceType psiClassReferenceType = ((PsiClassReferenceType) psiParameter.getType());
+                for (int i = 1; i < prefixs.length; i++) {
+                    String prefix = prefixs[i];
+                    String qualifiedName = psiClassReferenceType.getReference().getQualifiedName();
+                    List<PsiMember> psiMembers = javaPsiService.findPsiClass(qualifiedName).map(psiClass -> {
+                        List<PsiMember> members = new ArrayList<>();
+                        members.addAll(Arrays.asList(psiClass.getAllFields()));
+                        members.addAll(Arrays.asList(psiClass.getAllMethods()));
+                        return members;
+                    }).orElse(Collections.emptyList());
+                    for (PsiMember psiMember : psiMembers) {
+                        if (psiMember instanceof PsiField) {
+                            if (prefix.equals(psiMember.getName())) {
+                                if (((PsiField) psiMember).getType() instanceof PsiClassReferenceType) {
+                                    psiClassReferenceType = (PsiClassReferenceType) ((PsiField) psiMember).getType();
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    //javaPsiService.findPsiClass(qualifiedName).filter(psiClass -> {
+                    //    for (PsiField field : psiClass.getAllFields()) {
+                    //        if (prefix.equals(field.getName())) {
+                    //            return field.getType() instanceof PsiClassReferenceType;
+                    //        }
+                    //    }
+                    //    return false;
+                    //    PsiMethod[] allMethods = psiClass.getAllMethods();
+                    //}).ifPresent(psiClass -> {
+                    //    for (PsiField field : psiClass.getAllFields()) {
+                    //        if (prefix.equals(field.getName())) {
+                    //            if (field.getType() instanceof PsiClassReferenceType) {
+                    //                //psiClassReferenceType = ((PsiClassReferenceType) field.getType());
+                    //            }
+                    //            return;
+                    //        }
+                    //        //        result.addElement(createLookupElement(field.getName(), field.getType().getPresentableText(), PlatformIcons.FIELD_ICON));
+                    //    }
+                    //    //    for (PsiMethod method : psiClass.getAllMethods()) {
+                    //    //        if (isTargetMethod(method)) {
+                    //    //            result.addElement(createLookupElement(processMethodName(method), method.getReturnType().getPresentableText(), getTailText(method), PlatformIcons.METHOD_ICON));
+                    //    //        }
+                    //    //    }
+                    //});
+                }
+                process(javaPsiService, psiClassReferenceType, result, prefixs);
+            }
+            //Arrays.stream(psiParameters).collect(Collectors.toMap(k -> {
+            //    Annotation.Value value = Annotation.PARAM.getValue(k);
+            //    if (value == null) {
+            //        return k.getType().getPresentableText();
+            //    }
+            //    return value;
+            //}, v -> {
+            //    return v;
+            //}));
         }
         //if (prefixs.length == 0) {
         //    // 2.无前缀
@@ -114,6 +187,14 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
         //    // 1.1 参数==1
         //    // 1.2 参数>1
         //}
+
+
+        // todo 提取为单独方法
+        if (prefixs.length == 0) {
+            for (int i = 0; i < psiParameters.length; i++) {
+                result.addElement(createLookupElement("param" + (i + 1), psiParameters[i].getType().getPresentableText(), AllIcons.Nodes.Class));
+            }
+        }
 
         // 2.2 参数>1
         //if (prefixs.length == 0) {
@@ -161,19 +242,25 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
                 } else {
                     // 自定义类型
                     if (parameterType instanceof PsiClassReferenceType) {
-                        process(javaPsiService, ((PsiClassReferenceType) parameterType), result);
+                        process(javaPsiService, ((PsiClassReferenceType) parameterType), result, new String[0]);
                     }
                 }
             }
         }
     }
 
-    private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType referenceType, @NotNull CompletionResultSet result) {
+    private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType referenceType, @NotNull CompletionResultSet result, String[] prefixs) {
+        String prefiex = String.join(".", prefixs);
         String qualifiedName = referenceType.getReference().getQualifiedName();
         javaPsiService.findPsiClass(qualifiedName).ifPresent(psiClass -> {
-            String tailText = getTailText(psiClass);
             for (PsiField field : psiClass.getAllFields()) {
-                result.addElement(createLookupElement(field.getName(), field.getType().getPresentableText(), tailText, PlatformIcons.FIELD_ICON));
+                String name = field.getName();
+                if (name != null) {
+                    if (prefiex.length() != 0) {
+                        name = prefiex + "." + name;
+                    }
+                    result.addElement(createLookupElement(name, field.getType().getPresentableText(), PlatformIcons.FIELD_ICON));
+                }
             }
             for (PsiMethod method : psiClass.getAllMethods()) {
                 if (isTargetMethod(method)) {
@@ -323,13 +410,17 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
     //    return EmptyUtil.Array.STRING;
     //}
 
+    /**
+     * 获取前缀
+     */
     @NotNull
     private String[] getPrefix(@NotNull CompletionResultSet result) {
         String prefix = result.getPrefixMatcher().getPrefix();
-        if (StringUtils.isBlank(prefix)) {
+        if (StringUtils.isBlank(prefix) || !prefix.contains(".")) {
             return Empty.Array.STRING;
         }
-        return prefix.split("\\.");
+        String substring = prefix.substring(0, prefix.lastIndexOf("."));
+        return substring.split("\\.");
     }
 
     /**
