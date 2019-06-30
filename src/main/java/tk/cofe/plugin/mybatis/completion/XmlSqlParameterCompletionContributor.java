@@ -190,7 +190,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
         }
         String prefiex = String.join(".", prefixs);
         for (PsiField field : psiClass.getAllFields()) {
-            createLookupElement(prefiex, field.getName(), field.getType().getPresentableText(), PRIVATE_FIELD_ICON, result::addElement);
+            createLookupElement(prefiex, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
         }
         for (PsiMethod method : psiClass.getAllMethods()) {
             if (isTargetMethod(method)) {
