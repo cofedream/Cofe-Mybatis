@@ -2,6 +2,7 @@ package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,14 @@ public final class PsiTypeUtils {
     public static boolean isJavaBuiltInType(@NotNull PsiType psiType) {
         // 获取显示的文本内容 Boolean/List<String>
         return isJavaBuiltInType(psiType.getPresentableText());
+    }
+
+    /**
+     * 判断是否为 void 类型
+     * @param psiType 需判断类型
+     */
+    public static boolean isVoid(@Nullable PsiType psiType) {
+        return psiType != null && PsiPrimitiveType.VOID.equals(psiType);
     }
 
     /**

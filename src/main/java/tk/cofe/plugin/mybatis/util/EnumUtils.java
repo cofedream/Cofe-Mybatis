@@ -7,6 +7,7 @@ import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import java.util.Optional;
 
 /**
+ * 枚举工具类
  * @author : zhengrf
  * @date : 2019-01-17
  */

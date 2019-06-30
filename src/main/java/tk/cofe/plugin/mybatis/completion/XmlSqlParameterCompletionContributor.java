@@ -1,6 +1,5 @@
 package tk.cofe.plugin.mybatis.completion;
 
-import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -10,7 +9,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
@@ -51,7 +49,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
     /**
      * 权重
      */
-    private static final double PRIORITY = 999.0;
+    private static final double PRIORITY = 20;
     /**
      * 尾标题
      */
@@ -138,34 +136,20 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
                 process(javaPsiService, psiClassReferenceType, result, prefixs);
             }
         }
-        // todo 提取为单独方法
-        if (prefixs.length == 0) {
-            for (int i = 0; i < psiParameters.length; i++) {
-                result.addElement(createLookupElement("param" + (i + 1), psiParameters[i].getType().getPresentableText(), AllIcons.Nodes.Class));
-            }
-        }
+        addParamsVariants(result, prefixs, psiParameters);
         result.stopHere();
     }
 
-    private void process(@NotNull JavaPsiService javaPsiService, PsiParameter[] psiParameters, @NotNull CompletionResultSet result) {
-        for (int i = 0; i < psiParameters.length; i++) {
-            PsiParameter parameter = psiParameters[i];
-            PsiType parameterType = parameter.getType();
-            String typeText = parameterType.getPresentableText();
-            String annotationValue = getParamAnnotationValue(parameter);
-            if (annotationValue != null) {
-                result.addElement(createLookupElement(annotationValue, typeText, AllIcons.Nodes.Parameter));
-                result.addElement(createLookupElement("param" + (i + 1), typeText, AllIcons.Nodes.Parameter, PRIORITY - i));
-            } else {
-                if (PsiTypeUtils.isCustomType(parameterType)) {
-                    // todo 处理集合
-                    result.addElement(createLookupElement("param" + (i + 1), typeText, AllIcons.Nodes.Parameter, PRIORITY - i));
-                } else {
-                    // 自定义类型
-                    if (parameterType instanceof PsiClassReferenceType) {
-                        process(javaPsiService, ((PsiClassReferenceType) parameterType), result, new String[0]);
-                    }
-                }
+    /**
+     * 添加 param1-paramn 的提示
+     * @param result           结果集
+     * @param prefixs          前缀
+     * @param methodParameters 方法参数
+     */
+    private void addParamsVariants(@NotNull CompletionResultSet result, @NotNull String[] prefixs, PsiParameter[] methodParameters) {
+        if (prefixs.length == 0) {
+            for (int i = 0; i < methodParameters.length; i++) {
+                result.addElement(createLookupElement("param" + (i + 1), methodParameters[i].getType().getPresentableText(), AllIcons.Nodes.Parameter, methodParameters.length - i));
             }
         }
     }
@@ -184,25 +168,22 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
                 }
             }
             for (PsiMethod method : psiClass.getAllMethods()) {
-                if (isTargetMethod(method)) {
+                if (isGetMethod(method)) {
                     result.addElement(createLookupElement(processMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON));
                 }
             }
         });
     }
 
-    private boolean isTargetMethod(PsiMethod method) {
+    /**
+     * 判断是否为 getXXX 函数
+     * @param method 方法名
+     */
+    private boolean isGetMethod(@NotNull PsiMethod method) {
         PsiType returnType = method.getReturnType();
-        return returnType != null && !returnType.equalsToText("void") && method.getName().startsWith("get") && !method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
+        return returnType != null && !PsiTypeUtils.isVoid(returnType) && method.getName().startsWith("get") && !method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
     }
 
-    private boolean isTargetMethod(PsiMethod method, String name) {
-        if (!isTargetMethod(method)) {
-            return false;
-        }
-        String methodName = method.getName();
-        return name.equals(Character.toLowerCase(methodName.charAt(4)) + methodName.substring(5));
-    }
 
     @Nullable
     private Integer getPrefixNum(String prefix) {
@@ -228,15 +209,6 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             return first + methodName.substring(4);
         }
         return String.valueOf(first);
-    }
-
-    @Nullable
-    private String getParamAnnotationValue(PsiParameter parameter) {
-        PsiAnnotation param = parameter.getAnnotation(Annotation.PARAM.getQualifiedName());
-        if (param != null) {
-            return AnnotationUtil.getStringAttributeValue(param, "value");
-        }
-        return null;
     }
 
     /**
@@ -272,11 +244,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     @NotNull
     private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon, double priority) {
-        LookupElementBuilder builder = LookupElementBuilder.create(lookupString).withTypeText(type).appendTailText(TAIL_TEXT, true).bold();
-        if (icon != null) {
-            builder = builder.withIcon(icon);
-        }
-        return PrioritizedLookupElement.withPriority(builder, priority);
+        return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withTypeText(type).appendTailText(TAIL_TEXT, true).bold().withIcon(icon), priority);
     }
 
     @NotNull

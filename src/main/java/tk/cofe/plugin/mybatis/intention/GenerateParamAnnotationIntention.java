@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
@@ -44,7 +45,7 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
         if (!(file instanceof PsiJavaFile)) {
             return false;
         }
-        PsiMethod method = PsiJavaUtils.getElement(editor, PsiMethod.class);
+        PsiMethod method = PsiElementUtils.getElement(editor, PsiMethod.class);
         if (method == null || method.getParameterList().isEmpty()) {
             return false;
         }
@@ -53,7 +54,7 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        PsiElement element = PsiJavaUtils.getElement(editor, file);
+        PsiElement element = PsiElementUtils.getElement(editor, file);
         PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
         if (method == null) {
             return;

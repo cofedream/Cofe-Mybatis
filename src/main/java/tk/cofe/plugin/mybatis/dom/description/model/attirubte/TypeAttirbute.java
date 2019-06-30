@@ -7,7 +7,7 @@ import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.GenericValueUtils;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ public interface TypeAttirbute extends DomElement {
      */
     @NotNull
     default Optional<String> getTypeValue() {
-        return GenericValueUtils.getAttributeVlaue(getType());
+        return DomUtils.getAttributeVlaue(getType());
     }
 
 }

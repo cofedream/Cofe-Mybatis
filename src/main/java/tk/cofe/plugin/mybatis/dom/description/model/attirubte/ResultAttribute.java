@@ -7,7 +7,7 @@ import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.GenericValueUtils;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 
@@ -29,6 +29,6 @@ public interface ResultAttribute extends DomElement {
      */
     @NotNull
     default Optional<String> getResultValue() {
-        return GenericValueUtils.getAttributeVlaue(getResult());
+        return DomUtils.getAttributeVlaue(getResult());
     }
 }

@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
+import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 /**
@@ -46,7 +47,7 @@ public class GenerateStatementIntention implements IntentionAction {
         if (!(file instanceof PsiJavaFile)) {
             return false;
         }
-        PsiMethod method = PsiJavaUtils.getElement(editor, PsiMethod.class);
+        PsiMethod method = PsiElementUtils.getElement(editor, PsiMethod.class);
         if (method == null) {
             return false;
         }
@@ -58,7 +59,7 @@ public class GenerateStatementIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        PsiMethod method = PsiJavaUtils.getElement(editor, PsiMethod.class);
+        PsiMethod method = PsiElementUtils.getElement(editor, PsiMethod.class);
         if (null == method) {
             return;
         }
