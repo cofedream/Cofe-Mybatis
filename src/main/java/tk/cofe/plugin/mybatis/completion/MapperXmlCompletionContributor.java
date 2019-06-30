@@ -104,7 +104,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                     if (type == null) {
                         return;
                     }
-                    if (PsiTypeUtils.isJavaBuiltInType(type)) {
+                    if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionType(type)) {
                         result.addAllElements(notCustomType.get(type.getPresentableText()));
                     } else {
                         if (type instanceof PsiClassReferenceType) {
@@ -113,7 +113,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                             if (StringUtils.isBlank(referenceName)) {
                                 return;
                             }
-                            if (PsiTypeUtils.isJavaBuiltInType(referenceName)) {
+                            if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionType(type)) {
                                 result.addAllElements(notCustomType.get(referenceName));
                             } else {
                                 result.addElement(createLookupElementBuilder(reference.getQualifiedName(), reference.getQualifiedName(), referenceName));

@@ -15,7 +15,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
-import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 /**
  * 声明类型
@@ -29,7 +29,7 @@ enum StatementTypeEnum {
             Select select = mapper.addSelect();
             GenericAttributeValue<String> resultType = select.getResultType();
             if (resultType != null) {
-                resultType.setStringValue(PsiTypeUtils.getResultType(method.getReturnType()).get(0));
+                resultType.setStringValue(PsiMybatisUtils.getResultType(method.getReturnType()).get(0));
             }
             return select;
         }

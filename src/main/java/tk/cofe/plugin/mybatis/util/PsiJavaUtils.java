@@ -1,16 +1,14 @@
 package tk.cofe.plugin.mybatis.util;
 
-import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
@@ -101,6 +99,30 @@ public final class PsiJavaUtils {
         }
         PsiClass parentOfType = PsiTreeUtil.getParentOfType(element, PsiClass.class);
         return parentOfType != null && parentOfType.isInterface();
+    }
+
+    /**
+     * 判断是否为 void 方法
+     * @param method 方法
+     */
+    public static boolean isVoidMethod(@NotNull PsiMethod method) {
+        return PsiTypeUtils.isVoid(method.getReturnType());
+    }
+
+    /**
+     * 判断是否为 getXXX 函数
+     * @param method 方法
+     */
+    public static boolean isGetMethod(@NotNull PsiMethod method) {
+        return method.getName().startsWith("get") && method.getName().length() > 3;
+    }
+
+    /**
+     * 判断是否为 本地方法 函数
+     * @param method 方法
+     */
+    public static boolean isNativeMethod(@NotNull PsiMethod method) {
+        return method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
     }
 
 }

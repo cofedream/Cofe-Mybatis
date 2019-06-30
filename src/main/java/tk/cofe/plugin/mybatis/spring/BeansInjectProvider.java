@@ -46,6 +46,18 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
     // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
 
+    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
+        if (psiPackage == null) {
+            return;
+        }
+        Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
+            if (psiClass.isInterface()) {
+                mappers.add(new CustomSpringComponent(psiClass));
+            }
+        });
+        Arrays.stream(psiPackage.getSubPackages(scope)).forEach(p -> processBasePackage(scope, p, mappers));
+    }
+
     @NotNull
     @Override
     public Collection<CommonSpringBean> getCustomComponents(@NotNull LocalModel springModel) {
@@ -122,18 +134,6 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 mappers.add(new CustomSpringComponent(aClass));
             }
         });
-    }
-
-    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
-        if (psiPackage == null) {
-            return;
-        }
-        Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
-            if (psiClass.isInterface()) {
-                mappers.add(new CustomSpringComponent(psiClass));
-            }
-        });
-        Arrays.stream(psiPackage.getSubPackages(scope)).forEach(p -> processBasePackage(scope, p, mappers));
     }
 
     @Nullable

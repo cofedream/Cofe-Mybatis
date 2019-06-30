@@ -1,7 +1,12 @@
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
@@ -13,6 +18,7 @@ import com.intellij.util.xml.DomService;
 import com.intellij.util.xml.XmlFileHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
@@ -23,6 +29,10 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * mybatis Psi工具类
@@ -30,6 +40,70 @@ import java.util.Collection;
  * @date : 2019-06-23
  */
 public class PsiMybatisUtils {
+    private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
+        private static final long serialVersionUID = -7375291625150519393L;
+
+        {
+            this.put("byte", Collections.singletonList("_byte"));
+            this.put("long", Collections.singletonList("_long"));
+            this.put("short", Collections.singletonList("_short"));
+            this.put("int", Arrays.asList("_int", "_integer"));
+            this.put("double", Collections.singletonList("_double"));
+            this.put("float", Collections.singletonList("_float"));
+            this.put("boolean", Collections.singletonList("_boolean"));
+            this.put("String", Collections.singletonList("string"));
+            this.put("Byte", Collections.singletonList("byte"));
+            this.put("Long", Collections.singletonList("long"));
+            this.put("Short", Collections.singletonList("short"));
+            this.put("Integer", Arrays.asList("int", "integer"));
+            this.put("Double", Collections.singletonList("double"));
+            this.put("Float", Collections.singletonList("float"));
+            this.put("Boolean", Collections.singletonList("boolean"));
+            this.put("Date", Collections.singletonList("date"));
+            this.put("Bigdecimal", Arrays.asList("decimal", "bigdecimal"));
+            this.put("Object", Collections.singletonList("object"));
+            this.put("Map", Collections.singletonList("map"));
+            this.put("Hashmap", Collections.singletonList("hashmap"));
+            this.put("List", Collections.singletonList("list"));
+            this.put("Arraylist", Collections.singletonList("arraylist"));
+            this.put("Collection", Collections.singletonList("collection"));
+            this.put("Iterator", Collections.singletonList("iterator"));
+        }
+    });
+    private static final Map<String, LookupElement> resultTypeLookupElement = Collections.unmodifiableMap(new HashMap<String, LookupElement>() {
+        private static final long serialVersionUID = 4402307158708442334L;
+
+        {
+            this.put("_byte", createLookupElement("_byte", "byte", "byte"));
+            this.put("_long", createLookupElement("_long", "long", "long"));
+            this.put("_short", createLookupElement("_short", "short", "short"));
+            this.put("_int", createLookupElement("_int", "int", "int"));
+            this.put("_integer", createLookupElement("_integer", "int", "int"));
+            this.put("_double", createLookupElement("_double", "double", "double"));
+            this.put("_float", createLookupElement("_float", "float", "float"));
+            this.put("_boolean", createLookupElement("_boolean", "boolean", "boolean"));
+            this.put("string", createLookupElement("string", "String", "string"));
+            this.put("byte", createLookupElement("byte", "Byte", "byte"));
+            this.put("long", createLookupElement("long", "Long", "long"));
+            this.put("short", createLookupElement("short", "Short", "short"));
+            this.put("int", createLookupElement("int", "Integer", "int"));
+            this.put("integer", createLookupElement("integer", "Integer", "int"));
+            this.put("Double", createLookupElement("double", "Double", "double"));
+            this.put("Float", createLookupElement("float", "Float", "float"));
+            this.put("Boolean", createLookupElement("boolean", "Boolean", "boolean"));
+            this.put("Date", createLookupElement("date", "Date", "date"));
+            this.put("decimal", createLookupElement("decimal", "Bigdecimal", "decimal"));
+            this.put("bigdecimal", createLookupElement("bigdecimal", "Bigdecimal", "decimal"));
+            this.put("Object", createLookupElement("object", "Object", "object"));
+            this.put("Map", createLookupElement("map", "Map", "map"));
+            this.put("Hashmap", createLookupElement("hashmap", "Hashmap", "hashmap"));
+            this.put("List", createLookupElement("list", "List", "list"));
+            this.put("Arraylist", createLookupElement("arraylist", "Arraylist", "arraylist"));
+            this.put("Collection", createLookupElement("collection", "Collection", "collection"));
+            this.put("Iterator", createLookupElement("iterator", "Iterator", "iterator"));
+        }
+    });
+
     @Nullable
     public static Mapper getMapper(@NotNull DomElement element) {
         return DomUtils.getParentOfType(element, Mapper.class, true);
@@ -96,5 +170,35 @@ public class PsiMybatisUtils {
             return DomManager.getDomManager(xmlElement.getProject()).getDomElement(((XmlAttribute) xmlElement));
         }
         return null;
+    }
+
+    /**
+     * 获取 ResultType
+     * @param type 类型
+     */
+    @NotNull
+    public static List<String> getResultType(@Nullable PsiType type) {
+        if (type == null) {
+            return Collections.emptyList();
+        }
+        if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionType(type)) {
+            return BaseType.get(type.getPresentableText());
+        } else {
+            PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+            return StringUtils.isBlank(reference.getReferenceName()) ? Collections.emptyList() : Collections.singletonList(reference.getQualifiedName());
+        }
+    }
+
+    /**
+     * 获取 ResultType LookupElement
+     * @param type 类型
+     * @return LookupElement
+     */
+    public static LookupElement getResultTypeLookupElement(@Nullable String type) {
+        return resultTypeLookupElement.get(type);
+    }
+
+    private static LookupElement createLookupElement(String lookupString, String typeText, String tailText) {
+        return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText(Empty.STRING).appendTailText(tailText, true);
     }
 }

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NonNls;
  */
 public final class Mybatis {
 
-    public static final class Mapper{
+    public static final class Mapper {
 
         @NonNls
         public static final String MAPPER_DTD_URL = "http://mybatis.org/dtd/mybatis-3-mapper.dtd";
@@ -28,7 +28,7 @@ public final class Mybatis {
         public static final String NAMESPACE_KEY = "mapper namespace";
     }
 
-    public static final class Config{
+    public static final class Config {
 
         @NonNls
         public static final String DTD_URL = "http://mybatis.org/dtd/mybatis-3-config.dtd";

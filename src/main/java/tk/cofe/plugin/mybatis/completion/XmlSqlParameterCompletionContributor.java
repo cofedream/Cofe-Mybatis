@@ -9,14 +9,13 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.injection.InjectedLanguageManager;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +25,7 @@ import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -33,7 +33,6 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +70,12 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             ClassElement classElement = DomUtils.getTargetElement(xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset())), ClassElement.class);
             if (classElement != null) {
                 JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
-                javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(javaPsiService, psiMethod, result, getPrefix(result)));
+                javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(psiMethod, result, getPrefix(result)));
             }
         }
     }
 
-    private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixs) {
+    private void process(@NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixs) {
         PsiParameter[] psiParameters = psiMethod.getParameterList().getParameters();
         if (psiParameters.length == 0) {
             return;
@@ -89,7 +88,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
                 if (value == null) {
                     // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
                     if (PsiTypeUtils.isCustomType(psiParameters[0].getType()) && psiParameters[0].getType() instanceof PsiClassReferenceType) {
-                        process(javaPsiService, ((PsiClassReferenceType) psiParameters[0].getType()), result, prefixs);
+                        process(prefixs, ((PsiClassReferenceType) psiParameters[0].getType()).resolve(), result);
                     }
                 } else {
                     result.addElement(createLookupElement(value.getValue(), psiParameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
@@ -111,29 +110,27 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             PsiParameter psiParameter = psiParameterMap.get(prefixs[0]);
             // 自定义类类型则取字段和方法
             if (psiParameter.getType() instanceof PsiClassReferenceType) {
+                PsiClass psiClass = ((PsiClassReferenceType) psiParameter.getType()).resolve();
                 // todo 判断是否自定义类型
-                PsiClassReferenceType psiClassReferenceType = ((PsiClassReferenceType) psiParameter.getType());
                 for (int i = 1; i < prefixs.length; i++) {
-                    String prefix = prefixs[i];
-                    String qualifiedName = psiClassReferenceType.getReference().getQualifiedName();
-                    List<PsiMember> psiMembers = javaPsiService.findPsiClass(qualifiedName).map(psiClass -> {
-                        List<PsiMember> members = new ArrayList<>();
-                        members.addAll(Arrays.asList(psiClass.getAllFields()));
-                        members.addAll(Arrays.asList(psiClass.getAllMethods()));
-                        return members;
-                    }).orElse(Collections.emptyList());
-                    for (PsiMember psiMember : psiMembers) {
-                        if (psiMember instanceof PsiField) {
-                            if (prefix.equals(psiMember.getName())) {
-                                if (((PsiField) psiMember).getType() instanceof PsiClassReferenceType) {
-                                    psiClassReferenceType = (PsiClassReferenceType) ((PsiField) psiMember).getType();
+                    if (psiClass != null) {
+                        String prefix = prefixs[i];
+                        List<PsiMember> psiMembers = new ArrayList<>();
+                        psiMembers.addAll(Arrays.asList(psiClass.getAllFields()));
+                        psiMembers.addAll(Arrays.asList(psiClass.getAllMethods()));
+                        for (PsiMember psiMember : psiMembers) {
+                            if (psiMember instanceof PsiField) {
+                                if (prefix.equals(psiMember.getName())) {
+                                    if (((PsiField) psiMember).getType() instanceof PsiClassReferenceType) {
+                                        psiClass = ((PsiClassReferenceType) ((PsiField) psiMember).getType()).resolve();
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
                 }
-                process(javaPsiService, psiClassReferenceType, result, prefixs);
+                process(prefixs, psiClass, result);
             }
         }
         addParamsVariants(result, prefixs, psiParameters);
@@ -154,34 +151,39 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
         }
     }
 
-    private void process(@NotNull JavaPsiService javaPsiService, @NotNull PsiClassReferenceType referenceType, @NotNull CompletionResultSet result, String[] prefixs) {
+    /**
+     * 通过类添加提示
+     * @param prefixs  前缀
+     * @param psiClass Java类
+     * @param result   结果集
+     */
+    private void process(String[] prefixs, @Nullable PsiClass psiClass, @NotNull CompletionResultSet result) {
+        if (psiClass == null) {
+            return;
+        }
         String prefiex = String.join(".", prefixs);
-        String qualifiedName = referenceType.getReference().getQualifiedName();
-        javaPsiService.findPsiClass(qualifiedName).ifPresent(psiClass -> {
-            for (PsiField field : psiClass.getAllFields()) {
-                String name = field.getName();
-                if (name != null) {
-                    if (prefiex.length() != 0) {
-                        name = prefiex + "." + name;
-                    }
-                    result.addElement(createLookupElement(name, field.getType().getPresentableText(), PlatformIcons.FIELD_ICON));
+        for (PsiField field : psiClass.getAllFields()) {
+            String name = field.getName();
+            if (name != null) {
+                if (prefiex.length() != 0) {
+                    name = prefiex + "." + name;
                 }
+                result.addElement(createLookupElement(name, field.getType().getPresentableText(), PlatformIcons.FIELD_ICON));
             }
-            for (PsiMethod method : psiClass.getAllMethods()) {
-                if (isGetMethod(method)) {
-                    result.addElement(createLookupElement(processMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON));
-                }
+        }
+        for (PsiMethod method : psiClass.getAllMethods()) {
+            if (isTargetMethod(method)) {
+                result.addElement(createLookupElement(processMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON));
             }
-        });
+        }
     }
 
     /**
      * 判断是否为 getXXX 函数
      * @param method 方法名
      */
-    private boolean isGetMethod(@NotNull PsiMethod method) {
-        PsiType returnType = method.getReturnType();
-        return returnType != null && !PsiTypeUtils.isVoid(returnType) && method.getName().startsWith("get") && !method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
+    private boolean isTargetMethod(@NotNull PsiMethod method) {
+        return !PsiJavaUtils.isVoidMethod(method) && PsiJavaUtils.isGetMethod(method) && !PsiJavaUtils.isNativeMethod(method);
     }
 
 

@@ -8,10 +8,10 @@ import com.intellij.psi.ResolveResult;
  * @date : 2019-06-16
  */
 public final class Empty {
+    public static final String STRING = "";
+
     private Empty() {
     }
-
-    public static final String STRING = "";
 
     public static final class Array {
         public static final Object[] OBJECTS = new Object[0];
