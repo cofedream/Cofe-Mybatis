@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * {@code <resultMap></resultMap>}
  * @author : zhengrf
  * @date : 2019-01-15
  */
@@ -26,6 +27,20 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
     @Attribute("extends")
     @Convert(ResultMapConverter.Extends.class)
     GenericAttributeValue<XmlAttributeValue> getExtends();
+
+    // tags
+
+    @SubTagList("id")
+    List<Id> getIds();
+
+    @SubTagList("result")
+    List<Result> getResults();
+
+    @SubTagList("association")
+    List<Association> getAssociations();
+
+    @SubTagList("collection")
+    List<Collection> getCollections();
 
     /**
      * 获取 Extends 值
@@ -41,12 +56,6 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
         }
         return Optional.empty();
     }
-
-    @SubTagList("id")
-    List<Id> getIds();
-
-    @SubTagList("result")
-    List<Result> getResults();
 
     @NotNull
     default List<PropertyAttribute> getPropertyAttributes() {

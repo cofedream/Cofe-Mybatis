@@ -8,6 +8,7 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 

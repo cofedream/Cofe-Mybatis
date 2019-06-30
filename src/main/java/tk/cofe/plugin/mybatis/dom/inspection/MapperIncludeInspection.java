@@ -7,7 +7,7 @@ import com.intellij.util.xml.highlighting.BasicDomElementsInspection;
 import com.intellij.util.xml.highlighting.DomElementAnnotationHolder;
 import com.intellij.util.xml.highlighting.DomHighlightingHelper;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 
 /**
  * @author : zhengrf

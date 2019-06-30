@@ -6,5 +6,5 @@ import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TestAttribute;
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface If extends TestAttribute, DynamicSql {
+public interface If extends DynamicTag,TestAttribute, DynamicSql {
 }

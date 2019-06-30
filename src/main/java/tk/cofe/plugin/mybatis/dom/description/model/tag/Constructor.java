@@ -1,12 +1,20 @@
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
-import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JdbcTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.SubTagList;
+
+import java.util.List;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Constructor extends IdAttribute, PropertyAttribute, JdbcTypeAttribute {
+public interface Constructor extends DomElement {
+
+    @SubTagList("idArg")
+    List<IdArg> getIdArgs();
+
+    @SubTagList("arg")
+    List<Arg> getArgs();
+
 }

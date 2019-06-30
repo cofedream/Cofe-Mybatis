@@ -9,7 +9,7 @@ import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collections;

@@ -8,13 +8,12 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : zhengrf
- * @date : 2019-01-21
+ * @date : 2019-06-30
  */
-public interface NameAttribute extends DomElement {
+public interface OfTypeAttribute extends DomElement {
 
     @NameValue
     @Nullable
-    @Attribute("name")
-    GenericAttributeValue<String> getName();
-
+    @Attribute("ofType")
+    GenericAttributeValue<String> getOfType();
 }

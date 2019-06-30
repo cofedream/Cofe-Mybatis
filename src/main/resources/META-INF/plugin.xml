@@ -68,7 +68,6 @@
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
-        <!--代码完成,无需指向引用-->
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
         <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor" order="first"/>
         <!--代码检查-->

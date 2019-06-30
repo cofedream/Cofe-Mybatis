@@ -1,4 +1,4 @@
-package tk.cofe.plugin.mybatis.dom.description.model.tag;
+package tk.cofe.plugin.mybatis.dom.description.model;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
@@ -9,6 +9,13 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Sql;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;

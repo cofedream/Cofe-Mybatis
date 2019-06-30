@@ -3,7 +3,7 @@ package tk.cofe.plugin.mybatis.dom.description;
 import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 
 import javax.swing.*;

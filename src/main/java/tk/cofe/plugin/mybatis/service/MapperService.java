@@ -7,7 +7,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 
 import java.util.List;
 

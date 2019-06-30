@@ -6,7 +6,7 @@ import com.intellij.util.xml.SubTagList;
 import java.util.List;
 
 /**
- * {@code <sql>} 标签
+ * 标签
  * @author : zhengrf
  * @date : 2019-01-20
  */

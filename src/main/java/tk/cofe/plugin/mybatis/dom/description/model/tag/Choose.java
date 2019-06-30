@@ -9,7 +9,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Choose extends DomElement {
+public interface Choose extends DynamicTag,DomElement {
 
     @SubTagList("when")
     List<When> getWhens();

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.DynamicSql;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -68,7 +69,9 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             return;
         }
         if (isSupport(parameters)) {
-            ClassElement classElement = DomUtils.getTargetElement(xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset())), ClassElement.class);
+            PsiElement elementAt = xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset()));
+            DynamicSql targetElement = DomUtils.getTargetElement(elementAt, DynamicSql.class);
+            ClassElement classElement = DomUtils.getTargetElement(elementAt, ClassElement.class);
             if (classElement != null) {
                 JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
                 javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(psiMethod, result, getPrefix(result)));

@@ -1,10 +1,11 @@
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
-import com.intellij.util.xml.DomElement;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.NameAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ValueAttribute;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Property extends DomElement {
+public interface Property extends NameAttribute, ValueAttribute {
 }
