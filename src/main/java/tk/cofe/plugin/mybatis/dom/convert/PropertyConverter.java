@@ -5,6 +5,8 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifier;
+import com.intellij.ui.RowIcon;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  * @date : 2019-01-21
  */
 public class PropertyConverter extends ResolvingConverter.StringConverter {
+
+    private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
     @NotNull
     @Override
@@ -43,7 +47,7 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
     @Nullable
     @Override
     public LookupElement createLookupElement(String property) {
-        return property == null ? null : LookupElementBuilder.create(property);
+        return property == null ? null : LookupElementBuilder.create(property).withIcon(PRIVATE_FIELD_ICON);
     }
 
     @Nullable

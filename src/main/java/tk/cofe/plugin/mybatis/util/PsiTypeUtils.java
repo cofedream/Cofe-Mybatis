@@ -87,12 +87,8 @@ public final class PsiTypeUtils {
      * @param psiType 类型
      */
     public static boolean isCustomType(@NotNull PsiType psiType) {
-        // 是否为基础类型判断
-        if (isPrimitiveType(psiType)) {
-            return false;
-        }
-        // 是否为包装类判断
-        if (isBoxPrimitiveType(psiType)) {
+        // 是否为基础类型或包装类判断
+        if (isPrimitiveOrBoxType(psiType)) {
             return false;
         }
         // 是否为String
@@ -103,6 +99,7 @@ public final class PsiTypeUtils {
         if (isCollectionType(psiType)) {
             return false;
         }
+        // 上述类型都不成立则为自定义对象
         return true;
     }
 

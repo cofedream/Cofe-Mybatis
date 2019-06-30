@@ -122,7 +122,24 @@ public final class PsiJavaUtils {
      * @param method 方法
      */
     public static boolean isNativeMethod(@NotNull PsiMethod method) {
-        return method.getModifierList().hasModifierProperty(PsiModifier.NATIVE);
+        return hasModifierProperty(method, PsiModifier.NATIVE);
+    }
+
+    /**
+     * 判断是否为 public 函数
+     * @param method 方法
+     */
+    public static boolean isPublicMethod(@NotNull PsiMethod method) {
+        return hasModifierProperty(method, PsiModifier.PUBLIC);
+    }
+
+    /**
+     * 判断是否又指定标识符
+     * @param method   方法
+     * @param modifier 标识符 {@link PsiModifier}
+     */
+    private static boolean hasModifierProperty(@NotNull PsiMethod method, String modifier) {
+        return method.getModifierList().hasModifierProperty(modifier);
     }
 
 }

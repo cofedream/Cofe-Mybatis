@@ -16,7 +16,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +33,10 @@ import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * XML 文件中的SQL 参数完成
@@ -53,6 +53,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
      * 尾标题
      */
     private static final String TAIL_TEXT = "                                        ";
+    private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
@@ -109,32 +110,58 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             }
             PsiParameter psiParameter = psiParameterMap.get(prefixs[0]);
             // 自定义类类型则取字段和方法
-            if (psiParameter.getType() instanceof PsiClassReferenceType) {
-                PsiClass psiClass = ((PsiClassReferenceType) psiParameter.getType()).resolve();
-                // todo 判断是否自定义类型
-                for (int i = 1; i < prefixs.length; i++) {
-                    if (psiClass != null) {
-                        String prefix = prefixs[i];
-                        List<PsiMember> psiMembers = new ArrayList<>();
-                        psiMembers.addAll(Arrays.asList(psiClass.getAllFields()));
-                        psiMembers.addAll(Arrays.asList(psiClass.getAllMethods()));
-                        for (PsiMember psiMember : psiMembers) {
-                            if (psiMember instanceof PsiField) {
-                                if (prefix.equals(psiMember.getName())) {
-                                    if (((PsiField) psiMember).getType() instanceof PsiClassReferenceType) {
-                                        psiClass = ((PsiClassReferenceType) ((PsiField) psiMember).getType()).resolve();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                process(prefixs, psiClass, result);
+            if (PsiTypeUtils.isCustomType(psiParameter.getType())) {
+                process(prefixs, getTargetPsiClass(prefixs, ((PsiClassReferenceType) psiParameter.getType()).resolve()), result);
             }
         }
         addParamsVariants(result, prefixs, psiParameters);
         result.stopHere();
+    }
+
+    /**
+     * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     * @param psiClass 类对象
+     * @param prefixs  前缀
+     */
+    @Nullable
+    private PsiClass getTargetPsiClass(final @NotNull String[] prefixs, @Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return null;
+        }
+        PsiClass target = psiClass;
+        for (int i = 1; i < prefixs.length; i++) {
+            if (target == null) {
+                return null;
+            }
+            target = getTargetPsiClass(prefixs[i], target);
+        }
+        return target;
+    }
+
+    /**
+     * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     * @param prefix   前缀
+     * @param psiClass 类对象
+     */
+    @Nullable
+    private PsiClass getTargetPsiClass(@NotNull String prefix, @NotNull PsiClass psiClass) {
+        for (PsiMember psiMember : psiClass.getAllMethods()) {
+            // 字段名与前缀匹配 且 为自定义类型
+            if (prefix.equals(psiMember.getName()) && PsiTypeUtils.isCustomType(((PsiField) psiMember).getType())) {
+                return ((PsiClassReferenceType) ((PsiField) psiMember).getType()).resolve();
+            }
+        }
+        // 字段名和前缀匹配
+        for (PsiMember psiMember : psiClass.getAllMethods()) {
+            if (prefix.equals(processGetMethodName(((PsiMethod) psiMember)))) {
+                PsiType returnType = ((PsiMethod) psiMember).getReturnType();
+                // 返回值不为 null 且 为自定义类型
+                if (returnType != null && PsiTypeUtils.isCustomType(returnType)) {
+                    return ((PsiClassReferenceType) returnType).resolve();
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -163,19 +190,24 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
         }
         String prefiex = String.join(".", prefixs);
         for (PsiField field : psiClass.getAllFields()) {
-            String name = field.getName();
-            if (name != null) {
-                if (prefiex.length() != 0) {
-                    name = prefiex + "." + name;
-                }
-                result.addElement(createLookupElement(name, field.getType().getPresentableText(), PlatformIcons.FIELD_ICON));
-            }
+            createLookupElement(prefiex, field.getName(), field.getType().getPresentableText(), PRIVATE_FIELD_ICON, result::addElement);
         }
         for (PsiMethod method : psiClass.getAllMethods()) {
             if (isTargetMethod(method)) {
-                result.addElement(createLookupElement(processMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON));
+                createLookupElement(prefiex, processGetMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }
+    }
+
+    private void createLookupElement(@Nullable final String prefiex, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
+        if (name == null || typeText == null) {
+            return;
+        }
+        String lookupString = name;
+        if (prefiex != null && prefiex.length() != 0) {
+            lookupString = prefiex + "." + lookupString;
+        }
+        consumer.accept(createLookupElement(lookupString, typeText, icon));
     }
 
     /**
@@ -183,29 +215,20 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
      * @param method 方法名
      */
     private boolean isTargetMethod(@NotNull PsiMethod method) {
-        return !PsiJavaUtils.isVoidMethod(method) && PsiJavaUtils.isGetMethod(method) && !PsiJavaUtils.isNativeMethod(method);
-    }
-
-
-    @Nullable
-    private Integer getPrefixNum(String prefix) {
-        if (prefix.startsWith("param")) {
-            return Integer.parseInt(prefix.substring(5));
-        }
-        if (prefix.startsWith("arg")) {
-            return Integer.parseInt(prefix.substring(3)) + 1;
-        }
-        return null;
+        return PsiJavaUtils.isPublicMethod(method) && !PsiJavaUtils.isVoidMethod(method) && !PsiJavaUtils.isNativeMethod(method) && PsiJavaUtils.isGetMethod(method);
     }
 
     /**
-     * 从方法获取 构建 LookupElement所需名称
+     * 处理 getAaaBbb 方法名称
      * @param method java方法
-     * @return String
+     * @return getAaaBbb->aaaBbb
      */
-    @NotNull
-    private String processMethodName(@NotNull PsiMethod method) {
+    @Nullable
+    private String processGetMethodName(@NotNull PsiMethod method) {
         String methodName = method.getName();
+        if (methodName.length() == 3) {
+            return null;
+        }
         char first = Character.toLowerCase(methodName.charAt(3));
         if (methodName.length() > 4) {
             return first + methodName.substring(4);
