@@ -158,18 +158,16 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
     private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull PsiAnnotationMemberValue annotationMemberValue) {
         List<PsiPackage> res = new ArrayList<>();
         for (PsiElement child : annotationMemberValue.getChildren()) {
-            if (!(child instanceof PsiExpression)) {
-                continue;
-            }
-            PsiLiteralExpression literal = ExpressionUtils.getLiteral(((PsiExpression) child));
-            if (literal == null) {
-                continue;
-            }
-            String text = literal.getText();
-            if (StringUtils.isNotBlank(text)) {
-                PsiPackage psiPackage = facade.findPackage(text.replaceAll("\"", ""));
-                if (psiPackage != null) {
-                    res.add(psiPackage);
+            if (child instanceof PsiExpression) {
+                PsiLiteralExpression literal = ExpressionUtils.getLiteral(((PsiExpression) child));
+                if (literal != null) {
+                    String text = literal.getText();
+                    if (text != null) {
+                        PsiPackage aPackage = facade.findPackage(text.replaceAll("\"", ""));
+                        if (aPackage != null) {
+                            res.add(aPackage);
+                        }
+                    }
                 }
             }
         }
