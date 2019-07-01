@@ -3,6 +3,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
@@ -112,7 +113,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     @Nullable
     @Override
-    public LookupElement createLookupElement(XmlAttributeValue xmlAttributeValue) {
-        return LookupElementBuilder.create(xmlAttributeValue.getValue());
+    public LookupElement createLookupElement(final XmlAttributeValue xmlAttributeValue) {
+        return LookupElementBuilder.create(xmlAttributeValue.getValue()).withIcon(PlatformIcons.XML_TAG_ICON);
     }
 }
