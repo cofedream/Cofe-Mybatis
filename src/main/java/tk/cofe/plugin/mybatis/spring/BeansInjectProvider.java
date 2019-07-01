@@ -2,6 +2,7 @@ package tk.cofe.plugin.mybatis.spring;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
+import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationClassValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
@@ -9,7 +10,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
@@ -22,16 +27,17 @@ import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
+import com.siyeh.ig.psiutils.ExpressionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -45,18 +51,6 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
 
     // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
-
-    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
-        if (psiPackage == null) {
-            return;
-        }
-        Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
-            if (psiClass.isInterface()) {
-                mappers.add(new CustomSpringComponent(psiClass));
-            }
-        });
-        Arrays.stream(psiPackage.getSubPackages(scope)).forEach(p -> processBasePackage(scope, p, mappers));
-    }
 
     @NotNull
     @Override
@@ -83,8 +77,9 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
             PsiAnnotation annotation = config.getAnnotation(annotationClassName);
             if (annotation != null) {
                 GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, ProjectRootsUtil.isInTestSource(config.getContainingFile()));
+                //GlobalSearchScope scope = GlobalSearchScope.projectScope(module.getProject());
                 JavaPsiFacade facade = JavaPsiFacade.getInstance(config.getProject());
-                annotation.getAttributes().forEach(attribute -> {
+                for (JvmAnnotationAttribute attribute : annotation.getAttributes()) {
                     JvmAnnotationAttributeValue attributeValue = attribute.getAttributeValue();
                     if (attributeValue == null) {
                         return;
@@ -96,7 +91,10 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                             if (attributeValue instanceof JvmAnnotationConstantValue) {
                                 processBasePackage(scope, getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue)), mappers);
                             } else if (attributeValue instanceof JvmAnnotationArrayValue) {
-                                getPsiPackage(facade, (JvmAnnotationArrayValue) attributeValue).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
+                                PsiAnnotationMemberValue basePackages = annotation.findAttributeValue(attribute.getAttributeName());
+                                if (basePackages != null) {
+                                    getPsiPackage(facade, basePackages).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
+                                }
                             }
                             break;
                         case "basePackageClasses":
@@ -123,9 +121,22 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                         default:
                             break;
                     }
-                });
+
+                }
             }
         }
+    }
+
+    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
+        if (psiPackage == null) {
+            return;
+        }
+        Arrays.stream(psiPackage.getClasses(scope)).forEach(psiClass -> {
+            if (psiClass.isInterface()) {
+                mappers.add(new CustomSpringComponent(psiClass));
+            }
+        });
+        Arrays.stream(psiPackage.getSubPackages(scope)).forEach(p -> processBasePackage(scope, p, mappers));
     }
 
     private void processQueryPsiClass(@NotNull Query<PsiClass> search, @NotNull Collection<CommonSpringBean> mappers) {
@@ -143,8 +154,25 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
     }
 
     @NotNull
-    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationArrayValue attributeValue) {
-        return attributeValue.getValues().stream().map(attr -> facade.findPackage(attr.toString().trim())).collect(Collectors.toList());
+    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull PsiAnnotationMemberValue annotationMemberValue) {
+        List<PsiPackage> res = new ArrayList<>();
+        for (PsiElement child : annotationMemberValue.getChildren()) {
+            if (!(child instanceof PsiExpression)) {
+                continue;
+            }
+            PsiLiteralExpression literal = ExpressionUtils.getLiteral(((PsiExpression) child));
+            if (literal == null) {
+                continue;
+            }
+            String text = literal.getText();
+            if (StringUtils.isNotBlank(text)) {
+                PsiPackage psiPackage = facade.findPackage(text.replaceAll("\"", ""));
+                if (psiPackage != null) {
+                    res.add(psiPackage);
+                }
+            }
+        }
+        return res;
     }
 }
 
