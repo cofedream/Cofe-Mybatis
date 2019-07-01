@@ -1,9 +1,12 @@
 package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.util.InheritanceUtil;
+import com.intellij.psi.util.PsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,8 +81,32 @@ public final class PsiTypeUtils {
      * 判断是否为集合类型  Collection/Map
      * @param psiType 类型
      */
-    public static boolean isCollectionType(@Nullable PsiType psiType) {
+    public static boolean isCollectionOrMapType(@Nullable PsiType psiType) {
         return com.siyeh.ig.psiutils.CollectionUtils.isCollectionClassOrInterface(psiType);
+    }
+
+    /**
+     * 判断是否为 Collection 类型
+     * @param psiType 类型
+     */
+    public static boolean isCollectionType(@Nullable PsiType psiType) {
+        final PsiClass resolved = PsiUtil.resolveClassInClassTypeOnly(psiType);
+        if (resolved == null) {
+            return false;
+        }
+        return InheritanceUtil.isInheritor(resolved, CommonClassNames.JAVA_UTIL_COLLECTION);
+    }
+
+    /**
+     * 判断是否为 Map 类型
+     * @param psiType 类型
+     */
+    public static boolean isMapType(@Nullable PsiType psiType) {
+        final PsiClass resolved = PsiUtil.resolveClassInClassTypeOnly(psiType);
+        if (resolved == null) {
+            return false;
+        }
+        return InheritanceUtil.isInheritor(resolved, CommonClassNames.JAVA_UTIL_MAP);
     }
 
     /**
@@ -96,7 +123,7 @@ public final class PsiTypeUtils {
             return false;
         }
         // 是否为集合判断
-        if (isCollectionType(psiType)) {
+        if (isCollectionOrMapType(psiType)) {
             return false;
         }
         // 上述类型都不成立则为自定义对象

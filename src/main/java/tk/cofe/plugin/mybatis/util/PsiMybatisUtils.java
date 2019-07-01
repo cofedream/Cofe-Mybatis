@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 
@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * mybatis Psi工具类
@@ -181,8 +183,12 @@ public class PsiMybatisUtils {
         if (type == null) {
             return Collections.emptyList();
         }
-        if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionType(type)) {
-            return BaseType.get(type.getPresentableText());
+        if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
+            return Optional.ofNullable(BaseType.get(type.getPresentableText())).orElse(Collections.emptyList());
+        } else if (PsiTypeUtils.isMapType(type)) {
+            return Optional.ofNullable(BaseType.get(((PsiClassReferenceType) type).getClassName())).orElse(Collections.emptyList());
+        } else if (PsiTypeUtils.isCollectionType(type)) {
+            return Arrays.stream(((PsiClassReferenceType) type).getParameters()).map(PsiType::getCanonicalText).collect(Collectors.toList());
         } else {
             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
             return StringUtils.isBlank(reference.getReferenceName()) ? Collections.emptyList() : Collections.singletonList(reference.getQualifiedName());

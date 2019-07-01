@@ -1,6 +1,7 @@
 package tk.cofe.plugin.mybatis.intention;
 
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -19,6 +20,8 @@ import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+
+import javax.swing.*;
 
 /**
  * @author : zhengrf
@@ -63,8 +66,11 @@ public class GenerateStatementIntention implements IntentionAction {
         if (null == method) {
             return;
         }
-        // todo 添加 ICON
         JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<StatementTypeEnum>(STATEMENT_TYPE, StatementTypeEnum.values()) {
+            @Override
+            public Icon getIconFor(final StatementTypeEnum value) {
+                return AllIcons.Nodes.Tag;
+            }
 
             @NotNull
             @Override
@@ -82,7 +88,7 @@ public class GenerateStatementIntention implements IntentionAction {
                     MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> selectedValue.processCreateStatement(mapper, method, project));
                 }));
             }
-        }).showInFocusCenter();
+        }).showInBestPositionFor(editor);
     }
 
     @Override

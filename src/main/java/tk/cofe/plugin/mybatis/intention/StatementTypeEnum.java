@@ -9,13 +9,16 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
+import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+
+import java.util.List;
 
 /**
  * 声明类型
@@ -27,9 +30,12 @@ enum StatementTypeEnum {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
-            GenericAttributeValue<String> resultType = select.getResultType();
-            if (resultType != null) {
-                resultType.setStringValue(PsiMybatisUtils.getResultType(method.getReturnType()).get(0));
+            GenericAttributeValue<String> resultTypeValue = select.getResultType();
+            if (resultTypeValue != null) {
+                List<String> resultType = PsiMybatisUtils.getResultType(method.getReturnType());
+                if (CollectionUtils.isNotEmpty(resultType)) {
+                    resultTypeValue.setStringValue(resultType.get(0));
+                }
             }
             return select;
         }

@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.DynamicSql;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -49,7 +48,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
     /**
      * 权重
      */
-    private static final double PRIORITY = 20;
+    private static final double PRIORITY = 100;
     /**
      * 尾标题
      */
@@ -70,9 +69,14 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
         }
         if (isSupport(parameters)) {
             PsiElement elementAt = xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset()));
-            DynamicSql targetElement = DomUtils.getTargetElement(elementAt, DynamicSql.class);
+            //DynamicSql dynamicSql = DomUtils.getTargetElement(elementAt, DynamicSql.class);
+            //Foreach foreach = (Foreach) dynamicSql;
+            //String stringValue = foreach.getItem().getStringValue();
+            //result.addElement(createLookupElement(stringValue,"Bind",PlatformIcons.XML_TAG_ICON));
             ClassElement classElement = DomUtils.getTargetElement(elementAt, ClassElement.class);
             if (classElement != null) {
+                //List<Bind> binds = classElement.getBinds();
+
                 JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
                 javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(psiMethod, result, getPrefix(result)));
             }
