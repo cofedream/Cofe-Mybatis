@@ -24,6 +24,7 @@ intellij {
 //    type "IC"
     plugins 'Spring', 'DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
+    updateSinceUntilBuild false
 }
 
 patchPluginXml {
