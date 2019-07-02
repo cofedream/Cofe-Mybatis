@@ -51,10 +51,11 @@ public class GenerateStatementIntention implements IntentionAction {
             return false;
         }
         PsiMethod method = PsiElementUtils.getElement(editor, PsiMethod.class);
-        if (method == null) {
+        if (method == null || PsiJavaUtils.hasAnnotations(method, Annotation.STATEMENT_ANNOTATIONS)) {
             return false;
         }
-        if (PsiJavaUtils.hasAnnotations(method, Annotation.STATEMENT_ANNOTATIONS)) {
+        PsiClass psiClass = method.getContainingClass();
+        if (psiClass == null || !MapperService.getInstance(project).isMapperClass(psiClass)) {
             return false;
         }
         return CollectionUtils.isEmpty(MapperService.getInstance(project).findStatement(method));

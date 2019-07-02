@@ -6,8 +6,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 
 import java.util.List;
 
@@ -19,6 +19,12 @@ public interface MapperService {
     static MapperService getInstance(@NotNull Project project) {
         return ServiceManager.getService(project, MapperService.class);
     }
+
+    /**
+     * 判断是否为 Mapper 接口文件
+     * @param mapperClass Class文件
+     */
+    boolean isMapperClass(@NotNull PsiClass mapperClass);
 
     /**
      * 判断 MapperInterface 是否存在与之对应的 Mapper 文件

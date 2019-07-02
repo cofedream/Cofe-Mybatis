@@ -8,12 +8,13 @@ import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
+import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,16 +32,15 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
     @NotNull
     @Override
     public Collection<? extends String> getVariants(ConvertContext context) {
-        ResultMap resultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
-        if (resultMap == null) {
+        String propertyType = PropertyType.parse(context.getInvocationElement());
+        if (propertyType == null) {
             return Collections.emptyList();
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+        return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields())
                         .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
                         .map(NavigationItem::getName)
                         .collect(Collectors.toList()))
-                .orElse(Collections.emptyList()))
                 .orElse(Collections.emptyList());
     }
 
@@ -53,12 +53,62 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
     @Nullable
     @Override
     public PsiElement resolve(String o, ConvertContext context) {
-        ResultMap resultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class, true);
-        if (resultMap == null) {
+        String propertyType = PropertyType.parse(context.getInvocationElement());
+        if (propertyType == null) {
             return null;
         }
-        return resultMap.getTypeValue().map(type -> JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+        return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> o.equals(field.getName())).findFirst()
-                        .orElse(null)).orElse(null)).orElse(null);
+                        .orElse(null)).orElse(null);
+    }
+
+    private enum PropertyType {
+        RESULT_MAP(ResultMap.class) {
+            @Override
+            String getType(DomElement domElement) {
+                return ((ResultMap) domElement).getTypeValue().orElse(null);
+            }
+        },
+        ASSOCIATION(Association.class) {
+            @Override
+            String getType(DomElement domElement) {
+                return ((Association) domElement).getJavaTypeValue().orElse(null);
+            }
+        },
+        COLLECTION(tk.cofe.plugin.mybatis.dom.description.model.tag.Collection.class) {
+            @Override
+            String getType(DomElement domElement) {
+                return ((tk.cofe.plugin.mybatis.dom.description.model.tag.Collection) domElement).getOfTypeValue().orElse(null);
+            }
+        },
+        ;
+
+        private Class<?> typeClass;
+
+        PropertyType(final Class<?> typeClass) {
+            this.typeClass = typeClass;
+        }
+
+        public static String parse(final DomElement domElement) {
+            if (domElement == null) {
+                return null;
+            }
+            for (DomElement curElement = domElement.getParent() == null ? domElement.getParent() : domElement.getParent().getParent();
+                 curElement != null;
+                 curElement = curElement.getParent()) {
+                for (PropertyType type : values()) {
+                    if (type.getTypeClass().isInstance(curElement)) {
+                        return type.getType(curElement);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public Class<?> getTypeClass() {
+            return typeClass;
+        }
+
+        abstract String getType(DomElement domElement);
     }
 }

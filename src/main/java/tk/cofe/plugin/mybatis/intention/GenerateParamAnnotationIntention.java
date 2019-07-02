@@ -3,6 +3,7 @@ package tk.cofe.plugin.mybatis.intention;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -47,6 +49,10 @@ public class GenerateParamAnnotationIntention implements IntentionAction {
         }
         PsiMethod method = PsiElementUtils.getElement(editor, PsiMethod.class);
         if (method == null || method.getParameterList().isEmpty()) {
+            return false;
+        }
+        PsiClass psiClass = method.getContainingClass();
+        if (psiClass == null || !MapperService.getInstance(project).isMapperClass(psiClass)) {
             return false;
         }
         return Arrays.stream(method.getParameterList().getParameters()).anyMatch(psiParameter -> !PsiJavaUtils.hasAnnotation(psiParameter, Annotation.PARAM));

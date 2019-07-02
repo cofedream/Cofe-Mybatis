@@ -49,10 +49,6 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
      * 权重
      */
     private static final double PRIORITY = 100;
-    /**
-     * 尾标题
-     */
-    private static final String TAIL_TEXT = "                                        ";
     private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
     @Override
@@ -276,7 +272,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     @NotNull
     private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon, double priority) {
-        return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withTypeText(type).appendTailText(TAIL_TEXT, true).bold().withIcon(icon), priority);
+        return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withTypeText(type).bold().withIcon(icon), priority);
     }
 
     @NotNull

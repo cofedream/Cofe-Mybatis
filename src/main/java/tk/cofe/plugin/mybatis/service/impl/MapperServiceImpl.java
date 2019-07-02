@@ -8,8 +8,8 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collections;
@@ -33,6 +33,11 @@ public class MapperServiceImpl implements MapperService {
     @Override
     public List<Mapper> findAllMappers() {
         return findDomElements(Mapper.class);
+    }
+
+    @Override
+    public boolean isMapperClass(@NotNull final PsiClass mapperClass) {
+        return findAllMappers().stream().anyMatch(mapper -> mapper.getNamespaceValue().orElse("").equals(mapperClass.getQualifiedName()));
     }
 
     @NotNull

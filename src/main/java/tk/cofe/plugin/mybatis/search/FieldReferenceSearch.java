@@ -32,9 +32,6 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
     @Override
     public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
         PsiElement fieldElement = queryParameters.getElementToSearch();
-        //System.out.println("FieldReferenceSearch===============");
-        //System.out.println(fieldElement.getText());
-        //System.out.println("FieldReferenceSearch===============");
         if (!(fieldElement instanceof PsiField)) {
             return;
         }
