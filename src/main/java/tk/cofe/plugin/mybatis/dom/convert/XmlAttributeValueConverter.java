@@ -51,18 +51,9 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (StringUtils.isBlank(value) || context == null) {
             return null;
         }
-        if (!isTarget(context)) {
-            return null;
-        }
         Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
         return mapper == null ? null : findTargetElement(value, context, mapper);
     }
-
-    /**
-     * 判断是否为目标元素
-     * @param selfContext 当前元素
-     */
-    protected abstract boolean isTarget(@NotNull ConvertContext selfContext);
 
     /**
      * 找到当前元素值引用的目标源元素
@@ -83,7 +74,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * 获取可能引用的 Dom 元素
      * @param value   值
      * @param context 当前元素
-     * @param mapper  当前MapperXMl
+     * @param mapper  当前MapperXML
      * @return Id属性列表
      */
     @NotNull

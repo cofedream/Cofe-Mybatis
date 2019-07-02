@@ -5,7 +5,6 @@ import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Include;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Sql;
 
@@ -25,11 +24,6 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
     @Override
     public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
         return mapper.getSqls().stream().filter(sql -> sql.getId() != null).map(sql -> sql.getId().getXmlAttributeValue()).collect(Collectors.toList());
-    }
-
-    @Override
-    protected boolean isTarget(@NotNull ConvertContext selfContext) {
-        return selfContext.getInvocationElement().getParent() instanceof Include;
     }
 
     @NotNull

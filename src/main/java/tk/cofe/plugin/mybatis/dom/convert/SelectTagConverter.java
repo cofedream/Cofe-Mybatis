@@ -68,34 +68,4 @@ public class SelectTagConverter {
         }
     }
 
-    public static class ResultMap extends XmlAttributeValueConverter<tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap> {
-        @Nullable
-        @Override
-        protected Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
-            return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).map(resultMap -> resultMap.getId().getXmlAttributeValue()).collect(Collectors.toList());
-        }
-
-        @Override
-        protected boolean isTarget(@NotNull ConvertContext selfContext) {
-            return selfContext.getInvocationElement().getParent() instanceof Select;
-        }
-
-        @NotNull
-        @Override
-        protected List<tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
-            return mapper.getResultMaps();
-        }
-
-        @Override
-        protected boolean filterDomElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement, @NotNull String selfValue) {
-            return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
-        }
-
-        @Nullable
-        @Override
-        protected XmlAttributeValue getTargetElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement) {
-            return Optional.ofNullable(targetDomElement.getId()).map(GenericAttributeValue::getXmlAttributeValue).orElse(null);
-        }
-
-    }
 }

@@ -34,11 +34,6 @@ public class ResultMapConverter {
                     .collect(Collectors.toList());
         }
 
-        @Override
-        protected boolean isTarget(@NotNull ConvertContext context) {
-            return context.getInvocationElement().getParent() instanceof ResultMap;
-        }
-
         @NotNull
         @Override
         protected List<ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
