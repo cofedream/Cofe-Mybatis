@@ -4,6 +4,8 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.NameValue;
+import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +13,7 @@ import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TypeAttirbute;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,12 @@ import java.util.Optional;
  * @date : 2019-01-15
  */
 public interface ResultMap extends IdAttribute, TypeAttirbute {
+
+    @Required
+    @NameValue
+    @Nullable
+    @Attribute("id")
+    GenericAttributeValue<String> getId();
 
     @Nullable
     @Attribute("extends")
@@ -41,6 +50,15 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @SubTagList("collection")
     List<Collection> getCollections();
+
+    /**
+     * 获取Id值
+     * @return Id 值 如果为Null 则返回 ""
+     */
+    @NotNull
+    default Optional<String> getIdValue() {
+        return DomUtils.getAttributeVlaue(getId());
+    }
 
     /**
      * 获取 Extends 值

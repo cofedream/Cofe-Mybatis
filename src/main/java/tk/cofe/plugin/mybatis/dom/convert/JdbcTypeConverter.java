@@ -2,7 +2,6 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +45,6 @@ public class JdbcTypeConverter extends ResolvingConverter<String> {
     @Nullable
     @Override
     public LookupElement createLookupElement(final String s) {
-        return s == null ? null : LookupElementBuilder.create(s).withIcon(PlatformIcons.CLASS_ICON);
+        return s == null ? null : LookupElementBuilder.create(s);
     }
 }

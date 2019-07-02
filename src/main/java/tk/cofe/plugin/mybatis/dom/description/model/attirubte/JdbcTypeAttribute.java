@@ -4,6 +4,7 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.NameValue;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.JdbcTypeConverter;
 
@@ -13,6 +14,7 @@ import tk.cofe.plugin.mybatis.dom.convert.JdbcTypeConverter;
  */
 public interface JdbcTypeAttribute extends DomElement {
 
+    @NameValue
     @Nullable
     @Attribute("jdbcType")
     @Convert(JdbcTypeConverter.class)
