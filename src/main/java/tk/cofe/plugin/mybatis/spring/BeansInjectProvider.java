@@ -27,21 +27,26 @@ import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
+import com.intellij.util.containers.ContainerUtil;
 import com.siyeh.ig.psiutils.ExpressionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
 
 /**
  * @author : zhengrf
  * @date : 2018-12-31
  */
 public class BeansInjectProvider extends SpringMyBatisBeansProvider {
+    private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
     // tk 相关类
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";
     private static final String TK_MAPPER_SCANNER_CONFIGURER = "tk.mybatis.spring.mapper.MapperScannerConfigurer";
@@ -168,12 +173,38 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
             if (text == null) {
                 continue;
             }
-            PsiPackage aPackage = facade.findPackage(text.replaceAll("\"", ""));
-            if (aPackage != null) {
-                res.add(aPackage);
+            String qualifiedName = text.replaceAll("\"", "");
+            if (qualifiedName.contains("*")) {
+                PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName.replaceAll("\\.", "\\\\.").replaceAll("\\*", "[^.]+") + ".*"));
+                getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).forEach(psiPackage -> {
+                    if (PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches()) {
+                        res.add(psiPackage);
+                    }
+                });
+            } else {
+                PsiPackage psiPackage = facade.findPackage(qualifiedName);
+                if (psiPackage != null) {
+                    res.add(psiPackage);
+                }
             }
         }
         return res;
+    }
+
+    private List<PsiPackage> getLeafPsiPackage(@Nullable PsiPackage psiPackage) {
+        if (psiPackage == null) {
+            return Collections.emptyList();
+        }
+        List<PsiPackage> psiPackages = new ArrayList<>();
+        PsiPackage[] subPackages = psiPackage.getSubPackages();
+        if (subPackages.length != 0) {
+            for (PsiPackage subPackage : subPackages) {
+                psiPackages.addAll(getLeafPsiPackage(subPackage));
+            }
+        } else {
+            psiPackages.add(psiPackage);
+        }
+        return psiPackages;
     }
 }
 
