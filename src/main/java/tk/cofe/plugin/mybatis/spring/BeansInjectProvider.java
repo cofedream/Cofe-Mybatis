@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -94,7 +95,7 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 case "value":
                 case "basePackages":
                     if (attributeValue instanceof JvmAnnotationConstantValue) {
-                        processBasePackage(scope, getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue)), mappers);
+                        getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue)).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
                     } else if (attributeValue instanceof JvmAnnotationArrayValue) {
                         PsiAnnotationMemberValue basePackages = annotation.findAttributeValue(attribute.getAttributeName());
                         if (basePackages != null) {
@@ -152,10 +153,10 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
         }
     }
 
-    @Nullable
-    private PsiPackage getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationConstantValue attributeValue) {
+    @NotNull
+    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationConstantValue attributeValue) {
         Object value = attributeValue.getConstantValue();
-        return value == null ? null : facade.findPackage(value.toString().trim());
+        return value == null ? Collections.emptyList() : getPsiPackage(facade, value.toString());
     }
 
     @NotNull
@@ -173,22 +174,43 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
             if (text == null) {
                 continue;
             }
-            String qualifiedName = text.replaceAll("\"", "");
-            if (qualifiedName.contains("*")) {
-                PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName.replaceAll("\\.", "\\\\.").replaceAll("\\*", "[^.]+") + ".*"));
-                getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).forEach(psiPackage -> {
-                    if (PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches()) {
-                        res.add(psiPackage);
-                    }
-                });
-            } else {
-                PsiPackage psiPackage = facade.findPackage(qualifiedName);
-                if (psiPackage != null) {
-                    res.add(psiPackage);
-                }
-            }
+            res.addAll(getPsiPackage(facade, text.replaceAll("\"", "")));
+            //if (qualifiedName.contains("*")) {
+            //    PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
+            //            .replaceAll("\\.", "\\\\.")
+            //            .replaceAll("\\*\\*", ".*?")
+            //            .replaceAll("\\*", "[^.]+") + ".*"));
+            //    getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).forEach(psiPackage -> {
+            //        if (PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches()) {
+            //            res.add(psiPackage);
+            //        }
+            //    });
+            //} else {
+            //    PsiPackage psiPackage = facade.findPackage(qualifiedName);
+            //    if (psiPackage != null) {
+            //        res.add(psiPackage);
+            //    }
+            //}
         }
         return res;
+    }
+
+    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull String qualifiedName) {
+        if (qualifiedName.contains("*")) {
+            PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
+                    .replaceAll("\\.", "\\\\.")
+                    .replaceAll("\\*\\*", ".*?")
+                    .replaceAll("\\*", "[^.]+") + ".*"));
+            return getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).stream()
+                    .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches())
+                    .collect(Collectors.toList());
+        } else {
+            PsiPackage psiPackage = facade.findPackage(qualifiedName);
+            if (psiPackage != null) {
+                return Collections.singletonList(psiPackage);
+            }
+        }
+        return Collections.emptyList();
     }
 
     private List<PsiPackage> getLeafPsiPackage(@Nullable PsiPackage psiPackage) {

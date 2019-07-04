@@ -8,7 +8,7 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 group 'tk.cofedream.plugin'
-version '1.0'
+version '1.2.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -25,12 +25,6 @@ intellij {
     plugins 'Spring','SpringBoot', 'DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
-}
-
-patchPluginXml {
-    changeNotes """
-
-    """
 }
 
 tasks.withType(JavaCompile) {

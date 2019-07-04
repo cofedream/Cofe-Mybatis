@@ -4,9 +4,16 @@
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
     <description><![CDATA[
-    Free Mybatis Plugin
-    <em>Created By Cofedream</em>
+    Free Mybatis Plugin <em>Created By Cofedream</em>
+
     ]]></description>
+
+    <change-notes><![CDATA[
+        <i>Fixed bugs:</i>
+        <ul>
+            <li>1.修改 Mybatis Spring注入,MapperScan#basePackages 支持 * 符号</li>
+        </ul>
+    ]]></change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -47,7 +54,7 @@
         <codeInsight.lineMarkerProvider language="JAVA"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
         <!--<codeInsight.lineMarkerProvider language="JAVA"-->
-                                        <!--implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
+        <!--implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
@@ -62,15 +69,17 @@
         <methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>
         <!--<lang.findUsagesProvider-->
         <!--<psi.referenceContributor language="JAVA"-->
-                                  <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
+        <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
         <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
         <!--<psi.referenceContributor language="XML"-->
-                                  <!--implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
+        <!--implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-        <completion.contributor language="SQL" implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor" order="first"/>
+        <completion.contributor language="SQL"
+                                implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor"
+                                order="first"/>
         <!--代码检查-->
         <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->
         <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
