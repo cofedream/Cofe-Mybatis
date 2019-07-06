@@ -10,11 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 
 /**
+ * Mapper Xml检查
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public class MapperIncludeInspection extends BasicDomElementsInspection<Mapper> {
-    public MapperIncludeInspection() {
+public class MapperXmlInspection extends BasicDomElementsInspection<Mapper> {
+    public MapperXmlInspection() {
         super(Mapper.class);
     }
 

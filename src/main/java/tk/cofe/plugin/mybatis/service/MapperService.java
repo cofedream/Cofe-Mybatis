@@ -35,6 +35,14 @@ public interface MapperService {
     List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass);
 
     /**
+     * 根据PsiClass 获取 Mapper Xml中的所有 Statement
+     * @param mapperClass Mapper Interface
+     * @return Mapper Statement
+     */
+    @NotNull
+    List<ClassElement> findMapperStatemtnts(@NotNull PsiClass mapperClass);
+
+    /**
      * 获取Mapper Dom 文件
      * @return Mapper文件
      */
@@ -56,5 +64,12 @@ public interface MapperService {
      */
     @NotNull
     List<ClassElement> findStatement(@NotNull PsiMethod method);
+
+    /**
+     * 查询PsiMethod对应的Mapper Statement是否存在
+     * @param method 方法
+     * @return true 存在, false 不存在
+     */
+    boolean existStatement(@NotNull PsiMethod method);
 
 }

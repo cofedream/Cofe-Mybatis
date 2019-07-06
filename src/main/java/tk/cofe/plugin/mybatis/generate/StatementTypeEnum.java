@@ -1,4 +1,4 @@
-package tk.cofe.plugin.mybatis.intention;
+package tk.cofe.plugin.mybatis.generate;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.openapi.editor.Editor;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-06-23
  */
-enum StatementTypeEnum {
+public enum StatementTypeEnum {
     SELECT("Select") {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
@@ -90,7 +90,7 @@ enum StatementTypeEnum {
         element.setValue("\n");
         int offset = 0;
         GenericAttributeValue<String> selectId = element.getId();
-        if (selectId != null && selectId.getXmlAttributeValue() != null) {
+        if (selectId.getXmlAttributeValue() != null) {
             selectId.setStringValue(method.getName());
             offset = selectId.getXmlAttributeValue().getTextOffset();
         }

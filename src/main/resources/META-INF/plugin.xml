@@ -81,7 +81,7 @@
                                 implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor"
                                 order="first"/>
         <!--纯提示-->
-        <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>
+        <!--<annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>-->
         <!--代码检查-->
         <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->
         <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
@@ -92,14 +92,17 @@
         <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
         <!--                 groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"-->
         <!--                 enabledByDefault="true" level="ERROR"-->
-        <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperIncludeInspection"/>-->
-        <!--<annotator -->
+        <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" -->
+        <localInspection language="JAVA" implementationClass="tk.cofe.plugin.mybatis.inspection.MapperMethodInspection"
+                         displayName="undefined method" level="ERROR" enabledByDefault="true"
+                         groupKey="group.name" groupPath="Mybatis.Interface"/>
+        <!--<localInspection language="XML" implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" />-->
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.GenerateParamAnnotationIntention</className>
         </intentionAction>
-        <intentionAction>
-            <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>
-        </intentionAction>
+        <!--<intentionAction>-->
+        <!--    <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>-->
+        <!--</intentionAction>-->
     </extensions>
 
     <actions>
