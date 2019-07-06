@@ -6,7 +6,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.TagValue;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
@@ -22,7 +22,7 @@ public interface ClassElement extends IdAttribute, DynamicSql {
 
     @Required
     @NameValue
-    @Nullable
+    @NotNull
     @Attribute("id")
     @Convert(ClassElementConverter.Id.class)
     GenericAttributeValue<String> getId();

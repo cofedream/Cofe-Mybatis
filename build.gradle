@@ -22,7 +22,7 @@ intellij {
     version '2018.3.2'
     type "IU"
 //    type "IC"
-    plugins 'Spring','SpringBoot', 'DatabaseTools'
+    plugins 'Spring','SpringBoot', 'DatabaseTools', 'properties'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
 }

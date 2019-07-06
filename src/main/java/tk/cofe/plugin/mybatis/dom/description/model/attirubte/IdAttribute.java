@@ -1,5 +1,6 @@
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;

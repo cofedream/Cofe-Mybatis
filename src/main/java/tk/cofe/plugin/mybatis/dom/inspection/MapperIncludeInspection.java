@@ -36,6 +36,6 @@ public class MapperIncludeInspection extends BasicDomElementsInspection<Mapper> 
     @NotNull
     @Override
     public String getShortName() {
-        return "MapperIncludeInspection";
+        return "MapperXmlInspection";
     }
 }

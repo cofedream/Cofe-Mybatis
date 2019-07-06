@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class ClassElementConverter {
 
     public static class Id extends ResolvingConverter.StringConverter {
+
         @NotNull
         @Override
         public Collection<? extends String> getVariants(ConvertContext context) {
