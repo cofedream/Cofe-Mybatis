@@ -1,6 +1,5 @@
 package tk.cofe.plugin.mybatis.spring;
 
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
@@ -83,12 +82,12 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
         if (annotation == null) {
             return;
         }
-        GlobalSearchScope scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, ProjectRootsUtil.isInTestSource(config.getContainingFile()));
+        GlobalSearchScope scope = GlobalSearchScope.projectScope(module.getProject());
         JavaPsiFacade facade = JavaPsiFacade.getInstance(config.getProject());
         for (JvmAnnotationAttribute attribute : annotation.getAttributes()) {
             JvmAnnotationAttributeValue attributeValue = attribute.getAttributeValue();
             if (attributeValue == null) {
-                return;
+                continue;
             }
             PsiClass psiClass;
             switch (attribute.getAttributeName()) {
@@ -116,7 +115,7 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 case "annotationClass":
                     psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
                     if (psiClass != null) {
-                        processQueryPsiClass(ClassesWithAnnotatedMembersSearch.search(psiClass, GlobalSearchScope.projectScope(config.getProject())), mappers);
+                        processQueryPsiClass(ClassesWithAnnotatedMembersSearch.search(psiClass, scope), mappers);
                     }
                     break;
                 case "markerInterface":
@@ -127,7 +126,6 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 default:
                     break;
             }
-
         }
     }
 
@@ -175,26 +173,11 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                 continue;
             }
             res.addAll(getPsiPackage(facade, text.replaceAll("\"", "")));
-            //if (qualifiedName.contains("*")) {
-            //    PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
-            //            .replaceAll("\\.", "\\\\.")
-            //            .replaceAll("\\*\\*", ".*?")
-            //            .replaceAll("\\*", "[^.]+") + ".*"));
-            //    getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).forEach(psiPackage -> {
-            //        if (PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches()) {
-            //            res.add(psiPackage);
-            //        }
-            //    });
-            //} else {
-            //    PsiPackage psiPackage = facade.findPackage(qualifiedName);
-            //    if (psiPackage != null) {
-            //        res.add(psiPackage);
-            //    }
-            //}
         }
         return res;
     }
 
+    @NotNull
     private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull String qualifiedName) {
         if (qualifiedName.contains("*")) {
             PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
