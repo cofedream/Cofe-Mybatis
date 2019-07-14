@@ -126,8 +126,8 @@ public final class PsiTypeUtils {
         if (isCollectionOrMapType(psiType)) {
             return false;
         }
-        // 上述类型都不成立则为自定义对象
-        return true;
+        // 上述类型都不成立,且为类对象,则为自定义对象
+        return psiType instanceof PsiClassReferenceType;
     }
 
 }
