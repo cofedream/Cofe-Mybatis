@@ -64,42 +64,41 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             PsiElement elementAt = xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset()));
             ClassElement classElement = DomUtils.getTargetElement(elementAt, ClassElement.class);
             if (classElement != null) {
-                JavaPsiService javaPsiService = JavaPsiService.getInstance(position.getProject());
-                javaPsiService.findPsiMethod(classElement).ifPresent(psiMethod -> process(psiMethod, result, getPrefix(result)));
+                JavaPsiService.getInstance(position.getProject()).findPsiMethod(classElement)
+                        .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefix(result), psiMethod.getParameterList().getParameters(), result));
             }
         }
     }
 
-    private void process(@NotNull PsiMethod psiMethod, @NotNull CompletionResultSet result, @NotNull String[] prefixs) {
-        PsiParameter[] psiParameters = psiMethod.getParameterList().getParameters();
-        if (psiParameters.length == 0) {
+    private void addPsiParamaterVariants(@NotNull String[] prefixs, final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
+        if (parameters.length == 0) {
             return;
         }
         // 根据 paramters 和 prefix 获取元素
         if (prefixs.length == 0) {
-            if (psiParameters.length == 1) {
-                Annotation.Value value = Annotation.PARAM.getValue(psiParameters[0]);
+            if (parameters.length == 1) {
+                Annotation.Value value = Annotation.PARAM.getValue(parameters[0]);
                 if (value == null) {
                     // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                    if (PsiTypeUtils.isCustomType(psiParameters[0].getType()) && psiParameters[0].getType() instanceof PsiClassType) {
-                        addPsiClassTypeVariants(prefixs, (PsiClassType) psiParameters[0].getType(), result);
+                    if (PsiTypeUtils.isCustomType(parameters[0].getType()) && parameters[0].getType() instanceof PsiClassType) {
+                        addPsiClassTypeVariants(prefixs, (PsiClassType) parameters[0].getType(), result);
                     }
                 } else {
-                    result.addElement(createLookupElement(value.getValue(), psiParameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
+                    result.addElement(createLookupElement(value.getValue(), parameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
                 }
             } else {
-                for (PsiParameter psiParameter : psiParameters) {
+                for (PsiParameter psiParameter : parameters) {
                     Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
                 }
             }
         } else {
-            PsiType type = getPrefixType(prefixs[0], psiParameters);
-            //// 自定义类类型则取字段和方法
+            PsiType type = getPrefixType(prefixs[0], parameters);
+            // 自定义类类型则取字段和方法
             if (type != null && PsiTypeUtils.isCustomType(type)) {
                 addPsiClassTypeVariants(prefixs, getTargetPsiClass(prefixs, (PsiClassType) type), result);
             }
         }
-        addParamsVariants(result, prefixs, psiParameters);
+        addParamsVariants(result, prefixs, parameters);
         result.stopHere();
     }
 
@@ -298,7 +297,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     private void addMethodsVariants(final String prefiex, final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
         for (PsiMethod method : methods) {
-            if (isTargetMethod(method)) {
+            if (isTargetMethod(method) && method.getReturnType() != null) {
                 createLookupElement(prefiex, processGetMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }
