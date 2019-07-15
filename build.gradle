@@ -8,7 +8,7 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 group 'tk.cofedream.plugin'
-version '1.2.1'
+version '1.2.3'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

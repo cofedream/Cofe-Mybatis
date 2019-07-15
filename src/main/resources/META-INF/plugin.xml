@@ -11,7 +11,7 @@
     <change-notes><![CDATA[
         <i>Fixed bugs:</i>
         <ul>
-            <li>1.修改 Mybatis Spring注入,MapperScan#basePackages 支持 * 符号</li>
+            <li>1.修正 xml 文件中 #{}/${} 的参数提示</li>
         </ul>
     ]]></change-notes>
 
