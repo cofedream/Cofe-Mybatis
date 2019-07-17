@@ -258,7 +258,12 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             }
             char beforeChart = text.charAt(i - 1);
             if (c == '{' && (beforeChart == '#' || beforeChart == '$')) {
-                return true;
+                for (int j = parameters.getOffset(); j < text.length(); j++) {
+                    if (text.charAt(j) == '}') {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
         return false;
