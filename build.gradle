@@ -8,7 +8,7 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 group 'tk.cofedream.plugin'
-version '1.2.3'
+version pluginVersion
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -26,7 +26,10 @@ intellij {
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
 }
-
+patchPluginXml{
+    version pluginVersion
+    sinceBuild '183'
+}
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
