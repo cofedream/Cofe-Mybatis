@@ -341,7 +341,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
      */
     private void addParamsVariants(@NotNull CompletionResultSet result, @NotNull String[] prefixs, PsiParameter[] methodParameters) {
         // 方法参数大于一个的时候才进行 param1->paramN的提示,否则仅提示类内部字段
-        if (prefixs.length != 0 || methodParameters.length <= 1) {
+        if (prefixs.length != 0 && methodParameters.length <= 1) {
             return;
         }
         for (int i = 0; i < methodParameters.length; i++) {

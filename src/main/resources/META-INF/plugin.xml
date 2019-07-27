@@ -4,8 +4,21 @@
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
     <description><![CDATA[
-    Free Mybatis Plugin <em>Created By Cofedream</em>
-
+    <h1>Cofe Mybatis</h1>
+    <p>
+        <b>
+            <a href="https://gitee.com/cofedream/Cofe_Mybatis">Gitee</a> |
+            <a href="https://github.com/cofedream/Cofe-Mybatis">GitHub</a>
+        </b>
+    </p>
+    <p><b>Free Mybatis Plugin <em>Created By Cofedream</em>.</b></p>
+    <p><b>Features:</b>
+    <ul>
+        <li>Support Spring Inject.</li>
+        <li>Support Mybatis XMl Completion.</li>
+        <li>Support <a href="https://gitee.com/free/Mapper">Mapper</a> MapperScan.</li>
+        <li>More.</li>
+    </ul>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -58,7 +71,7 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
-        <customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>
+        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->
         <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsagesProvider"/>-->
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
