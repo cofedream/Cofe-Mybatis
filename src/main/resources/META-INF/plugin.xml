@@ -22,9 +22,13 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <i>Fixed bugs:</i>
+        <i>new features:</i>
         <ul>
-            <li>1.修正 xml 文件中 #{}/${} 的参数提示</li>
+            <li>1.新增&lt;Sql&gt; 标签的Documentation</li>
+        </ul>
+        <i>fixed bugs:</i>
+        <ul>
+            <li>1.修正只有一个参数时 #{}/${} 无法提示的BUG</li>
         </ul>
     ]]></change-notes>
 
@@ -70,6 +74,9 @@
         <!--implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
+
+        <lang.documentationProvider language="XML" implementationClass="tk.cofe.plugin.mybatis.documentation.SqlTagDocumentation" order="first"/>
+
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
         <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->
         <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsagesProvider"/>-->

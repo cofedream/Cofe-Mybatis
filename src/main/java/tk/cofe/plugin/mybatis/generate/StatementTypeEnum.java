@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -47,7 +48,7 @@ public enum StatementTypeEnum {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
-            GenericAttributeValue<String> resultTypeValue = select.getResultType();
+            GenericAttributeValue<PsiClass> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
                 List<String> resultType = PsiMybatisUtils.getResultType(method.getReturnType());
                 if (CollectionUtils.isNotEmpty(resultType)) {

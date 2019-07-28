@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -34,5 +33,5 @@ public interface Include extends Property, DynamicTag, DynamicSql {
     @Nullable
     @Attribute("refid")
     @Convert(IncludeConverter.class)
-    GenericAttributeValue<XmlTag> getRefId();
+    GenericAttributeValue<Sql> getRefId();
 }

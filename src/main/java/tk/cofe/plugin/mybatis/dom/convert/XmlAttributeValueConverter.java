@@ -19,7 +19,6 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
@@ -33,6 +32,7 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * XmlAttribute 基础转换器
@@ -40,21 +40,21 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public abstract class XmlAttributeValueConverter<T extends DomElement> extends ResolvingConverter<XmlAttributeValue> {
+public abstract class XmlAttributeValueConverter<T extends DomElement> extends ResolvingConverter<T> {
 
     @NotNull
     @Override
-    public Collection<? extends XmlAttributeValue> getVariants(ConvertContext context) {
+    public Collection<? extends T> getVariants(ConvertContext context) {
         Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
         if (mapper == null) {
             return Collections.emptyList();
         }
-        Collection<XmlAttributeValue> variants = getVariants(context, mapper);
+        Collection<T> variants = getVariants(context, mapper);
         return variants == null ? Collections.emptyList() : variants;
     }
 
     @Nullable
-    protected abstract Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper);
+    protected abstract Collection<T> getVariants(ConvertContext context, Mapper mapper);
 
     /**
      * 根据字符串值转成目标元素
@@ -64,7 +64,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      */
     @Nullable
     @Override
-    public XmlAttributeValue fromString(@Nullable String value, ConvertContext context) {
+    public T fromString(@Nullable String value, ConvertContext context) {
         if (StringUtils.isBlank(value) || context == null) {
             return null;
         }
@@ -80,11 +80,11 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * @return 目标元素
      */
     @Nullable
-    private XmlAttributeValue findTargetElement(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper currentMapper) {
+    private T findTargetElement(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper currentMapper) {
         return getReferenceDomElements(value, context, currentMapper).stream()
                 .filter(targetDom -> filterDomElement(targetDom, value))
                 .findFirst()
-                .map(this::getTargetElement).orElse(null);
+                .orElse(null);
     }
 
     /**
@@ -105,23 +105,13 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      */
     protected abstract boolean filterDomElement(@NotNull T targetDomElement, @NotNull String selfValue);
 
-    /**
-     * 获取目标节点
-     * @param targetDomElement 目标元素
-     * @return 目标节点
-     */
-    @Nullable
-    protected abstract XmlAttributeValue getTargetElement(@NotNull T targetDomElement);
-
     @Nullable
     @Override
-    public String toString(@Nullable XmlAttributeValue xmlAttributeValue, ConvertContext context) {
-        return xmlAttributeValue == null ? null : xmlAttributeValue.getValue();
+    public LookupElement createLookupElement(final T t) {
+        if (t == null) {
+            return null;
+        }
+        return Optional.ofNullable(toString(t, null)).map(text -> LookupElementBuilder.create(text).withIcon(PlatformIcons.XML_TAG_ICON)).orElse(null);
     }
 
-    @Nullable
-    @Override
-    public LookupElement createLookupElement(final XmlAttributeValue xmlAttributeValue) {
-        return LookupElementBuilder.create(xmlAttributeValue.getValue()).withIcon(PlatformIcons.XML_TAG_ICON);
-    }
 }

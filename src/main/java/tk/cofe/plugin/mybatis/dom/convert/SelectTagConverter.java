@@ -20,14 +20,14 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Empty;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -35,9 +35,6 @@ import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Select 标签相关转换
@@ -46,7 +43,7 @@ import java.util.stream.Collectors;
  */
 public class SelectTagConverter {
 
-    public static class ResultType extends ResolvingConverter<String> {
+    public static class ResultType extends ResolvingConverter<PsiClass> {
 
         private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
             return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText(Empty.STRING).appendTailText(tailText, true);
@@ -54,35 +51,38 @@ public class SelectTagConverter {
 
         @NotNull
         @Override
-        public Collection<? extends String> getVariants(ConvertContext context) {
-            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> PsiMybatisUtils.getResultType(psiMethod.getReturnType())).orElse(Collections.emptyList());
+        public Collection<? extends PsiClass> getVariants(ConvertContext context) {
+            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> {
+                PsiType returnType = psiMethod.getReturnType();
+                if (returnType instanceof PsiClassReferenceType) {
+                    return Collections.singletonList(((PsiClassReferenceType) returnType).resolve());
+                }
+                return Collections.<PsiClass>emptyList();
+            }).orElse(Collections.emptyList());
         }
 
         @Nullable
         @Override
-        public String fromString(@Nullable String s, ConvertContext context) {
-            return s;
+        public PsiClass fromString(@Nullable String className, ConvertContext context) {
+            return className != null ? JavaPsiService.getInstance(context.getProject()).findPsiClass(className).orElse(null) : null;
         }
 
         @Nullable
         @Override
-        public String toString(@Nullable String s, ConvertContext context) {
-            return s;
+        public String toString(@Nullable PsiClass psiClass, ConvertContext context) {
+            return psiClass == null ? null : psiClass.getQualifiedName();
         }
 
         @Nullable
         @Override
-        public LookupElement createLookupElement(String text) {
-            LookupElement lookupElement = PsiMybatisUtils.getResultTypeLookupElement(text);
+        public LookupElement createLookupElement(PsiClass psiClass) {
+            LookupElement lookupElement = PsiMybatisUtils.getResultTypeLookupElement(psiClass.getName());
             if (lookupElement != null) {
                 return lookupElement;
             }
-            String shortName = text;
-            if (text.lastIndexOf(".") > 0) {
-                shortName = text.substring(text.lastIndexOf(".") + 1);
-            }
-            return createLookupElementBuilder(text, text, shortName).withIcon(AllIcons.Nodes.Class);
+            return createLookupElementBuilder(psiClass.getQualifiedName(), psiClass.getQualifiedName(), psiClass.getName()).withIcon(AllIcons.Nodes.Class);
         }
+
     }
 
 }

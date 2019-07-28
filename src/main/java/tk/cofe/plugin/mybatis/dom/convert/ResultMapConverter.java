@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.dom.convert;
 
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,13 +40,13 @@ public class ResultMapConverter {
     public static class Extends extends XmlAttributeValueConverter<ResultMap> {
         @Nullable
         @Override
-        public Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
+        public Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
             ResultMap domElement = (ResultMap) DomUtils.getDomElement(context.getTag());
             if (domElement == null) {
                 return null;
             }
-            return mapper.getResultMaps().stream().filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
-                    .map(resultMap -> resultMap.getId() == null ? null : resultMap.getId().getXmlAttributeValue())
+            return mapper.getResultMaps().stream()
+                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
                     .collect(Collectors.toList());
         }
 
@@ -64,8 +63,8 @@ public class ResultMapConverter {
 
         @Nullable
         @Override
-        protected XmlAttributeValue getTargetElement(@NotNull ResultMap targetDomElement) {
-            return targetDomElement.getId() == null ? null : targetDomElement.getId().getXmlAttributeValue();
+        public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
+            return resultMap == null ? null : resultMap.getIdValue().orElse(null);
         }
     }
 }

@@ -17,16 +17,14 @@
 
 package tk.cofe.plugin.mybatis.dom.convert;
 
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.ConvertContext;
-import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,28 +32,27 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2019-07-02
  */
-public class ResultMapAttributeConverter extends XmlAttributeValueConverter<tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap> {
+public class ResultMapAttributeConverter extends XmlAttributeValueConverter<ResultMap> {
     @Nullable
     @Override
-    protected Collection<XmlAttributeValue> getVariants(ConvertContext context, Mapper mapper) {
-        return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).map(resultMap -> resultMap.getId().getXmlAttributeValue()).collect(Collectors.toList());
+    protected Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
+        return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).collect(Collectors.toList());
     }
 
     @NotNull
     @Override
-    protected List<tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+    protected List<ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
         return mapper.getResultMaps();
     }
 
     @Override
-    protected boolean filterDomElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement, @NotNull String selfValue) {
+    protected boolean filterDomElement(@NotNull ResultMap targetDomElement, @NotNull String selfValue) {
         return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
     }
 
     @Nullable
     @Override
-    protected XmlAttributeValue getTargetElement(@NotNull tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap targetDomElement) {
-        return Optional.ofNullable(targetDomElement.getId()).map(GenericAttributeValue::getXmlAttributeValue).orElse(null);
+    public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
+        return resultMap == null ? null : resultMap.getIdValue().orElse(null);
     }
-
 }
