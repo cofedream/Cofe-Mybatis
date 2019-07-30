@@ -40,6 +40,9 @@
     <!-- Optional dependency on another plugin.
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
        (the format of this file conforms to the format of plugin.xml) will be loaded. -->
+    <!--依赖设置,仅支持IDEA-->
+    <depends>com.intellij.modules.java</depends>
+    <!--其他可选模块-->
     <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
     <depends optional="true" config-file="mybatis-spring-boot.xml">com.intellij.spring.boot</depends>
     <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
