@@ -28,7 +28,7 @@ import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Include extends Property, DynamicTag, DynamicSql {
+public interface Include extends DynamicTag, DynamicSql {
 
     @Nullable
     @Attribute("refid")
