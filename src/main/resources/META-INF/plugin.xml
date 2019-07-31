@@ -11,7 +11,7 @@
             <a href="https://github.com/cofedream/Cofe-Mybatis">GitHub</a>
         </b>
     </p>
-    <p><b>Free Mybatis Plugin <em>Created By Cofedream</em>.</b></p>
+    <p><b>Free Mybatis Plugin For Jetbrains <em>Created By Cofedream</em>.</b></p>
     <p><b>Features:</b>
     <ul>
         <li>Support Spring Inject.</li>
@@ -25,24 +25,23 @@
         <i>new features:</i>
         <ul>
             <li>1.新增&lt;Sql&gt; 标签的Documentation</li>
+            <li>2.生成 Select Statement 若缺失 ResutType则提示</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>1.修正只有一个参数时 #{}/${} 无法提示的BUG</li>
+            <li>1.修正插件实用IDE范围</li>
+            <li>2.修正只有一个参数时 #{}/${} 无法提示的BUG</li>
+            <li>3.修正为void 的方法生成Select Statement的时候报错的问题</li>
         </ul>
     ]]></change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
+    <!-- uncomment to enable plugin in all products -->
+    <depends>com.intellij.modules.java</depends>
     <!-- Optional dependency on another plugin.
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
        (the format of this file conforms to the format of plugin.xml) will be loaded. -->
-    <!--依赖设置,仅支持IDEA-->
-    <depends>com.intellij.modules.java</depends>
-    <!--其他可选模块-->
     <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
     <depends optional="true" config-file="mybatis-spring-boot.xml">com.intellij.spring.boot</depends>
     <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
@@ -50,7 +49,7 @@
     <!-- Resource bundle (/messages/MyPluginBundle.properties) to be used
        with `key` attributes in extension points and implicit keys like
        `action.[pluginID].[ActionID].text` -->
-    <resource-bundle>MybatisBundle</resource-bundle>
+    <resource-bundle>messages.MyBatisBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
@@ -117,8 +116,8 @@
         <!--                 enabledByDefault="true" level="ERROR"-->
         <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" -->
         <localInspection language="JAVA" implementationClass="tk.cofe.plugin.mybatis.inspection.MapperMethodInspection"
-                         displayName="undefined method" level="ERROR" enabledByDefault="true"
-                         groupKey="group.name" groupPath="Mybatis.Interface"/>
+                         displayName="undefined statement" level="ERROR" enabledByDefault="true"
+                         groupKey="action.group.text" groupPath="Mybatis.Interface"/>
         <!--<localInspection language="XML" implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" />-->
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.GenerateParamAnnotationIntention</className>

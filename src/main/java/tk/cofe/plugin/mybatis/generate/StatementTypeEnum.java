@@ -18,6 +18,9 @@
 package tk.cofe.plugin.mybatis.generate;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -27,6 +30,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
@@ -40,6 +44,7 @@ import java.util.List;
 
 /**
  * 声明类型
+ *
  * @author : zhengrf
  * @date : 2019-06-23
  */
@@ -53,6 +58,13 @@ public enum StatementTypeEnum {
                 List<String> resultType = PsiMybatisUtils.getResultType(method.getReturnType());
                 if (CollectionUtils.isNotEmpty(resultType)) {
                     resultTypeValue.setStringValue(resultType.get(0));
+                } else {
+                    Notification mybatis = new Notification(
+                            MyBatisBundle.message("action.group.text"),
+                            MyBatisBundle.message("action.generate.title"),
+                            MyBatisBundle.message("action.generate.text", method.getName()),
+                            NotificationType.WARNING);
+                    Notifications.Bus.notify(mybatis);
                 }
             }
             return select;
@@ -87,6 +99,7 @@ public enum StatementTypeEnum {
 
     /**
      * 执行创建元素动作,并返回创建的元素
+     *
      * @param mapper Mapper
      * @param method Java方法
      * @return 要创建的元素
@@ -95,11 +108,12 @@ public enum StatementTypeEnum {
 
     /**
      * 指定元素动作
+     *
      * @param mapper  Mapper
      * @param method  方法
      * @param project 当前项目
      */
-    public void processCreateStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
+    public void createStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
         ClassElement element = addClassElement(mapper, method);
         XmlTag tag = element.getXmlTag();
         if (tag == null) {
@@ -108,11 +122,17 @@ public enum StatementTypeEnum {
         element.setValue("\n");
         int offset = 0;
         // todo 修正
-        GenericAttributeValue<String> selectId = element.getId();
-        if (selectId.getXmlAttributeValue() != null) {
-            selectId.setStringValue(method.getName());
-            offset = selectId.getXmlAttributeValue().getTextOffset();
+        //GenericAttributeValue<String> selectId = element.getId();
+        GenericAttributeValue<PsiMethod> elementId = element.getId();
+        if (elementId.getXmlAttributeValue() != null) {
+            elementId.setStringValue(method.getName());
+            //element.setValue(method.getName());
+            offset = elementId.getXmlAttributeValue().getTextOffset();
         }
+        //if (selectId.getXmlAttributeValue() != null) {
+        //    selectId.setStringValue(method.getName());
+        //    offset = selectId.getXmlAttributeValue().getTextOffset();
+        //}
         NavigationUtil.activateFileWithPsiElement(tag, true);
         Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         if (null != xmlEditor) {

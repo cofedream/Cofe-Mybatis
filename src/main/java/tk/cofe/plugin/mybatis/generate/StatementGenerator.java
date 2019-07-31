@@ -81,7 +81,7 @@ public class StatementGenerator {
                     if (null == psiClass) {
                         return;
                     }
-                    MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> selectedValue.processCreateStatement(mapper, method, project));
+                    MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> selectedValue.createStatement(mapper, method, project));
                 }));
             }
         };

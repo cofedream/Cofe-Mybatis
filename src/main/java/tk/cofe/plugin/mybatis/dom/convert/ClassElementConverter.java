@@ -50,10 +50,9 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement)
+            return JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement)
                     .map(psiClass -> Arrays.stream(psiClass.getMethods())
                             .collect(Collectors.toList()))
-                    .orElse(Collections.emptyList()))
                     .orElse(Collections.emptyList());
         }
 
@@ -63,9 +62,12 @@ public class ClassElementConverter {
             if (StringUtils.isBlank(methodName)) {
                 return null;
             }
-            return JavaPsiService.getInstance(context.getProject())
-                    .findPsiMethod(DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true))
-                    .filter(psiMethod -> methodName.equals(psiMethod.getName()))
+            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
+            if (classElement == null) {
+                return null;
+            }
+            return classElement.getNamespaceValue()
+                    .flatMap(classQualifiedName -> JavaPsiService.getInstance(context.getProject()).findPsiMethod(classQualifiedName, methodName))
                     .orElse(null);
         }
 

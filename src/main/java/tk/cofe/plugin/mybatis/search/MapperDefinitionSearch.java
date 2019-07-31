@@ -38,6 +38,6 @@ public class MapperDefinitionSearch extends QueryExecutorBase<XmlElement, PsiEle
         if (!(queryParameters instanceof PsiTypeParameterListOwner)) {
             return;
         }
-        //JavaPsiService.getInstance(queryParameters.getProject()).processCreateStatement(queryParameters, (Processor<DomElement>) classElement -> consumer.processCreateStatement(classElement.getXmlElement()));
+        //JavaPsiService.getInstance(queryParameters.getProject()).createStatement(queryParameters, (Processor<DomElement>) classElement -> consumer.createStatement(classElement.getXmlElement()));
     }
 }

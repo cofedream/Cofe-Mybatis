@@ -20,15 +20,13 @@ package tk.cofe.plugin.mybatis.service;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
-import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 
 import java.util.Optional;
 
@@ -48,6 +46,9 @@ public interface JavaPsiService {
     Optional<PsiMethod> findPsiMethod(@Nullable ClassElement element);
 
     @NotNull
+    Optional<PsiMethod> findPsiMethod(@Nullable String qualifiedName, @Nullable String methodName);
+
+    @NotNull
     Optional<PsiMethod[]> findPsiMethods(@Nullable ClassElement element);
 
     @NotNull
@@ -55,16 +56,16 @@ public interface JavaPsiService {
 
     /**
      * 查找PsiClass
+     *
      * @param qualifiedName 类全限定名
      * @return PsiClass
      */
     @NotNull
     Optional<PsiClass> findPsiClass(@NotNull String qualifiedName);
 
-    void process(@NotNull PsiElement target, @NotNull Processor processor);
-
     /**
      * 导包
+     *
      * @param file          Java类文件
      * @param qualifiedName 包名
      */
@@ -72,6 +73,7 @@ public interface JavaPsiService {
 
     /**
      * 给元素添加注解
+     *
      * @param psiModifierListOwner 目标元素
      * @param annotationText       注解文本
      */

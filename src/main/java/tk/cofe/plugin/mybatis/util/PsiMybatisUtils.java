@@ -22,6 +22,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlAttribute;
@@ -55,6 +56,7 @@ import java.util.stream.Collectors;
 
 /**
  * mybatis Psi工具类
+ *
  * @author : zhengrf
  * @date : 2019-06-23
  */
@@ -137,6 +139,7 @@ public class PsiMybatisUtils {
 
     /**
      * 判断是否为mapper.xml文件
+     *
      * @param file 文件
      * @return 结果
      */
@@ -153,6 +156,7 @@ public class PsiMybatisUtils {
 
     /**
      * 基础 增删拆改操作
+     *
      * @param xmlElement 元素
      * @return 判断是否增删查该操作标签内的元素
      * @see Select
@@ -193,14 +197,16 @@ public class PsiMybatisUtils {
 
     /**
      * 获取 ResultType
+     *
      * @param type 类型
      */
     @NotNull
     public static List<String> getResultType(@Nullable PsiType type) {
         if (type == null) {
             return Collections.emptyList();
-        }
-        if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
+        } else if (PsiPrimitiveType.VOID.equals(type)) {
+            return Collections.emptyList();
+        } else if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
             return Optional.ofNullable(BaseType.get(type.getPresentableText())).orElse(Collections.emptyList());
         } else if (PsiTypeUtils.isMapType(type)) {
             return Optional.ofNullable(BaseType.get(((PsiClassReferenceType) type).getClassName())).orElse(Collections.emptyList());
@@ -214,6 +220,7 @@ public class PsiMybatisUtils {
 
     /**
      * 获取 ResultType LookupElement
+     *
      * @param type 类型
      * @return LookupElement
      */

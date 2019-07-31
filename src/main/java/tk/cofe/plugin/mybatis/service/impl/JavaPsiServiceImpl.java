@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.service.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
@@ -29,11 +28,12 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Optional;
 
@@ -50,17 +50,6 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         this.project = project;
         this.mapperService = MapperService.getInstance(project);
         this.javaPsiFacade = JavaPsiFacade.getInstance(project);
-    }
-
-    // todo 调整
-    @Override
-    @SuppressWarnings("unchecked")
-    public void process(@NotNull PsiElement target, @NotNull Processor processor) {
-        if (target instanceof PsiMethod) {
-            process((PsiMethod) target, processor);
-        } else if (target instanceof PsiClass) {
-            process((PsiClass) target, processor);
-        }
     }
 
     @Override
@@ -111,6 +100,20 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     @Override
     public Optional<PsiMethod> findPsiMethod(@Nullable ClassElement element) {
         return findPsiMethods(element).flatMap(psiMethods -> psiMethods.length > 0 ? Optional.of(psiMethods[0]) : Optional.empty());
+    }
+
+    @Override
+    public Optional<PsiMethod> findPsiMethod(@Nullable final String qualifiedName, @Nullable final String methodName) {
+        if (StringUtils.isBlank(qualifiedName) || StringUtils.isBlank(methodName)) {
+            return Optional.empty();
+        }
+        return findPsiClass(qualifiedName).flatMap(psiClass -> {
+            PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
+            if (methods.length == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(methods[0]);
+        });
     }
 
     @NotNull
