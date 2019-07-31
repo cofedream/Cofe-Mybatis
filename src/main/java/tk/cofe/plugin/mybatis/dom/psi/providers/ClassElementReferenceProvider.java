@@ -22,7 +22,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.psi.references.IdAttributeReference;
+import tk.cofe.plugin.mybatis.dom.psi.reference.IdAttributeReference;
 
 /**
  * @author : zhengrf

@@ -31,9 +31,11 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * JavaPsi工具
+ *
  * @author : zhengrf
  * @date : 2019-01-01
  */
@@ -43,6 +45,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否有指定注解
+     *
      * @param target     目标元素
      * @param annotation 目标注解
      * @return true 有指定注解，false 没有指定注解
@@ -54,6 +57,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否有指定注解
+     *
      * @param target      目标元素
      * @param annotations 目标注解集合
      * @return true 有指定注解，false 没有指定注解
@@ -68,6 +72,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否已经导入目标类
+     *
      * @param file          Java类文件
      * @param qualifiedName 类全限定名
      * @return true 已导入，false 未导入
@@ -82,6 +87,7 @@ public final class PsiJavaUtils {
 
     /**
      * 导入类到指定Java文件
+     *
      * @param file     Java文件
      * @param psiClass 要导入的类
      */
@@ -94,6 +100,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断 PsiElement 是否为接口
+     *
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
@@ -103,6 +110,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断 PsiElement 是否为类方法
+     *
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
@@ -120,6 +128,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否为 void 方法
+     *
      * @param method 方法
      */
     public static boolean isVoidMethod(@NotNull PsiMethod method) {
@@ -128,6 +137,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否为 getXXX 函数
+     *
      * @param method 方法
      */
     public static boolean isGetMethod(@NotNull PsiMethod method) {
@@ -136,6 +146,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否为 本地方法 函数
+     *
      * @param method 方法
      */
     public static boolean isNativeMethod(@NotNull PsiMethod method) {
@@ -144,6 +155,7 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否为 public 函数
+     *
      * @param method 方法
      */
     public static boolean isPublicMethod(@NotNull PsiMethod method) {
@@ -152,11 +164,20 @@ public final class PsiJavaUtils {
 
     /**
      * 判断是否又指定标识符
+     *
      * @param method   方法
      * @param modifier 标识符 {@link PsiModifier}
      */
     private static boolean hasModifierProperty(@NotNull PsiMethod method, String modifier) {
         return method.getModifierList().hasModifierProperty(modifier);
+    }
+
+    public static Optional<PsiMethod> findPsiMethod(@NotNull PsiClass psiClass, @NotNull String methodName) {
+        PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
+        if (methods.length == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(methods[0]);
     }
 
 }

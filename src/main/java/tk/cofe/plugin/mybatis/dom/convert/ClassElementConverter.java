@@ -26,14 +26,14 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -50,9 +50,8 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement)
-                    .map(psiClass -> Arrays.stream(psiClass.getMethods())
-                            .collect(Collectors.toList()))
+            return PsiMybatisUtils.getPsiClass(classElement)
+                    .map(psiClass -> Arrays.asList(psiClass.getMethods()))
                     .orElse(Collections.emptyList());
         }
 
@@ -66,9 +65,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return null;
             }
-            return classElement.getNamespaceValue()
-                    .flatMap(classQualifiedName -> JavaPsiService.getInstance(context.getProject()).findPsiMethod(classQualifiedName, methodName))
-                    .orElse(null);
+            return PsiMybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
         }
 
         @Nullable
@@ -80,7 +77,7 @@ public class ClassElementConverter {
         @Nullable
         @Override
         public LookupElement createLookupElement(PsiMethod psiMethod) {
-            return LookupElementBuilder.create(psiMethod.getName()).withIcon(AllIcons.Nodes.Method);
+            return psiMethod == null ? null : LookupElementBuilder.create(psiMethod.getName()).withIcon(AllIcons.Nodes.Method);
         }
     }
 }

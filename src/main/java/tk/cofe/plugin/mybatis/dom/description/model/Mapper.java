@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -26,14 +27,13 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -50,20 +50,19 @@ public interface Mapper extends DomElement {
 
     String TAG_NAME = "mapper";
 
+    @NotNull
     @Required
     @NameValue
-    @NotNull
     @Attribute("namespace")
-    GenericAttributeValue<String> getNamespace();
+    GenericAttributeValue<PsiClass> getNamespace();
 
     /**
      * 获取 namespace属性值
      * @return namespace属性值
      */
     @NotNull
-    default Optional<String> getNamespaceValue() {
-        String value = getNamespace().getValue();
-        return Optional.ofNullable(StringUtils.isBlank(value) ? null : value);
+    default Optional<PsiClass> getNamespaceValue() {
+        return Optional.ofNullable(getNamespace().getValue());
     }
 
     @SubTagList("resultMap")

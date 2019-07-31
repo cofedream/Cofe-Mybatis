@@ -55,13 +55,13 @@ public class MapperServiceImpl implements MapperService {
 
     @Override
     public boolean isMapperClass(@NotNull final PsiClass mapperClass) {
-        return findAllMappers().stream().anyMatch(mapper -> mapper.getNamespaceValue().orElse("").equals(mapperClass.getQualifiedName()));
+        return findAllMappers().stream().anyMatch(mapper -> mapper.getNamespaceValue().map(psiClass -> psiClass.equals(mapperClass)).orElse(false));
     }
 
     @NotNull
     @Override
     public List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
-        return findAllMappers().stream().filter(mapperXml -> mapperXml.getNamespaceValue().orElse("").equals(mapperClass.getQualifiedName())).collect(Collectors.toList());
+        return findAllMappers().stream().filter(mapper -> mapper.getNamespaceValue().map(psiClass -> psiClass.equals(mapperClass)).orElse(false)).collect(Collectors.toList());
     }
 
     @NotNull

@@ -29,7 +29,7 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
-import tk.cofe.plugin.mybatis.dom.psi.references.PsiIdentifierReference;
+import tk.cofe.plugin.mybatis.dom.psi.reference.PsiIdentifierReference;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 

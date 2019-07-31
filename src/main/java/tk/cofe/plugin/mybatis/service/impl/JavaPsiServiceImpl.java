@@ -27,8 +27,6 @@ import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -88,15 +86,4 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         });
     }
 
-    @NotNull
-    @Override
-    public Optional<PsiMethod[]> findPsiMethod(@NotNull Mapper mapper, String methodName) {
-        return mapper.getNamespaceValue().flatMap(namespace -> findPsiClass(namespace).flatMap(psiClass -> Optional.of(psiClass.findMethodsByName(methodName, false))));
-    }
-
-    @NotNull
-    @Override
-    public Optional<PsiClass> findPsiClass(@NotNull ClassElement element) {
-        return element.getNamespaceValue().flatMap(this::findPsiClass);
-    }
 }

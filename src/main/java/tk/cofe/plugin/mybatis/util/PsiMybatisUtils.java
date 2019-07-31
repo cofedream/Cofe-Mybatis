@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
@@ -168,7 +169,6 @@ public class PsiMybatisUtils {
         if (xmlElement == null) {
             return false;
         }
-        // todo 下面两个判断可以合并
         DomElement domElement = DomUtils.getDomElement(xmlElement);
         if (!(domElement instanceof ClassElement)) {
             return false;
@@ -230,5 +230,15 @@ public class PsiMybatisUtils {
 
     private static LookupElement createLookupElement(String lookupString, String typeText, String tailText) {
         return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText(Empty.STRING).appendTailText(tailText, true);
+    }
+
+    /**
+     * 获取当前 XML 对应的 Mapper 接口
+     *
+     * @param classElement 基础CRUD元素
+     * @return PsiClass
+     */
+    public static Optional<PsiClass> getPsiClass(@NotNull ClassElement classElement) {
+        return Optional.ofNullable(DomUtils.getParentOfType(classElement, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 }

@@ -26,14 +26,12 @@ import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
-import tk.cofe.plugin.mybatis.dom.psi.references.IdAttributeReference;
+import tk.cofe.plugin.mybatis.dom.psi.reference.IdAttributeReference;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * 接口方法定位到XML标签 Ctrl+B

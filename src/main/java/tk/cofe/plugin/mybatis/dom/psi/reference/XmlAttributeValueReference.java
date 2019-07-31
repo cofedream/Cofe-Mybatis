@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.psi.references;
+package tk.cofe.plugin.mybatis.dom.psi.reference;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -24,6 +24,8 @@ import com.intellij.psi.ResolveResult;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * XmlAttributeValue 引用
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */

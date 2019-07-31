@@ -25,8 +25,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 
 import java.util.Optional;
 
@@ -40,13 +38,7 @@ public interface JavaPsiService {
     }
 
     @NotNull
-    Optional<PsiClass> findPsiClass(@NotNull ClassElement element);
-
-    @NotNull
     Optional<PsiMethod> findPsiMethod(@Nullable String qualifiedName, @Nullable String methodName);
-
-    @NotNull
-    Optional<PsiMethod[]> findPsiMethod(@NotNull Mapper mapper, String methodName);
 
     /**
      * 查找PsiClass

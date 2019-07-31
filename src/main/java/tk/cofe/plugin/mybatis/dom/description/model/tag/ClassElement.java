@@ -26,10 +26,8 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ParameterTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.dynamic.DynamicSql;
-import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 
@@ -39,16 +37,12 @@ import java.util.Optional;
  */
 public interface ClassElement extends DynamicSql, ParameterTypeAttribute {
 
+    @NotNull
     @Required
     @NameValue
-    @NotNull
     @Attribute("id")
     @Convert(ClassElementConverter.Id.class)
     GenericAttributeValue<PsiMethod> getId();
-
-    default Optional<String> getNamespaceValue() {
-        return Optional.ofNullable(DomUtils.getParentOfType(this, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
-    }
 
     /**
      * 获取Id对应的PsiMethod

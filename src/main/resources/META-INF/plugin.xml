@@ -26,6 +26,7 @@
         <ul>
             <li>1.新增&lt;Sql&gt; 标签的Documentation</li>
             <li>2.生成 Select Statement 若缺失 ResutType则提示</li>
+            <li>3.<result/>和<id/>标签中的 property 标签属性重命名是可一并重命名字段</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
@@ -77,7 +78,9 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
-        <lang.documentationProvider language="XML" implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation" order="first"/>
+        <lang.documentationProvider language="XML"
+                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"
+                                    order="first"/>
 
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
         <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->
@@ -90,6 +93,7 @@
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
         <!--<methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>-->
         <!--<lang.findUsagesProvider-->
+
         <!--<psi.referenceContributor language="JAVA"-->
         <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
         <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->

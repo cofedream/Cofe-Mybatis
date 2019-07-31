@@ -19,22 +19,26 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.util.CollectionUtils;
+import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -43,13 +47,13 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public class PropertyConverter extends ResolvingConverter<PsiMember> {
+public class PropertyConverter extends ResolvingConverter<PsiField> {
 
     private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
     @NotNull
     @Override
-    public Collection<? extends PsiMember> getVariants(ConvertContext context) {
+    public Collection<? extends PsiField> getVariants(ConvertContext context) {
         String propertyType = PropertyType.parse(context.getInvocationElement());
         if (propertyType == null) {
             return Collections.emptyList();
@@ -63,29 +67,43 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
 
     @Nullable
     @Override
-    public LookupElement createLookupElement(PsiMember psiMember) {
+    public LookupElement createLookupElement(PsiField psiMember) {
         return psiMember == null || psiMember.getName() == null ? null : LookupElementBuilder.create(psiMember.getName()).withIcon(PRIVATE_FIELD_ICON);
     }
 
     @Nullable
     @Override
-    public PsiMember fromString(@Nullable final String member, final ConvertContext context) {
-        if (member == null) {
+    public PsiField fromString(@Nullable final String member, final ConvertContext context) {
+        if (StringUtils.isBlank(member)) {
             return null;
         }
-        String propertyType = PropertyType.parse(context.getInvocationElement());
-        if (propertyType == null) {
+        String type = PropertyType.parse(context.getInvocationElement());
+        if (StringUtils.isBlank(type)) {
             return null;
         }
-        return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
-                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> member.equals(field.getName())).findFirst()
-                        .orElse(null)).orElse(null);
+        List<PsiField> fields = JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+                .map(psiClass -> Arrays.asList(psiClass.getAllFields()))
+                .orElse(Collections.emptyList());
+        if (CollectionUtils.isEmpty(fields)) {
+            return null;
+        }
+        for (PsiField field : fields) {
+            if (member.equals(field.getName())) {
+                return field;
+            }
+        }
+        return null;
     }
 
     @Nullable
     @Override
-    public String toString(@Nullable final PsiMember psiMember, final ConvertContext context) {
+    public String toString(@Nullable final PsiField psiMember, final ConvertContext context) {
         return psiMember == null ? null : psiMember.getName();
+    }
+
+    @Override
+    public void handleElementRename(final GenericDomValue<PsiField> genericValue, final ConvertContext context, final String newElementName) {
+        super.handleElementRename(genericValue, context, newElementName);
     }
 
     private enum PropertyType {
