@@ -69,15 +69,6 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
     List<Collection> getCollections();
 
     /**
-     * 获取Id值
-     * @return Id 值 如果为Null 则返回 ""
-     */
-    @NotNull
-    default Optional<String> getIdValue() {
-        return DomUtils.getAttributeVlaue(getId());
-    }
-
-    /**
      * 获取 Extends 值
      * @return Extends 值 如果为Null 则返回 ""
      */

@@ -107,6 +107,7 @@ public enum StatementTypeEnum {
         }
         element.setValue("\n");
         int offset = 0;
+        // todo 修正
         GenericAttributeValue<String> selectId = element.getId();
         if (selectId.getXmlAttributeValue() != null) {
             selectId.setStringValue(method.getName());

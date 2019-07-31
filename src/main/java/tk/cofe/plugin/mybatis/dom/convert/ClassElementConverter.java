@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
@@ -42,18 +41,17 @@ import java.util.stream.Collectors;
  */
 public class ClassElementConverter {
 
-    public static class Id extends ResolvingConverter.StringConverter {
+    public static class Id extends ResolvingConverter<PsiMethod> {
 
         @NotNull
         @Override
-        public Collection<? extends String> getVariants(ConvertContext context) {
+        public Collection<? extends PsiMethod> getVariants(ConvertContext context) {
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
             if (classElement == null) {
                 return Collections.emptyList();
             }
             return classElement.getIdValue().map(id -> JavaPsiService.getInstance(context.getProject()).findPsiClass(classElement)
                     .map(psiClass -> Arrays.stream(psiClass.getMethods())
-                            .map(PsiMethod::getName)
                             .collect(Collectors.toList()))
                     .orElse(Collections.emptyList()))
                     .orElse(Collections.emptyList());
@@ -61,7 +59,7 @@ public class ClassElementConverter {
 
         @Nullable
         @Override
-        public PsiElement resolve(String methodName, ConvertContext context) {
+        public PsiMethod fromString(@Nullable final String methodName, final ConvertContext context) {
             if (StringUtils.isBlank(methodName)) {
                 return null;
             }
@@ -73,8 +71,14 @@ public class ClassElementConverter {
 
         @Nullable
         @Override
-        public LookupElement createLookupElement(String s) {
-            return LookupElementBuilder.create(s).withIcon(AllIcons.Nodes.Method);
+        public String toString(@Nullable final PsiMethod psiMethod, final ConvertContext context) {
+            return psiMethod == null ? null : psiMethod.getName();
+        }
+
+        @Nullable
+        @Override
+        public LookupElement createLookupElement(PsiMethod psiMethod) {
+            return LookupElementBuilder.create(psiMethod.getName()).withIcon(AllIcons.Nodes.Method);
         }
     }
 }
