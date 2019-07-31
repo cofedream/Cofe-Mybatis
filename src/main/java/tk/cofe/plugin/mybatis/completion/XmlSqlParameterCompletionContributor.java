@@ -42,7 +42,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
@@ -55,6 +54,7 @@ import java.util.function.Consumer;
 
 /**
  * XML 文件中的SQL 参数完成
+ *
  * @author : zhengrf
  * @date : 2019-01-05
  */
@@ -81,8 +81,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
             PsiElement elementAt = xmlFile.findElementAt(manager.injectedToHost(position, position.getTextOffset()));
             ClassElement classElement = DomUtils.getTargetElement(elementAt, ClassElement.class);
             if (classElement != null) {
-                JavaPsiService.getInstance(position.getProject()).findPsiMethod(classElement)
-                        .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefix(result), psiMethod.getParameterList().getParameters(), result));
+                classElement.getIdMethod().ifPresent(psiMethod -> addPsiParamaterVariants(getPrefix(result), psiMethod.getParameterList().getParameters(), result));
             }
         }
     }
@@ -121,6 +120,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 获取前缀对应的类型
+     *
      * @param prefix        前缀
      * @param psiParameters 参数数组
      * @return 前缀对应的类型
@@ -149,6 +149,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     *
      * @param psiClass 类对象
      * @param prefixs  前缀
      */
@@ -166,6 +167,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     *
      * @param prefix  前缀
      * @param psiType 类对象
      */
@@ -197,6 +199,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     *
      * @param prefix  前缀
      * @param psiType 类对象
      */
@@ -226,6 +229,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 判断是否为 getXXX 函数
+     *
      * @param method 方法名
      */
     private boolean isTargetMethod(@NotNull PsiMethod method) {
@@ -234,6 +238,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 处理 getAaaBbb 方法名称
+     *
      * @param method java方法
      * @return getAaaBbb->aaaBbb
      */
@@ -288,6 +293,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 通过类添加提示
+     *
      * @param prefixs 前缀
      * @param psiType Java类类型
      * @param result  结果集
@@ -327,6 +333,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 判断是否为目标字段
+     *
      * @param psiField 字段
      */
     private boolean isTargetField(@NotNull PsiField psiField) {
@@ -335,6 +342,7 @@ public class XmlSqlParameterCompletionContributor extends CompletionContributor 
 
     /**
      * 添加 param1-paramn 的提示
+     *
      * @param result           结果集
      * @param prefixs          前缀
      * @param methodParameters 方法参数

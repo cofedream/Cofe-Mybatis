@@ -88,7 +88,7 @@
         <!--<targetElementEvaluator language="XML" implementationClass="tk.cofedream.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
         <!--<java.elementFinder implementation=""-->
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
-        <methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>
+        <!--<methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>-->
         <!--<lang.findUsagesProvider-->
         <!--<psi.referenceContributor language="JAVA"-->
         <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->

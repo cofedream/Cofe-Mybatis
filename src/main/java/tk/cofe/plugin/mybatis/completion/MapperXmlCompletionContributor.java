@@ -116,7 +116,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                 if (classElement == null) {
                     return;
                 }
-                JavaPsiService.getInstance(xmlTag.getProject()).findPsiMethod(classElement).ifPresent(psiMethod -> {
+                classElement.getIdMethod().ifPresent(psiMethod -> {
                     PsiType type = psiMethod.getReturnType();
                     if (type == null) {
                         return;

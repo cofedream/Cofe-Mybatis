@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.dom.psi.references;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiReferenceBase;
@@ -27,7 +26,6 @@ import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
@@ -36,6 +34,7 @@ import java.util.List;
 
 /**
  * Xml Attribute 引用
+ *
  * @author : zhengrf
  * @date : 2019-01-05
  */
@@ -50,8 +49,11 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         List<ResolveResult> result = new ArrayList<>();
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
         if (PsiMybatisUtils.isBaseStatementElement(tag)) {
-            Project project = myElement.getProject();
-            JavaPsiService.getInstance(project).findPsiMethod((ClassElement) DomUtils.getDomElement(tag)).ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
+            ClassElement classElement = (ClassElement) DomUtils.getDomElement(tag);
+            if (classElement == null) {
+                return Empty.Array.RESOLVE_RESULT;
+            }
+            classElement.getIdMethod().ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
         }
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));

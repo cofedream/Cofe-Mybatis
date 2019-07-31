@@ -20,7 +20,10 @@ package tk.cofe.plugin.mybatis.search;
 import com.intellij.openapi.application.QueryExecutorBase;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlElement;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
@@ -39,6 +42,7 @@ import java.util.Optional;
  * @see MapperReferenceContributor
  */
 public class MapperMethodReferencesSearch extends QueryExecutorBase<PsiReference, com.intellij.psi.search.searches.MethodReferencesSearch.SearchParameters> {
+    // 使用 DOM Converter 处理
     public MapperMethodReferencesSearch() {
         super(true);
     }
@@ -49,15 +53,19 @@ public class MapperMethodReferencesSearch extends QueryExecutorBase<PsiReference
         if (method.getContainingClass() != null) {
             Collection<Mapper> mappers = MapperService.getInstance(queryParameters.getProject()).findMapperXmls(method.getContainingClass());
             mappers.forEach(mapperXml -> mapperXml.getClassElements().forEach(element -> {
-                if (element.getIdValue().map(id -> id.equals(method.getName())).orElse(false)) {
-                    Optional.of(element)
-                            .map(ClassElement::getId)
-                            .map(attributeValue -> {
-                                XmlAttributeValue xmlAttributeValue = attributeValue.getXmlAttributeValue();
-                                return xmlAttributeValue == null ? null : new IdAttributeReference(xmlAttributeValue);
-                            })
-                            .ifPresent(consumer::process);
-                }
+                element.getIdMethod().ifPresent(psiMethod -> {
+                    XmlElement xmlElement = element.getXmlElement();
+                    if (xmlElement instanceof XmlTag) {
+                        XmlAttribute id = ((XmlTag) xmlElement).getAttribute("id");
+                        if (id == null) {
+                            return;
+                        }
+                        XmlAttributeValue valueElement = id.getValueElement();
+                        if (valueElement != null) {
+                            consumer.process(new IdAttributeReference(valueElement));
+                        }
+                    }
+                });
             }));
         }
     }

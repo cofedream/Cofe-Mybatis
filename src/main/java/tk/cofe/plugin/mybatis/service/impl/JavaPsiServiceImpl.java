@@ -25,7 +25,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
@@ -67,28 +66,6 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         }
     }
 
-    public void process(@NotNull PsiMethod psiMethod, @NotNull Processor<ClassElement> processor) {
-        PsiClass psiClass = psiMethod.getContainingClass();
-        if (psiClass == null) {
-            return;
-        }
-        mapperService.findMapperXmls(psiClass).forEach(mapperXml -> mapperXml.getClassElements().forEach(classElement -> {
-            classElement.getIdValue().ifPresent(id -> {
-                if (id.equals(psiMethod.getName())) {
-                    processor.process(classElement);
-                }
-            });
-        }));
-    }
-
-    public void process(@NotNull PsiClass psiClass, @NotNull Processor<Mapper> processor) {
-        mapperService.findMapperXmls(psiClass).forEach(mapperXml -> mapperXml.getNamespaceValue().ifPresent(qualifiedName -> {
-            if (qualifiedName.equals(psiClass.getQualifiedName())) {
-                processor.process(mapperXml);
-            }
-        }));
-    }
-
     @NotNull
     @Override
     public Optional<PsiClass> findPsiClass(@NotNull String qualifiedName) {
@@ -97,11 +74,6 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     }
 
     @NotNull
-    @Override
-    public Optional<PsiMethod> findPsiMethod(@Nullable ClassElement element) {
-        return findPsiMethods(element).flatMap(psiMethods -> psiMethods.length > 0 ? Optional.of(psiMethods[0]) : Optional.empty());
-    }
-
     @Override
     public Optional<PsiMethod> findPsiMethod(@Nullable final String qualifiedName, @Nullable final String methodName) {
         if (StringUtils.isBlank(qualifiedName) || StringUtils.isBlank(methodName)) {
@@ -114,17 +86,6 @@ public class JavaPsiServiceImpl implements JavaPsiService {
             }
             return Optional.of(methods[0]);
         });
-    }
-
-    @NotNull
-    @Override
-    public Optional<PsiMethod[]> findPsiMethods(@Nullable ClassElement element) {
-        if (element == null || !element.getIdValue().isPresent()) {
-            return Optional.empty();
-        }
-        return element.getNamespaceValue().flatMap(qualifiedName ->
-                findPsiClass(qualifiedName).flatMap(psiClass ->
-                        element.getIdValue().flatMap(id -> Optional.of(psiClass.findMethodsByName(id, false)))));
     }
 
     @NotNull

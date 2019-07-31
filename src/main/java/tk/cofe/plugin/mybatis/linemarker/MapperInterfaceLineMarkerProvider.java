@@ -29,7 +29,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.service.MapperService;
@@ -42,6 +41,7 @@ import java.util.stream.Collectors;
 
 /**
  * Mapper接口与内部方法标记
+ *
  * @author : zhengrf
  * @date : 2019-01-01
  */
@@ -69,6 +69,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
 
     /**
      * 标记接口
+     *
      * @param mapperClass 类元素
      * @param element     方法元素
      * @param result      标记结果
@@ -76,10 +77,10 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     private void markerMethod(PsiClass mapperClass, @NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
         Collection<Mapper> mappers = MapperService.getInstance(element.getProject()).findMapperXmls(mapperClass);
         if (!mappers.isEmpty()) {
-            List<ClassElement> collect = mappers.stream().flatMap(mapperXml -> mapperXml.getClassElements().stream()).collect(Collectors.toList());
-            PsiMethod method = (PsiMethod) element;
-            List<XmlTag> xmlMethods = collect.stream().filter(classElement -> classElement.getIdValue().map(id -> id.equals(method.getName())).orElse(false))
+            List<XmlTag> xmlMethods = mappers.stream().flatMap(mapperXml -> mapperXml.getClassElements().stream())
+                    .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(element)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
+            PsiMethod method = (PsiMethod) element;
             if (!xmlMethods.isEmpty() && method.getNameIdentifier() != null) {
                 NavigationGutterIconBuilder<PsiElement> methodBuild = NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
@@ -92,6 +93,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
 
     /**
      * 标记接口
+     *
      * @param element 类元素
      * @param result  标记结果
      */

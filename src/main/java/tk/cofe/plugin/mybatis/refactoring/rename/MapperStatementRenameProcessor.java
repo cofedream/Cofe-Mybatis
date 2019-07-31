@@ -21,7 +21,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.rename.RenameDialog;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
@@ -31,7 +30,6 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
@@ -60,18 +58,15 @@ public class MapperStatementRenameProcessor extends RenamePsiElementProcessor {
     @Override
     public void renameElement(@NotNull PsiElement element, @NotNull String newName, @NotNull UsageInfo[] usages, @Nullable RefactoringElementListener listener) throws IncorrectOperationException {
         DomUtils.resolveToDomTarget(element).ifPresent(domTarget -> {
-            ClassElement domElement = (ClassElement) domTarget.getDomElement();
-            JavaPsiService.getInstance(element.getProject()).findPsiMethods(domElement).ifPresent(psiMethods -> {
-                for (PsiMethod psiMethod : psiMethods) {
-                    if (domElement.getIdValue().map(id -> id.equals(psiMethod.getName())).orElse(false)) {
-                        UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));
-                        if (!CollectionUtils.isEmpty(methodUsage)) {
-                            RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(psiMethod);
-                            processor.renameElement(psiMethod, newName, methodUsage, listener);
-                        }
+            ClassElement classElement = (ClassElement) domTarget.getDomElement();
+            if (classElement != null) {
+                classElement.getIdMethod().ifPresent(psiMethod -> {
+                    UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));
+                    if (!CollectionUtils.isEmpty(methodUsage)) {
+                        RenamePsiElementProcessor.forElement(psiMethod).renameElement(psiMethod, newName, methodUsage, listener);
                     }
-                }
-            });
+                });
+            }
         });
         super.renameElement(element, newName, usages, listener);
     }

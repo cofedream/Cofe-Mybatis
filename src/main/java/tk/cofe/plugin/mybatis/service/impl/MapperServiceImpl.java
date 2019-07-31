@@ -30,8 +30,8 @@ import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -66,7 +66,7 @@ public class MapperServiceImpl implements MapperService {
 
     @NotNull
     @Override
-    public List<ClassElement> findMapperStatemtnts(@NotNull final PsiClass mapperClass) {
+    public List<ClassElement> findStatemtnts(@NotNull final PsiClass mapperClass) {
         return findMapperXmls(mapperClass).stream().flatMap(mapper -> mapper.getClassElements().stream()).collect(Collectors.toList());
     }
 
@@ -77,14 +77,14 @@ public class MapperServiceImpl implements MapperService {
 
     @NotNull
     @Override
-    public List<ClassElement> findStatement(@NotNull PsiMethod method) {
+    public Optional<ClassElement> findStatement(@NotNull PsiMethod method) {
         PsiClass psiClass = method.getContainingClass();
         if (psiClass == null) {
-            return Collections.emptyList();
+            return Optional.empty();
         }
-        return findMapperStatemtnts(psiClass).stream()
-                .filter(classElement -> classElement.getIdValue().map(id -> id.equals(method.getName())).orElse(false))
-                .collect(Collectors.toList());
+        return findStatemtnts(psiClass).stream()
+                .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
+                .findFirst();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MapperServiceImpl implements MapperService {
                 return true;
             }
         }
-        return findMapperStatemtnts(method.getContainingClass()).stream()
-                .anyMatch(classElement -> classElement.getIdValue().map(id -> id.equals(method.getName())).orElse(false));
+        return findStatemtnts(method.getContainingClass()).stream()
+                .anyMatch(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false));
     }
 }

@@ -27,6 +27,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : zhengrf
@@ -57,7 +58,7 @@ public interface MapperService {
      * @return Mapper Statement
      */
     @NotNull
-    List<ClassElement> findMapperStatemtnts(@NotNull PsiClass mapperClass);
+    List<ClassElement> findStatemtnts(@NotNull PsiClass mapperClass);
 
     /**
      * 获取Mapper Dom 文件
@@ -80,7 +81,7 @@ public interface MapperService {
      * @return Statement 集合
      */
     @NotNull
-    List<ClassElement> findStatement(@NotNull PsiMethod method);
+    Optional<ClassElement> findStatement(@NotNull PsiMethod method);
 
     /**
      * 查询PsiMethod对应的Mapper Statement是否存在

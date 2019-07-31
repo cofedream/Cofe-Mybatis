@@ -49,12 +49,11 @@ public interface ClassElement extends DynamicSql {
     }
 
     /**
-     * 获取Id值
-     * @return Id 值 如果为Null 则返回 ""
+     * 获取Id对应的PsiMethod
      */
     @NotNull
-    default Optional<String> getIdValue() {
-        return Optional.ofNullable(getId().getValue()).map(PsiMethod::getName);
+    default Optional<PsiMethod> getIdMethod() {
+        return Optional.ofNullable(getId().getValue());
     }
 
     @TagValue

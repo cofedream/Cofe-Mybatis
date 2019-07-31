@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -40,6 +39,7 @@ import java.util.stream.Collectors;
 
 /**
  * foreach标签转换器
+ *
  * @author : zhengrf
  * @date : 2019-06-27
  */
@@ -54,13 +54,9 @@ public class ForeachConverter {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdValue().map(id ->
-                    JavaPsiService.getInstance(context.getProject()).findPsiMethod(classElement)
-                            .map(method -> Arrays.stream(method.getParameterList().getParameters())
-                                    .map(psiParameter -> Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())
-                                    .collect(Collectors.toList()))
-                            .orElse(Collections.emptyList())
-            ).orElse(Collections.emptyList());
+            return classElement.getIdMethod().map(method -> Arrays.stream(method.getParameterList().getParameters())
+                    .map(psiParameter -> Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())
+                    .collect(Collectors.toList())).orElse(Collections.emptyList());
         }
 
         @Nullable
@@ -70,7 +66,10 @@ public class ForeachConverter {
                 return null;
             }
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
-            List<PsiParameter> parameters = JavaPsiService.getInstance(context.getProject()).findPsiMethod(classElement)
+            if (classElement == null) {
+                return null;
+            }
+            List<PsiParameter> parameters = classElement.getIdMethod()
                     .map(method -> Arrays.stream(method.getParameterList().getParameters()).filter(psiParameter -> text.equals(Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())).collect(Collectors.toList()))
                     .orElse(Collections.emptyList());
             if (CollectionUtils.isNotEmpty(parameters)) {

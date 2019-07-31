@@ -38,6 +38,7 @@ import java.util.Collections;
 
 /**
  * Select 标签相关转换
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
@@ -52,7 +53,11 @@ public class SelectTagConverter {
         @NotNull
         @Override
         public Collection<? extends PsiClass> getVariants(ConvertContext context) {
-            return JavaPsiService.getInstance(context.getProject()).findPsiMethod((Select) DomUtils.getDomElement(context.getTag())).map(psiMethod -> {
+            Select select = (Select) DomUtils.getDomElement(context.getTag());
+            if (select == null) {
+                return Collections.emptyList();
+            }
+            return select.getIdMethod().map(psiMethod -> {
                 PsiType returnType = psiMethod.getReturnType();
                 if (returnType instanceof PsiClassReferenceType) {
                     return Collections.singletonList(((PsiClassReferenceType) returnType).resolve());

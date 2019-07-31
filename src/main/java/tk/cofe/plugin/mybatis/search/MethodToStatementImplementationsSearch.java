@@ -28,7 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 /**
- * Mapper 跳转 XML 标签定义 CTRL+ALT+B
+ * Mapper 跳转 XML 标签定义 CTRL+ALT+B<br/>
+ * 接口实现查找
+ *
  * @author : zhengrf
  * @date : 2019-01-03
  */
@@ -47,10 +49,6 @@ public class MethodToStatementImplementationsSearch extends QueryExecutorBase<Xm
         if (project == null) {
             return;
         }
-        MapperService.getInstance(project).findStatement((PsiMethod) element).forEach(classElement -> {
-            if (classElement.getId() != null && classElement.getId().getXmlAttributeValue() != null) {
-                consumer.process(classElement.getId().getXmlAttributeValue());
-            }
-        });
+        MapperService.getInstance(project).findStatement((PsiMethod) element).ifPresent(classElement -> consumer.process(classElement.getId().getXmlAttributeValue()));
     }
 }
