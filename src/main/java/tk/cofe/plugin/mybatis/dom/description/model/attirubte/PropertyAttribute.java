@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
+import com.intellij.psi.PsiField;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
@@ -36,5 +37,5 @@ public interface PropertyAttribute extends DomElement {
     @NotNull
     @Attribute("property")
     @Convert(PropertyConverter.class)
-    GenericAttributeValue<String> getProperty();
+    GenericAttributeValue<PsiField> getProperty();
 }

@@ -19,8 +19,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
@@ -42,13 +41,13 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public class PropertyConverter extends ResolvingConverter.StringConverter {
+public class PropertyConverter extends ResolvingConverter<PsiMember> {
 
     private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
     @NotNull
     @Override
-    public Collection<? extends String> getVariants(ConvertContext context) {
+    public Collection<? extends PsiMember> getVariants(ConvertContext context) {
         String propertyType = PropertyType.parse(context.getInvocationElement());
         if (propertyType == null) {
             return Collections.emptyList();
@@ -56,27 +55,35 @@ public class PropertyConverter extends ResolvingConverter.StringConverter {
         return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields())
                         .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
-                        .map(NavigationItem::getName)
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
 
     @Nullable
     @Override
-    public LookupElement createLookupElement(String property) {
-        return property == null ? null : LookupElementBuilder.create(property).withIcon(PRIVATE_FIELD_ICON);
+    public LookupElement createLookupElement(PsiMember psiMember) {
+        return psiMember == null || psiMember.getName() == null ? null : LookupElementBuilder.create(psiMember.getName()).withIcon(PRIVATE_FIELD_ICON);
     }
 
     @Nullable
     @Override
-    public PsiElement resolve(String o, ConvertContext context) {
+    public PsiMember fromString(@Nullable final String member, final ConvertContext context) {
+        if (member == null) {
+            return null;
+        }
         String propertyType = PropertyType.parse(context.getInvocationElement());
         if (propertyType == null) {
             return null;
         }
         return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
-                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> o.equals(field.getName())).findFirst()
+                .map(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> member.equals(field.getName())).findFirst()
                         .orElse(null)).orElse(null);
+    }
+
+    @Nullable
+    @Override
+    public String toString(@Nullable final PsiMember psiMember, final ConvertContext context) {
+        return psiMember == null ? null : psiMember.getName();
     }
 
     private enum PropertyType {
