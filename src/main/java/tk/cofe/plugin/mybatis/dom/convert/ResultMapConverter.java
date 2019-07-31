@@ -29,26 +29,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 解析 "ResultMap" 标签
+ * 与 ResultMap 有关的标签或属性
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */
 public class ResultMapConverter {
-    /**
-     * extends 属性
-     */
-    public static class Extends extends XmlAttributeValueConverter<ResultMap> {
-        @Nullable
-        @Override
-        public Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
-            ResultMap domElement = (ResultMap) DomUtils.getDomElement(context.getTag());
-            if (domElement == null) {
-                return null;
-            }
-            return mapper.getResultMaps().stream()
-                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
-                    .collect(Collectors.toList());
-        }
+
+    private static abstract class Base extends XmlAttributeValueConverter<ResultMap> {
 
         @NotNull
         @Override
@@ -66,5 +54,38 @@ public class ResultMapConverter {
         public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
             return resultMap == null ? null : resultMap.getIdValue().orElse(null);
         }
+    }
+
+    /**
+     * extends 属性
+     */
+    public static class Extends extends Base {
+        @Nullable
+        @Override
+        public Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
+            ResultMap domElement = (ResultMap) DomUtils.getDomElement(context.getTag());
+            if (domElement == null) {
+                return null;
+            }
+            return mapper.getResultMaps().stream()
+                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
+                    .collect(Collectors.toList());
+        }
+
+    }
+
+    /**
+     * resultMap 属性
+     *
+     * @author : zhengrf
+     * @date : 2019-07-02
+     */
+    public static class Attribute extends Base {
+        @Nullable
+        @Override
+        protected Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
+            return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).collect(Collectors.toList());
+        }
+
     }
 }

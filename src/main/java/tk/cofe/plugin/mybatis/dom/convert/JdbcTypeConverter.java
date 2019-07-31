@@ -56,7 +56,7 @@ public class JdbcTypeConverter extends ResolvingConverter<String> {
     @Nullable
     @Override
     public String toString(@Nullable String s, ConvertContext context) {
-        return s;
+        return JdbcType.contains(s) ? s : null;
     }
 
     @Nullable

@@ -38,6 +38,8 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
+ * property 属性
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */

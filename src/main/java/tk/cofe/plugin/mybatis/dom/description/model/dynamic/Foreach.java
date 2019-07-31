@@ -18,6 +18,8 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
+import com.intellij.util.xml.Required;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ForeachConverter;
 
@@ -27,7 +29,8 @@ import tk.cofe.plugin.mybatis.dom.convert.ForeachConverter;
  */
 public interface Foreach extends DynamicTag, DynamicSql {
 
-    @Nullable
+    @Required
+    @NotNull
     @NameValue
     @Attribute("collection")
     @Convert(ForeachConverter.Collection.class)

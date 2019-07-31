@@ -121,18 +121,11 @@ public enum StatementTypeEnum {
         }
         element.setValue("\n");
         int offset = 0;
-        // todo 修正
-        //GenericAttributeValue<String> selectId = element.getId();
         GenericAttributeValue<PsiMethod> elementId = element.getId();
         if (elementId.getXmlAttributeValue() != null) {
             elementId.setStringValue(method.getName());
-            //element.setValue(method.getName());
             offset = elementId.getXmlAttributeValue().getTextOffset();
         }
-        //if (selectId.getXmlAttributeValue() != null) {
-        //    selectId.setStringValue(method.getName());
-        //    offset = selectId.getXmlAttributeValue().getTextOffset();
-        //}
         NavigationUtil.activateFileWithPsiElement(tag, true);
         Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         if (null != xmlEditor) {

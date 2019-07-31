@@ -17,13 +17,12 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
-import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.convert.ResultMapAttributeConverter;
+import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 
 /**
@@ -35,7 +34,7 @@ public interface ResultMapAttribute extends DomElement {
 
     @NameValue
     @Nullable
-    @Attribute("resultMap")
-    @Convert(ResultMapAttributeConverter.class)
+    @com.intellij.util.xml.Attribute("resultMap")
+    @Convert(ResultMapConverter.Attribute.class)
     GenericAttributeValue<ResultMap> getResultMap();
 }
