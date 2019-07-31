@@ -30,7 +30,7 @@ import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TypeAttirbute;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection;
 
 import java.util.ArrayList;
 import java.util.List;

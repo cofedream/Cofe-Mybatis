@@ -12,14 +12,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.documentation;
+package tk.cofe.plugin.mybatis.dom.documentation;
 
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Sql;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collections;

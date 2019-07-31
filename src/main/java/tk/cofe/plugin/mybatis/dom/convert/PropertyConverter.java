@@ -99,10 +99,10 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
                 return ((Association) domElement).getJavaTypeValue().orElse(null);
             }
         },
-        COLLECTION(tk.cofe.plugin.mybatis.dom.description.model.tag.Collection.class) {
+        COLLECTION(tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection.class) {
             @Override
             String getType(DomElement domElement) {
-                return ((tk.cofe.plugin.mybatis.dom.description.model.tag.Collection) domElement).getOfTypeValue().orElse(null);
+                return ((tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection) domElement).getOfTypeValue().orElse(null);
             }
         },
         ;

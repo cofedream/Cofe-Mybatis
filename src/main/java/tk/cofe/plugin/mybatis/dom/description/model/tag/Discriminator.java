@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.description.model.tag;
 import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JavaTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JdbcTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Case;
 
 import java.util.List;
 

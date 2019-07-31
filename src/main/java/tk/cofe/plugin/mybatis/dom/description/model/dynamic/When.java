@@ -1,55 +1,24 @@
 /*
  * Copyright (C) 2019 cofe
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.description.model.tag;
+package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.SubTagList;
-
-import java.util.List;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TestAttribute;
 
 /**
- * 标签
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface DynamicSql extends DomElement {
-
-    @SubTagList("include")
-    List<Include> getIncludes();
-
-    @SubTagList("trim")
-    List<Trim> getTrims();
-
-    @SubTagList("where")
-    List<Where> getWheres();
-
-    @SubTagList("set")
-    List<Set> getSets();
-
-    @SubTagList("foreach")
-    List<Foreach> getForeachs();
-
-    @SubTagList("choose")
-    List<Choose> getChooses();
-
-    @SubTagList("if")
-    List<If> getIfs();
-
-    @SubTagList("bind")
-    List<Bind> getBinds();
+public interface When extends DynamicTag,TestAttribute, DynamicSql {
 }

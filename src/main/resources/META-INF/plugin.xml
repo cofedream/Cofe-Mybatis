@@ -77,7 +77,7 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
-        <lang.documentationProvider language="XML" implementationClass="tk.cofe.plugin.mybatis.documentation.SqlTagDocumentation" order="first"/>
+        <lang.documentationProvider language="XML" implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation" order="first"/>
 
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
         <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->

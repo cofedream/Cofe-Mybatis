@@ -27,6 +27,7 @@ import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.DynamicSql;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
