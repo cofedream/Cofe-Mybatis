@@ -16,11 +16,9 @@ package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.convert.PsiClassConverter;
 
 /**
  * parameterType 属性
@@ -32,6 +30,5 @@ public interface ParameterTypeAttribute extends DomElement {
 
     @NotNull
     @Attribute("parameterType")
-    @Convert(PsiClassConverter.ParameterType.class)
     GenericAttributeValue<PsiClass> getParameterType();
 }
