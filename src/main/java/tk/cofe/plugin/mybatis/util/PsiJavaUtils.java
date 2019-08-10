@@ -180,4 +180,24 @@ public final class PsiJavaUtils {
         return Optional.of(methods[0]);
     }
 
+
+    /**
+     * 处理 getAaaBbb 方法名称
+     *
+     * @param method java方法
+     * @return getAaaBbb->aaaBbb,或者 ""
+     */
+    @NotNull
+    public static String processGetMethodName(@NotNull PsiMethod method) {
+        String methodName = method.getName();
+        if (methodName.length() == 3) {
+            return "";
+        }
+        char first = Character.toLowerCase(methodName.charAt(3));
+        if (methodName.length() > 4) {
+            return first + methodName.substring(4);
+        }
+        return String.valueOf(first);
+    }
+
 }

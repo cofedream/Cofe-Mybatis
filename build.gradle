@@ -16,6 +16,12 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
 }
+configurations {
+    all*.exclude group: 'org.javassist'
+}
+dependencies{
+    compile group: 'ognl', name: 'ognl', version: '3.2.10'
+}
 
 intellij {
     pluginName 'Cofe-Mybatis'

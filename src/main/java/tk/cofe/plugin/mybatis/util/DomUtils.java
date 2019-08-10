@@ -46,6 +46,10 @@ public final class DomUtils extends DomUtil {
         return Optional.empty();
     }
 
+    public static <T> T getParentOfType(final DomElement domElement, final Class<T> requiredClass) {
+        return DomUtils.getParentOfType(domElement, requiredClass, true);
+    }
+
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T> T getTargetElement(PsiElement element, final Class<T> requiredClass) {
@@ -58,6 +62,7 @@ public final class DomUtils extends DomUtil {
 
     /**
      * 获取 {@code GenericAttributeValue<String> } 属性值值
+     *
      * @param attributeValue 属性值对象
      * @return NULL 则返回 {@code Optional.empty()}
      */

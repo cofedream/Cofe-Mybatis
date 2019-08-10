@@ -18,12 +18,14 @@
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
 import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.convert.TestConverter;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
@@ -38,10 +40,12 @@ public interface TestAttribute extends DomElement {
     @NameValue
     @Nullable
     @Attribute("test")
+    @Convert(TestConverter.class)
     GenericAttributeValue<String> getTest();
 
     /**
      * 获取 test 值
+     *
      * @return test 值 如果为Null 则返回 ""
      */
     @NotNull
