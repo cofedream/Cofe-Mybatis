@@ -31,7 +31,6 @@ import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
@@ -46,6 +45,7 @@ import java.util.Map;
 
 /**
  * 代码完成,无需指向引用
+ *
  * @author : zhengrf
  * @date : 2019-01-05
  */

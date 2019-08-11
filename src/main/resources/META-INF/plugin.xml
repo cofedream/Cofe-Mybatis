@@ -31,8 +31,8 @@
         <i>fixed bugs:</i>
         <ul>
             <li>1.调整 &lt;Sql/&gt; 标签的Documentation 的显示样式</li>
-            <li>2.修正只有一个参数时 #{}/${} 无法提示的BUG</li>
-            <li>3.修正为void 的方法生成Select Statement的时候报错的问题</li>
+            <li>2.修正 IC-IDEA 版本中 Mapper.xml 的 Statement 不支持 SQL Parameter 提示的问题</li>
+            <li>3.修正 #{param[1-n].} 的时候不会提示的问题</li>
         </ul>
     ]]></change-notes>
 
@@ -104,7 +104,7 @@
 
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
         <completion.contributor id="xml-sql-param-completion" language="XML" order="first"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.SqlParameterCompletionContributor"/>
+                                implementationClass="tk.cofe.plugin.mybatis.completion.XmlFileSqlParameterCompletionContributor"/>
         <!--纯提示-->
         <!--<annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>-->
         <!--代码检查-->

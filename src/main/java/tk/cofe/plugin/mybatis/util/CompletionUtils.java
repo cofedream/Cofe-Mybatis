@@ -25,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 代码完成相关工具类
  *
@@ -32,6 +35,8 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
  * @date : 2019-08-10
  */
 public class CompletionUtils {
+
+    private static final Pattern PARAM_PATTERN = Pattern.compile("param(?<num>\\d+)");
 
     /**
      * 获取前缀对应的类型
@@ -42,6 +47,14 @@ public class CompletionUtils {
      */
     @Nullable
     public static PsiType getPrefixType(@NotNull final String prefix, @NotNull final PsiParameter[] psiParameters) {
+        Matcher matcher = PARAM_PATTERN.matcher(prefix);
+        if (matcher.matches()) {
+            int num = Integer.parseInt(matcher.group("num")) - 1;
+            if (num > psiParameters.length) {
+                return null;
+            }
+            return psiParameters[num].getType();
+        }
         if (psiParameters.length == 1) {
             if (PsiTypeUtils.isCustomType(psiParameters[0].getType())) {
                 Annotation.Value value = Annotation.PARAM.getValue(psiParameters[0]);
@@ -52,10 +65,10 @@ public class CompletionUtils {
                 }
             }
         } else {
-            for (int i = 0; i < psiParameters.length; i++) {
-                Annotation.Value value = Annotation.PARAM.getValue(psiParameters[i]);
-                if ((value != null && prefix.equals(value.getValue())) || prefix.equals("param" + (i + 1))) {
-                    return psiParameters[i].getType();
+            for (PsiParameter psiParameter : psiParameters) {
+                Annotation.Value value = Annotation.PARAM.getValue(psiParameter);
+                if ((value != null && prefix.equals(value.getValue()))) {
+                    return psiParameter.getType();
                 }
             }
         }
