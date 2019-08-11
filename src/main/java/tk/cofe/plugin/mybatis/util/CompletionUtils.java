@@ -122,7 +122,7 @@ public class CompletionUtils {
         if (psiClass == null) {
             return null;
         }
-        for (PsiMember psiMember : psiClass.getAllMethods()) {
+        for (PsiMember psiMember : psiClass.getAllFields()) {
             // 字段名与前缀匹配 且 为自定义类型
             if (prefix.equals(psiMember.getName()) && PsiTypeUtils.isCustomType(((PsiField) psiMember).getType())) {
                 return (PsiClassType) ((PsiField) psiMember).getType();

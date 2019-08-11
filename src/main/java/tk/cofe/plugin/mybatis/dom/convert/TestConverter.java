@@ -42,6 +42,7 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -73,27 +74,29 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             PsiParameter[] parameters = parameterList.getParameters();
             Set<String> res = new HashSet<>();
             String[] prefixs = getPrefix(originPrefix);
+            // 完成的前缀内容
+            String completionPrefix = getCompletionPrefix(originPrefix);
             if (prefixs.length == 0) {
                 if (parameters.length == 1) {
                     Annotation.Value value = Annotation.PARAM.getValue(parameters[0]);
                     if (value == null) {
                         // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
                         if (PsiTypeUtils.isCustomType(parameters[0].getType()) && parameters[0].getType() instanceof PsiClassType) {
-                            addPsiClassTypeVariants(getCompletionPrefix(originPrefix), (PsiClassType) parameters[0].getType(), res);
+                            addPsiClassTypeVariants(completionPrefix, (PsiClassType) parameters[0].getType(), res);
                         }
                     } else {
-                        //result.addElement(createLookupElement(value.getValue(), parameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
+                        res.add(completionPrefix + value.getValue());
                     }
                 } else {
-                    //for (PsiParameter psiParameter : parameters) {
-                    //    Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
-                    //}
+                    for (PsiParameter psiParameter : parameters) {
+                        Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
+                    }
                 }
             } else {
                 PsiType type = CompletionUtils.getPrefixType(prefixs[0], parameters);
                 // 自定义类类型则取字段和方法
                 if (type != null && PsiTypeUtils.isCustomType(type)) {
-                    addPsiClassTypeVariants(getCompletionPrefix(originPrefix), CompletionUtils.getTargetPsiClass(prefixs, (PsiClassType) type), res);
+                    addPsiClassTypeVariants(completionPrefix, CompletionUtils.getTargetPsiClass(prefixs, (PsiClassType) type), res);
                 }
             }
             return res;
@@ -120,10 +123,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
         try {
             Ognl.parseExpression(prefix);
         } catch (OgnlException e) {
-            if (prefix.charAt(prefix.length() - 1) == ' ') {
-                return true;
-            }
-            return false;
+            return prefix.charAt(prefix.length() - 1) == ' ';
         }
         for (int i = prefix.length() - 2; i > 0; i--) {
             char charAt = prefix.charAt(i);
