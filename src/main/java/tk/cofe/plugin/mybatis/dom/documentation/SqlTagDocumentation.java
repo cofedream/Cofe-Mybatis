@@ -51,7 +51,19 @@ public class SqlTagDocumentation implements DocumentationProvider {
     public String generateDoc(final PsiElement element, @Nullable final PsiElement originalElement) {
         return Optional.ofNullable(DomUtils.getTargetElement(element, Sql.class))
                 .filter(sql -> sql.getXmlTag() != null).map(DomElement::getXmlTag)
-                .map(xmlTag -> "<pre>" + xmlTag.getText().replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\\n", "<br/>") + "</pre>")
+                .map(xmlTag -> {
+                    String text = xmlTag.getText().replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\\n", "<br/>");
+                    int index = text.lastIndexOf("&lt;");
+                    String origin = text.substring(0, index);
+                    String start = "";
+                    for (int i = origin.length()-1; i > 0; i--) {
+                        if (origin.charAt(i)!=' ') {
+                            start = text.substring(0, i+1);
+                            break;
+                        }
+                    }
+                    return "<pre><b>" + start+text.substring(index) + "</b></pre>";
+                })
                 .orElse(null);
     }
 
