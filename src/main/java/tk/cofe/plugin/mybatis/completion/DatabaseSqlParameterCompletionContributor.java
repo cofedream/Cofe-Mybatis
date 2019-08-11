@@ -58,7 +58,7 @@ import java.util.function.Consumer;
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class XmlSqlParameterCompletionContributor extends CompletionContributor {
+public class DatabaseSqlParameterCompletionContributor extends CompletionContributor {
 
     /**
      * 权重

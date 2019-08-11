@@ -103,9 +103,8 @@
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <!--<completion.contributor language="XML" implementationClass="tk.cofedream.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-        <completion.contributor language="SQL"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.XmlSqlParameterCompletionContributor"
-                                order="first"/>
+        <completion.contributor id="xml-sql-param-completion" language="XML" order="first"
+                                implementationClass="tk.cofe.plugin.mybatis.completion.SqlParameterCompletionContributor"/>
         <!--纯提示-->
         <!--<annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>-->
         <!--代码检查-->
