@@ -30,7 +30,7 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
  * SQL 文件中的SQL 参数完成
  *
  * @author : zhengrf
- * @date : 2019-01-05
+ * @date : 2019-08-11
  */
 public class SqlFileSqlParameterCompletionContributor extends BaseSqlParameterCompletionContributor {
 
