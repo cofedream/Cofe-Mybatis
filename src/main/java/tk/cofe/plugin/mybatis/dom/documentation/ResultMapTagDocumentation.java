@@ -14,18 +14,19 @@
 
 package tk.cofe.plugin.mybatis.dom.documentation;
 
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 
 /**
- * sql 标签的 documentation
+ * resultMap 标签的 documentation
  *
  * @author : zhengrf
- * @date : 2019-07-27
+ * @date : 2019-08-11
  */
-public class SqlTagDocumentation extends BaseTagDocumentation<Sql> {
+public class ResultMapTagDocumentation extends BaseTagDocumentation<ResultMap> {
 
     @Override
-    Class<Sql> getTargetDomElement() {
-        return Sql.class;
+    Class<ResultMap> getTargetDomElement() {
+        return ResultMap.class;
     }
+
 }
