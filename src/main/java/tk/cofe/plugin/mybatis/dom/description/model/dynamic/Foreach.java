@@ -17,7 +17,6 @@ package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,18 +30,15 @@ public interface Foreach extends DynamicTag, DynamicSql {
 
     @Required
     @NotNull
-    @NameValue
     @Attribute("collection")
     @Convert(ForeachConverter.Collection.class)
     GenericAttributeValue<String> getCollection();
 
     @Nullable
-    @NameValue
     @Attribute("item")
     GenericAttributeValue<String> getItem();
 
     @Nullable
-    @NameValue
     @Attribute("index")
     GenericAttributeValue<String> getIndex();
 

@@ -21,7 +21,6 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,6 @@ import java.util.Optional;
 public interface TestAttribute extends DomElement {
 
     @Required
-    @NameValue
     @Nullable
     @Attribute("test")
     @Convert(TestConverter.class)

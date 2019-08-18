@@ -22,7 +22,6 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.PropertyConverter;
@@ -37,7 +36,6 @@ public interface PropertyAttribute extends DomElement {
 
     @NotNull
     @Required
-    @NameValue
     @Attribute("property")
     @Convert(PropertyConverter.class)
     GenericAttributeValue<PsiField> getProperty();

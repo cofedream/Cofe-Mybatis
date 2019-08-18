@@ -16,14 +16,6 @@ package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.SubTagList;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Bind;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Choose;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.If;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Include;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Set;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Trim;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Where;
 
 import java.util.List;
 

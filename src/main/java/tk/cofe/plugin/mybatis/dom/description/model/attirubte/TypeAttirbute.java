@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +34,6 @@ import java.util.Optional;
 public interface TypeAttirbute extends DomElement {
 
     @Required
-    @NameValue
     @Nullable
     @Attribute("type")
     GenericAttributeValue<String> getType();

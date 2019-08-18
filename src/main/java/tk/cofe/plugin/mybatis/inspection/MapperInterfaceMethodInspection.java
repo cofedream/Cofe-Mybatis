@@ -40,7 +40,7 @@ import tk.cofe.plugin.mybatis.service.MapperService;
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public class MapperMethodInspection extends AbstractBaseJavaLocalInspectionTool {
+public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private static final String STATEMENT_REF_NOT_DEFINED = "Statement #ref not defined";
 

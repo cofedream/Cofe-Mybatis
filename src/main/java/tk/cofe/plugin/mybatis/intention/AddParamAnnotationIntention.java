@@ -40,16 +40,17 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
 import java.util.Arrays;
 
 /**
- * 生成 @Param 注解
+ * 添加 @Param 注解
+ *
  * @author : zhengrf
  * @date : 2019-06-18
  */
-public class GenerateParamAnnotationIntention implements IntentionAction {
+public class AddParamAnnotationIntention implements IntentionAction {
     @Nls(capitalization = Nls.Capitalization.Sentence)
     @NotNull
     @Override
     public String getText() {
-        return "Generate @Param";
+        return "Add '@Param' annotation";
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)

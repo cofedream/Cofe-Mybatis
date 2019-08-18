@@ -111,23 +111,22 @@
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MapperCompletionContributor"/>-->
         <!--纯提示-->
         <!--<annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>-->
+
         <!--代码检查-->
-        <!--<localInspection language="JAVA" shortName="MybatisMapperMethodInspection" applyToDialects="false"-->
-        <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
-        <!--                 groupBundle="MybatisBundle" groupKey="inspection.group.java" groupPath="Mybatis"-->
-        <!--                 enabledByDefault="true" level="ERROR"-->
-        <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperMethodInspection"/>-->
         <!--<localInspection language="XML" shortName="MapperXmlInspection" applyToDialects="false"-->
         <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
         <!--                 groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"-->
         <!--                 enabledByDefault="true" level="ERROR"-->
         <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" -->
-        <localInspection language="JAVA" implementationClass="tk.cofe.plugin.mybatis.inspection.MapperMethodInspection"
-                         displayName="undefined statement" level="ERROR" enabledByDefault="true"
-                         groupKey="action.group.text" groupPath="Mybatis.Interface"/>
-        <!--<localInspection language="XML" implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" />-->
+        <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
+                         language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
+                         groupKey="action.interface.group.text" groupPath="Mybatis"/>
+        <!--<localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"-->
+        <!--                 language="XML" displayName="unmapped method" level="ERROR" enabledByDefault="true"-->
+        <!--                 groupKey="action.xml.group.text" groupPath="Mybatis"/>-->
         <intentionAction>
-            <className>tk.cofe.plugin.mybatis.intention.GenerateParamAnnotationIntention</className>
+            <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
+            <categoryKey>intention.category.key</categoryKey>
         </intentionAction>
         <!--<intentionAction>-->
         <!--    <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>-->
