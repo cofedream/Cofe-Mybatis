@@ -49,7 +49,7 @@ import java.util.Map;
  * @author : zhengrf
  * @date : 2019-01-05
  */
-public class MapperXmlCompletionContributor extends CompletionContributor {
+public class MybatisXmlCompletionContributor extends CompletionContributor {
 
     private static LookupElementBuilder createLookupElementBuilder(String lookupString, String typeText, String tailText) {
         return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText("").appendTailText(tailText, true);
