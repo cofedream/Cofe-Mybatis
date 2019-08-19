@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
@@ -25,6 +26,8 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.PropertyConverter;
+
+import java.util.Optional;
 
 /**
  * 字段属性
@@ -39,4 +42,12 @@ public interface PropertyAttribute extends DomElement {
     @Attribute("property")
     @Convert(PropertyConverter.class)
     GenericAttributeValue<PsiField> getProperty();
+
+    /**
+     * 获取 property 对应的 PsiField
+     */
+    @NotNull
+    default Optional<PsiField> getPropertyField() {
+        return Optional.ofNullable(getProperty().getValue());
+    }
 }
