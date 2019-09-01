@@ -17,19 +17,8 @@
 
 package tk.cofe.plugin.mybatis.dom.inspection;
 
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomFileElement;
-import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.highlighting.BasicDomElementsInspection;
-import com.intellij.util.xml.highlighting.DomElementAnnotationHolder;
-import com.intellij.util.xml.highlighting.DomHighlightingHelper;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 
 /**
  * Mapper Xml检查
@@ -40,21 +29,5 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 public class MapperXmlInspection extends BasicDomElementsInspection<Mapper> {
     public MapperXmlInspection() {
         super(Mapper.class);
-    }
-
-    @Nullable
-    @Override
-    protected ProblemDescriptor[] checkDomFile(@NotNull final DomFileElement<Mapper> domFileElement, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-        return super.checkDomFile(domFileElement, manager, isOnTheFly);
-    }
-
-    @Override
-    protected boolean shouldCheckResolveProblems(final GenericDomValue value) {
-        return super.shouldCheckResolveProblems(value);
-    }
-
-    @Override
-    protected void checkDomElement(final DomElement element, final DomElementAnnotationHolder holder, final DomHighlightingHelper helper) {
-        super.checkDomElement(element, holder, helper);
     }
 }

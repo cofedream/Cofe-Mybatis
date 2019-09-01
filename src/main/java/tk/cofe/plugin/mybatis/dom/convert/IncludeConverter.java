@@ -34,6 +34,11 @@ import java.util.stream.Collectors;
  */
 public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
 
+    @Override
+    public String getErrorMissingTagName() {
+        return "Sql";
+    }
+
     @Nullable
     @Override
     public Collection<Sql> getVariants(ConvertContext context, Mapper mapper) {

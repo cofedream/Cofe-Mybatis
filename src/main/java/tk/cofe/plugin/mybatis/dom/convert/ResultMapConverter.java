@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.convert;
 
+import com.intellij.database.dbimport.ReaderTask;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,10 @@ import java.util.stream.Collectors;
 public class ResultMapConverter {
 
     private static abstract class Base extends XmlAttributeValueConverter<ResultMap> {
+        @Override
+        public String getErrorMissingTagName() {
+            return "ResultMap";
+        }
 
         @NotNull
         @Override
@@ -67,7 +72,6 @@ public class ResultMapConverter {
      * extends 属性
      */
     public static class Extends extends Base {
-
         @Nullable
         @Override
         public Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {

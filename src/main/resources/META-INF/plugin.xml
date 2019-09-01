@@ -121,13 +121,10 @@
         <!--代码检查-->
         <localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"
                          language="XML" displayName="mapper xml validate" level="ERROR" enabledByDefault="true"
-                         groupKey="action.interface.group.text" groupPath="Mybatis"/>
+                         groupKey="action.group.xml.text" groupPath="Mybatis"/>
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
-                         groupKey="action.interface.group.text" groupPath="Mybatis"/>
-        <!--<localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"-->
-        <!--                 language="XML" displayName="unmapped method" level="ERROR" enabledByDefault="true"-->
-        <!--                 groupKey="action.xml.group.text" groupPath="Mybatis"/>-->
+                         groupKey="action.group.interface.text" groupPath="Mybatis"/>
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>

@@ -25,6 +25,7 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
@@ -42,6 +43,12 @@ import java.util.Optional;
  * @date : 2019-01-21
  */
 public abstract class XmlAttributeValueConverter<T extends DomElement> extends ResolvingConverter<T> {
+    @Override
+    public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
+        return MyBatisBundle.message("error.cannot.resolve.message", getErrorMissingTagName(), s);
+    }
+
+    public abstract String getErrorMissingTagName();
 
     @NotNull
     @Override
