@@ -45,7 +45,7 @@ import java.util.Optional;
 public abstract class XmlAttributeValueConverter<T extends DomElement> extends ResolvingConverter<T> {
     @Override
     public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
-        return MyBatisBundle.message("error.cannot.resolve.message", getErrorMissingTagName(), s);
+        return MyBatisBundle.message("error.cannot.found.message", getErrorMissingTagName(), s);
     }
 
     public abstract String getErrorMissingTagName();

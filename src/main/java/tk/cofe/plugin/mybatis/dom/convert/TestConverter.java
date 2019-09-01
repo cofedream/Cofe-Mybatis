@@ -31,6 +31,7 @@ import ognl.OgnlException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
@@ -50,6 +51,30 @@ import java.util.Set;
  * @date : 2019-08-10
  */
 public class TestConverter extends ResolvingConverter.StringConverter {
+    @Override
+    public String fromString(final String s, final ConvertContext context) {
+        if (StringUtils.isBlank(s)) {
+            return null;
+        }
+        try {
+            Node node = (Node) Ognl.parseExpression(s);
+            if (node != null) {
+                Node child = node.jjtGetChild(node.jjtGetNumChildren() - 1);
+                if (child != null) {
+                    return node.toString();
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
+        return MyBatisBundle.message("error.cannot.parse.message", "OGNL Expression", s);
+    }
+
     @NotNull
     @Override
     public Collection<? extends String> getVariants(final ConvertContext context) {
