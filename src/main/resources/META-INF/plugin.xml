@@ -18,8 +18,8 @@
         <li>
             Support Mybatis.
             <ul>
-                <ul>SQL parameter completion.</ul>
-                <ul>Tag or attribute check.</ul>
+                <li>SQL parameter completion.</li>
+                <li>Tag or attribute check.</li>
             </ul>
         </li>
         <li>Support <a href="https://gitee.com/free/Mapper">Mapper</a> MapperScan.</li>
