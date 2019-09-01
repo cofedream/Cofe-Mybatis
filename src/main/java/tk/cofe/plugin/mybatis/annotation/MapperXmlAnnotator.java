@@ -25,11 +25,20 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
+import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Mapper xml 提示
@@ -47,17 +56,18 @@ public class MapperXmlAnnotator implements Annotator {
             return;
         }
         DomElement domElement = DomUtils.getDomElement(element);
-        if (domElement instanceof ClassElement) {
-            processDomElement(holder, ((ClassElement) domElement));
+        if (domElement instanceof IdAttribute) {
+            processDomElement(holder, ((IdAttribute) domElement));
         }
     }
 
-    private void processDomElement(final AnnotationHolder holder, final ClassElement domElement) {
-        //process(holder, domElement.getId().getXmlAttributeValue(), CAN_NOT_FOUND_RESULTMAP, domElement.getIdMethod().isPresent());
+    private void processDomElement(final AnnotationHolder holder, final IdAttribute domElement) {
+        String id = domElement.getIdValue().orElse(null);
+        process(holder, domElement, domElement.getId().getXmlAttributeValue(), MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id);
     }
 
-    private void process(@NotNull final AnnotationHolder holder, final XmlAttributeValue xmlAttributeValue, final String errorMessage, final boolean canResolve) {
-        if (xmlAttributeValue == null) {
+    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final XmlAttributeValue xmlAttributeValue, final String errorMessage, final String id) {
+        if (xmlAttributeValue == null || id == null) {
             return;
         }
         PsiElement targetElement = getPsiElement(xmlAttributeValue);
@@ -65,15 +75,34 @@ public class MapperXmlAnnotator implements Annotator {
             holder.createErrorAnnotation(xmlAttributeValue, MISSING_VALUE);
             return;
         }
-        if (!canResolve) {
+        Mapper mapper = DomUtils.getTargetElement(targetElement, Mapper.class);
+        List<? extends IdAttribute> ids = getIdAttributes(domElement, mapper);
+        if (ids.stream().filter(idInfo -> Objects.equals(id, idInfo.getIdValue().orElse(null))).count() > 1) {
             holder.createErrorAnnotation(targetElement, errorMessage);
+        }
+    }
+
+    private List<? extends IdAttribute> getIdAttributes(final IdAttribute domElement, final Mapper mapper) {
+        if (domElement instanceof Sql) {
+            return mapper.getSqls();
+        } else if (domElement instanceof Insert) {
+            return mapper.getInserts();
+        } else if (domElement instanceof Select) {
+            return mapper.getSqls();
+        } else if (domElement instanceof Update) {
+            return mapper.getUpdates();
+        } else if (domElement instanceof Delete) {
+            return mapper.getDeletes();
+        } else {
+            return Collections.emptyList();
         }
     }
 
     @Nullable
     private PsiElement getPsiElement(final XmlAttributeValue xmlAttributeValue) {
         for (PsiElement child : xmlAttributeValue.getChildren()) {
-            if (StringUtils.isNotBlank(child.getText()) && !"\"".equals(child.getText())) {
+            String text = child.getText();
+            if (StringUtils.isNotBlank(text)) {
                 return child;
             }
         }
