@@ -17,12 +17,9 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
-import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
@@ -33,10 +30,7 @@ import java.util.Optional;
  */
 public interface IdAttribute extends DomElement {
 
-    @Required
-    @Nullable
-    @Attribute("id")
-    GenericAttributeValue<String> getId();
+    GenericAttributeValue<?> getId();
 
     /**
      * 获取Id值

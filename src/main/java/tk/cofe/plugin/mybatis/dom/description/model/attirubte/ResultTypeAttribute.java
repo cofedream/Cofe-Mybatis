@@ -17,10 +17,10 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : zhengrf
@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ResultTypeAttribute extends DomElement {
 
-    @Nullable
     @Attribute("resultType")
-    GenericAttributeValue<String> getResultType();
+    GenericAttributeValue<PsiClass> getResultType();
 }

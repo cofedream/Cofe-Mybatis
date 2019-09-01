@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Namespace;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;

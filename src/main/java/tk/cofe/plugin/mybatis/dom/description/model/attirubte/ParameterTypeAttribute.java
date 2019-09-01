@@ -18,7 +18,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * parameterType 属性
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ParameterTypeAttribute extends DomElement {
 
-    @NotNull
     @Attribute("parameterType")
     GenericAttributeValue<PsiClass> getParameterType();
 }

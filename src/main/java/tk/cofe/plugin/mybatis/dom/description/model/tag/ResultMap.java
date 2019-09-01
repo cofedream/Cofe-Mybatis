@@ -21,6 +21,8 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,12 +44,20 @@ import java.util.Optional;
  */
 public interface ResultMap extends IdAttribute, TypeAttirbute {
 
+    @Required
+    @Attribute("id")
+    GenericAttributeValue<String> getId();
+
     @Nullable
     @Attribute("extends")
     @Convert(ResultMapConverter.Extends.class)
     GenericAttributeValue<ResultMap> getExtends();
 
-    // tags
+    @SubTag("constructor")
+    Constructor getConstructor();
+
+    @SubTag("discriminator")
+    Discriminator getDiscriminator();
 
     @SubTagList("id")
     List<Id> getIds();

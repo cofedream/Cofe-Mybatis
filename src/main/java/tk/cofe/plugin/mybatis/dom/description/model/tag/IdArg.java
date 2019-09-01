@@ -17,14 +17,19 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
-import com.intellij.util.xml.DomElement;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JavaTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JdbcTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.NameAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.SelectAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TypeHandlerAttribute;
 
 /**
  * {@code <idArg/>}
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface IdArg extends JavaTypeAttribute, NameAttribute, DomElement {
+public interface IdArg extends JavaTypeAttribute, ColumnAttribute, JdbcTypeAttribute, TypeHandlerAttribute, SelectAttribute, ResultTypeAttribute, NameAttribute {
 }

@@ -67,10 +67,11 @@ public final class DomUtils extends DomUtil {
      * @return NULL 则返回 {@code Optional.empty()}
      */
     @NotNull
-    public static Optional<String> getAttributeVlaue(@Nullable GenericAttributeValue<String> attributeValue) {
-        if (attributeValue == null) {
+    public static Optional<String> getAttributeVlaue(@NotNull GenericAttributeValue<?> attributeValue) {
+        String value = attributeValue.getStringValue();
+        if (StringUtils.isBlank(value)) {
             return Optional.empty();
         }
-        return StringUtils.isBlank(attributeValue.getValue()) ? Optional.empty() : Optional.of(attributeValue.getValue().trim());
+        return StringUtils.isBlank(value.trim()) ? Optional.empty() : Optional.of(value.trim());
     }
 }

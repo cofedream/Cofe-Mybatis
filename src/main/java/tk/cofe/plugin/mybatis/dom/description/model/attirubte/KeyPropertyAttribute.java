@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : zhengrf
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface KeyPropertyAttribute extends DomElement {
 
-    @Nullable
     @Attribute("keyProperty")
     GenericAttributeValue<String> getKeyProperty();
 

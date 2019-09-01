@@ -17,17 +17,16 @@ package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
 
 /**
  * {@code <include></include} 标签
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Include extends DynamicTag, DynamicSql {
+public interface Include extends DynamicTag {
 
-    @Nullable
     @Attribute("refid")
     @Convert(IncludeConverter.class)
     GenericAttributeValue<Sql> getRefId();

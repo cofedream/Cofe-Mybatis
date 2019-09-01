@@ -17,12 +17,22 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
+import com.intellij.psi.PsiClass;
+import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
 
 /**
  * {@code <typeAliases></typeAliases>}
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
 public interface TypeAliases extends DomElement {
+
+    @Attribute("alias")
+    GenericAttributeValue<String> getAlias();
+
+    @Attribute("type")
+    GenericAttributeValue<PsiClass> getType();
 }

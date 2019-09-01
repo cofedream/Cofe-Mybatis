@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JavaTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JdbcTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
@@ -24,9 +25,10 @@ import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TypeHandlerAttribu
 
 /**
  * {@code <id property="" column="" jdbcType=""/>}
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Id extends PropertyAttribute, JavaTypeAttribute, JdbcTypeAttribute, TypeHandlerAttribute {
+public interface Id extends PropertyAttribute, JavaTypeAttribute, ColumnAttribute, JdbcTypeAttribute, TypeHandlerAttribute {
 
 }

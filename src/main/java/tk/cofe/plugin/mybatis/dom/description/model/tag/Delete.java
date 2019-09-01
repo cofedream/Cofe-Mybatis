@@ -17,9 +17,21 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
+import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.convert.TestConverter;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.DatabaseIdAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.LangAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ParameterTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TimeoutAttribute;
+
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Delete extends ClassElement {
+public interface Delete extends ClassElement, ResultMapAttribute, ParameterTypeAttribute, TimeoutAttribute, LangAttribute, DatabaseIdAttribute {
 }

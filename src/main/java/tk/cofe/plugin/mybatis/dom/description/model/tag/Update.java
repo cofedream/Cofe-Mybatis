@@ -17,10 +17,18 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.DatabaseIdAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.KeyColumnAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.KeyPropertyAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.LangAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ParameterTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TimeoutAttribute;
+
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Update extends ClassElement {
+public interface Update extends ClassElement, ResultMapAttribute, ParameterTypeAttribute, TimeoutAttribute, KeyPropertyAttribute, KeyColumnAttribute, LangAttribute, DatabaseIdAttribute {
 
 }

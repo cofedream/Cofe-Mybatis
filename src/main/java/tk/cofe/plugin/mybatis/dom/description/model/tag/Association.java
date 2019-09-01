@@ -17,26 +17,48 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
+import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ColumnAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ColumnPrefixAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ForeignColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JavaTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.JdbcTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.NotNullColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultSetAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.SelectAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TypeHandlerAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection;
 
 import java.util.List;
 
 /**
  * {@code <association></association>}
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Association extends PropertyAttribute, JavaTypeAttribute, JdbcTypeAttribute, SelectAttribute, ResultMapAttribute {
+public interface Association extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
+        SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
+
+    @SubTag("constructor")
+    Constructor getConstructor();
+
+    @SubTag("discriminator")
+    Discriminator getDiscriminator();
 
     @SubTagList("id")
     List<Id> getIds();
 
     @SubTagList("result")
     List<Result> getResult();
+
+    @SubTagList("association")
+    List<Association> getAssociations();
+
+    @SubTagList("collection")
+    List<Collection> getCollections();
 
 }

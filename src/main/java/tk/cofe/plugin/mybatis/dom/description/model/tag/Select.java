@@ -17,19 +17,23 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.tag;
 
-import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.DatabaseIdAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.LangAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.attirubte.TimeoutAttribute;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Select extends ResultMapAttribute, ClassElement {
+public interface Select extends ClassElement, ResultMapAttribute, ResultTypeAttribute, TimeoutAttribute, DatabaseIdAttribute, LangAttribute {
 
-    @Nullable
-    @Attribute("resultType")
-    GenericAttributeValue<PsiClass> getResultType();
+    @Attribute("fetchSize")
+    GenericAttributeValue<String> getFetchSize();
+
+    @Attribute("resultSets")
+    GenericAttributeValue<String> getResultSets();
 }

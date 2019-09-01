@@ -14,22 +14,43 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
+import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ValueAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Constructor;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Discriminator;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.Id;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Result;
 
 import java.util.List;
 
 /**
  * {@code <case/>} 标签
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Case extends ValueAttribute, ResultTypeAttribute, ResultMapAttribute {
+public interface Case extends ValueAttribute, ResultMapAttribute, ResultTypeAttribute {
+
+    @SubTag("constructor")
+    Constructor getConstructor();
+
+    @SubTag("discriminator")
+    Discriminator getDiscriminator();
+
+    @SubTag("id")
+    List<Id> getIds();
 
     @SubTagList("result")
     List<Result> getResults();
+
+    @SubTagList("association")
+    List<Association> getAssociations();
+
+    @SubTagList("collection")
+    List<Collection> getCollections();
 
 }

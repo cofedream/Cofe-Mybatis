@@ -21,7 +21,6 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
@@ -32,7 +31,6 @@ import java.util.Optional;
  */
 public interface JavaTypeAttribute extends DomElement {
 
-    @Nullable
     @Attribute("javaType")
     GenericAttributeValue<String> getJavaType();
 

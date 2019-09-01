@@ -14,7 +14,6 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.SubTagList;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Choose extends DynamicTag,DomElement {
+public interface Choose extends DynamicTag {
 
     @SubTagList("when")
     List<When> getWhens();

@@ -23,7 +23,6 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.TestConverter;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
@@ -36,7 +35,6 @@ import java.util.Optional;
 public interface TestAttribute extends DomElement {
 
     @Required
-    @Nullable
     @Attribute("test")
     @Convert(TestConverter.class)
     GenericAttributeValue<String> getTest();
