@@ -40,6 +40,10 @@
             <li>修正 IC-IDEA 版本中 Mapper.xml 的 Statement 不支持 SQL Parameter 提示的问题</li>
             <li>修正 #{param[1-n].} 的时候不会提示的问题</li>
         </ul>
+        <i>other:</i>
+        <ul>
+            <li>add plugin icon</li>
+        </ul>
     ]]></change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
