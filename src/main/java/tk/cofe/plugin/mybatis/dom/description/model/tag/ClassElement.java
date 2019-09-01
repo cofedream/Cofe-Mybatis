@@ -39,7 +39,6 @@ public interface ClassElement extends DynamicSql, ParameterTypeAttribute {
 
     @NotNull
     @Required
-    @NameValue
     @Attribute("id")
     @Convert(ClassElementConverter.Id.class)
     GenericAttributeValue<PsiMethod> getId();

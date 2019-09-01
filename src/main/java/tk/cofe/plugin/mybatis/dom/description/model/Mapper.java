@@ -52,7 +52,6 @@ public interface Mapper extends DomElement {
 
     @NotNull
     @Required
-    @NameValue
     @Attribute("namespace")
     GenericAttributeValue<PsiClass> getNamespace();
 

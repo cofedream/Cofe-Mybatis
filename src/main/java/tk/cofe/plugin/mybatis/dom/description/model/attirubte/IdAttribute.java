@@ -35,7 +35,6 @@ import java.util.Optional;
 public interface IdAttribute extends DomElement {
 
     @Required
-    @NameValue
     @Nullable
     @Attribute("id")
     GenericAttributeValue<String> getId();

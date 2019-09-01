@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface NameAttribute extends DomElement {
 
-    @NameValue
     @Nullable
     @Attribute("name")
     GenericAttributeValue<String> getName();

@@ -57,7 +57,6 @@
        with `key` attributes in extension points and implicit keys like
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
@@ -120,11 +119,9 @@
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>
 
         <!--代码检查-->
-        <!--<localInspection language="XML" shortName="MapperXmlInspection" applyToDialects="false"-->
-        <!--                 bundle="MybatisBundle" key="mapper.inspection.display.name"-->
-        <!--                 groupBundle="MybatisBundle" groupKey="inspection.group.xml" groupPath="Mybatis"-->
-        <!--                 enabledByDefault="true" level="ERROR"-->
-        <!--                 implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection" -->
+        <localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"
+                         language="XML" displayName="mapper xml validate" level="ERROR" enabledByDefault="true"
+                         groupKey="action.interface.group.text" groupPath="Mybatis"/>
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.interface.group.text" groupPath="Mybatis"/>

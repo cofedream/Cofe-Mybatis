@@ -56,8 +56,5 @@ public class MapperXmlInspection extends BasicDomElementsInspection<Mapper> {
     @Override
     protected void checkDomElement(final DomElement element, final DomElementAnnotationHolder holder, final DomHighlightingHelper helper) {
         super.checkDomElement(element, holder, helper);
-        //if (element instanceof ClassElement) {
-        //    super.checkDomElement(element, holder, helper);
-        //}
     }
 }

@@ -39,7 +39,6 @@ import java.util.Optional;
  */
 public interface Collection extends PropertyAttribute, JavaTypeAttribute, JdbcTypeAttribute, SelectAttribute, ResultMapAttribute {
 
-    @NameValue
     @Nullable
     @Attribute("ofType")
     GenericAttributeValue<String> getOfType();

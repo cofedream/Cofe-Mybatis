@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -51,6 +52,12 @@ public class ResultMapConverter {
 
         @Nullable
         @Override
+        public ResultMap fromString(@Nullable final String value, final ConvertContext context) {
+            return super.fromString(value, context);
+        }
+
+        @Nullable
+        @Override
         public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
             return resultMap == null ? null : resultMap.getIdValue().orElse(null);
         }
@@ -60,6 +67,7 @@ public class ResultMapConverter {
      * extends 属性
      */
     public static class Extends extends Base {
+
         @Nullable
         @Override
         public Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
@@ -81,6 +89,7 @@ public class ResultMapConverter {
      * @date : 2019-07-02
      */
     public static class Attribute extends Base {
+
         @Nullable
         @Override
         protected Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {

@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.StringUtils;
 
@@ -38,8 +39,6 @@ import tk.cofe.plugin.mybatis.util.StringUtils;
  */
 public class MapperXmlAnnotator implements Annotator {
 
-    private static final String CAN_NOT_FOUND_RESULTMAP = "Can not found ResultMap";
-    private static final String CAN_NOT_FOUN_FIELD = "Can not found Field";
     private static final String MISSING_VALUE = "Missing value";
 
     @Override
@@ -48,20 +47,13 @@ public class MapperXmlAnnotator implements Annotator {
             return;
         }
         DomElement domElement = DomUtils.getDomElement(element);
-        if (domElement instanceof PropertyAttribute) {
-            processDomElement(holder, ((PropertyAttribute) domElement));
-        }
-        if (domElement instanceof ResultMapAttribute) {
-            processDomElement(holder, ((ResultMapAttribute) domElement));
+        if (domElement instanceof ClassElement) {
+            processDomElement(holder, ((ClassElement) domElement));
         }
     }
 
-    private void processDomElement(@NotNull final AnnotationHolder holder, final ResultMapAttribute domElement) {
-        process(holder, domElement.getResultMap().getXmlAttributeValue(), CAN_NOT_FOUND_RESULTMAP, domElement.getResultMapElement().isPresent());
-    }
-
-    private void processDomElement(@NotNull final AnnotationHolder holder, final PropertyAttribute attribute) {
-        process(holder, attribute.getProperty().getXmlAttributeValue(), CAN_NOT_FOUN_FIELD, attribute.getPropertyField().isPresent());
+    private void processDomElement(final AnnotationHolder holder, final ClassElement domElement) {
+        //process(holder, domElement.getId().getXmlAttributeValue(), CAN_NOT_FOUND_RESULTMAP, domElement.getIdMethod().isPresent());
     }
 
     private void process(@NotNull final AnnotationHolder holder, final XmlAttributeValue xmlAttributeValue, final String errorMessage, final boolean canResolve) {

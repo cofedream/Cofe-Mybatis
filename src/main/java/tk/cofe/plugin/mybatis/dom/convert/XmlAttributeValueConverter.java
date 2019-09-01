@@ -36,6 +36,7 @@ import java.util.Optional;
 
 /**
  * XmlAttribute 基础转换器
+ *
  * @param <T> 目标 DOm 元素
  * @author : zhengrf
  * @date : 2019-01-21
@@ -58,6 +59,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 根据字符串值转成目标元素
+     *
      * @param value   字符值
      * @param context 字符元素
      * @return 目标元素
@@ -69,11 +71,15 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
             return null;
         }
         Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
-        return mapper == null ? null : findTargetElement(value, context, mapper);
+        if (mapper == null) {
+            return null;
+        }
+        return findTargetElement(value, context, mapper);
     }
 
     /**
      * 找到当前元素值引用的目标源元素
+     *
      * @param value         值
      * @param context       当前元素
      * @param currentMapper 当前MapperXMl
@@ -89,6 +95,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 获取可能引用的 Dom 元素
+     *
      * @param value   值
      * @param context 当前元素
      * @param mapper  当前MapperXML
@@ -99,6 +106,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
 
     /**
      * 判断是否为目标元素
+     *
      * @param targetDomElement 目标元素
      * @param selfValue        当前值
      * @return {@code true} 则为目标元素

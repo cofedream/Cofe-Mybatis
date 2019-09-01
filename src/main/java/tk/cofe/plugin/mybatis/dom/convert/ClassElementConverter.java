@@ -25,6 +25,7 @@ import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -42,6 +43,10 @@ import java.util.Collections;
 public class ClassElementConverter {
 
     public static class Id extends ResolvingConverter<PsiMethod> {
+        @Override
+        public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
+            return MyBatisBundle.message("error.cannot.resolve.method.message", s);
+        }
 
         @NotNull
         @Override

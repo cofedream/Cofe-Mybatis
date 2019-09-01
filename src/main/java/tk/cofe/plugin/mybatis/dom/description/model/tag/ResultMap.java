@@ -38,13 +38,13 @@ import java.util.Optional;
 
 /**
  * {@code <resultMap></resultMap>}
+ *
  * @author : zhengrf
  * @date : 2019-01-15
  */
 public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @Required
-    @NameValue
     @Nullable
     @Attribute("id")
     GenericAttributeValue<String> getId();
@@ -70,6 +70,7 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     /**
      * 获取 Extends 值
+     *
      * @return Extends 值 如果为Null 则返回 ""
      */
     @NotNull

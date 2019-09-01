@@ -29,6 +29,7 @@ import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
@@ -50,6 +51,11 @@ import java.util.stream.Collectors;
 public class PropertyConverter extends ResolvingConverter<PsiField> {
 
     private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
+
+    @Override
+    public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
+        return MyBatisBundle.message("error.cannot.resolve.field.message", s);
+    }
 
     @NotNull
     @Override
