@@ -21,7 +21,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.NotNull;

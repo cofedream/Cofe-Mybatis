@@ -38,6 +38,7 @@ public interface JavaTypeAttribute extends DomElement {
 
     /**
      * 获取 javaType 值
+     *
      * @return javaType 值 如果为Null 则返回 ""
      */
     @NotNull

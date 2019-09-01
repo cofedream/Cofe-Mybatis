@@ -14,11 +14,12 @@
 
 package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
+import com.intellij.util.xml.DomElement;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Sql extends DynamicSql, IdAttribute {
+public interface Sql extends DomElement, DynamicSql, IdAttribute {
 }

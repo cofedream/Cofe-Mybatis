@@ -21,8 +21,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
-import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,11 +41,6 @@ import java.util.Optional;
  * @date : 2019-01-15
  */
 public interface ResultMap extends IdAttribute, TypeAttirbute {
-
-    @Required
-    @Nullable
-    @Attribute("id")
-    GenericAttributeValue<String> getId();
 
     @Nullable
     @Attribute("extends")

@@ -25,10 +25,10 @@ import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * {@code <include>} 标签
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */
@@ -42,7 +42,7 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
     @Nullable
     @Override
     public Collection<Sql> getVariants(ConvertContext context, Mapper mapper) {
-        return mapper.getSqls().stream().filter(sql -> sql.getId() != null).collect(Collectors.toList());
+        return mapper.getSqls();
     }
 
     @NotNull

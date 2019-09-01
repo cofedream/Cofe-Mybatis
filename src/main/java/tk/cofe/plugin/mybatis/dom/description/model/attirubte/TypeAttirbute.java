@@ -40,6 +40,7 @@ public interface TypeAttirbute extends DomElement {
 
     /**
      * 获取 type 值
+     *
      * @return type 值 如果为Null 则返回 ""
      */
     @NotNull

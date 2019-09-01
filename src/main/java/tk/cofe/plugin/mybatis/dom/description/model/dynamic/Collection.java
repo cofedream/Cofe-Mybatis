@@ -16,7 +16,6 @@ package tk.cofe.plugin.mybatis.dom.description.model.dynamic;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.NameValue;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +57,7 @@ public interface Collection extends PropertyAttribute, JavaTypeAttribute, JdbcTy
 
     /**
      * 获取 ofType 值
+     *
      * @return ofType 值 如果为Null 则返回 ""
      */
     @NotNull
