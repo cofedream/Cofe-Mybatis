@@ -19,8 +19,10 @@ package tk.cofe.plugin.mybatis.dom.description.model.attirubte;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.PsiClassConverter;
 
 /**
  * @author : zhengrf
@@ -29,5 +31,6 @@ import com.intellij.util.xml.GenericAttributeValue;
 public interface ResultTypeAttribute extends DomElement {
 
     @Attribute("resultType")
+    @Convert(PsiClassConverter.class)
     GenericAttributeValue<PsiClass> getResultType();
 }
