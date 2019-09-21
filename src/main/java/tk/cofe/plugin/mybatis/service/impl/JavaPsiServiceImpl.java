@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.service.impl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaFile;
@@ -30,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Optional;
 
@@ -74,7 +74,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     @NotNull
     @Override
     public Optional<PsiMethod> findPsiMethod(@Nullable final String qualifiedName, @Nullable final String methodName) {
-        if (StringUtils.isBlank(qualifiedName) || StringUtils.isBlank(methodName)) {
+        if (StringUtil.isEmpty(qualifiedName) || StringUtil.isEmpty(methodName)) {
             return Optional.empty();
         }
         return findPsiClass(qualifiedName).flatMap(psiClass -> {

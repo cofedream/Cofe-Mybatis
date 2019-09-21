@@ -25,6 +25,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
@@ -44,7 +45,6 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import javax.swing.*;
 import java.util.Optional;
@@ -219,7 +219,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
      * 创建提示
      */
     private void createLookupElement(@NotNull String originPrefix, @Nullable final String prefix, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
-        if (StringUtils.isBlank(name) || StringUtils.isBlank(typeText)) {
+        if (StringUtil.isEmpty(name) || StringUtil.isEmpty(typeText)) {
             return;
         }
         consumer.accept(createLookupElement(originPrefix, prefix + name, typeText, icon));

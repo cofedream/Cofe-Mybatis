@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.annotation;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
@@ -34,7 +35,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -102,7 +102,7 @@ public class MapperXmlAnnotator implements Annotator {
     private PsiElement getPsiElement(final XmlAttributeValue xmlAttributeValue) {
         for (PsiElement child : xmlAttributeValue.getChildren()) {
             String text = child.getText();
-            if (StringUtils.isNotBlank(text)) {
+            if (StringUtil.isNotEmpty(text)) {
                 return child;
             }
         }

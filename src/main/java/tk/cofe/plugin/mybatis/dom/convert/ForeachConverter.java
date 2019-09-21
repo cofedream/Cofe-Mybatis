@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiParameter;
 import com.intellij.util.xml.ConvertContext;
@@ -30,7 +31,6 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,7 +62,7 @@ public class ForeachConverter {
         @Nullable
         @Override
         public PsiElement resolve(String text, ConvertContext context) {
-            if (StringUtils.isBlank(text)) {
+            if (StringUtil.isEmpty(text)) {
                 return null;
             }
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);

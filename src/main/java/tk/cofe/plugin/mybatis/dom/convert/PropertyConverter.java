@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
@@ -34,7 +35,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.CollectionUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -80,11 +80,11 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
     @Nullable
     @Override
     public PsiField fromString(@Nullable final String member, final ConvertContext context) {
-        if (StringUtils.isBlank(member)) {
+        if (StringUtil.isEmpty(member)) {
             return null;
         }
         String type = PropertyType.parse(context.getInvocationElement());
-        if (StringUtils.isBlank(type)) {
+        if (StringUtil.isEmpty(type)) {
             return null;
         }
         List<PsiField> fields = JavaPsiService.getInstance(context.getProject()).findPsiClass(type)

@@ -19,11 +19,11 @@ package tk.cofe.plugin.mybatis.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 /**
  * XML 文件中的SQL 参数完成
@@ -56,7 +56,7 @@ public class XmlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
     String[] getPrefixArray(@NotNull CompletionResultSet result) {
         String prefixText = result.getPrefixMatcher().getPrefix();
         String prefix = prefixText.substring(prefixText.lastIndexOf("{") + 1);
-        if (StringUtils.isBlank(prefix) || !prefix.contains(".")) {
+        if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
             return Empty.Array.STRING;
         }
         String substring = prefix.substring(0, prefix.lastIndexOf("."));

@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.convert;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
@@ -38,7 +39,6 @@ import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +53,7 @@ import java.util.Set;
 public class TestConverter extends ResolvingConverter.StringConverter {
     @Override
     public String fromString(final String s, final ConvertContext context) {
-        if (StringUtils.isBlank(s)) {
+        if (StringUtil.isEmpty(s)) {
             return null;
         }
         try {
@@ -129,7 +129,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
     }
 
     private String getPrefixStr(final String attributeValue) {
-        if (StringUtils.isNotBlank(attributeValue)) {
+        if (StringUtil.isNotEmpty(attributeValue)) {
             String[] prefixArr = attributeValue.split("IntellijIdeaRulezzz ");
             if (prefixArr.length > 0) {
                 return prefixArr[0];
@@ -163,7 +163,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
     }
 
     private String getCompletionPrefix(@Nullable String prefix) {
-        if (StringUtils.isBlank(prefix)) {
+        if (StringUtil.isEmpty(prefix)) {
             return "";
         }
         int pointIndex = prefix.lastIndexOf(".");
@@ -183,7 +183,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
      */
     @NotNull
     private String[] getPrefix(@NotNull String prefix) {
-        if (StringUtils.isBlank(prefix)) {
+        if (StringUtil.isEmpty(prefix)) {
             return Empty.Array.STRING;
         }
         if (prefix.charAt(prefix.length() - 1) == '.') {

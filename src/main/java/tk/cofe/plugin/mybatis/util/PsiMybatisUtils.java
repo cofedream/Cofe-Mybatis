@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -214,7 +215,7 @@ public class PsiMybatisUtils {
             return Arrays.stream(((PsiClassReferenceType) type).getParameters()).map(PsiType::getCanonicalText).collect(Collectors.toList());
         } else {
             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-            return StringUtils.isBlank(reference.getReferenceName()) ? Collections.emptyList() : Collections.singletonList(reference.getQualifiedName());
+            return StringUtil.isEmpty(reference.getReferenceName()) ? Collections.emptyList() : Collections.singletonList(reference.getQualifiedName());
         }
     }
 

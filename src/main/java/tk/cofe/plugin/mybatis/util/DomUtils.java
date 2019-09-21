@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
@@ -69,9 +70,9 @@ public final class DomUtils extends DomUtil {
     @NotNull
     public static Optional<String> getAttributeVlaue(@NotNull GenericAttributeValue<?> attributeValue) {
         String value = attributeValue.getStringValue();
-        if (StringUtils.isBlank(value)) {
+        if (StringUtil.isEmpty(value)) {
             return Optional.empty();
         }
-        return StringUtils.isBlank(value.trim()) ? Optional.empty() : Optional.of(value.trim());
+        return StringUtil.isEmpty(value.trim()) ? Optional.empty() : Optional.of(value.trim());
     }
 }

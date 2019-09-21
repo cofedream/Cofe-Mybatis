@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
@@ -30,7 +31,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,7 +63,7 @@ public class ClassElementConverter {
         @Nullable
         @Override
         public PsiMethod fromString(@Nullable final String methodName, final ConvertContext context) {
-            if (StringUtils.isBlank(methodName)) {
+            if (StringUtil.isEmpty(methodName)) {
                 return null;
             }
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);

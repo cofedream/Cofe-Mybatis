@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.search;
 
 import com.intellij.openapi.application.QueryExecutorBase;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
@@ -30,7 +31,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.psi.reference.XmlAttributeValueReference;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -57,17 +57,17 @@ public class FieldReferenceSearch extends QueryExecutorBase<XmlAttributeValueRef
             return;
         }
         String classQualifiedName = psiClass.getQualifiedName();
-        if (StringUtils.isBlank(classQualifiedName)) {
+        if (StringUtil.isEmpty(classQualifiedName)) {
             return;
         }
         JavaPsiService javaPsiService = JavaPsiService.getInstance(queryParameters.getProject());
         MapperService.getInstance(queryParameters.getProject()).findAllMappers()
                 .forEach(mapper -> mapper.getResultMaps().forEach(resultMap -> {
-                    resultMap.getTypeValue().ifPresent(type -> javaPsiService.findPsiClass(type).ifPresent(typeClass -> {
+                    resultMap.getTypeValue().flatMap(javaPsiService::findPsiClass).ifPresent(typeClass -> {
                         if (isTarget(psiClass, classQualifiedName)) {
                             process(resultMap.getPropertyAttributes(), psiField, consumer);
                         }
-                    }));
+                    });
                 }));
     }
 

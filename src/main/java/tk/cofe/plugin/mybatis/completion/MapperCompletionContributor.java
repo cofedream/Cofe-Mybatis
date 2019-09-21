@@ -25,6 +25,7 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassObjectAccessExpression;
@@ -43,7 +44,6 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 /**
  * @author : zhengrf
@@ -93,7 +93,7 @@ public class MapperCompletionContributor extends CompletionContributor {
                                                     PsiAnnotation annotation = psiField.getAnnotation("javax.persistence.Column");
                                                     if (annotation != null) {
                                                         String name = AnnotationUtil.getStringAttributeValue(annotation, "name");
-                                                        if (StringUtils.isNotBlank(name)) {
+                                                        if (StringUtil.isNotEmpty(name)) {
                                                             String lookupString = "\"" + name + "\"";
                                                             result.addElement(PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString, lookupString), 1));
                                                         }

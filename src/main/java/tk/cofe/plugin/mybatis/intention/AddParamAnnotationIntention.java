@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.intention;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -35,7 +36,6 @@ import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Arrays;
 
@@ -89,7 +89,7 @@ public class AddParamAnnotationIntention implements IntentionAction {
                 continue;
             }
             String name = parameter.getName();
-            if (StringUtils.isBlank(name)) {
+            if (StringUtil.isEmpty(name)) {
                 continue;
             }
             JavaPsiService psiService = JavaPsiService.getInstance(project);

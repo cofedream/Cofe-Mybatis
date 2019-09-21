@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
@@ -28,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -74,7 +74,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     @Nullable
     @Override
     public T fromString(@Nullable String value, ConvertContext context) {
-        if (StringUtils.isBlank(value) || context == null) {
+        if (StringUtil.isEmpty(value) || context == null) {
             return null;
         }
         Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());

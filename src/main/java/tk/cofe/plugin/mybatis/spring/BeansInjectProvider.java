@@ -24,6 +24,7 @@ import com.intellij.lang.jvm.annotation.JvmAnnotationClassValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
@@ -47,7 +48,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.siyeh.ig.psiutils.ExpressionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -123,7 +123,7 @@ public class BeansInjectProvider extends SpringMyBatisBeansProvider {
                     psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
                     if (psiClass != null) {
                         String classQualifiedName = psiClass.getQualifiedName();
-                        if (StringUtils.isBlank(classQualifiedName)) {
+                        if (StringUtil.isEmpty(classQualifiedName)) {
                             return;
                         }
                         processBasePackage(scope, facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf("."))), mappers);

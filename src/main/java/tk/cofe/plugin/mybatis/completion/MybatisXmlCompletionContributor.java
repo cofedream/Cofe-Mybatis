@@ -21,6 +21,7 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiType;
@@ -35,7 +36,6 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,7 +127,7 @@ public class MybatisXmlCompletionContributor extends CompletionContributor {
                         if (type instanceof PsiClassReferenceType) {
                             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
                             String referenceName = reference.getReferenceName();
-                            if (StringUtils.isBlank(referenceName)) {
+                            if (StringUtil.isEmpty(referenceName)) {
                                 return;
                             }
                             if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
