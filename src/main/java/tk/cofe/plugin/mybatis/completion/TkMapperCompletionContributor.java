@@ -49,8 +49,8 @@ import org.jetbrains.annotations.Nullable;
  * @author : zhengrf
  * @date : 2019-08-18
  */
-public class MapperCompletionContributor extends CompletionContributor {
-    public MapperCompletionContributor() {
+public class TkMapperCompletionContributor extends CompletionContributor {
+    public TkMapperCompletionContributor() {
         super();
     }
 
