@@ -29,7 +29,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import java.util.Optional;
@@ -40,12 +39,10 @@ import java.util.Optional;
  */
 public class JavaPsiServiceImpl implements JavaPsiService {
     private final Project project;
-    private final MapperService mapperService;
     private final JavaPsiFacade javaPsiFacade;
 
     public JavaPsiServiceImpl(Project project) {
         this.project = project;
-        this.mapperService = MapperService.getInstance(project);
         this.javaPsiFacade = JavaPsiFacade.getInstance(project);
     }
 

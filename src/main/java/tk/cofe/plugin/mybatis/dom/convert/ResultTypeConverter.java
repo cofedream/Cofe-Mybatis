@@ -16,12 +16,9 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.Converter;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomJavaUtil;
-import com.intellij.util.xml.GenericDomValue;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.type.TypeAliasRegistry;
 
@@ -30,9 +27,12 @@ import tk.cofe.plugin.mybatis.type.TypeAliasRegistry;
  * @date : 2019-09-20
  */
 public class ResultTypeConverter extends Converter<PsiClass> {
+
     @Override
     public PsiClass fromString(final String s, final ConvertContext context) {
-        if (StringUtil.isEmptyOrSpaces(s)) return null;
+        if (StringUtil.isEmptyOrSpaces(s)) {
+            return null;
+        }
         String str = s;
         if (StringUtil.isNotEmpty(s)) {
             Class<?> type = TypeAliasRegistry.getType(s);
@@ -40,9 +40,7 @@ public class ResultTypeConverter extends Converter<PsiClass> {
                 str = type.getCanonicalName();
             }
         }
-        final DomElement element = context.getInvocationElement();
-        final GlobalSearchScope scope = element instanceof GenericDomValue ? context.getSearchScope() : null;
-        return DomJavaUtil.findClass(str.trim(), context.getFile(), context.getModule(), scope);
+        return DomJavaUtil.findClass(str.trim(), context.getInvocationElement());
     }
 
     @Nullable

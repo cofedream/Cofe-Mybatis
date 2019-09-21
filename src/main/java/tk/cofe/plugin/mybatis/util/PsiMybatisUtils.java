@@ -17,8 +17,6 @@
 
 package tk.cofe.plugin.mybatis.util;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
@@ -38,7 +36,6 @@ import com.intellij.util.xml.DomService;
 import com.intellij.util.xml.XmlFileHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
@@ -91,39 +88,6 @@ public class PsiMybatisUtils {
             this.put("Arraylist", Collections.singletonList("arraylist"));
             this.put("Collection", Collections.singletonList("collection"));
             this.put("Iterator", Collections.singletonList("iterator"));
-        }
-    });
-    private static final Map<String, LookupElement> resultTypeLookupElement = Collections.unmodifiableMap(new HashMap<String, LookupElement>() {
-        private static final long serialVersionUID = 4402307158708442334L;
-
-        {
-            this.put("_byte", createLookupElement("_byte", "byte", "byte"));
-            this.put("_long", createLookupElement("_long", "long", "long"));
-            this.put("_short", createLookupElement("_short", "short", "short"));
-            this.put("_int", createLookupElement("_int", "int", "int"));
-            this.put("_integer", createLookupElement("_integer", "int", "int"));
-            this.put("_double", createLookupElement("_double", "double", "double"));
-            this.put("_float", createLookupElement("_float", "float", "float"));
-            this.put("_boolean", createLookupElement("_boolean", "boolean", "boolean"));
-            this.put("string", createLookupElement("string", "String", "string"));
-            this.put("byte", createLookupElement("byte", "Byte", "byte"));
-            this.put("long", createLookupElement("long", "Long", "long"));
-            this.put("short", createLookupElement("short", "Short", "short"));
-            this.put("int", createLookupElement("int", "Integer", "int"));
-            this.put("integer", createLookupElement("integer", "Integer", "int"));
-            this.put("Double", createLookupElement("double", "Double", "double"));
-            this.put("Float", createLookupElement("float", "Float", "float"));
-            this.put("Boolean", createLookupElement("boolean", "Boolean", "boolean"));
-            this.put("Date", createLookupElement("date", "Date", "date"));
-            this.put("decimal", createLookupElement("decimal", "Bigdecimal", "decimal"));
-            this.put("bigdecimal", createLookupElement("bigdecimal", "Bigdecimal", "decimal"));
-            this.put("Object", createLookupElement("object", "Object", "object"));
-            this.put("Map", createLookupElement("map", "Map", "map"));
-            this.put("Hashmap", createLookupElement("hashmap", "Hashmap", "hashmap"));
-            this.put("List", createLookupElement("list", "List", "list"));
-            this.put("Arraylist", createLookupElement("arraylist", "Arraylist", "arraylist"));
-            this.put("Collection", createLookupElement("collection", "Collection", "collection"));
-            this.put("Iterator", createLookupElement("iterator", "Iterator", "iterator"));
         }
     });
 
@@ -217,20 +181,6 @@ public class PsiMybatisUtils {
             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
             return StringUtil.isEmpty(reference.getReferenceName()) ? Collections.emptyList() : Collections.singletonList(reference.getQualifiedName());
         }
-    }
-
-    /**
-     * 获取 ResultType LookupElement
-     *
-     * @param type 类型
-     * @return LookupElement
-     */
-    public static LookupElement getResultTypeLookupElement(@Nullable String type) {
-        return resultTypeLookupElement.get(type);
-    }
-
-    private static LookupElement createLookupElement(String lookupString, String typeText, String tailText) {
-        return LookupElementBuilder.create(lookupString).withTypeText(typeText).withPresentableText(Empty.STRING).appendTailText(tailText, true);
     }
 
     /**
