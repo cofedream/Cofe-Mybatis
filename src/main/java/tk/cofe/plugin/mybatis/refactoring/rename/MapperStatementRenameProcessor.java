@@ -26,11 +26,11 @@ import com.intellij.refactoring.rename.RenameDialog;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.RenameUtil;
 import com.intellij.usageView.UsageInfo;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collections;
@@ -62,7 +62,7 @@ public class MapperStatementRenameProcessor extends RenamePsiElementProcessor {
             if (classElement != null) {
                 classElement.getIdMethod().ifPresent(psiMethod -> {
                     UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));
-                    if (!CollectionUtils.isEmpty(methodUsage)) {
+                    if (!ArrayUtil.isEmpty(methodUsage)) {
                         RenamePsiElementProcessor.forElement(psiMethod).renameElement(psiMethod, newName, methodUsage, listener);
                     }
                 });

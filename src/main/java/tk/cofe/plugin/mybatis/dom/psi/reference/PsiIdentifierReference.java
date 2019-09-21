@@ -27,10 +27,10 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.RenameUtil;
 import com.intellij.usageView.UsageInfo;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 
 import java.util.Collections;
 
@@ -66,7 +66,7 @@ public class PsiIdentifierReference extends PsiReferenceBase.Poly<PsiIdentifier>
         if (element instanceof PsiMethod) {
             PsiMethod psiMethod = (PsiMethod) element;
             UsageInfo[] methodUsage = RenameUtil.findUsages(psiMethod, newElementName, true, true, Collections.singletonMap(psiMethod, psiMethod.getName()));
-            if (!CollectionUtils.isEmpty(methodUsage)) {
+            if (!ArrayUtil.isEmpty(methodUsage)) {
                 RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(psiMethod);
                 processor.renameElement(psiMethod, newElementName, methodUsage, null);
             }

@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.generate.StatementGenerator;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 

@@ -37,7 +37,6 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public enum StatementTypeEnum {
             GenericAttributeValue<PsiClass> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
                 List<String> resultType = PsiMybatisUtils.getResultType(method.getReturnType());
-                if (CollectionUtils.isNotEmpty(resultType)) {
+                if (!resultType.isEmpty()) {
                     resultTypeValue.setStringValue(resultType.get(0));
                 } else {
                     Notification mybatis = new Notification(

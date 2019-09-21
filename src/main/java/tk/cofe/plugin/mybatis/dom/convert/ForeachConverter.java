@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Arrays;
@@ -72,7 +71,7 @@ public class ForeachConverter {
             List<PsiParameter> parameters = classElement.getIdMethod()
                     .map(method -> Arrays.stream(method.getParameterList().getParameters()).filter(psiParameter -> text.equals(Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())).collect(Collectors.toList()))
                     .orElse(Collections.emptyList());
-            if (CollectionUtils.isNotEmpty(parameters)) {
+            if (!parameters.isEmpty()) {
                 return super.resolve(text, context);
             }
             return null;

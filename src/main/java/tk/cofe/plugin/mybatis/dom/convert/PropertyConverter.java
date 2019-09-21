@@ -34,7 +34,6 @@ import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
-import tk.cofe.plugin.mybatis.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -90,7 +89,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
         List<PsiField> fields = JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
                 .map(psiClass -> Arrays.asList(psiClass.getAllFields()))
                 .orElse(Collections.emptyList());
-        if (CollectionUtils.isEmpty(fields)) {
+        if (fields.isEmpty()) {
             return null;
         }
         for (PsiField field : fields) {
