@@ -35,6 +35,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.ui.RowIcon;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,8 +43,8 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 import javax.swing.*;
@@ -70,35 +71,31 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
             return;
         }
         PsiFile psiFile = getTargetPsiFile(parameters, result);
-        if (!PsiMybatisUtils.isMapperXmlFile(psiFile)) {
+        if (!MybatisUtils.isMapperXmlFile(psiFile)) {
             return;
         }
         if (isSupport(parameters)) {
-            ClassElement classElement = DomUtils.getTargetElement(getTargetElement(psiFile, parameters, result), ClassElement.class);
-            if (classElement != null) {
-                classElement.getIdMethod().ifPresent(psiMethod -> {
-                    String prefixText = getPrefixText(result);
-                    addPsiParamaterVariants(prefixText, getPrefixArray(result), psiMethod.getParameterList().getParameters(), result);
-                });
-            }
+            DomUtils.getDomElement(getTargetElement(psiFile, parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
+                    .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefixText(result), getPrefixArray(result), psiMethod.getParameterList().getParameters(), result));
         }
     }
 
-    private void addPsiParamaterVariants(@NotNull final String prefixText, @NotNull String[] prefixArr, final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
-        if (parameters.length == 0) {
+    private void addPsiParamaterVariants(@NotNull final String prefixText, @NotNull String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
+        if (ArrayUtil.isEmpty(parameters)) {
             return;
         }
         // 根据 paramters 和 prefix 获取元素
-        if (prefixArr.length == 0) {
+        if (ArrayUtil.isEmpty(prefixArr)) {
             if (parameters.length == 1) {
-                Annotation.Value value = Annotation.PARAM.getValue(parameters[0]);
+                PsiParameter firstParam = parameters[0]; // 第一个参数
+                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                 if (value == null) {
                     // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                    if (PsiTypeUtils.isCustomType(parameters[0].getType()) && parameters[0].getType() instanceof PsiClassType) {
-                        addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) parameters[0].getType(), result);
+                    if (PsiTypeUtils.isCustomType(firstParam.getType()) && firstParam.getType() instanceof PsiClassType) {
+                        addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) firstParam.getType(), result);
                     }
                 } else {
-                    result.addElement(createLookupElement(prefixText, value.getValue(), parameters[0].getType().getPresentableText(), AllIcons.Nodes.Parameter));
+                    result.addElement(createLookupElement(prefixText, value.getValue(), firstParam.getType().getPresentableText(), AllIcons.Nodes.Parameter));
                 }
             } else {
                 for (PsiParameter psiParameter : parameters) {
@@ -116,6 +113,9 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         result.stopHere();
     }
 
+    /**
+     * 获取需要代码提示的文件
+     */
     abstract PsiFile getTargetPsiFile(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
 
     abstract PsiElement getTargetElement(@NotNull PsiFile psiFile, @NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);

@@ -23,7 +23,6 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author : zhengrf
@@ -39,14 +38,13 @@ public abstract class BaseTagDocumentation<T extends DomElement> implements Docu
     @Nullable
     @Override
     public List<String> getUrlFor(final PsiElement element, final PsiElement originalElement) {
-        return Optional.ofNullable(DomUtils.getTargetElement(element, getTargetDomElement()))
-                .map(sql -> Collections.<String>emptyList()).orElse(null);
+        return DomUtils.getDomElement(element, getTargetDomElement()).map(sql -> Collections.<String>emptyList()).orElse(null);
     }
 
     @Nullable
     @Override
     public String generateDoc(final PsiElement element, @Nullable final PsiElement originalElement) {
-        return Optional.ofNullable(DomUtils.getTargetElement(element, getTargetDomElement()))
+        return DomUtils.getDomElement(element, getTargetDomElement())
                 .filter(targetDom -> targetDom.getXmlTag() != null).map(DomElement::getXmlTag)
                 .map(xmlTag -> {
                     String text = xmlTag.getText().replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\\n", "<br/>");

@@ -51,14 +51,14 @@ public final class DomUtils extends DomUtil {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
-    @Nullable
+    @NotNull
     @SuppressWarnings("unchecked")
-    public static <T> T getTargetElement(PsiElement element, final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element,@NotNull final Class<T> requiredClass) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
-            return ((T) domElement);
+            return Optional.of((T) domElement);
         }
-        return DomUtils.getParentOfType(domElement, requiredClass, true);
+        return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
     }
 
     /**

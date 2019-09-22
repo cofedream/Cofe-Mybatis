@@ -58,6 +58,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     public void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation) {
         PsiModifierList modifierList = psiModifierListOwner.getModifierList();
         if (modifierList != null) {
+            this.importClass((PsiJavaFile) psiModifierListOwner.getContainingFile(), annotation.getQualifiedName());
             modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotation.toString(), psiModifierListOwner));
         }
     }

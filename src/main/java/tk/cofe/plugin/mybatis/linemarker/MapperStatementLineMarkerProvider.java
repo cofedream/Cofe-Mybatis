@@ -25,13 +25,13 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,16 +50,12 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
-        DomElement domElement = DomManager.getDomManager(element.getProject()).getDomElement(((XmlTag) element));
-        if (!(domElement instanceof ClassElement)) {
-            return null;
-        }
-        return ((ClassElement) domElement).getIdMethod().map(psiMethods -> new LineMarkerInfo<>(
+        return DomUtils.getDomElement(element, ClassElement.class).flatMap(ClassElement::getIdMethod).map(psiMethods -> new LineMarkerInfo<>(
                 (XmlTag) element,
                 element.getTextRange(),
                 MybatisIcons.NavigateToMethod,
                 Pass.UPDATE_ALL,
-                from -> "Navigate to method",
+                from -> MyBatisBundle.message("action.navigate.tip", "method"),
                 (e, from) -> ((Navigatable) psiMethods.getNavigationElement()).navigate(true),
                 GutterIconRenderer.Alignment.CENTER)).orElse(null);
     }
@@ -70,7 +66,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean isTarget(@NotNull PsiElement element) {
-        return element instanceof XmlTag && PsiMybatisUtils.isElementWithMapperXMLFile(element) && PsiMybatisUtils.isBaseStatementElement((XmlElement) element);
+        return element instanceof XmlTag && MybatisUtils.isElementWithMapperXMLFile(element) && MybatisUtils.isBaseStatement((XmlElement) element);
     }
 
 }

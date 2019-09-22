@@ -30,7 +30,7 @@ import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return PsiMybatisUtils.getPsiClass(classElement)
+            return MybatisUtils.getPsiClass(classElement)
                     .map(psiClass -> Arrays.asList(psiClass.getMethods()))
                     .orElse(Collections.emptyList());
         }
@@ -70,7 +70,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return null;
             }
-            return PsiMybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
+            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
         }
 
         @Nullable

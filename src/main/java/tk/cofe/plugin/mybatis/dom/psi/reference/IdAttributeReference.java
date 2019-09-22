@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         List<ResolveResult> result = new ArrayList<>();
         XmlTag tag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
-        if (PsiMybatisUtils.isBaseStatementElement(tag)) {
+        if (MybatisUtils.isBaseStatement(tag)) {
             ClassElement classElement = (ClassElement) DomUtils.getDomElement(tag);
             if (classElement == null) {
                 return Empty.Array.RESOLVE_RESULT;

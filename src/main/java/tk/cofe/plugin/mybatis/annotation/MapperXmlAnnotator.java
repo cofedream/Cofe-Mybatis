@@ -62,8 +62,7 @@ public class MapperXmlAnnotator implements Annotator {
     }
 
     private void processDomElement(final AnnotationHolder holder, final IdAttribute domElement) {
-        String id = domElement.getIdValue().orElse(null);
-        process(holder, domElement, domElement.getId().getXmlAttributeValue(), MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id);
+        domElement.getIdValue().ifPresent(id -> process(holder, domElement, domElement.getId().getXmlAttributeValue(), MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id));
     }
 
     private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final XmlAttributeValue xmlAttributeValue, final String errorMessage, final String id) {
@@ -75,13 +74,14 @@ public class MapperXmlAnnotator implements Annotator {
             holder.createErrorAnnotation(xmlAttributeValue, MISSING_VALUE);
             return;
         }
-        Mapper mapper = DomUtils.getTargetElement(targetElement, Mapper.class);
-        List<? extends IdAttribute> ids = getIdAttributes(domElement, mapper);
-        if (ids.stream().filter(idInfo -> Objects.equals(id, idInfo.getIdValue().orElse(null))).count() > 1) {
-            holder.createErrorAnnotation(targetElement, errorMessage);
-        }
+        DomUtils.getDomElement(targetElement, Mapper.class).ifPresent(mapper -> {
+            if (getIdAttributes(domElement, mapper).stream().filter(info -> Objects.equals(id, info.getIdValue().orElse(null))).count() > 1) {
+                holder.createErrorAnnotation(targetElement, errorMessage);
+            }
+        });
     }
 
+    @NotNull
     private List<? extends IdAttribute> getIdAttributes(final IdAttribute domElement, final Mapper mapper) {
         if (domElement instanceof Sql) {
             return mapper.getSqls();

@@ -29,7 +29,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Optional;
 
@@ -41,13 +41,13 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
     @Nullable
     @Override
     public PsiElement getGotoDeclarationTarget(@Nullable PsiElement sourceElement, Editor editor) {
-        if (!PsiMybatisUtils.isElementWithMapperXMLFile(sourceElement)) {
+        if (!MybatisUtils.isElementWithMapperXMLFile(sourceElement)) {
             return null;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);
         return xmlAttribute == null ? null : EnumUtils.parse(StatementAttribute.values(), xmlAttribute).map(statement -> {
             if (sourceElement.getLanguage().is(XMLLanguage.INSTANCE)) {
-                if (PsiMybatisUtils.isMapperXmlFile(sourceElement.getContainingFile())) {
+                if (MybatisUtils.isMapperXmlFile(sourceElement.getContainingFile())) {
                     return statement.process(sourceElement).orElse(null);
                 }
             }

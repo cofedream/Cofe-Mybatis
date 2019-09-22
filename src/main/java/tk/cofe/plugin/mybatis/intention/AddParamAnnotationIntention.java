@@ -22,7 +22,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
@@ -78,11 +77,11 @@ public class AddParamAnnotationIntention implements IntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        PsiElement element = PsiElementUtils.getElement(editor, file);
-        PsiMethod method = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+        PsiMethod method = PsiTreeUtil.getParentOfType(PsiElementUtils.getElement(editor, file), PsiMethod.class);
         if (method == null) {
             return;
         }
+        JavaPsiService service = JavaPsiService.getInstance(project);
         for (PsiParameter parameter : method.getParameterList().getParameters()) {
             // 有 @Param 则跳过
             if (PsiJavaUtils.hasAnnotation(parameter, Annotation.PARAM)) {
@@ -92,9 +91,7 @@ public class AddParamAnnotationIntention implements IntentionAction {
             if (StringUtil.isEmpty(name)) {
                 continue;
             }
-            JavaPsiService psiService = JavaPsiService.getInstance(project);
-            psiService.importClass(((PsiJavaFile) file), Annotation.PARAM.getQualifiedName());
-            psiService.addAnnotation(parameter, Annotation.PARAM.withValue(name));
+            service.addAnnotation(parameter, Annotation.PARAM.withValue(name));
         }
 
     }

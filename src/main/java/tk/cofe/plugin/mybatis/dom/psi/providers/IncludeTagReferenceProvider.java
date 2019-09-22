@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @Override
         public ResolveResult[] multiResolve(boolean incompleteCode) {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
-            Mapper mapper = PsiMybatisUtils.getMapper(originalElement);
+            Mapper mapper = MybatisUtils.getMapper(originalElement);
             if (mapper == null) {
                 return Empty.Array.RESOLVE_RESULT;
             }
@@ -78,7 +78,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @NotNull
         @Override
         public Object[] getVariants() {
-            Mapper mapper = PsiMybatisUtils.getMapper(((XmlAttributeValue) myElement));
+            Mapper mapper = MybatisUtils.getMapper(((XmlAttributeValue) myElement));
             if (mapper == null) {
                 return Empty.Array.OBJECTS;
             }

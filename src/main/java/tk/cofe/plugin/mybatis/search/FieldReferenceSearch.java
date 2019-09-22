@@ -61,13 +61,11 @@ public class FieldReferenceSearch extends QueryExecutorBase<XmlAttributeValueRef
             return;
         }
         JavaPsiService javaPsiService = JavaPsiService.getInstance(queryParameters.getProject());
-        MapperService.getInstance(queryParameters.getProject()).findAllMappers()
-                .forEach(mapper -> mapper.getResultMaps().forEach(resultMap -> {
-                    resultMap.getTypeValue().flatMap(javaPsiService::findPsiClass).ifPresent(typeClass -> {
-                        if (isTarget(psiClass, classQualifiedName)) {
-                            process(resultMap.getPropertyAttributes(), psiField, consumer);
-                        }
-                    });
+        MapperService.getInstance(queryParameters.getProject()).findAllMappers().stream().flatMap(info -> info.getResultMaps().stream())
+                .forEach(resultMap -> resultMap.getTypeValue().flatMap(javaPsiService::findPsiClass).ifPresent(typeClass -> {
+                    if (isTarget(psiClass, classQualifiedName)) {
+                        process(resultMap.getPropertyAttributes(), psiField, consumer);
+                    }
                 }));
     }
 

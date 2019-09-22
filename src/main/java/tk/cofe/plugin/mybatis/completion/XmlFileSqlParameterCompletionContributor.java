@@ -59,8 +59,7 @@ public class XmlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
         if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
             return Empty.Array.STRING;
         }
-        String substring = prefix.substring(0, prefix.lastIndexOf("."));
-        return substring.split("\\.");
+        return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
     }
 
 }

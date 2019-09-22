@@ -34,7 +34,7 @@ import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class ResultMapReferenceProvider {
                 if (!extendsValue.isPresent()) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
-                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
@@ -96,7 +96,7 @@ public class ResultMapReferenceProvider {
                 if (domElement == null) {
                     return Empty.Array.OBJECTS;
                 }
-                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
                     return Empty.Array.OBJECTS;
                 }
@@ -139,7 +139,7 @@ public class ResultMapReferenceProvider {
                 if (!idValue.isPresent()) {
                     return Empty.Array.RESOLVE_RESULT;
                 }
-                Mapper mapper = PsiMybatisUtils.getMapper((XmlAttributeValue) myElement);
+                Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
                     return Empty.Array.RESOLVE_RESULT;
                 }

@@ -34,7 +34,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.EnumUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         PsiElement position = parameters.getPosition();
-        if (!PsiMybatisUtils.isElementWithMapperXMLFile(position)) {
+        if (!MybatisUtils.isElementWithMapperXMLFile(position)) {
             return;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(position, XmlAttribute.class);

@@ -48,16 +48,13 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
     @Nullable
     @Override
     public ProblemDescriptor[] checkMethod(@NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-        MapperService mapperService = MapperService.getInstance(method.getProject());
         PsiClass psiClass = method.getContainingClass();
         if (psiClass == null) {
             return null;
         }
-        if (!mapperService.isMapperClass(psiClass)) {
-            return null;
-        }
-        // 不存在Method对应的Statement则提示
-        if (!mapperService.existStatement(method)) {
+        MapperService mapperService = MapperService.getInstance(method.getProject());
+        if (mapperService.isMapperClass(psiClass) && !mapperService.existStatement(method)) {
+            // 不存在Method对应的Statement则提示
             PsiIdentifier nameIdentifier = method.getNameIdentifier();
             if (nameIdentifier != null) {
                 return new ProblemDescriptor[] {problemDescriptor(method, manager, isOnTheFly, nameIdentifier)};

@@ -18,7 +18,6 @@
 package tk.cofe.plugin.mybatis.search;
 
 import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
@@ -45,10 +44,6 @@ public class MethodToStatementImplementationsSearch extends QueryExecutorBase<Xm
         if (!(element instanceof PsiMethod)) {
             return;
         }
-        Project project = queryParameters.getProject();
-        if (project == null) {
-            return;
-        }
-        MapperService.getInstance(project).findStatement((PsiMethod) element).ifPresent(classElement -> consumer.process(classElement.getId().getXmlAttributeValue()));
+        MapperService.getInstance(element.getProject()).findStatement((PsiMethod) element).ifPresent(classElement -> consumer.process(classElement.getId().getXmlAttributeValue()));
     }
 }

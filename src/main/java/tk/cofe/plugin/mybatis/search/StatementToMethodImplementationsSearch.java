@@ -28,7 +28,7 @@ import com.intellij.util.QueryExecutor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,7 +47,7 @@ public class StatementToMethodImplementationsSearch implements QueryExecutor<Psi
         AtomicBoolean result = new AtomicBoolean(false);
         DumbService.getInstance(element.getProject()).runReadActionInSmartMode(() -> {
             XmlTag xmlTag = PsiTreeUtil.getParentOfType(element, XmlTag.class);
-            if (!PsiMybatisUtils.isBaseStatementElement(xmlTag)) {
+            if (!MybatisUtils.isBaseStatement(xmlTag)) {
                 return;
             }
             ClassElement classElement = (ClassElement) DomUtils.getDomElement(xmlTag);

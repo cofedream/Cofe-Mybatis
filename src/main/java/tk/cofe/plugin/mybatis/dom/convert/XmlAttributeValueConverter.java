@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     @NotNull
     @Override
     public Collection<? extends T> getVariants(ConvertContext context) {
-        Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
+        Mapper mapper = MybatisUtils.getMapper(context.getInvocationElement());
         if (mapper == null) {
             return Collections.emptyList();
         }
@@ -77,7 +77,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (StringUtil.isEmpty(value) || context == null) {
             return null;
         }
-        Mapper mapper = PsiMybatisUtils.getMapper(context.getInvocationElement());
+        Mapper mapper = MybatisUtils.getMapper(context.getInvocationElement());
         if (mapper == null) {
             return null;
         }

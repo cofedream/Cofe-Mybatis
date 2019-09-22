@@ -31,10 +31,14 @@
         <i>new features:</i>
         <ul>
             <li>新增 &lt;resultMap/&gt; 标签的Documentation</li>
+            <li>&lt;test/&gt;和&lt;when/&gt;标签中的 test 属性 现已支持提示</li>
+            <li>调整Mapper XML 中的校验</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>修正Mapper文件无XML,使用@Mapper注解时无法生成对应注解的问题</li>
+            <li>调整 &lt;sql/&gt; 标签的Documentation 的显示样式</li>
+            <li>修正 IC-IDEA 版本中 Mapper.xml 的 Statement 不支持 SQL Parameter 提示的问题</li>
+            <li>修正 #{param[1-n].} 的时候不会提示的问题</li>
         </ul>
     ]]></change-notes>
 
@@ -79,12 +83,10 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
-        <lang.documentationProvider language="XML"
-                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"
-                                    order="first"/>
-        <lang.documentationProvider language="XML"
-                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"
-                                    order="first"/>
+        <lang.documentationProvider language="XML" order="first"
+                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"/>
+        <lang.documentationProvider language="XML" order="first"
+                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
         <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->

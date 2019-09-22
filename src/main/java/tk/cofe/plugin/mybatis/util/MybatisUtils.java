@@ -25,10 +25,8 @@ import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
@@ -59,7 +57,7 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2019-06-23
  */
-public class PsiMybatisUtils {
+public class MybatisUtils {
     private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
         private static final long serialVersionUID = -7375291625150519393L;
 
@@ -130,7 +128,7 @@ public class PsiMybatisUtils {
      * @see Delete
      * @see Insert
      */
-    public static boolean isBaseStatementElement(@Nullable final XmlElement xmlElement) {
+    public static boolean isBaseStatement(@Nullable final XmlElement xmlElement) {
         if (xmlElement == null) {
             return false;
         }
@@ -148,16 +146,6 @@ public class PsiMybatisUtils {
         Collection<String> namespacesSet = Arrays.asList(namespaces);
         XmlFileHeader header = DomService.getInstance().getXmlFileHeader(xmlFile);
         return namespacesSet.contains(header.getPublicId()) || namespacesSet.contains(header.getSystemId()) || namespacesSet.contains(header.getRootTagNamespace());
-    }
-
-    @Nullable
-    public static DomElement getDomElement(@NotNull XmlElement xmlElement) {
-        if (xmlElement instanceof XmlTag) {
-            return DomManager.getDomManager(xmlElement.getProject()).getDomElement(((XmlTag) xmlElement));
-        } else if (xmlElement instanceof XmlAttribute) {
-            return DomManager.getDomManager(xmlElement.getProject()).getDomElement(((XmlAttribute) xmlElement));
-        }
-        return null;
     }
 
     /**
