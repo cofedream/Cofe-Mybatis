@@ -34,6 +34,7 @@ import java.util.function.Supplier;
  */
 public class Annotation implements Cloneable {
 
+    public static final Annotation MAPPER = new Annotation("@Mapper", "org.apache.ibatis.annotations.Mapper");
     public static final Annotation PARAM = new Annotation("@Param", "org.apache.ibatis.annotations.Param");
     public static final Annotation SELECT = new Annotation("@Select", "org.apache.ibatis.annotations.Select");
     public static final Annotation UPDATE = new Annotation("@Update", "org.apache.ibatis.annotations.Update");

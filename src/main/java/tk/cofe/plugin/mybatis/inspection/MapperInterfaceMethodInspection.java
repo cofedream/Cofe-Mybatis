@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.inspection;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.LocalQuickFixBase;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.openapi.editor.Editor;
@@ -28,7 +29,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiEditorUtil;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
@@ -36,7 +36,7 @@ import tk.cofe.plugin.mybatis.generate.StatementGenerator;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 /**
- * Mapper Java Interface 检查,<a href="http://www.jetbrains.org/intellij/sdk/docs/reference_guide/custom_language_support/code_inspections_and_intentions.html">详情</a>
+ * Mapper Interface 检查,<a href="http://www.jetbrains.org/intellij/sdk/docs/reference_guide/custom_language_support/code_inspections_and_intentions.html">详情</a>
  *
  * @author : zhengrf
  * @date : 2019-01-20
@@ -56,39 +56,35 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
         if (!mapperService.isMapperClass(psiClass)) {
             return null;
         }
-        // 存在Method对应的Statement则不提示
+        // 不存在Method对应的Statement则提示
         if (!mapperService.existStatement(method)) {
             PsiIdentifier nameIdentifier = method.getNameIdentifier();
             if (nameIdentifier != null) {
-                return new ProblemDescriptor[] {createMethodProblemDescriptor(method, manager, isOnTheFly, nameIdentifier)};
+                return new ProblemDescriptor[] {problemDescriptor(psiClass, method, manager, isOnTheFly, nameIdentifier)};
             }
         }
         return null;
     }
 
     @NotNull
-    private ProblemDescriptor createMethodProblemDescriptor(@NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
-        return manager.createProblemDescriptor(nameIdentifier,
-                STATEMENT_REF_NOT_DEFINED,
-                new LocalQuickFix() {
-                    @Nls(capitalization = Nls.Capitalization.Sentence)
-                    @NotNull
-                    @Override
-                    public String getFamilyName() {
-                        return MyBatisBundle.message("action.generate.intention", "statement");
-                    }
+    private ProblemDescriptor problemDescriptor(@NotNull final PsiClass psiClass, @NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
+        return manager.createProblemDescriptor(nameIdentifier, STATEMENT_REF_NOT_DEFINED, generateStatement(psiClass, method), ProblemHighlightType.ERROR, isOnTheFly);
+    }
 
-                    @Override
-                    public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-                        Editor editor = PsiEditorUtil.Service.getInstance().findEditorByPsiElement(method);
-                        if (editor == null) {
-                            return;
-                        }
-                        StatementGenerator.generator(project, editor, method.getContainingFile(), method);
-                    }
-                },
-                ProblemHighlightType.ERROR,
-                isOnTheFly);
+    /**
+     * 生成标签
+     */
+    private LocalQuickFix generateStatement(@NotNull final PsiClass psiClass, @NotNull final PsiMethod method) {
+        return new LocalQuickFixBase(MyBatisBundle.message("action.generate.intention", "statement")) {
+            @Override
+            public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+                Editor editor = PsiEditorUtil.Service.getInstance().findEditorByPsiElement(method);
+                if (editor == null) {
+                    return;
+                }
+                StatementGenerator.generator(project, editor, method.getContainingFile(), psiClass, method);
+            }
+        };
     }
 
 }

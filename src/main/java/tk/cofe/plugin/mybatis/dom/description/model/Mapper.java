@@ -25,6 +25,7 @@ import com.intellij.util.xml.Namespace;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.constants.Mybatis;
 import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
@@ -37,6 +38,7 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,11 +58,22 @@ public interface Mapper extends DomElement {
 
     /**
      * 获取 namespace属性值
+     *
      * @return namespace属性值
      */
     @NotNull
     default Optional<PsiClass> getNamespaceValue() {
         return Optional.ofNullable(getNamespace().getValue());
+    }
+
+    /**
+     * 判断是否为目标Mapper XML文件
+     *
+     * @param psiClass 需判断的类
+     * @return true 是目标 Mapper XML , false 非目标Mapper XML
+     */
+    default boolean isTargetMapper(@Nullable PsiClass psiClass) {
+        return Objects.equals(getNamespace().getValue(), psiClass);
     }
 
     @SubTagList("resultMap")

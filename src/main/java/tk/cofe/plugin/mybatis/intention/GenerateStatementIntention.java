@@ -77,7 +77,11 @@ public class GenerateStatementIntention implements IntentionAction {
         if (null == method) {
             return;
         }
-        StatementGenerator.generator(project, editor, file, method);
+        PsiClass psiClass = method.getContainingClass();
+        if (psiClass == null) {
+            return;
+        }
+        StatementGenerator.generator(project, editor, file, psiClass, method);
     }
 
     @Override

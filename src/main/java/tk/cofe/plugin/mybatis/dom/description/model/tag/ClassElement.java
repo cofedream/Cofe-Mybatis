@@ -24,11 +24,13 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.TagValue;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.attirubte.ParameterTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.description.model.dynamic.DynamicSql;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,6 +50,16 @@ public interface ClassElement extends IdAttribute, DynamicSql, ParameterTypeAttr
     @NotNull
     default Optional<PsiMethod> getIdMethod() {
         return Optional.ofNullable(getId().getValue());
+    }
+
+    /**
+     * 判断是否为目标Mapper XML文件
+     *
+     * @param psiMethod 需判断的方法
+     * @return true 是目标方法, false 非目标方法
+     */
+    default boolean isTargetMethod(@Nullable PsiMethod psiMethod) {
+        return Objects.equals(getId().getValue(), psiMethod);
     }
 
     @TagValue

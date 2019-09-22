@@ -29,6 +29,7 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,13 +56,14 @@ public class MapperServiceImpl implements MapperService {
 
     @Override
     public boolean isMapperClass(@NotNull final PsiClass mapperClass) {
-        return findAllMappers().stream().anyMatch(mapper -> mapper.getNamespaceValue().map(psiClass -> psiClass.equals(mapperClass)).orElse(false));
+        return PsiJavaUtils.hasAnnotation(mapperClass, Annotation.MAPPER) // 有 @Mapper 注解
+                || findAllMappers().stream().anyMatch(mapper -> mapper.isTargetMapper(mapperClass));
     }
 
     @NotNull
     @Override
     public List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
-        return findAllMappers().stream().filter(mapper -> mapper.getNamespaceValue().map(psiClass -> psiClass.equals(mapperClass)).orElse(false)).collect(Collectors.toList());
+        return findAllMappers().stream().filter(mapper -> mapper.isTargetMapper(mapperClass)).collect(Collectors.toList());
     }
 
     @NotNull
@@ -82,9 +84,7 @@ public class MapperServiceImpl implements MapperService {
         if (psiClass == null) {
             return Optional.empty();
         }
-        return findStatemtnts(psiClass).stream()
-                .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
-                .findFirst();
+        return findStatemtnts(psiClass).stream().filter(classElement -> classElement.isTargetMethod(method)).findFirst();
     }
 
     @Override
@@ -93,12 +93,10 @@ public class MapperServiceImpl implements MapperService {
             return false;
         }
         for (Annotation annotation : Annotation.STATEMENT_ANNOTATIONS) {
-            if (method.hasAnnotation(annotation.getQualifiedName())) {
-                // 存在注解式或者XML
+            if (PsiJavaUtils.hasAnnotation(method, annotation)) {
                 return true;
             }
         }
-        return findStatemtnts(method.getContainingClass()).stream()
-                .anyMatch(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false));
+        return findStatemtnts(method.getContainingClass()).stream().anyMatch(classElement -> classElement.isTargetMethod(method));
     }
 }
