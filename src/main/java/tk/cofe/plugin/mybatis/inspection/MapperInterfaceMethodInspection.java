@@ -31,11 +31,12 @@ import com.intellij.psi.util.PsiEditorUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.generate.StatementGenerator;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 /**
- * Mapper Java Interface 检查
+ * Mapper Java Interface 检查,<a href="http://www.jetbrains.org/intellij/sdk/docs/reference_guide/custom_language_support/code_inspections_and_intentions.html">详情</a>
  *
  * @author : zhengrf
  * @date : 2019-01-20
@@ -74,7 +75,7 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
                     @NotNull
                     @Override
                     public String getFamilyName() {
-                        return "Generate new statement";
+                        return MyBatisBundle.message("action.generate.intention", "statement");
                     }
 
                     @Override

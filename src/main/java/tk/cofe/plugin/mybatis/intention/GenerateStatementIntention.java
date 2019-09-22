@@ -28,12 +28,14 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.generate.StatementGenerator;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiElementUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 /**
+ * <a href="http://www.jetbrains.org/intellij/sdk/docs/reference_guide/custom_language_support/code_inspections_and_intentions.html">详情</a>
  * @author : zhengrf
  * @date : 2019-06-18
  */
@@ -43,7 +45,7 @@ public class GenerateStatementIntention implements IntentionAction {
     @NotNull
     @Override
     public String getText() {
-        return "Generate new statement";
+        return MyBatisBundle.message("action.generate.intention", "statement");
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)

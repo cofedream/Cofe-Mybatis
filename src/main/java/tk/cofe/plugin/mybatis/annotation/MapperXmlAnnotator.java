@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Mapper xml 提示
+ * Mapper xml 提示,<a href="http://www.jetbrains.org/intellij/sdk/docs/tutorials/custom_language_support/annotator.html">详情</a>
  *
  * @author : zhengrf
  * @date : 2019-07-06

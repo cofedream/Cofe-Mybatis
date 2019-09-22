@@ -38,7 +38,7 @@ import javax.swing.*;
  * @author : zhengrf
  * @date : 2019-07-06
  */
-public class StatementGenerator {
+public final class StatementGenerator {
     private static final String STATEMENT_TYPE = "Statement Type";
 
     /**
