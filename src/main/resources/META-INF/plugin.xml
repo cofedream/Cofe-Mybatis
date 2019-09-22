@@ -34,7 +34,7 @@
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>调整 &lt;sql/&gt; 标签的Documentation 的显示样式</li>
+            <li>修正Mapper文件无XML,使用@Mapper注解时无法生成对应注解的问题</li>
         </ul>
     ]]></change-notes>
 
@@ -106,7 +106,8 @@
         <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
-        <completion.contributor language="XML" implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
+        <completion.contributor language="XML"
+                                implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
         <completion.contributor id="xml-sql-param-completion" language="XML" order="first"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.XmlFileSqlParameterCompletionContributor"/>
         <!--<completion.contributor id="mapper-example-completion" language="JAVA" order="first"-->

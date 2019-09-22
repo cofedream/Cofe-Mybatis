@@ -47,26 +47,24 @@ public final class StatementGenerator {
     /**
      * 生成Statement
      *
-     * @param project  项目
-     * @param editor   编辑窗口
-     * @param file     当前文件
-     * @param psiClass 接口类
-     * @param method   接口方法
+     * @param project 项目
+     * @param editor  编辑窗口
+     * @param file    当前文件
+     * @param method  接口方法
      */
-    public static void generator(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file, @NotNull final PsiClass psiClass, @NotNull final PsiMethod method) {
-        JBPopupFactory.getInstance().createListPopup(createGeneratorPopup(project, file, psiClass, method)).showInBestPositionFor(editor);
+    public static void generator(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file, @NotNull final PsiMethod method) {
+        JBPopupFactory.getInstance().createListPopup(createGeneratorPopup(project, file, method)).showInBestPositionFor(editor);
     }
 
     /**
      * 创建生成提示窗口
      *
-     * @param project  项目
-     * @param file     当前文件
-     * @param psiClass 接口类
-     * @param method   接口方法
+     * @param project 项目
+     * @param file    当前文件
+     * @param method  接口方法
      * @return 窗口
      */
-    private static BaseListPopupStep<StatementTypeEnum> createGeneratorPopup(@NotNull final Project project, @NotNull final PsiFile file, @NotNull final PsiClass psiClass, @NotNull final PsiMethod method) {
+    private static BaseListPopupStep<StatementTypeEnum> createGeneratorPopup(@NotNull final Project project, @NotNull final PsiFile file, @NotNull final PsiMethod method) {
         return new BaseListPopupStep<StatementTypeEnum>(STATEMENT_TYPE, StatementTypeEnum.values()) {
             @Override
             public Icon getIconFor(final StatementTypeEnum value) {
@@ -80,16 +78,16 @@ public final class StatementGenerator {
             }
 
             @Override
-            public PopupStep onChosen(StatementTypeEnum selectedValue, boolean finalChoice) {
+            public PopupStep onChosen(StatementTypeEnum value, boolean finalChoice) {
                 return doFinalStep(() -> WriteCommandAction.writeCommandAction(project, file).run(() -> {
                     PsiClass psiClass = method.getContainingClass();
                     if (null == psiClass) {
                         return;
                     }
                     if (PsiJavaUtils.hasAnnotation(psiClass, Annotation.MAPPER)) {
-                        JavaPsiService.getInstance(project).addAnnotation(psiClass, Annotation.MAPPER.toString());
+                        JavaPsiService.getInstance(project).addAnnotation(method, value.getAnnotation().withValue(""));
                     } else {
-                        MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> selectedValue.createStatement(mapper, method, project));
+                        MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> value.createStatement(mapper, psiClass, method, project));
                     }
                 }));
             }

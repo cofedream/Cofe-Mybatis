@@ -94,7 +94,7 @@ public class AddParamAnnotationIntention implements IntentionAction {
             }
             JavaPsiService psiService = JavaPsiService.getInstance(project);
             psiService.importClass(((PsiJavaFile) file), Annotation.PARAM.getQualifiedName());
-            psiService.addAnnotation(parameter, Annotation.PARAM.withValue(name).toString());
+            psiService.addAnnotation(parameter, Annotation.PARAM.withValue(name));
         }
 
     }

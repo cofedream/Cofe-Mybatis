@@ -81,7 +81,7 @@ public class GenerateStatementIntention implements IntentionAction {
         if (psiClass == null) {
             return;
         }
-        StatementGenerator.generator(project, editor, file, psiClass, method);
+        StatementGenerator.generator(project, editor, file, method);
     }
 
     @Override

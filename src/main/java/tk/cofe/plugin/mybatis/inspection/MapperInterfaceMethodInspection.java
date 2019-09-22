@@ -60,21 +60,21 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
         if (!mapperService.existStatement(method)) {
             PsiIdentifier nameIdentifier = method.getNameIdentifier();
             if (nameIdentifier != null) {
-                return new ProblemDescriptor[] {problemDescriptor(psiClass, method, manager, isOnTheFly, nameIdentifier)};
+                return new ProblemDescriptor[] {problemDescriptor(method, manager, isOnTheFly, nameIdentifier)};
             }
         }
         return null;
     }
 
     @NotNull
-    private ProblemDescriptor problemDescriptor(@NotNull final PsiClass psiClass, @NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
-        return manager.createProblemDescriptor(nameIdentifier, STATEMENT_REF_NOT_DEFINED, generateStatement(psiClass, method), ProblemHighlightType.ERROR, isOnTheFly);
+    private ProblemDescriptor problemDescriptor(@NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
+        return manager.createProblemDescriptor(nameIdentifier, STATEMENT_REF_NOT_DEFINED, generateStatement(method), ProblemHighlightType.ERROR, isOnTheFly);
     }
 
     /**
      * 生成标签
      */
-    private LocalQuickFix generateStatement(@NotNull final PsiClass psiClass, @NotNull final PsiMethod method) {
+    private LocalQuickFix generateStatement(@NotNull final PsiMethod method) {
         return new LocalQuickFixBase(MyBatisBundle.message("action.generate.intention", "statement")) {
             @Override
             public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
@@ -82,7 +82,7 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
                 if (editor == null) {
                     return;
                 }
-                StatementGenerator.generator(project, editor, method.getContainingFile(), psiClass, method);
+                StatementGenerator.generator(project, editor, method.getContainingFile(), method);
             }
         };
     }

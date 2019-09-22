@@ -30,6 +30,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
@@ -37,6 +38,8 @@ import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiMybatisUtils;
 
 import java.util.List;
@@ -48,7 +51,7 @@ import java.util.List;
  * @date : 2019-06-23
  */
 public enum StatementTypeEnum {
-    SELECT("Select") {
+    SELECT(Annotation.SELECT, "Select") {
         @Override
         public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
@@ -68,17 +71,17 @@ public enum StatementTypeEnum {
             }
             return select;
         }
-    }, INSERT("Insert") {
+    }, INSERT(Annotation.INSERT, "Insert") {
         @Override
         public Insert addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addInsert();
         }
-    }, UPDATE("Update") {
+    }, UPDATE(Annotation.UPDATE, "Update") {
         @Override
         public Update addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addUpdate();
         }
-    }, DELETE("Delete") {
+    }, DELETE(Annotation.DELETE, "Delete") {
         @Override
         public Delete addClassElement(@NotNull Mapper mapper, PsiMethod method) {
             return mapper.addDelete();
@@ -88,12 +91,19 @@ public enum StatementTypeEnum {
 
     private String desc;
 
-    StatementTypeEnum(String desc) {
+    private Annotation annotation;
+
+    StatementTypeEnum(Annotation annotation, String desc) {
+        this.annotation = annotation;
         this.desc = desc;
     }
 
     public String getDesc() {
         return desc;
+    }
+
+    public Annotation getAnnotation() {
+        return annotation;
     }
 
     /**
@@ -108,28 +118,29 @@ public enum StatementTypeEnum {
     /**
      * 指定元素动作
      *
-     * @param mapper  Mapper
-     * @param method  方法
-     * @param project 当前项目
+     * @param mapper   Mapper
+     * @param psiClass 接口类
+     * @param method   方法
+     * @param project  当前项目
      */
-    public void createStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
-        ClassElement element = addClassElement(mapper, method);
-        XmlTag tag = element.getXmlTag();
-        if (tag == null) {
-            return;
-        }
-        element.setValue("\n");
-        int offset = 0;
-        GenericAttributeValue<PsiMethod> elementId = element.getId();
-        if (elementId.getXmlAttributeValue() != null) {
-            elementId.setStringValue(method.getName());
-            offset = elementId.getXmlAttributeValue().getTextOffset();
-        }
-        NavigationUtil.activateFileWithPsiElement(tag, true);
-        Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-        if (null != xmlEditor) {
-            xmlEditor.getCaretModel().moveToOffset(offset);
-            xmlEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-        }
+    public void createStatement(Mapper mapper, final PsiClass psiClass, PsiMethod method, @NotNull Project project) {
+            ClassElement element = addClassElement(mapper, method);
+            XmlTag tag = element.getXmlTag();
+            if (tag == null) {
+                return;
+            }
+            element.setValue("\n");
+            int offset = 0;
+            GenericAttributeValue<PsiMethod> elementId = element.getId();
+            if (elementId.getXmlAttributeValue() != null) {
+                elementId.setStringValue(method.getName());
+                offset = elementId.getXmlAttributeValue().getTextOffset();
+            }
+            NavigationUtil.activateFileWithPsiElement(tag, true);
+            Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+            if (null != xmlEditor) {
+                xmlEditor.getCaretModel().moveToOffset(offset);
+                xmlEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+            }
     }
 }

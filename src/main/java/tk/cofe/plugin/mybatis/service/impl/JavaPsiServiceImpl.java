@@ -28,6 +28,7 @@ import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
@@ -54,10 +55,10 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     }
 
     @Override
-    public void addAnnotation(PsiModifierListOwner psiModifierListOwner, String annotationText) {
+    public void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation) {
         PsiModifierList modifierList = psiModifierListOwner.getModifierList();
         if (modifierList != null) {
-            modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotationText, psiModifierListOwner));
+            modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotation.toString(), psiModifierListOwner));
         }
     }
 

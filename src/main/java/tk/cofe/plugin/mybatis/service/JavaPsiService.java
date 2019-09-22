@@ -25,6 +25,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Optional;
 
@@ -61,7 +62,8 @@ public interface JavaPsiService {
      * 给元素添加注解
      *
      * @param psiModifierListOwner 目标元素
-     * @param annotationText       注解文本
+     * @param annotation           注解
      */
-    void addAnnotation(PsiModifierListOwner psiModifierListOwner, String annotationText);
+    void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation);
+
 }
