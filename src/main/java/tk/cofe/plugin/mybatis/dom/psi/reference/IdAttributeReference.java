@@ -24,7 +24,6 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
@@ -51,14 +50,14 @@ public class IdAttributeReference extends PsiReferenceBase.Poly<PsiElement> {
         if (MybatisUtils.isBaseStatement(tag)) {
             ClassElement classElement = (ClassElement) DomUtils.getDomElement(tag);
             if (classElement == null) {
-                return Empty.Array.RESOLVE_RESULT;
+                return new ResolveResult[0];
             }
             classElement.getIdMethod().ifPresent(psiMethod -> result.add(new PsiElementResolveResult(psiMethod)));
         }
         if (result.isEmpty()) {
             result.add(new PsiElementResolveResult(myElement));
         }
-        return result.toArray(Empty.Array.RESOLVE_RESULT);
+        return result.toArray(new ResolveResult[0]);
     }
 
 }

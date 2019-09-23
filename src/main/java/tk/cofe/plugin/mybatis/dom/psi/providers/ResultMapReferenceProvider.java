@@ -29,7 +29,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
@@ -70,15 +69,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 Optional<String> extendsValue = domElement.getExtendsValue();
                 if (!extendsValue.isPresent()) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
@@ -86,7 +85,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
-                return result.toArray(Empty.Array.RESOLVE_RESULT);
+                return result.toArray(new ResolveResult[0]);
             }
 
             @NotNull
@@ -94,11 +93,11 @@ public class ResultMapReferenceProvider {
             public Object[] getVariants() {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return Empty.Array.OBJECTS;
+                    return new Object[0];
                 }
                 Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
-                    return Empty.Array.OBJECTS;
+                    return new Object[0];
                 }
                 return ElementPresentationManager.getInstance().createVariants(mapper.getResultMaps()
                         .stream().filter(resultMap -> resultMap.getIdValue()
@@ -133,15 +132,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 Optional<String> idValue = domElement.getIdValue();
                 if (!idValue.isPresent()) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
-                    return Empty.Array.RESOLVE_RESULT;
+                    return new ResolveResult[0];
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.getResultMaps().forEach(resultMap -> resultMap.getExtendsValue().ifPresent(extendsValue -> {
@@ -149,7 +148,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getXmlElement()));
                     }
                 }));
-                return result.toArray(Empty.Array.RESOLVE_RESULT);
+                return result.toArray(new ResolveResult[0]);
             }
 
         }

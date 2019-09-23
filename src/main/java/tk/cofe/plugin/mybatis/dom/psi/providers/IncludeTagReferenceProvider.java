@@ -27,7 +27,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
@@ -61,7 +60,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
             Mapper mapper = MybatisUtils.getMapper(originalElement);
             if (mapper == null) {
-                return Empty.Array.RESOLVE_RESULT;
+                return new ResolveResult[0];
             }
             List<Sql> sqls = mapper.getSqls();
             List<ResolveResult> result = new ArrayList<>();
@@ -72,7 +71,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
                     }
                 }
             }));
-            return result.toArray(Empty.Array.RESOLVE_RESULT);
+            return result.toArray(new ResolveResult[0]);
         }
 
         @NotNull
@@ -80,7 +79,7 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         public Object[] getVariants() {
             Mapper mapper = MybatisUtils.getMapper(((XmlAttributeValue) myElement));
             if (mapper == null) {
-                return Empty.Array.OBJECTS;
+                return new Object[0];
             }
             return ElementPresentationManager.getInstance().createVariants(mapper.getSqls());
         }

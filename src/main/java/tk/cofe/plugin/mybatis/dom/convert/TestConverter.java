@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.constants.Empty;
 import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -184,7 +183,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
     @NotNull
     private String[] getPrefix(@NotNull String prefix) {
         if (StringUtil.isEmpty(prefix)) {
-            return Empty.Array.STRING;
+            return new String[0];
         }
         if (prefix.charAt(prefix.length() - 1) == '.') {
             prefix = prefix + 'a';
@@ -193,11 +192,11 @@ public class TestConverter extends ResolvingConverter.StringConverter {
         try {
             node = (Node) Ognl.parseExpression(prefix);
         } catch (OgnlException e) {
-            return Empty.Array.STRING;
+            return new String[0];
         }
         prefix = getPrefix(node);
         if (!prefix.contains(".")) {
-            return Empty.Array.STRING;
+            return new String[0];
         }
         String substring = prefix.substring(0, prefix.lastIndexOf("."));
         return substring.split("\\.");

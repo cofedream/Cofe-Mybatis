@@ -24,7 +24,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.constants.Empty;
 
 /**
  * SQL 文件中的SQL 参数完成
@@ -60,7 +59,7 @@ public class SqlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
     String[] getPrefixArray(@NotNull CompletionResultSet result) {
         String prefix = result.getPrefixMatcher().getPrefix();
         if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
-            return Empty.Array.STRING;
+            return new String[0];
         }
         String substring = prefix.substring(0, prefix.lastIndexOf("."));
         return substring.split("\\.");
