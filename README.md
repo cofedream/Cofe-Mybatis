@@ -1,5 +1,7 @@
 # Mybatis_Plugin
 
+感谢 <img src="/images/jetbrains-variant-3.svg" />[JetBrains](https://www.jetbrains.com/?from=Cofe-Mybatis) 的支持
+
 ## 介绍
 
 现已发布至Jetbrains插件仓库,地址[cofe-mybatis](https://plugins.jetbrains.com/plugin/12808-cofe-mybatis)
@@ -9,6 +11,7 @@
 因为觉得现有的不满足自己的需求，所以自己写一个。
 
 项目源起于2018年11月份,原本 fork 自 [free-idea-mybatis](https://github.com/wuzhizhan/free-idea-mybatis),但后续写着觉得难受就删了重来
+
 
 ## 功能演示
 
