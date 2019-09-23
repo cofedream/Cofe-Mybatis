@@ -27,7 +27,6 @@ intellij {
     pluginName 'Cofe-Mybatis'
     version '2018.3.2'
     type "IU"
-//    type "IC"
     plugins 'Spring','SpringBoot', 'DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
