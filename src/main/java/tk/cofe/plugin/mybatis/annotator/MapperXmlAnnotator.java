@@ -1,31 +1,26 @@
 /*
  * Copyright (C) 2019 cofe
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.annotation;
+package tk.cofe.plugin.mybatis.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
@@ -39,6 +34,7 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Mapper xml 提示,<a href="http://www.jetbrains.org/intellij/sdk/docs/tutorials/custom_language_support/annotator.html">详情</a>
@@ -47,8 +43,6 @@ import java.util.Objects;
  * @date : 2019-07-06
  */
 public class MapperXmlAnnotator implements Annotator {
-
-    private static final String MISSING_VALUE = "Missing value";
 
     @Override
     public void annotate(@NotNull final PsiElement element, @NotNull final AnnotationHolder holder) {
@@ -62,21 +56,16 @@ public class MapperXmlAnnotator implements Annotator {
     }
 
     private void processDomElement(final AnnotationHolder holder, final IdAttribute domElement) {
-        domElement.getIdValue().ifPresent(id -> process(holder, domElement, domElement.getId().getXmlAttributeValue(), MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id));
+        domElement.getIdValue().ifPresent(id -> process(holder, domElement, MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id));
     }
 
-    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final XmlAttributeValue xmlAttributeValue, final String errorMessage, final String id) {
-        if (xmlAttributeValue == null || id == null) {
-            return;
-        }
-        PsiElement targetElement = getPsiElement(xmlAttributeValue);
-        if (targetElement == null) {
-            holder.createErrorAnnotation(xmlAttributeValue, MISSING_VALUE);
-            return;
-        }
-        DomUtils.getDomElement(targetElement, Mapper.class).ifPresent(mapper -> {
-            if (getIdAttributes(domElement, mapper).stream().filter(info -> Objects.equals(id, info.getIdValue().orElse(null))).count() > 1) {
-                holder.createErrorAnnotation(targetElement, errorMessage);
+    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String text) {
+        Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
+            if (getIdAttributes(domElement, mapper).stream().filter(info -> Objects.equals(text, info.getIdValue().orElse(null))).count() > 1) {
+                XmlElement element = DomUtils.getValueElement(domElement.getId());
+                if (element != null) {
+                    holder.createErrorAnnotation(element, errorMessage);
+                }
             }
         });
     }
@@ -98,14 +87,4 @@ public class MapperXmlAnnotator implements Annotator {
         }
     }
 
-    @Nullable
-    private PsiElement getPsiElement(final XmlAttributeValue xmlAttributeValue) {
-        for (PsiElement child : xmlAttributeValue.getChildren()) {
-            String text = child.getText();
-            if (StringUtil.isNotEmpty(text)) {
-                return child;
-            }
-        }
-        return null;
-    }
 }

@@ -115,7 +115,7 @@
         <!--<completion.contributor id="mapper-example-completion" language="JAVA" order="first"-->
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.TkMapperCompletionContributor"/>-->
         <!--纯提示-->
-        <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotation.MapperXmlAnnotator"/>
+        <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>
 
         <!--代码检查-->
         <localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"

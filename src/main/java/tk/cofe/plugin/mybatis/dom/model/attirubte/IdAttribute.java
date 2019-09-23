@@ -27,6 +27,7 @@ import java.util.Optional;
  */
 public interface IdAttribute extends DomElement {
 
+    @NotNull
     GenericAttributeValue<?> getId();
 
     /**
