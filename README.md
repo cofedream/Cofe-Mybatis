@@ -1,6 +1,6 @@
 # Mybatis_Plugin
 
-感谢 <img src="/images/jetbrains-variant-3.svg" />[JetBrains](https://www.jetbrains.com/?from=Cofe-Mybatis) 的支持
+感谢 [JetBrains](https://www.jetbrains.com/?from=Cofe-Mybatis) 对此项目的支持
 
 ## 介绍
 
