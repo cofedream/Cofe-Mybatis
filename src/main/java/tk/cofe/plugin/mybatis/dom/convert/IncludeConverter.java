@@ -20,8 +20,8 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
 
 import java.util.Collection;
 import java.util.List;

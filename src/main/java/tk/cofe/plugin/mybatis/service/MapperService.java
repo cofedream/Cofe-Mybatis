@@ -23,8 +23,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 
 import java.util.List;
 import java.util.Optional;

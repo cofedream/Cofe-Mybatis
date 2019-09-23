@@ -17,13 +17,11 @@
 
 package tk.cofe.plugin.mybatis.dom.convert;
 
-import com.intellij.database.dbimport.ReaderTask;
 import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collection;

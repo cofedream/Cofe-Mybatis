@@ -32,12 +32,12 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Update;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
+import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
+import tk.cofe.plugin.mybatis.dom.model.tag.Select;
+import tk.cofe.plugin.mybatis.dom.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.List;

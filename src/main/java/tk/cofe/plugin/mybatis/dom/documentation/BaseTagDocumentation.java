@@ -28,7 +28,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-08-11
  */
-public abstract class BaseTagDocumentation<T extends DomElement> implements DocumentationProvider {
+abstract class BaseTagDocumentation<T extends DomElement> implements DocumentationProvider {
     @Nullable
     @Override
     public String getQuickNavigateInfo(final PsiElement element, final PsiElement originalElement) {

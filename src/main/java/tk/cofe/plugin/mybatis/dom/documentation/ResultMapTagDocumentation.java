@@ -14,7 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.documentation;
 
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
 /**
  * resultMap 标签的 documentation

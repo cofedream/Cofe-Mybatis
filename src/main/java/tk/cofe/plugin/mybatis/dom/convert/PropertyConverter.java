@@ -31,8 +31,8 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.Association;
-import tk.cofe.plugin.mybatis.dom.description.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.model.tag.Association;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 
 import java.util.Arrays;
@@ -124,10 +124,10 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
                 return ((Association) domElement).getJavaTypeValue().orElse(null);
             }
         },
-        COLLECTION(tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection.class) {
+        COLLECTION(tk.cofe.plugin.mybatis.dom.model.dynamic.Collection.class) {
             @Override
             String getType(DomElement domElement) {
-                return ((tk.cofe.plugin.mybatis.dom.description.model.dynamic.Collection) domElement).getOfTypeValue().orElse(null);
+                return ((tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) domElement).getOfTypeValue().orElse(null);
             }
         },
         ;

@@ -18,7 +18,7 @@
 package tk.cofe.plugin.mybatis.dom.inspection;
 
 import com.intellij.util.xml.highlighting.BasicDomElementsInspection;
-import tk.cofe.plugin.mybatis.dom.description.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
 
 /**
  * Mapper Xml检查

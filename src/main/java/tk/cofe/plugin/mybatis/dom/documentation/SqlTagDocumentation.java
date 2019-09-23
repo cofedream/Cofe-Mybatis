@@ -14,7 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.documentation;
 
-import tk.cofe.plugin.mybatis.dom.description.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
 
 /**
  * sql 标签的 documentation
