@@ -28,7 +28,7 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.psi.reference.XmlAttributeValueReference;
+import tk.cofe.plugin.mybatis.psi.reference.XmlAttributeValueReference;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 

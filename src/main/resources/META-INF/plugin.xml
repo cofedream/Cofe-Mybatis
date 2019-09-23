@@ -89,8 +89,8 @@
                                     implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
         <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
-        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsageSearcher"/>-->
-        <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.java.usages.ClassFieldFindUsagesProvider"/>-->
+        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsageSearcher"/>-->
+        <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsagesProvider"/>-->
         <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
         <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
         <!--<gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->

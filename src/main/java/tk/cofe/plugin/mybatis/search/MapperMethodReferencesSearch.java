@@ -27,8 +27,8 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor;
-import tk.cofe.plugin.mybatis.dom.psi.reference.IdAttributeReference;
+import tk.cofe.plugin.mybatis.psi.MapperReferenceContributor;
+import tk.cofe.plugin.mybatis.psi.reference.IdAttributeReference;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
