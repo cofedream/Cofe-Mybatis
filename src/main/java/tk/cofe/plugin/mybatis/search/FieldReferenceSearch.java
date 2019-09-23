@@ -28,8 +28,8 @@ import com.intellij.util.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.psi.reference.XmlAttributeValueReference;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.List;
@@ -60,13 +60,11 @@ public class FieldReferenceSearch extends QueryExecutorBase<XmlAttributeValueRef
         if (StringUtil.isEmpty(classQualifiedName)) {
             return;
         }
-        JavaPsiService javaPsiService = JavaPsiService.getInstance(queryParameters.getProject());
-        MapperService.getInstance(queryParameters.getProject()).findAllMappers().stream().flatMap(info -> info.getResultMaps().stream())
-                .forEach(resultMap -> resultMap.getTypeValue().flatMap(javaPsiService::findPsiClass).ifPresent(typeClass -> {
-                    if (isTarget(psiClass, classQualifiedName)) {
-                        process(resultMap.getPropertyAttributes(), psiField, consumer);
-                    }
-                }));
+        MapperService.getInstance(queryParameters.getProject()).findAllMappers().stream()
+                .flatMap(mapper -> mapper.getResultMaps().stream())
+                .filter(resultMap -> resultMap.getTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false))
+                .map(ResultMap::getPropertyAttributes)
+                .forEach(attributes -> process(attributes, psiField, consumer));
     }
 
     private void process(@NotNull List<? extends PropertyAttribute> attributes, @NotNull PsiField psiField, @NotNull Processor<? super XmlAttributeValueReference> consumer) {

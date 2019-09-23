@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -29,7 +30,7 @@ import java.util.Optional;
 public interface JavaTypeAttribute extends DomElement {
 
     @Attribute("javaType")
-    GenericAttributeValue<String> getJavaType();
+    GenericAttributeValue<PsiClass> getJavaType();
 
     /**
      * 获取 javaType 值
@@ -37,7 +38,7 @@ public interface JavaTypeAttribute extends DomElement {
      * @return javaType 值 如果为Null 则返回 ""
      */
     @NotNull
-    default Optional<String> getJavaTypeValue() {
-        return DomUtils.getAttributeVlaue(getJavaType());
+    default Optional<PsiClass> getJavaTypeValue() {
+        return Optional.ofNullable(getJavaType().getValue());
     }
 }

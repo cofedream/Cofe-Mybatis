@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.model.dynamic;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.SubTag;
@@ -48,7 +49,7 @@ public interface Collection extends PropertyAttribute, ColumnAttribute, JavaType
         SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
 
     @Attribute("ofType")
-    GenericAttributeValue<String> getOfType();
+    GenericAttributeValue<PsiClass> getOfType();
 
     @SubTag("constructor")
     Constructor getConstructor();
@@ -75,8 +76,8 @@ public interface Collection extends PropertyAttribute, ColumnAttribute, JavaType
      * @return ofType 值 如果为Null 则返回 ""
      */
     @NotNull
-    default Optional<String> getOfTypeValue() {
-        return DomUtils.getAttributeVlaue(getOfType());
+    default Optional<PsiClass> getOfTypeValue() {
+        return Optional.ofNullable(getOfType().getValue());
     }
 
 }

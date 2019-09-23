@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
@@ -33,12 +34,12 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -59,11 +60,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
     @NotNull
     @Override
     public Collection<? extends PsiField> getVariants(ConvertContext context) {
-        String propertyType = PropertyType.parse(context.getInvocationElement());
-        if (propertyType == null) {
-            return Collections.emptyList();
-        }
-        return JavaPsiService.getInstance(context.getProject()).findPsiClass(propertyType)
+        return PropertyType.parse(context.getInvocationElement())
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields())
                         .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
                         .collect(Collectors.toList()))
@@ -82,11 +79,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
         if (StringUtil.isEmpty(member)) {
             return null;
         }
-        String type = PropertyType.parse(context.getInvocationElement());
-        if (StringUtil.isEmpty(type)) {
-            return null;
-        }
-        List<PsiField> fields = JavaPsiService.getInstance(context.getProject()).findPsiClass(type)
+        List<PsiField> fields = PropertyType.parse(context.getInvocationElement())
                 .map(psiClass -> Arrays.asList(psiClass.getAllFields()))
                 .orElse(Collections.emptyList());
         if (fields.isEmpty()) {
@@ -114,20 +107,20 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
     private enum PropertyType {
         RESULT_MAP(ResultMap.class) {
             @Override
-            String getType(DomElement domElement) {
-                return ((ResultMap) domElement).getTypeValue().orElse(null);
+            Optional<PsiClass> getType(DomElement domElement) {
+                return ((ResultMap) domElement).getTypeValue();
             }
         },
         ASSOCIATION(Association.class) {
             @Override
-            String getType(DomElement domElement) {
-                return ((Association) domElement).getJavaTypeValue().orElse(null);
+            Optional<PsiClass> getType(DomElement domElement) {
+                return ((Association) domElement).getJavaTypeValue();
             }
         },
         COLLECTION(tk.cofe.plugin.mybatis.dom.model.dynamic.Collection.class) {
             @Override
-            String getType(DomElement domElement) {
-                return ((tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) domElement).getOfTypeValue().orElse(null);
+            Optional<PsiClass> getType(DomElement domElement) {
+                return ((tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) domElement).getOfTypeValue();
             }
         },
         ;
@@ -138,9 +131,9 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
             this.typeClass = typeClass;
         }
 
-        public static String parse(final DomElement domElement) {
+        public static Optional<PsiClass> parse(final DomElement domElement) {
             if (domElement == null) {
-                return null;
+                return Optional.empty();
             }
             for (DomElement curElement = domElement.getParent() == null ? domElement.getParent() : domElement.getParent().getParent();
                  curElement != null;
@@ -151,13 +144,13 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
                     }
                 }
             }
-            return null;
+            return Optional.empty();
         }
 
         public Class<?> getTypeClass() {
             return typeClass;
         }
 
-        abstract String getType(DomElement domElement);
+        abstract Optional<PsiClass> getType(DomElement domElement);
     }
 }

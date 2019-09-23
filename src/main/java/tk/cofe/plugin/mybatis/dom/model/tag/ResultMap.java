@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
@@ -26,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TypeAttirbute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,14 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-15
  */
-public interface ResultMap extends IdAttribute, TypeAttirbute {
+public interface ResultMap extends IdAttribute {
 
     @Required
     @Attribute("id")
     GenericAttributeValue<String> getId();
+
+    @Attribute("type")
+    GenericAttributeValue<PsiClass> getType();
 
     @Nullable
     @Attribute("extends")
@@ -67,6 +71,16 @@ public interface ResultMap extends IdAttribute, TypeAttirbute {
 
     @SubTagList("collection")
     List<Collection> getCollections();
+
+    /**
+     * 获取 type 值
+     *
+     * @return type 值 如果为Null 则返回 ""
+     */
+    @NotNull
+    default Optional<PsiClass> getTypeValue() {
+        return Optional.ofNullable(getType().getValue());
+    }
 
     /**
      * 获取 Extends 值
