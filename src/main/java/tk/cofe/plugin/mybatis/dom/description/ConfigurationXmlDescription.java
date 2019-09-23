@@ -16,8 +16,7 @@ package tk.cofe.plugin.mybatis.dom.description;
 
 import com.intellij.util.xml.DomFileDescription;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.constants.Mybatis;
-import tk.cofe.plugin.mybatis.dom.model.ConfigurationXml;
+import tk.cofe.plugin.mybatis.dom.model.Configuration;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 
 import javax.swing.*;
@@ -27,15 +26,15 @@ import javax.swing.*;
  * @author : zhengrf
  * @date : 2019-01-02
  */
-public class ConfigurationXmlDescription extends DomFileDescription<ConfigurationXml> {
+public class ConfigurationXmlDescription extends DomFileDescription<Configuration> {
 
     public ConfigurationXmlDescription() {
-        super(ConfigurationXml.class, ConfigurationXml.TAG_NAME);
+        super(Configuration.class, Configuration.TAG_NAME);
     }
 
     @Override
     protected void initializeFileDescription() {
-        registerNamespacePolicy(Mybatis.Config.NAMESPACE_KEY, Mybatis.Config.DTDS);
+        registerNamespacePolicy(Configuration.NAMESPACE_KEY, Configuration.DTDS);
     }
 
     @Nullable

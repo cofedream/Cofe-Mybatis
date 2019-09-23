@@ -34,7 +34,6 @@ import com.intellij.util.xml.DomService;
 import com.intellij.util.xml.XmlFileHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.constants.Mybatis;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
@@ -111,7 +110,7 @@ public class MybatisUtils {
         if (!(file instanceof XmlFile)) {
             return false;
         }
-        return isTargetXml(((XmlFile) file), Mybatis.Mapper.DTDS);
+        return isTargetXml(((XmlFile) file), Mapper.DTDS);
     }
 
     public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
