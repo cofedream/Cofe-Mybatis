@@ -24,6 +24,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.util.ArrayUtil;
@@ -35,12 +37,14 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -78,10 +82,7 @@ public class ForeachConverter {
                             if (PsiTypeUtils.isCustomType(firstParam.getType())) {
                                 PsiClass psiClass = ((PsiClassType) firstParam.getType()).resolve();
                                 if (psiClass != null) {
-                                    List<String> res = new ArrayList<>();
-                                    Arrays.stream(psiClass.getAllMethods()).forEach(info -> res.add(info.getName()));
-                                    Arrays.stream(psiClass.getAllFields()).forEach(info -> res.add(info.getName()));
-                                    return res;
+                                    return addPsiClassVariants(psiClass);
                                 }
                             }
                         } else {
@@ -122,6 +123,21 @@ public class ForeachConverter {
         public LookupElement createLookupElement(String s) {
             return LookupElementBuilder.create(s).withIcon(AllIcons.Nodes.Parameter);
         }
+    }
+
+    private static java.util.Collection<String> addPsiClassVariants(final PsiClass psiClass) {
+        Set<String> res = new HashSet<>();
+        for (PsiMethod info : psiClass.getAllMethods()) {
+            if (PsiTypeUtils.isCollectionType(info.getReturnType()) && CompletionUtils.isTargetMethod(info)) {
+                res.add(PsiJavaUtils.processGetMethodName(info));
+            }
+        }
+        for (PsiField info : psiClass.getAllFields()) {
+            if (PsiTypeUtils.isCollectionType(info.getType()) && CompletionUtils.isTargetField(info)) {
+                res.add(info.getName());
+            }
+        }
+        return res;
     }
 
     private static String[] getPrefixArr(@NotNull String prefix) {
