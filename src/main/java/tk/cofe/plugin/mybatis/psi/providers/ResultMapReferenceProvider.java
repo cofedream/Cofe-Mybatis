@@ -39,12 +39,17 @@ import java.util.stream.Collectors;
 
 /**
  * ResultMap Reference
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */
 public class ResultMapReferenceProvider {
+
+    private static final ResolveResult[] EMPTY_RESOLVE_RESULTS = new ResolveResult[0];
+
     /**
      * Extends 属性引用
+     *
      * @see ResultMapConverter
      */
     public static class Extends extends PsiReferenceProvider {
@@ -66,23 +71,23 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 Optional<String> extendsValue = domElement.getExtendsValue();
                 if (!extendsValue.isPresent()) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
-                    if (id.equals(extendsValue.get()) && resultMap.getId() != null && resultMap.getId().getXmlAttributeValue() != null) {
+                    if (id.equals(extendsValue.get()) && resultMap.getId().getXmlAttributeValue() != null) {
                         result.add(new PsiElementResolveResult(resultMap.getId().getXmlAttributeValue()));
                     }
                 }));
-                return result.toArray(new ResolveResult[0]);
+                return result.toArray(EMPTY_RESOLVE_RESULTS);
             }
 
             @NotNull
@@ -129,15 +134,15 @@ public class ResultMapReferenceProvider {
             public ResolveResult[] multiResolve(boolean incompleteCode) {
                 ResultMap domElement = (ResultMap) DomUtils.getDomElement(PsiTreeUtil.getParentOfType(myElement, XmlTag.class));
                 if (domElement == null) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 Optional<String> idValue = domElement.getIdValue();
                 if (!idValue.isPresent()) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
                 if (mapper == null) {
-                    return new ResolveResult[0];
+                    return EMPTY_RESOLVE_RESULTS;
                 }
                 List<ResolveResult> result = new ArrayList<>();
                 mapper.getResultMaps().forEach(resultMap -> resultMap.getExtendsValue().ifPresent(extendsValue -> {
@@ -145,7 +150,7 @@ public class ResultMapReferenceProvider {
                         result.add(new PsiElementResolveResult(resultMap.getXmlElement()));
                     }
                 }));
-                return result.toArray(new ResolveResult[0]);
+                return result.toArray(EMPTY_RESOLVE_RESULTS);
             }
 
         }

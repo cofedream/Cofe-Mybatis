@@ -42,6 +42,7 @@ import java.util.Optional;
  */
 public interface ResultMap extends IdAttribute {
 
+    @NotNull
     @Required
     @Attribute("id")
     GenericAttributeValue<String> getId();
@@ -49,7 +50,6 @@ public interface ResultMap extends IdAttribute {
     @Attribute("type")
     GenericAttributeValue<PsiClass> getType();
 
-    @Nullable
     @Attribute("extends")
     @Convert(ResultMapConverter.Extends.class)
     GenericAttributeValue<ResultMap> getExtends();
