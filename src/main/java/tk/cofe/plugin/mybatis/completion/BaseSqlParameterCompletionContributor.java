@@ -91,7 +91,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
                 Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                 if (value == null) {
                     // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                    if (PsiTypeUtils.isCustomType(firstParam.getType()) && firstParam.getType() instanceof PsiClassType) {
+                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
                         addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) firstParam.getType(), result);
                     }
                 } else {

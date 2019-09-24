@@ -21,16 +21,23 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,13 +56,46 @@ public class ForeachConverter {
         @NotNull
         @Override
         public java.util.Collection<? extends String> getVariants(ConvertContext context) {
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
+            XmlAttribute xmlAttributeValue = (XmlAttribute) context.getXmlElement();
+            if (xmlAttributeValue == null) {
+                return Collections.emptySet();
+            }
+            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class);
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdMethod().map(method -> Arrays.stream(method.getParameterList().getParameters())
-                    .map(psiParameter -> Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())
-                    .collect(Collectors.toList())).orElse(Collections.emptyList());
+            return classElement.getIdMethod().map(method -> {
+                PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
+                if (ArrayUtil.isEmpty(parameters)) {
+                    return Collections.<String>emptySet();
+                }
+                String[] prefixArr = getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue()));
+                if (ArrayUtil.isEmpty(prefixArr)) {
+                    if (parameters.length == 1) {
+                        PsiParameter firstParam = parameters[0];
+                        Annotation.Value value = Annotation.PARAM.getValue(firstParam);
+                        if (value == null) {
+                            if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                                PsiClass psiClass = ((PsiClassType) firstParam.getType()).resolve();
+                                if (psiClass != null) {
+                                    List<String> res = new ArrayList<>();
+                                    Arrays.stream(psiClass.getAllMethods()).forEach(info -> res.add(info.getName()));
+                                    Arrays.stream(psiClass.getAllFields()).forEach(info -> res.add(info.getName()));
+                                    return res;
+                                }
+                            }
+                        } else {
+                            return Collections.singletonList(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
+                        }
+                    } else {
+                        return Arrays.stream(method.getParameterList().getParameters())
+                                .map(psiParameter -> Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())
+                                .collect(Collectors.toList());
+                    }
+                }
+                //PsiParameter[] parameters = parameterList.getParameters();
+                return Collections.<String>emptySet();
+            }).orElse(Collections.emptyList());
         }
 
         @Nullable
@@ -71,10 +111,10 @@ public class ForeachConverter {
             List<PsiParameter> parameters = classElement.getIdMethod()
                     .map(method -> Arrays.stream(method.getParameterList().getParameters()).filter(psiParameter -> text.equals(Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())).collect(Collectors.toList()))
                     .orElse(Collections.emptyList());
-            if (!parameters.isEmpty()) {
-                return super.resolve(text, context);
+            if (parameters.isEmpty()) {
+                return null;
             }
-            return null;
+            return super.resolve(text, context);
         }
 
         @Nullable
@@ -84,4 +124,10 @@ public class ForeachConverter {
         }
     }
 
+    private static String[] getPrefixArr(@NotNull String prefix) {
+        if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
+            return new String[0];
+        }
+        return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
+    }
 }

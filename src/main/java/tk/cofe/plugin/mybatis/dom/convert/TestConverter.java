@@ -77,12 +77,11 @@ public class TestConverter extends ResolvingConverter.StringConverter {
     @NotNull
     @Override
     public Collection<? extends String> getVariants(final ConvertContext context) {
-        XmlAttribute xmlAttributeValue = (XmlAttribute) context.getInvocationElement().getXmlElement();
+        XmlAttribute xmlAttributeValue = (XmlAttribute) context.getXmlElement();
         if (xmlAttributeValue == null) {
             return Collections.emptySet();
         }
-        String attributeValue = xmlAttributeValue.getValue();
-        final String originPrefix = getPrefixStr(attributeValue);
+        final String originPrefix = CompletionUtils.getPrefixStr(xmlAttributeValue.getValue());
         if (!isSupport(originPrefix)) {
             return Collections.emptySet();
         }
@@ -102,11 +101,12 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             String completionPrefix = getCompletionPrefix(originPrefix);
             if (prefixs.length == 0) {
                 if (parameters.length == 1) {
-                    Annotation.Value value = Annotation.PARAM.getValue(parameters[0]);
+                    PsiParameter firstParam = parameters[0];
+                    Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                     if (value == null) {
                         // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                        if (PsiTypeUtils.isCustomType(parameters[0].getType()) && parameters[0].getType() instanceof PsiClassType) {
-                            addPsiClassTypeVariants(completionPrefix, (PsiClassType) parameters[0].getType(), res);
+                        if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                            addPsiClassTypeVariants(completionPrefix, (PsiClassType) firstParam.getType(), res);
                         }
                     } else {
                         res.add(completionPrefix + value.getValue());
@@ -127,18 +127,8 @@ public class TestConverter extends ResolvingConverter.StringConverter {
         }).orElse(Collections.emptySet());
     }
 
-    private String getPrefixStr(final String attributeValue) {
-        if (StringUtil.isNotEmpty(attributeValue)) {
-            String[] prefixArr = attributeValue.split("IntellijIdeaRulezzz ");
-            if (prefixArr.length > 0) {
-                return prefixArr[0];
-            }
-        }
-        return "";
-    }
-
     private boolean isSupport(@Nullable String prefix) {
-        if (prefix == null || prefix.trim().length() == 0) {
+        if (StringUtil.isEmpty(prefix)) {
             return true;
         }
         if (prefix.charAt(prefix.length() - 1) == '.') {

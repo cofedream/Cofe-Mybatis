@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
@@ -154,7 +155,6 @@ public class CompletionUtils {
         return null;
     }
 
-
     /**
      * 判断是否为目标字段
      *
@@ -171,5 +171,20 @@ public class CompletionUtils {
      */
     public static boolean isTargetMethod(@NotNull PsiMethod method) {
         return PsiJavaUtils.isPublicMethod(method) && !PsiJavaUtils.isVoidMethod(method) && !PsiJavaUtils.isNativeMethod(method) && PsiJavaUtils.isGetMethod(method);
+    }
+
+    /**
+     * 获取前缀文本
+     *
+     * @param text 文本内容
+     */
+    public static String getPrefixStr(final String text) {
+        if (StringUtil.isNotEmpty(text)) {
+            String[] prefixArr = text.split("IntellijIdeaRulezzz ");
+            if (prefixArr.length > 0) {
+                return prefixArr[0];
+            }
+        }
+        return "";
     }
 }
