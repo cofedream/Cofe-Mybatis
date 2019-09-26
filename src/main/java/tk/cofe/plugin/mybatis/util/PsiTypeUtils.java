@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
@@ -35,6 +36,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为 void 类型
+     *
      * @param psiType 类型
      */
     public static boolean isVoid(@Nullable PsiType psiType) {
@@ -43,6 +45,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为 String 类型
+     *
      * @param psiType 类型
      */
     public static boolean isString(@Nullable PsiType psiType) {
@@ -51,6 +54,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为基础类型
+     *
      * @param psiType 类型
      */
     public static boolean isPrimitiveType(@Nullable PsiType psiType) {
@@ -69,6 +73,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为包装类
+     *
      * @param psiType 类型
      */
     public static boolean isBoxPrimitiveType(@Nullable PsiType psiType) {
@@ -88,6 +93,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为基础类型或包装类
+     *
      * @param psiType 类型
      */
     public static boolean isPrimitiveOrBoxType(@Nullable PsiType psiType) {
@@ -96,6 +102,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为集合类型  Collection/Map
+     *
      * @param psiType 类型
      */
     public static boolean isCollectionOrMapType(@Nullable PsiType psiType) {
@@ -104,6 +111,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为 Collection 类型
+     *
      * @param psiType 类型
      */
     public static boolean isCollectionType(@Nullable PsiType psiType) {
@@ -116,6 +124,7 @@ public final class PsiTypeUtils {
 
     /**
      * 判断是否为 Map 类型
+     *
      * @param psiType 类型
      */
     public static boolean isMapType(@Nullable PsiType psiType) {
@@ -127,7 +136,18 @@ public final class PsiTypeUtils {
     }
 
     /**
+     * 判断是否为 数组类型
+     *
+     * @param psiType 类型
+     * @return true 是数组类型,false 非数组类型
+     */
+    public static boolean isArrayType(@Nullable PsiType psiType) {
+        return psiType instanceof PsiArrayType;
+    }
+
+    /**
      * 是自定义类型
+     *
      * @param psiType 类型
      */
     public static boolean isCustomType(@NotNull PsiType psiType) {

@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,10 +81,11 @@ public class ForeachConverter {
                         Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                         if (value == null) {
                             if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                                PsiClass psiClass = ((PsiClassType) firstParam.getType()).resolve();
-                                if (psiClass != null) {
-                                    return addPsiClassVariants(psiClass);
-                                }
+                                Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(ForeachConverter::addPsiClassVariants);
+                            } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
+                                return Collections.singletonList("list");
+                            } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
+                                return Collections.singletonList("array");
                             }
                         } else {
                             return Collections.singletonList(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
@@ -94,7 +96,6 @@ public class ForeachConverter {
                                 .collect(Collectors.toList());
                     }
                 }
-                //PsiParameter[] parameters = parameterList.getParameters();
                 return Collections.<String>emptySet();
             }).orElse(Collections.emptyList());
         }
