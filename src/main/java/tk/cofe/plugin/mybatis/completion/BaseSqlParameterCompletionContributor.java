@@ -105,7 +105,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         } else {
             PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
             // 自定义类类型则取字段和方法
-            if (type != null && PsiTypeUtils.isCustomType(type)) {
+            if (PsiTypeUtils.isCustomType(type)) {
                 addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) type), result);
             }
         }

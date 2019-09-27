@@ -119,7 +119,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             } else {
                 PsiType type = CompletionUtils.getPrefixType(prefixs[0], parameters);
                 // 自定义类类型则取字段和方法
-                if (type != null && PsiTypeUtils.isCustomType(type)) {
+                if (PsiTypeUtils.isCustomType(type)) {
                     addPsiClassTypeVariants(completionPrefix, CompletionUtils.getTargetPsiClass(prefixs, (PsiClassType) type), res);
                 }
             }

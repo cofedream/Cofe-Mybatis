@@ -147,7 +147,7 @@ public class CompletionUtils {
             if (prefix.equals(PsiJavaUtils.processGetMethodName(((PsiMethod) psiMember)))) {
                 PsiType returnType = ((PsiMethod) psiMember).getReturnType();
                 // 返回值不为 null 且 为自定义类型
-                if (returnType != null && PsiTypeUtils.isCustomType(returnType)) {
+                if (PsiTypeUtils.isCustomType(returnType)) {
                     return (PsiClassType) returnType;
                 }
             }

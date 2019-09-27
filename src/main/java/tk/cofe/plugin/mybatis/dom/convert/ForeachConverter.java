@@ -27,6 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
@@ -40,6 +42,7 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -81,7 +84,7 @@ public class ForeachConverter {
                         Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                         if (value == null) {
                             if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                                Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(ForeachConverter::addPsiClassVariants);
+                                return Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).map(ForeachConverter::addPsiClassVariants).orElse(Collections.emptyList());
                             } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
                                 return Collections.singletonList("list");
                             } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
@@ -91,10 +94,21 @@ public class ForeachConverter {
                             return Collections.singletonList(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
                         }
                     } else {
-                        return Arrays.stream(method.getParameterList().getParameters())
-                                .map(psiParameter -> Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())
-                                .collect(Collectors.toList());
+                        List<String> res = new ArrayList<>();
+                        PsiParameterList parameterList = method.getParameterList();
+                        for (int i = 0; i < parameterList.getParameters().length; i++) {
+                            Annotation.Value value = Annotation.PARAM.getValue(parameterList.getParameters()[i]);
+                            if (value != null) {
+                                res.add(value.getValue());
+                            } else {
+                                res.add("param" + (i + 1));
+                            }
+                        }
+                        return res;
                     }
+                } else {
+                    PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+                    return addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) type));
                 }
                 return Collections.<String>emptySet();
             }).orElse(Collections.emptyList());
@@ -127,15 +141,29 @@ public class ForeachConverter {
     }
 
     private static java.util.Collection<String> addPsiClassVariants(final PsiClass psiClass) {
+        return addPsiClassVariants("", psiClass);
+    }
+
+    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, final PsiClassType psiClassType) {
+        if (psiClassType == null) {
+            return Collections.emptyList();
+        }
+        return addPsiClassVariants(prefix, psiClassType.resolve());
+    }
+
+    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return Collections.emptyList();
+        }
         Set<String> res = new HashSet<>();
         for (PsiMethod info : psiClass.getAllMethods()) {
             if (PsiTypeUtils.isCollectionType(info.getReturnType()) && CompletionUtils.isTargetMethod(info)) {
-                res.add(PsiJavaUtils.processGetMethodName(info));
+                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
             }
         }
         for (PsiField info : psiClass.getAllFields()) {
             if (PsiTypeUtils.isCollectionType(info.getType()) && CompletionUtils.isTargetField(info)) {
-                res.add(info.getName());
+                res.add(prefix + info.getName());
             }
         }
         return res;

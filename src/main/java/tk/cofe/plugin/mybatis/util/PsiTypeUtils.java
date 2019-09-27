@@ -150,7 +150,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isCustomType(@NotNull PsiType psiType) {
+    public static boolean isCustomType(@Nullable PsiType psiType) {
         // 是否为基础类型或包装类判断
         if (isPrimitiveOrBoxType(psiType)) {
             return false;
