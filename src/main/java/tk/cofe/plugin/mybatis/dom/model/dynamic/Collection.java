@@ -36,7 +36,6 @@ import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
 import tk.cofe.plugin.mybatis.dom.model.tag.Id;
 import tk.cofe.plugin.mybatis.dom.model.tag.Result;
-import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.List;
 import java.util.Optional;

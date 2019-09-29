@@ -100,11 +100,11 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
         Collection<Mapper> mappers = MapperService.getInstance(mapperClass.getProject()).findMapperXmls(mapperClass);
         PsiIdentifier nameIdentifier = mapperClass.getNameIdentifier();
         if (!mappers.isEmpty() && nameIdentifier != null) {
-            NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
+            result.add(NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
                     .setAlignment(GutterIconRenderer.Alignment.CENTER)
                     .setTargets(mappers.stream().map(mapperXml -> mapperXml.getNamespace().getXmlTag()).collect(Collectors.toList()))
-                    .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"));
-            result.add(builder.createLineMarkerInfo(nameIdentifier));
+                    .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"))
+                    .createLineMarkerInfo(nameIdentifier));
         }
     }
 }

@@ -28,12 +28,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Statement 生成
@@ -84,10 +84,11 @@ public final class StatementGenerator {
                     if (null == psiClass) {
                         return;
                     }
-                    if (PsiJavaUtils.hasAnnotation(psiClass, Annotation.MAPPER)) {
+                    List<Mapper> mappers = MapperService.getInstance(project).findMapperXmls(psiClass);
+                    if (mappers.isEmpty()) {
                         JavaPsiService.getInstance(project).addAnnotation(method, value.getAnnotation().withValue(""));
                     } else {
-                        MapperService.getInstance(project).findMapperXmls(psiClass).forEach(mapper -> value.createStatement(mapper, psiClass, method, project));
+                        mappers.forEach(mapper -> value.createStatement(mapper, method, project));
                     }
                 }));
             }

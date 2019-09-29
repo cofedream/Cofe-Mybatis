@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 
 /**
  * Mybatis相关注解
+ *
  * @author : zhengrf
  * @date : 2019-06-18
  */
@@ -99,11 +100,11 @@ public class Annotation implements Cloneable {
 
     @Override
     protected Annotation clone() {
-        Annotation annotation = null;
+        Annotation annotation;
         try {
             annotation = (Annotation) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return annotation;
     }

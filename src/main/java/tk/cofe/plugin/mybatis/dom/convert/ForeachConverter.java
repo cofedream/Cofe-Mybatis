@@ -95,9 +95,8 @@ public class ForeachConverter {
                         }
                     } else {
                         List<String> res = new ArrayList<>();
-                        PsiParameterList parameterList = method.getParameterList();
-                        for (int i = 0; i < parameterList.getParameters().length; i++) {
-                            Annotation.Value value = Annotation.PARAM.getValue(parameterList.getParameters()[i]);
+                        for (int i = 0; i < parameters.length; i++) {
+                            Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
                             if (value != null) {
                                 res.add(value.getValue());
                             } else {

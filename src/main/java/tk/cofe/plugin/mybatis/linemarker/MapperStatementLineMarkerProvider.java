@@ -57,7 +57,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
                 Pass.UPDATE_ALL,
                 from -> MyBatisBundle.message("action.navigate.tip", "method"),
                 (e, from) -> ((Navigatable) psiMethods.getNavigationElement()).navigate(true),
-                GutterIconRenderer.Alignment.CENTER)).orElse(null);
+                GutterIconRenderer.Alignment.CENTER)).get();
     }
 
     @Override

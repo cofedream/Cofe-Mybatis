@@ -38,14 +38,14 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
     @Nullable
     @Override
     public List<String> getUrlFor(final PsiElement element, final PsiElement originalElement) {
-        return DomUtils.getDomElement(element, getTargetDomElement()).map(sql -> Collections.<String>emptyList()).orElse(null);
+        return DomUtils.getDomElement(element, getTargetDomElement()).map(sql -> Collections.<String>emptyList()).get();
     }
 
     @Nullable
     @Override
     public String generateDoc(final PsiElement element, @Nullable final PsiElement originalElement) {
         return DomUtils.getDomElement(element, getTargetDomElement())
-                .filter(targetDom -> targetDom.getXmlTag() != null).map(DomElement::getXmlTag)
+                .map(DomElement::getXmlTag)
                 .map(xmlTag -> {
                     String text = xmlTag.getText().replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\\n", "<br/>");
                     int index = text.lastIndexOf("&lt;");
@@ -58,8 +58,7 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
                         }
                     }
                     return "<pre><b>" + start + text.substring(index) + "</b></pre>";
-                })
-                .orElse(null);
+                }).get();
     }
 
     @Nullable

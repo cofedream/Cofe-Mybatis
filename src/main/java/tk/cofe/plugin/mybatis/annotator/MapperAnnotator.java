@@ -33,6 +33,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Mapper xml 提示,<a href="http://www.jetbrains.org/intellij/sdk/docs/tutorials/custom_language_support/annotator.html">详情</a>
@@ -55,7 +58,7 @@ public class MapperAnnotator implements DomElementsAnnotator {
 
     private void process(@NotNull final DomElementAnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
         Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
-            if (getIdAttributes(domElement, mapper).stream().filter(info -> Objects.equals(id, info.getIdValue().orElse(null))).count() > 1) {
+            if (getIdAttributes(domElement, mapper).stream().filter(info -> ((IdAttribute) info).isEqualsId(id)).count() > 1) {
                 DomElement targetElement = DomUtils.getDomElement(domElement.getId().getXmlElement());
                 if (targetElement != null) {
                     holder.createProblem(targetElement, HighlightSeverity.ERROR, errorMessage);

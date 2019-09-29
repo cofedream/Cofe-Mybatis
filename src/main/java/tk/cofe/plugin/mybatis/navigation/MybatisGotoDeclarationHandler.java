@@ -26,9 +26,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.EnumUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Optional;
@@ -45,21 +43,16 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
             return null;
         }
         XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(sourceElement, XmlAttribute.class);
-        return xmlAttribute == null ? null : EnumUtils.parse(StatementAttribute.values(), xmlAttribute).map(statement -> {
-            if (sourceElement.getLanguage().is(XMLLanguage.INSTANCE)) {
-                if (MybatisUtils.isMapperXmlFile(sourceElement.getContainingFile())) {
-                    return statement.process(sourceElement).orElse(null);
-                }
-            }
-            return null;
-        }).orElse(null);
+        return xmlAttribute == null ? null : parse(StatementAttribute.values(), xmlAttribute)
+                .filter(statement -> sourceElement.getLanguage().is(XMLLanguage.INSTANCE) && MybatisUtils.isMapperXmlFile(sourceElement.getContainingFile()))
+                .flatMap(statement -> statement.process(sourceElement)).get();
     }
 
-    private enum StatementAttribute implements AttributeEnums {
+    private enum StatementAttribute {
         ID("id") {
             @Override
             Optional<? extends PsiElement> process(PsiElement element) {
-                return Optional.ofNullable(DomUtils.findDomElement(element, ClassElement.class)).map(ClassElement::getIdMethod).orElse(null);
+                return DomUtils.getDomElement(element, ClassElement.class).flatMap(ClassElement::getIdMethod);
             }
         },
         ;
@@ -70,20 +63,20 @@ public class MybatisGotoDeclarationHandler extends GotoDeclarationHandlerBase {
             this.value = attributeValue;
         }
 
-        @NotNull
-        public static Optional<StatementAttribute> parse(@NotNull XmlAttribute xmlAttribute) {
-            for (StatementAttribute attribute : values()) {
-                if (attribute.getValue().equals(xmlAttribute.getName())) {
-                    return Optional.of(attribute);
-                }
-            }
-            return Optional.empty();
-        }
-
         abstract Optional<? extends PsiElement> process(PsiElement element);
 
         public String getValue() {
             return value;
         }
+    }
+
+    @NotNull
+    private static Optional<StatementAttribute> parse(@NotNull StatementAttribute[] values, @NotNull XmlAttribute xmlAttribute) {
+        for (StatementAttribute attribute : values) {
+            if (attribute.getValue().equals(xmlAttribute.getName())) {
+                return Optional.of(attribute);
+            }
+        }
+        return Optional.empty();
     }
 }

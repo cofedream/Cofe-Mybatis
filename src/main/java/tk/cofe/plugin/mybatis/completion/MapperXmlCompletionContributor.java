@@ -31,9 +31,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.enums.AttributeEnums;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.EnumUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
@@ -42,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 代码完成,无需指向引用
@@ -69,10 +68,10 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         if (xmlTag == null) {
             return;
         }
-        EnumUtils.parse(StatementAttribute.values(), xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
+        parse(StatementAttribute.values(), xmlAttribute).ifPresent(statementAttribute -> statementAttribute.process(xmlTag, result));
     }
 
-    private enum StatementAttribute implements AttributeEnums {
+    private enum StatementAttribute {
         RESULT_TYPE("resultType") {
             private final Map<String, List<LookupElementBuilder>> registerType;
             {
@@ -111,27 +110,26 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                     return;
                 }
                 classElement.getIdMethod()
-                        .filter(info->info.getReturnType()!=null)
+                        .filter(info -> info.getReturnType() != null)
                         .map(PsiMethod::getReturnType)
                         .ifPresent(type -> {
-                    if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
-                        result.addAllElements(registerType.get(type.getPresentableText()));
-                    } else {
-                        if (type instanceof PsiClassReferenceType) {
-                            PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                            String referenceName = reference.getReferenceName();
-                            if (StringUtil.isEmpty(referenceName)) {
-                                return;
-                            }
                             if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
-                                result.addAllElements(registerType.get(referenceName));
+                                result.addAllElements(registerType.get(type.getPresentableText()));
                             } else {
-                                result.addElement(createLookupElementBuilder(reference.getQualifiedName()));
+                                if (type instanceof PsiClassReferenceType) {
+                                    PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+                                    String referenceName = reference.getReferenceName();
+                                    if (StringUtil.isEmpty(referenceName)) {
+                                        return;
+                                    }
+                                    if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
+                                        result.addAllElements(registerType.get(referenceName));
+                                    } else {
+                                        result.addElement(createLookupElementBuilder(reference.getQualifiedName()));
+                                    }
+                                }
                             }
-                        }
-                    }
-
-                });
+                        });
                 result.stopHere();
             }
         };
@@ -147,5 +145,21 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         public String getValue() {
             return value;
         }
+    }
+
+    /**
+     * 解析标签
+     *
+     * @param targetEnums  目标属性枚举
+     * @param xmlAttribute 需要解析的属性
+     * @return 解析结果
+     */
+    private static Optional<StatementAttribute> parse(@NotNull StatementAttribute[] targetEnums, @NotNull XmlAttribute xmlAttribute) {
+        for (StatementAttribute attribute : targetEnums) {
+            if (attribute.getValue().equals(xmlAttribute.getName())) {
+                return Optional.of(attribute);
+            }
+        }
+        return Optional.empty();
     }
 }

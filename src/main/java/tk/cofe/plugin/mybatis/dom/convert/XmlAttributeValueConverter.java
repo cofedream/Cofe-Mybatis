@@ -96,8 +96,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     private T findTargetElement(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper currentMapper) {
         return getReferenceDomElements(value, context, currentMapper).stream()
                 .filter(targetDom -> filterDomElement(targetDom, value))
-                .findFirst()
-                .orElse(null);
+                .findFirst().orElse(null);
     }
 
     /**
@@ -126,7 +125,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (t == null) {
             return null;
         }
-        return Optional.ofNullable(toString(t, null)).map(text -> LookupElementBuilder.create(text).withIcon(PlatformIcons.XML_TAG_ICON)).orElse(null);
+        return Optional.ofNullable(toString(t, null)).map(text -> LookupElementBuilder.create(text).withIcon(PlatformIcons.XML_TAG_ICON)).get();
     }
 
 }

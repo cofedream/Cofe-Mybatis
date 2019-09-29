@@ -18,6 +18,7 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
+import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
@@ -28,6 +29,7 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
  */
 public interface Sql extends DomElement, DynamicSql, IdAttribute, LangAttribute, DatabaseIdAttribute {
 
+    @NotNull
     @Required
     @Attribute("id")
     GenericAttributeValue<String> getId();

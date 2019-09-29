@@ -26,6 +26,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
@@ -58,7 +59,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     public void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation) {
         PsiModifierList modifierList = psiModifierListOwner.getModifierList();
         if (modifierList != null) {
-            this.importClass((PsiJavaFile) psiModifierListOwner.getContainingFile(), annotation.getQualifiedName());
+            importClass((PsiJavaFile) psiModifierListOwner.getContainingFile(), annotation.getQualifiedName());
             modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotation.toString(), psiModifierListOwner));
         }
     }
@@ -76,13 +77,10 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         if (StringUtil.isEmpty(qualifiedName) || StringUtil.isEmpty(methodName)) {
             return Optional.empty();
         }
-        return findPsiClass(qualifiedName).flatMap(psiClass -> {
-            PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
-            if (methods.length == 0) {
-                return Optional.empty();
-            }
-            return Optional.of(methods[0]);
-        });
+        return findPsiClass(qualifiedName)
+                .map(psiClass -> psiClass.findMethodsByName(methodName, true))
+                .filter(methods -> !ArrayUtil.isEmpty(methods))
+                .map(methods -> methods[0]);
     }
 
 }

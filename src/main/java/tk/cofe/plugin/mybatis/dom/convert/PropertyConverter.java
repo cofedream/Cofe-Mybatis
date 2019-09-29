@@ -38,7 +38,6 @@ import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -79,18 +78,9 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
         if (StringUtil.isEmpty(member)) {
             return null;
         }
-        List<PsiField> fields = PropertyType.parse(context.getInvocationElement())
-                .map(psiClass -> Arrays.asList(psiClass.getAllFields()))
-                .orElse(Collections.emptyList());
-        if (fields.isEmpty()) {
-            return null;
-        }
-        for (PsiField field : fields) {
-            if (member.equals(field.getName())) {
-                return field;
-            }
-        }
-        return null;
+        return PropertyType.parse(context.getInvocationElement())
+                .flatMap(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> member.equals(field.getName())).findFirst())
+                .get();
     }
 
     @Nullable
@@ -131,10 +121,8 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
             this.typeClass = typeClass;
         }
 
-        public static Optional<PsiClass> parse(final DomElement domElement) {
-            if (domElement == null) {
-                return Optional.empty();
-            }
+        @NotNull
+        public static Optional<PsiClass> parse(@NotNull final DomElement domElement) {
             for (DomElement curElement = domElement.getParent() == null ? domElement.getParent() : domElement.getParent().getParent();
                  curElement != null;
                  curElement = curElement.getParent()) {

@@ -20,7 +20,6 @@ import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.util.xml.ConvertContext;
@@ -90,11 +89,10 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             return Collections.emptySet();
         }
         return classElement.getIdMethod().map(method -> {
-            PsiParameterList parameterList = method.getParameterList();
-            if (parameterList.getParametersCount() == 0) {
+            PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
+            if (parameters.length == 0) {
                 return Collections.<String>emptySet();
             }
-            PsiParameter[] parameters = parameterList.getParameters();
             Set<String> res = new HashSet<>();
             String[] prefixs = getPrefix(originPrefix);
             // 完成的前缀内容

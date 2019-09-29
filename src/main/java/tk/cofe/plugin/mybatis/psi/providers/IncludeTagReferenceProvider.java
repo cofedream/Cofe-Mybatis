@@ -61,13 +61,11 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
             }
             List<Sql> sqls = mapper.getSqls();
             List<ResolveResult> result = new ArrayList<>();
-            sqls.forEach(sql -> sql.getIdValue().ifPresent(id -> {
-                if (id.equals(originalElement.getValue())) {
-                    if (sql.getXmlElement() != null) {
-                        result.add(new PsiElementResolveResult(sql.getXmlElement()));
-                    }
+            sqls.forEach(sql -> {
+                if (sql.getXmlElement() != null && sql.isEqualsId(originalElement.getValue())) {
+                    result.add(new PsiElementResolveResult(sql.getXmlElement()));
                 }
-            }));
+            });
             return result.toArray(new ResolveResult[0]);
         }
 

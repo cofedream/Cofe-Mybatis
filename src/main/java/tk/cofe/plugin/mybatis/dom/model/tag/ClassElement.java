@@ -36,6 +36,7 @@ import java.util.Optional;
  */
 public interface ClassElement extends IdAttribute, DynamicSql, ParameterTypeAttribute {
 
+    @NotNull
     @Required
     @Attribute("id")
     @Convert(ClassElementConverter.Id.class)

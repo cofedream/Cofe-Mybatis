@@ -53,12 +53,12 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
 
     @Override
     protected boolean filterDomElement(@NotNull Sql targetDomElement, @NotNull String selfValue) {
-        return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
+        return targetDomElement.isEqualsId(selfValue);
     }
 
     @Nullable
     @Override
     public String toString(@Nullable final Sql sql, final ConvertContext context) {
-        return sql == null ? null : sql.getIdValue().orElse(null);
+        return sql == null ? null : sql.getIdValue(null);
     }
 }

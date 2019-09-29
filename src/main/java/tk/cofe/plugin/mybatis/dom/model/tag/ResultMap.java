@@ -23,12 +23,10 @@ import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
-import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.ArrayList;
 import java.util.List;

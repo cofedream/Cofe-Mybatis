@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>tk.cofedream.plugin.mybatis</id>
+    <id>tk.cofe.plugin.mybatis</id>
     <name>Cofe-Mybatis</name>
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
@@ -57,6 +57,16 @@
        with `key` attributes in extension points and implicit keys like
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
+
+    <!-- Actions -->
+    <actions>
+    </actions>
+
+    <!-- Extension points defined by the plugin.
+       Extension points are registered by a plugin so that other
+       plugins can provide this plugin with certain data. The
+       "beanClass" attribute specifies the class the implementations
+       of which can be used for the extension point. -->
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
@@ -70,16 +80,16 @@
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206110419-How-to-implement-go-to-to-implementation-
         -->
-        <!--<definitionsSearch implementation="tk.cofedream.plugin.mybatis.search.MapperDefinitionSearch"/>-->
+        <!--<definitionsSearch implementation="tk.cofe.plugin.mybatis.search.MapperDefinitionSearch"/>-->
         <!--实现一致-->
         <definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.MethodToStatementImplementationsSearch"/>
-        <!--<definitionsScopedSearch implementation="tk.cofedream.plugin.mybatis.search.StatementToMethodImplementationsSearch"/>-->
+        <!--<definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.StatementToMethodImplementationsSearch"/>-->
         <!-- Add your extensions here -->
 
         <codeInsight.lineMarkerProvider language="JAVA"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
         <!--<codeInsight.lineMarkerProvider language="JAVA"-->
-        <!--implementationClass="tk.cofedream.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
+        <!--implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
@@ -88,25 +98,25 @@
         <lang.documentationProvider language="XML" order="first"
                                     implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
-        <!--<methodImplementor implementation="tk.cofedream.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
+        <!--<methodImplementor implementation="tk.cofe.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
         <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsageSearcher"/>-->
         <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsagesProvider"/>-->
-        <!--<customUsageSearcher implementation="tk.cofedream.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
-        <!--<findUsagesHandlerFactory implementation="tk.cofedream.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
-        <!--<gotoDeclarationHandler implementation="tk.cofedream.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
-        <!--<targetElementEvaluator language="XML" implementationClass="tk.cofedream.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
+        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
+        <!--<findUsagesHandlerFactory implementation="tk.cofe.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
+        <!--<gotoDeclarationHandler implementation="tk.cofe.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
+        <!--<targetElementEvaluator language="XML" implementationClass="tk.cofe.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
         <!--<java.elementFinder implementation=""-->
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
         <!--<methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>-->
         <!--<lang.findUsagesProvider-->
 
         <!--<psi.referenceContributor language="JAVA"-->
-        <!--implementation="tk.cofedream.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
-        <!--<referencesSearch implementation="tk.cofedream.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
+        <!--implementation="tk.cofe.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
+        <!--<referencesSearch implementation="tk.cofe.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
         <!--<psi.referenceContributor language="XML"-->
-        <!--implementation="tk.cofedream.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
-        <!--<refactoring.elementListenerProvider implementation="tk.cofedream.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
-        <!--<renamePsiElementProcessor implementation="tk.cofedream.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
+        <!--implementation="tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
+        <!--<refactoring.elementListenerProvider implementation="tk.cofe.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
+        <!--<renamePsiElementProcessor implementation="tk.cofe.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
@@ -133,7 +143,4 @@
         <!--</intentionAction>-->
     </extensions>
 
-    <actions>
-        <!-- Add your actions here -->
-    </actions>
 </idea-plugin>

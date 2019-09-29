@@ -115,13 +115,11 @@ public enum StatementTypeEnum {
 
     /**
      * 指定元素动作
-     *
-     * @param mapper   Mapper
-     * @param psiClass 接口类
+     *  @param mapper   Mapper
      * @param method   方法
      * @param project  当前项目
      */
-    public void createStatement(Mapper mapper, final PsiClass psiClass, PsiMethod method, @NotNull Project project) {
+    public void createStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
             ClassElement element = addClassElement(mapper, method);
             XmlTag tag = element.getXmlTag();
             if (tag == null) {

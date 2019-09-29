@@ -108,9 +108,6 @@ public class TypeAliasRegistry {
         TYPE_ALIASES.put(key, value);
     }
 
-    /**
-     * @since 3.2.2
-     */
     public static Map<String, Class<?>> getTypeAliases() {
         return Collections.unmodifiableMap(TYPE_ALIASES);
     }

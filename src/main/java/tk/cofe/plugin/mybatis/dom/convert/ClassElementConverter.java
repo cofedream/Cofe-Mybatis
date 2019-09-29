@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return null;
             }
-            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
+            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).get();
         }
 
         @Nullable

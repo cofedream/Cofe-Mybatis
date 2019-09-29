@@ -33,7 +33,6 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -59,9 +58,9 @@ public class MapperXmlAnnotator implements Annotator {
         domElement.getIdValue().ifPresent(id -> process(holder, domElement, MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id));
     }
 
-    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String text) {
+    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
         Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
-            if (getIdAttributes(domElement, mapper).stream().filter(info -> Objects.equals(text, info.getIdValue().orElse(null))).count() > 1) {
+            if (getIdAttributes(domElement, mapper).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {
                     holder.createErrorAnnotation(element, errorMessage);

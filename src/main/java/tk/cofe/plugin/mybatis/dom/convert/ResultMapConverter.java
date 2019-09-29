@@ -50,7 +50,7 @@ public class ResultMapConverter {
 
         @Override
         protected boolean filterDomElement(@NotNull ResultMap targetDomElement, @NotNull String selfValue) {
-            return targetDomElement.getIdValue().map(id -> id.equals(selfValue)).orElse(false);
+            return targetDomElement.isEqualsId(selfValue);
         }
 
         @Nullable
@@ -62,7 +62,7 @@ public class ResultMapConverter {
         @Nullable
         @Override
         public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
-            return resultMap == null ? null : resultMap.getIdValue().orElse(null);
+            return resultMap == null ? null : resultMap.getIdValue(null);
         }
     }
 
@@ -78,7 +78,7 @@ public class ResultMapConverter {
                 return null;
             }
             return mapper.getResultMaps().stream()
-                    .filter(resultMap -> domElement.getIdValue().map(id -> !id.equals(resultMap.getIdValue().orElse(null))).orElse(false))
+                    .filter(resultMap -> resultMap.isEqualsId(domElement.getIdValue(null)))
                     .collect(Collectors.toList());
         }
 
@@ -95,7 +95,7 @@ public class ResultMapConverter {
         @Nullable
         @Override
         protected Collection<ResultMap> getVariants(ConvertContext context, Mapper mapper) {
-            return mapper.getResultMaps().stream().filter(resultMap -> resultMap.getId() != null).collect(Collectors.toList());
+            return mapper.getResultMaps();
         }
 
     }

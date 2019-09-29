@@ -17,7 +17,6 @@ package tk.cofe.plugin.mybatis.dom.description;
 import com.intellij.util.xml.DomFileDescription;
 import com.intellij.util.xml.highlighting.DomElementsAnnotator;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.annotator.MapperAnnotator;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 
@@ -46,12 +45,12 @@ public class MapperXmlDescription extends DomFileDescription<Mapper> {
         return MybatisIcons.MybatisInterface;
     }
 
-    ///**
-    // * <a href="https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#useful-methods-of-domelement-and-dommanager">详情</a>
-    // */
-    //@Nullable
-    //@Override
-    //public DomElementsAnnotator createAnnotator() {
-    //    return new MapperAnnotator();
-    //}
+    /**
+     * <a href="https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#useful-methods-of-domelement-and-dommanager">详情</a>
+     */
+    @Nullable
+    @Override
+    public DomElementsAnnotator createAnnotator() {
+        return null;
+    }
 }

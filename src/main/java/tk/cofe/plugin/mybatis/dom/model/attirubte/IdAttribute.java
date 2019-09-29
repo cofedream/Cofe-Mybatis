@@ -14,11 +14,14 @@
 
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,5 +41,26 @@ public interface IdAttribute extends DomElement {
     @NotNull
     default Optional<String> getIdValue() {
         return DomUtils.getAttributeVlaue(getId());
+    }
+
+    /**
+     * 获取Id值
+     *
+     * @param defaultValue 默认ID值
+     * @return Id 值
+     */
+    @Nullable
+    default String getIdValue(final String defaultValue) {
+        return getIdValue().orElse(defaultValue);
+    }
+
+    /**
+     * 判断ID是否相同
+     *
+     * @param id id值
+     * @return true 相等,false 不相等
+     */
+    default boolean isEqualsId(final String id) {
+        return StringUtil.isNotEmpty(id) && Objects.equals(id, getIdValue(null));
     }
 }

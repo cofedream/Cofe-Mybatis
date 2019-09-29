@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * JdbcType 属性提示
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
