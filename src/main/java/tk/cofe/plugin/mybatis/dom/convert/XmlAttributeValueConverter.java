@@ -125,7 +125,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (t == null) {
             return null;
         }
-        return Optional.ofNullable(toString(t, null)).map(text -> LookupElementBuilder.create(text).withIcon(PlatformIcons.XML_TAG_ICON)).get();
+        return Optional.ofNullable(toString(t, null)).map(text -> LookupElementBuilder.create(text).withIcon(PlatformIcons.XML_TAG_ICON)).orElse(null);
     }
 
 }

@@ -38,7 +38,7 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
     @Nullable
     @Override
     public List<String> getUrlFor(final PsiElement element, final PsiElement originalElement) {
-        return DomUtils.getDomElement(element, getTargetDomElement()).map(sql -> Collections.<String>emptyList()).get();
+        return DomUtils.getDomElement(element, getTargetDomElement()).map(sql -> Collections.<String>emptyList()).orElse(null);
     }
 
     @Nullable
@@ -58,7 +58,7 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
                         }
                     }
                     return "<pre><b>" + start + text.substring(index) + "</b></pre>";
-                }).get();
+                }).orElse(null);
     }
 
     @Nullable

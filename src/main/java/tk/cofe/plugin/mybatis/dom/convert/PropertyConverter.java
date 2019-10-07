@@ -80,7 +80,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
         }
         return PropertyType.parse(context.getInvocationElement())
                 .flatMap(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> member.equals(field.getName())).findFirst())
-                .get();
+                .orElse(null);
     }
 
     @Nullable

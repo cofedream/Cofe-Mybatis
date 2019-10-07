@@ -70,7 +70,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return null;
             }
-            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).get();
+            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
         }
 
         @Nullable
