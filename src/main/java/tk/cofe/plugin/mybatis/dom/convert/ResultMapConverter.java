@@ -55,12 +55,6 @@ public class ResultMapConverter {
 
         @Nullable
         @Override
-        public ResultMap fromString(@Nullable final String value, final ConvertContext context) {
-            return super.fromString(value, context);
-        }
-
-        @Nullable
-        @Override
         public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
             return resultMap == null ? null : resultMap.getIdValue(null);
         }

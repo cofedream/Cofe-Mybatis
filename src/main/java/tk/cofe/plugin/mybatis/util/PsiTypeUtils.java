@@ -25,7 +25,6 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiUtil;
-import com.intellij.spring.model.utils.PsiTypeUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
