@@ -201,11 +201,6 @@ public class ForeachConverter {
         public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
             addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters)), res);
         }
-
-        @Override
-        public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> result) {
-
-        }
     }
 
 }

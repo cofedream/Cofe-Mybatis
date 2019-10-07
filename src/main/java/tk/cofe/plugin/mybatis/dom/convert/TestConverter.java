@@ -134,11 +134,6 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
         }
     }
 
-    @Override
-    public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> result) {
-
-    }
-
     private boolean isSupport(@Nullable String prefix) {
         if (StringUtil.isEmpty(prefix)) {
             return true;
