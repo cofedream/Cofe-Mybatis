@@ -76,7 +76,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
         if (isSupport(parameters)) {
             DomUtils.getDomElement(getTargetElement(psiFile, parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
-                    .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefixText(result), getPrefixArray(result), psiMethod.getParameterList().getParameters(), result));
+                    .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefixText(result), getPrefixArray(result.getPrefixMatcher().getPrefix()), psiMethod.getParameterList().getParameters(), result));
         }
     }
 
@@ -128,7 +128,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     /**
      * 获取前缀,用于目标类查询
      */
-    abstract String[] getPrefixArray(@NotNull final CompletionResultSet result);
+    abstract String[] getPrefixArray(final String prefix);
 
     /**
      * 判断是否支持代码完成

@@ -172,6 +172,13 @@ public final class PsiJavaUtils {
         return method.getModifierList().hasModifierProperty(modifier);
     }
 
+    /**
+     * 获取指定方法
+     *
+     * @param psiClass   类信息
+     * @param methodName 方法名称
+     * @return 方法信息
+     */
     public static Optional<PsiMethod> findPsiMethod(@NotNull PsiClass psiClass, @NotNull String methodName) {
         PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
         if (methods.length == 0) {

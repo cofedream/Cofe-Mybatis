@@ -27,7 +27,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.util.ArrayUtil;
@@ -43,13 +42,12 @@ import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * foreach标签转换器
@@ -77,7 +75,7 @@ public class ForeachConverter {
                 if (ArrayUtil.isEmpty(parameters)) {
                     return Collections.<String>emptySet();
                 }
-                String[] prefixArr = getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue()));
+                String[] prefixArr = CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue()));
                 if (ArrayUtil.isEmpty(prefixArr)) {
                     if (parameters.length == 1) {
                         PsiParameter firstParam = parameters[0];
@@ -97,17 +95,16 @@ public class ForeachConverter {
                         List<String> res = new ArrayList<>();
                         for (int i = 0; i < parameters.length; i++) {
                             Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
-                            if (value != null) {
-                                res.add(value.getValue());
-                            } else {
+                            if (value == null) {
                                 res.add("param" + (i + 1));
+                            } else {
+                                res.add(value.getValue());
                             }
                         }
                         return res;
                     }
                 } else {
-                    PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
-                    return addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) type));
+                    return addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) CompletionUtils.getPrefixType(prefixArr[0], parameters)));
                 }
                 return Collections.<String>emptySet();
             }).orElse(Collections.emptyList());
@@ -123,13 +120,44 @@ public class ForeachConverter {
             if (classElement == null) {
                 return null;
             }
-            List<PsiParameter> parameters = classElement.getIdMethod()
-                    .map(method -> Arrays.stream(method.getParameterList().getParameters()).filter(psiParameter -> text.equals(Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue())).collect(Collectors.toList()))
-                    .orElse(Collections.emptyList());
-            if (parameters.isEmpty()) {
+            return classElement.getIdMethod().map(method -> {
+                PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
+                if (ArrayUtil.isEmpty(parameters)) {
+                    return null;
+                }
+                String[] prefixArr = CompletionUtils.getPrefixArr(text);
+                if (ArrayUtil.isEmpty(prefixArr)) {
+                    for (int i = 0; i < parameters.length; i++) {
+                        Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
+                        if (value == null) {
+                            if (PsiTypeUtils.isCustomType(parameters[i].getType())) {
+                                return Optional.ofNullable(((PsiClassType) parameters[i].getType()).resolve())
+                                        .map(psiClass -> ForeachConverter.resolve(psiClass, text))
+                                        .orElse(null);
+                            } else if (PsiTypeUtils.isCollectionType(parameters[i].getType())
+                                    || PsiTypeUtils.isArrayType(parameters[i].getType())) {
+                                if (("param" + (i + 1)).equals(text)
+                                        || ((parameters.length == 1) && ("list".equals(text) || "array".equals(text)))) {
+                                    return parameters[i];
+                                }
+                            }
+                        } else if ((Objects.equals(text, value.getValue()) || ("param" + (i + 1)).equals(text))
+                                && (PsiTypeUtils.isCollectionType(parameters[i].getType())
+                                || PsiTypeUtils.isArrayType(parameters[i].getType()))) {
+                            return parameters[i];
+                        }
+                    }
+                } else {
+                    PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+                    for (int i = 1; i < prefixArr.length; i++) {
+                        type = CompletionUtils.getTargetPsiType(prefixArr[i], type);
+                    }
+                    if ((type instanceof PsiClassType)) {
+                        return ForeachConverter.resolve(((PsiClassType) type).resolve(), text.substring(text.lastIndexOf(".") + 1));
+                    }
+                }
                 return null;
-            }
-            return super.resolve(text, context);
+            }).orElse(null);
         }
 
         @Nullable
@@ -139,15 +167,31 @@ public class ForeachConverter {
         }
     }
 
+    @Nullable
+    private static PsiElement resolve(@Nullable PsiClass psiClass, @Nullable String text) {
+        if (psiClass == null || text == null) {
+            return null;
+        }
+        PsiField field = psiClass.findFieldByName(text, true);
+        if (field != null) {
+            return field;
+        }
+        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
+    }
+
+    private static String processTextToGetMethodName(@NotNull final String text) {
+        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
+    }
+
     private static java.util.Collection<String> addPsiClassVariants(final PsiClass psiClass) {
         return addPsiClassVariants("", psiClass);
     }
 
-    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, final PsiClassType psiClassType) {
-        if (psiClassType == null) {
+    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiType psiClassType) {
+        if (!(psiClassType instanceof PsiClassType)) {
             return Collections.emptyList();
         }
-        return addPsiClassVariants(prefix, psiClassType.resolve());
+        return addPsiClassVariants(prefix, ((PsiClassType) psiClassType).resolve());
     }
 
     private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass) {
@@ -168,10 +212,4 @@ public class ForeachConverter {
         return res;
     }
 
-    private static String[] getPrefixArr(@NotNull String prefix) {
-        if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
-            return new String[0];
-        }
-        return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
-    }
 }

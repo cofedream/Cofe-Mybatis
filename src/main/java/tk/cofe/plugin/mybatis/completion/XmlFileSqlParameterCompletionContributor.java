@@ -19,10 +19,10 @@ package tk.cofe.plugin.mybatis.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.util.CompletionUtils;
 
 /**
  * XML 文件中的SQL 参数完成
@@ -52,13 +52,8 @@ public class XmlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
      * 获取前缀
      */
     @NotNull
-    String[] getPrefixArray(@NotNull CompletionResultSet result) {
-        String prefixText = result.getPrefixMatcher().getPrefix();
-        String prefix = prefixText.substring(prefixText.lastIndexOf("{") + 1);
-        if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
-            return new String[0];
-        }
-        return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
+    String[] getPrefixArray(final String prefix) {
+        return CompletionUtils.getPrefixArr(prefix.substring(prefix.lastIndexOf("{") + 1));
     }
 
 }

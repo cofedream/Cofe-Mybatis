@@ -49,6 +49,17 @@ import java.util.Set;
  * @date : 2019-08-10
  */
 public class TestConverter extends ResolvingConverter.StringConverter {
+    private static String getPrefix(Node node) {
+        if (node instanceof ASTChain) {
+            return node.toString();
+        }
+        int i = node.jjtGetNumChildren();
+        if (i > 1) {
+            return getPrefix(node.jjtGetChild(i - 1));
+        }
+        return node.toString();
+    }
+
     @Override
     public String fromString(final String s, final ConvertContext context) {
         if (StringUtil.isEmpty(s)) {
@@ -182,23 +193,7 @@ public class TestConverter extends ResolvingConverter.StringConverter {
         } catch (OgnlException e) {
             return new String[0];
         }
-        prefix = getPrefix(node);
-        if (!prefix.contains(".")) {
-            return new String[0];
-        }
-        String substring = prefix.substring(0, prefix.lastIndexOf("."));
-        return substring.split("\\.");
-    }
-
-    private static String getPrefix(Node node) {
-        if (node instanceof ASTChain) {
-            return node.toString();
-        }
-        int i = node.jjtGetNumChildren();
-        if (i > 1) {
-            return getPrefix(node.jjtGetChild(i - 1));
-        }
-        return node.toString();
+        return CompletionUtils.getPrefixArr(getPrefix(node));
     }
 
     private void addPsiClassTypeVariants(final String prefix, @Nullable final PsiClassType psiType, @NotNull final Set<String> res) {

@@ -187,4 +187,17 @@ public class CompletionUtils {
         }
         return "";
     }
+
+    /**
+     * 获取前缀数组
+     *
+     * @param prefix 前缀
+     * @return 前缀数组
+     */
+    public static String[] getPrefixArr(@NotNull String prefix) {
+        if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
+            return new String[0];
+        }
+        return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
+    }
 }
