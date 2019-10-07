@@ -106,7 +106,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter parameter, final Set<String> res) {
+    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter parameter, @NotNull final Set<String> res) {
         Annotation.Value value = Annotation.PARAM.getValue(parameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
@@ -119,14 +119,14 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+    public void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
         for (PsiParameter psiParameter : parameters) {
             Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
         }
     }
 
     @Override
-    public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
         if (PsiTypeUtils.isCustomType(type)) {

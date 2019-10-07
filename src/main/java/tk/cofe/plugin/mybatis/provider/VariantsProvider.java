@@ -43,11 +43,11 @@ public interface VariantsProvider<T> {
         return res;
     }
 
-    void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter parameter, final T res);
+    void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter parameter, @NotNull final T res);
 
-    void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
+    void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T res);
 
-    void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
+    void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T res);
 
     void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T result);
 }
