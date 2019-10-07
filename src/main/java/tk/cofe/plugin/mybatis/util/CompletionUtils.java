@@ -109,12 +109,15 @@ public class CompletionUtils {
     /**
      * 根据前缀获取目标类中字段的类型或方法的返回值类型
      *
-     * @param psiClass 类对象
-     * @param prefixs  前缀
+     * @param prefixs 前缀
+     * @param psiType 类对象
      */
     @Nullable
-    public static PsiClassType getTargetPsiClass(final @NotNull String[] prefixs, @Nullable final PsiClassType psiClass) {
-        PsiClassType target = psiClass;
+    public static PsiClassType getTargetPsiClass(final @NotNull String[] prefixs, @Nullable final PsiType psiType) {
+        if (!(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        PsiClassType target = ((PsiClassType) psiType);
         for (int i = 1; i < prefixs.length; i++) {
             if (target == null) {
                 return null;

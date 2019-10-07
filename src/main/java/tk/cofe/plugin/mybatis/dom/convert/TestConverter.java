@@ -22,6 +22,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import ognl.ASTChain;
@@ -100,40 +101,41 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             return Collections.emptySet();
         }
         return classElement.getIdMethod().map(method -> {
-            PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
-            if (parameters.length == 0) {
-                return Collections.<String>emptySet();
-            }
             Set<String> res = new HashSet<>();
-            String[] prefixs = getPrefix(originPrefix);
-            // 完成的前缀内容
-            String completionPrefix = getCompletionPrefix(originPrefix);
-            if (prefixs.length == 0) {
-                if (parameters.length == 1) {
-                    PsiParameter firstParam = parameters[0];
-                    Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-                    if (value == null) {
-                        // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                        if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                            addPsiClassTypeVariants(completionPrefix, (PsiClassType) firstParam.getType(), res);
-                        }
-                    } else {
-                        res.add(completionPrefix + value.getValue());
-                    }
-                } else {
-                    for (PsiParameter psiParameter : parameters) {
-                        Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
-                    }
-                }
-            } else {
-                PsiType type = CompletionUtils.getPrefixType(prefixs[0], parameters);
-                // 自定义类类型则取字段和方法
-                if (PsiTypeUtils.isCustomType(type)) {
-                    addPsiClassTypeVariants(completionPrefix, CompletionUtils.getTargetPsiClass(prefixs, (PsiClassType) type), res);
-                }
-            }
+            addVariants(getCompletionPrefix(originPrefix), getPrefix(originPrefix), (PsiParameter[]) method.getParameters(), res);
             return res;
         }).orElse(Collections.emptySet());
+    }
+
+    // 完成的前缀内容
+    private void addVariants(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+        if (ArrayUtil.isEmpty(parameters)) {
+            return;
+        }
+        if (ArrayUtil.isEmpty(prefixArr)) {
+            if (parameters.length == 1) {
+                PsiParameter firstParam = parameters[0];
+                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
+                if (value == null) {
+                    // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                        addPsiClassTypeVariants(prefixText, (PsiClassType) firstParam.getType(), res);
+                    }
+                } else {
+                    res.add(prefixText + value.getValue());
+                }
+            } else {
+                for (PsiParameter psiParameter : parameters) {
+                    Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
+                }
+            }
+        } else {
+            PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+            // 自定义类类型则取字段和方法
+            if (PsiTypeUtils.isCustomType(type)) {
+                addPsiClassTypeVariants(prefixText, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
+            }
+        }
     }
 
     private boolean isSupport(@Nullable String prefix) {

@@ -76,11 +76,13 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
         if (isSupport(parameters)) {
             DomUtils.getDomElement(getTargetElement(psiFile, parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
-                    .ifPresent(psiMethod -> addPsiParamaterVariants(getPrefixText(result), getPrefixArray(result.getPrefixMatcher().getPrefix()), psiMethod.getParameterList().getParameters(), result));
+                    .ifPresent(psiMethod -> {
+                        addVariants(getPrefixText(result), getPrefixArray(result.getPrefixMatcher().getPrefix()), psiMethod.getParameterList().getParameters(), result);
+                    });
         }
     }
 
-    private void addPsiParamaterVariants(@NotNull final String prefixText, @NotNull String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
+    private void addVariants(@NotNull final String prefixText, @NotNull String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
         if (ArrayUtil.isEmpty(parameters)) {
             return;
         }
@@ -106,7 +108,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
             PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
             // 自定义类类型则取字段和方法
             if (PsiTypeUtils.isCustomType(type)) {
-                addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) type), result);
+                addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), result);
             }
         }
         addParamsVariants(prefixText, result, prefixArr, parameters);

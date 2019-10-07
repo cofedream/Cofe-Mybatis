@@ -41,10 +41,8 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +54,45 @@ import java.util.Set;
  * @date : 2019-06-27
  */
 public class ForeachConverter {
+
+    @Nullable
+    private static PsiElement resolve(@Nullable PsiClass psiClass, @Nullable String text) {
+        if (psiClass == null || text == null) {
+            return null;
+        }
+        PsiField field = psiClass.findFieldByName(text, true);
+        if (field != null) {
+            return field;
+        }
+        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
+    }
+
+    private static String processTextToGetMethodName(@NotNull final String text) {
+        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
+    }
+
+    private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiType psiClassType, final Set<String> res) {
+        if (!(psiClassType instanceof PsiClassType)) {
+            return;
+        }
+        addPsiClassVariants(prefix, ((PsiClassType) psiClassType).resolve(), res);
+    }
+
+    private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
+        if (psiClass == null) {
+            return;
+        }
+        for (PsiMethod info : psiClass.getAllMethods()) {
+            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && CompletionUtils.isTargetMethod(info)) {
+                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
+            }
+        }
+        for (PsiField info : psiClass.getAllFields()) {
+            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
+                res.add(prefix + info.getName());
+            }
+        }
+    }
 
     public static class Collection extends ResolvingConverter.StringConverter {
 
@@ -76,23 +113,23 @@ public class ForeachConverter {
                     return Collections.<String>emptySet();
                 }
                 String[] prefixArr = CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue()));
+                Set<String> res = new HashSet<>();
                 if (ArrayUtil.isEmpty(prefixArr)) {
                     if (parameters.length == 1) {
                         PsiParameter firstParam = parameters[0];
                         Annotation.Value value = Annotation.PARAM.getValue(firstParam);
                         if (value == null) {
                             if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                                return Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).map(ForeachConverter::addPsiClassVariants).orElse(Collections.emptyList());
+                                Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
                             } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
-                                return Collections.singletonList("list");
+                                res.add("list");
                             } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
-                                return Collections.singletonList("array");
+                                res.add("array");
                             }
                         } else {
-                            return Collections.singletonList(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
+                            res.add(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
                         }
                     } else {
-                        List<String> res = new ArrayList<>();
                         for (int i = 0; i < parameters.length; i++) {
                             Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
                             if (value == null) {
@@ -101,13 +138,12 @@ public class ForeachConverter {
                                 res.add(value.getValue());
                             }
                         }
-                        return res;
                     }
                 } else {
-                    return addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, (PsiClassType) CompletionUtils.getPrefixType(prefixArr[0], parameters)));
+                    addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters)), res);
                 }
-                return Collections.<String>emptySet();
-            }).orElse(Collections.emptyList());
+                return res;
+            }).orElse(Collections.emptySet());
         }
 
         @Nullable
@@ -165,51 +201,6 @@ public class ForeachConverter {
         public LookupElement createLookupElement(String s) {
             return LookupElementBuilder.create(s).withIcon(AllIcons.Nodes.Parameter);
         }
-    }
-
-    @Nullable
-    private static PsiElement resolve(@Nullable PsiClass psiClass, @Nullable String text) {
-        if (psiClass == null || text == null) {
-            return null;
-        }
-        PsiField field = psiClass.findFieldByName(text, true);
-        if (field != null) {
-            return field;
-        }
-        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
-    }
-
-    private static String processTextToGetMethodName(@NotNull final String text) {
-        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
-    }
-
-    private static java.util.Collection<String> addPsiClassVariants(final PsiClass psiClass) {
-        return addPsiClassVariants("", psiClass);
-    }
-
-    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiType psiClassType) {
-        if (!(psiClassType instanceof PsiClassType)) {
-            return Collections.emptyList();
-        }
-        return addPsiClassVariants(prefix, ((PsiClassType) psiClassType).resolve());
-    }
-
-    private static java.util.Collection<String> addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass) {
-        if (psiClass == null) {
-            return Collections.emptyList();
-        }
-        Set<String> res = new HashSet<>();
-        for (PsiMethod info : psiClass.getAllMethods()) {
-            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && CompletionUtils.isTargetMethod(info)) {
-                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
-            }
-        }
-        for (PsiField info : psiClass.getAllFields()) {
-            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
-                res.add(prefix + info.getName());
-            }
-        }
-        return res;
     }
 
 }
