@@ -170,29 +170,29 @@ public class ForeachConverter {
         }
 
         @Override
-        public void existPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
-            if (parameters.length == 1) {
-                PsiParameter firstParam = parameters[0];
-                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-                if (value == null) {
-                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                        Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
-                    } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
-                        res.add("list");
-                    } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
-                        res.add("array");
-                    }
-                } else {
-                    res.add(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
+        public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter parameter, final Set<String> res) {
+            Annotation.Value value = Annotation.PARAM.getValue(parameter);
+            if (value == null) {
+                if (PsiTypeUtils.isCustomType(parameter.getType())) {
+                    Optional.ofNullable(((PsiClassType) parameter.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
+                } else if (PsiTypeUtils.isCollectionType(parameter.getType())) {
+                    res.add("list");
+                } else if (PsiTypeUtils.isArrayType(parameter.getType())) {
+                    res.add("array");
                 }
             } else {
-                for (int i = 0; i < parameters.length; i++) {
-                    Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
-                    if (value == null) {
-                        res.add("param" + (i + 1));
-                    } else {
-                        res.add(value.getValue());
-                    }
+                res.add(Annotation.PARAM.getValue(parameter, parameter::getName).getValue());
+            }
+        }
+
+        @Override
+        public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+            for (int i = 0; i < parameters.length; i++) {
+                Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
+                if (value == null) {
+                    res.add("param" + (i + 1));
+                } else {
+                    res.add(value.getValue());
                 }
             }
         }

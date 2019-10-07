@@ -106,22 +106,22 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void existPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
-        if (parameters.length == 1) {
-            PsiParameter firstParam = parameters[0];
-            Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-            if (value == null) {
-                // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                    addPsiClassTypeVariants(prefixText, (PsiClassType) firstParam.getType(), res);
-                }
-            } else {
-                res.add(prefixText + value.getValue());
+    public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter parameter, final Set<String> res) {
+        Annotation.Value value = Annotation.PARAM.getValue(parameter);
+        if (value == null) {
+            // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+            if (PsiTypeUtils.isCustomType(parameter.getType())) {
+                addPsiClassTypeVariants(prefixText, (PsiClassType) parameter.getType(), res);
             }
         } else {
-            for (PsiParameter psiParameter : parameters) {
-                Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
-            }
+            res.add(prefixText + value.getValue());
+        }
+    }
+
+    @Override
+    public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+        for (PsiParameter psiParameter : parameters) {
+            Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
         }
     }
 

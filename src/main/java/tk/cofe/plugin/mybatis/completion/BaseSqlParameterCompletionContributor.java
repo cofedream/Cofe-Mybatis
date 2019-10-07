@@ -81,22 +81,22 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     }
 
     @Override
-    public void existPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
-        if (parameters.length == 1) {
-            PsiParameter firstParam = parameters[0]; // 第一个参数
-            Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-            if (value == null) {
-                // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                    addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) firstParam.getType(), result);
-                }
-            } else {
-                result.addElement(createLookupElement(prefixText, value.getValue(), firstParam.getType().getPresentableText(), AllIcons.Nodes.Parameter));
+    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, final PsiParameter parameter, @NotNull final CompletionResultSet result) {
+        Annotation.Value value = Annotation.PARAM.getValue(parameter);
+        if (value == null) {
+            // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+            if (PsiTypeUtils.isCustomType(parameter.getType())) {
+                addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) parameter.getType(), result);
             }
         } else {
-            for (PsiParameter psiParameter : parameters) {
-                Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(prefixText, value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
-            }
+            result.addElement(createLookupElement(prefixText, value.getValue(), parameter.getType().getPresentableText(), AllIcons.Nodes.Parameter));
+        }
+    }
+
+    @Override
+    public void multiParam(@NotNull final String prefixText, final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+        for (PsiParameter psiParameter : parameters) {
+            Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(prefixText, value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
         }
     }
 

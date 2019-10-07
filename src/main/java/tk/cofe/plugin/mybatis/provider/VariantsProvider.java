@@ -31,7 +31,11 @@ public interface VariantsProvider<T> {
             return res;
         }
         if (ArrayUtil.isEmpty(prefixArr)) {
-            existPrefix(prefixText, prefixArr, parameters, res);
+            if (parameters.length == 1) {
+                singleParam(prefixText, prefixArr, parameters[0], res);
+            } else {
+                multiParam(prefixText, prefixArr, parameters, res);
+            }
         } else {
             emptyPrefix(prefixText, prefixArr, parameters, res);
         }
@@ -39,7 +43,9 @@ public interface VariantsProvider<T> {
         return res;
     }
 
-    void existPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
+    void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter parameter, final T res);
+
+    void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
 
     void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
 
