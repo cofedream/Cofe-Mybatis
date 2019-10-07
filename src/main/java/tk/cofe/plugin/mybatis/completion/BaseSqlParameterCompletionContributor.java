@@ -101,11 +101,11 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     }
 
     @Override
-    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
         if (PsiTypeUtils.isCustomType(type)) {
-            addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), result);
+            addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
         }
     }
 

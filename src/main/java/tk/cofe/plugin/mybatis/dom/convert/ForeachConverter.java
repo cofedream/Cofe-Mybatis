@@ -56,45 +56,6 @@ import java.util.Set;
  */
 public class ForeachConverter {
 
-    @Nullable
-    private static PsiElement resolve(@Nullable PsiClass psiClass, @Nullable String text) {
-        if (psiClass == null || text == null) {
-            return null;
-        }
-        PsiField field = psiClass.findFieldByName(text, true);
-        if (field != null) {
-            return field;
-        }
-        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
-    }
-
-    private static String processTextToGetMethodName(@NotNull final String text) {
-        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
-    }
-
-    private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiType psiClassType, final Set<String> res) {
-        if (!(psiClassType instanceof PsiClassType)) {
-            return;
-        }
-        addPsiClassVariants(prefix, ((PsiClassType) psiClassType).resolve(), res);
-    }
-
-    private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
-        if (psiClass == null) {
-            return;
-        }
-        for (PsiMethod info : psiClass.getAllMethods()) {
-            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && CompletionUtils.isTargetMethod(info)) {
-                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
-            }
-        }
-        for (PsiField info : psiClass.getAllFields()) {
-            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
-                res.add(prefix + info.getName());
-            }
-        }
-    }
-
     public static class Collection extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {
 
         @NotNull
@@ -123,44 +84,7 @@ public class ForeachConverter {
             if (classElement == null) {
                 return null;
             }
-            return classElement.getIdMethod().map(method -> {
-                PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
-                if (ArrayUtil.isEmpty(parameters)) {
-                    return null;
-                }
-                String[] prefixArr = CompletionUtils.getPrefixArr(text);
-                if (ArrayUtil.isEmpty(prefixArr)) {
-                    for (int i = 0; i < parameters.length; i++) {
-                        Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
-                        if (value == null) {
-                            if (PsiTypeUtils.isCustomType(parameters[i].getType())) {
-                                return Optional.ofNullable(((PsiClassType) parameters[i].getType()).resolve())
-                                        .map(psiClass -> ForeachConverter.resolve(psiClass, text))
-                                        .orElse(null);
-                            } else if (PsiTypeUtils.isCollectionType(parameters[i].getType())
-                                    || PsiTypeUtils.isArrayType(parameters[i].getType())) {
-                                if (("param" + (i + 1)).equals(text)
-                                        || ((parameters.length == 1) && ("list".equals(text) || "array".equals(text)))) {
-                                    return parameters[i];
-                                }
-                            }
-                        } else if ((Objects.equals(text, value.getValue()) || ("param" + (i + 1)).equals(text))
-                                && (PsiTypeUtils.isCollectionType(parameters[i].getType())
-                                || PsiTypeUtils.isArrayType(parameters[i].getType()))) {
-                            return parameters[i];
-                        }
-                    }
-                } else {
-                    PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
-                    for (int i = 1; i < prefixArr.length; i++) {
-                        type = CompletionUtils.getTargetPsiType(prefixArr[i], type);
-                    }
-                    if ((type instanceof PsiClassType)) {
-                        return ForeachConverter.resolve(((PsiClassType) type).resolve(), text.substring(text.lastIndexOf(".") + 1));
-                    }
-                }
-                return null;
-            }).orElse(null);
+            return classElement.getIdMethod().map(method -> resloaveProvider(text, method)).orElse(null);
         }
 
         @Nullable
@@ -199,7 +123,93 @@ public class ForeachConverter {
 
         @Override
         public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
-            addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters)), res);
+            final PsiClassType psiClassType = CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters));
+            if (psiClassType != null) {
+                addPsiClassVariants(String.join(",", prefixArr).concat("."), psiClassType.resolve(), res);
+            }
+        }
+
+    }
+
+    private static PsiElement resloaveProvider(final String text, final PsiMethod method) {
+        PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
+        if (ArrayUtil.isEmpty(parameters)) {
+            return null;
+        }
+        PsiElement res;
+        String[] prefixArr = CompletionUtils.getPrefixArr(text);
+        if (ArrayUtil.isEmpty(prefixArr)) {
+            res = existPrefix(text, parameters);
+        } else {
+            res = emptyPrefix(text, parameters, prefixArr);
+        }
+        return res;
+    }
+
+    private static PsiElement existPrefix(final String text, final PsiParameter[] parameters) {
+        for (int i = 0; i < parameters.length; i++) {
+            Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
+            if (value == null) {
+                if (PsiTypeUtils.isCustomType(parameters[i].getType())) {
+                    return Optional.ofNullable(((PsiClassType) parameters[i].getType()).resolve())
+                            .map(psiClass -> ForeachConverter.resolve(psiClass, text))
+                            .orElse(null);
+                } else if (PsiTypeUtils.isCollectionType(parameters[i].getType())
+                        || PsiTypeUtils.isArrayType(parameters[i].getType())) {
+                    if (("param" + (i + 1)).equals(text)
+                            || ((parameters.length == 1) && ("list".equals(text) || "array".equals(text)))) {
+                        return parameters[i];
+                    }
+                }
+            } else if ((Objects.equals(text, value.getValue()) || ("param" + (i + 1)).equals(text))
+                    && (PsiTypeUtils.isCollectionType(parameters[i].getType())
+                    || PsiTypeUtils.isArrayType(parameters[i].getType()))) {
+                return parameters[i];
+            }
+        }
+        return null;
+    }
+
+    private static PsiElement emptyPrefix(final String text, final PsiParameter[] parameters, final String[] prefixArr) {
+        PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+        for (int i = 1; i < prefixArr.length; i++) {
+            type = CompletionUtils.getTargetPsiType(prefixArr[i], type);
+        }
+        if ((type instanceof PsiClassType)) {
+            return ForeachConverter.resolve(((PsiClassType) type).resolve(), text.substring(text.lastIndexOf(".") + 1));
+        }
+        return null;
+    }
+
+    @Nullable
+    private static PsiElement resolve(@Nullable PsiClass psiClass, @Nullable String text) {
+        if (psiClass == null || text == null) {
+            return null;
+        }
+        PsiField field = psiClass.findFieldByName(text, true);
+        if (field != null) {
+            return field;
+        }
+        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
+    }
+
+    private static String processTextToGetMethodName(@NotNull final String text) {
+        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
+    }
+
+    private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
+        if (psiClass == null) {
+            return;
+        }
+        for (PsiMethod info : psiClass.getAllMethods()) {
+            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && CompletionUtils.isTargetMethod(info)) {
+                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
+            }
+        }
+        for (PsiField info : psiClass.getAllFields()) {
+            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
+                res.add(prefix + info.getName());
+            }
         }
     }
 
