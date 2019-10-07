@@ -200,12 +200,12 @@ public class ForeachConverter {
         }
         Set<String> res = new HashSet<>();
         for (PsiMethod info : psiClass.getAllMethods()) {
-            if (PsiTypeUtils.isCollectionType(info.getReturnType()) && CompletionUtils.isTargetMethod(info)) {
+            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && CompletionUtils.isTargetMethod(info)) {
                 res.add(prefix + PsiJavaUtils.processGetMethodName(info));
             }
         }
         for (PsiField info : psiClass.getAllFields()) {
-            if (PsiTypeUtils.isCollectionType(info.getType()) && CompletionUtils.isTargetField(info)) {
+            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
                 res.add(prefix + info.getName());
             }
         }

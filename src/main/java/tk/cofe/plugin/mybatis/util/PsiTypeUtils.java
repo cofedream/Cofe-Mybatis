@@ -25,13 +25,19 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.spring.model.utils.PsiTypeUtil;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-08
  */
 public final class PsiTypeUtils {
+
+    private static final List<String> DATE_CLASS_NAMES = Arrays.asList(CommonClassNames.JAVA_UTIL_DATE, "java.time.LocalDate", "java.time.LocalTime");
 
     /**
      * 判断是否为 void 类型
@@ -145,21 +151,38 @@ public final class PsiTypeUtils {
     }
 
     /**
+     * 判断是否为事件类型
+     *
+     * @param psiType 类型
+     * @return true 是时间类型,false 非时间类型
+     */
+    public static boolean isDateType(@Nullable PsiType psiType) {
+        if (psiType == null) {
+            return false;
+        }
+        final PsiClass resolved = PsiUtil.resolveClassInClassTypeOnly(psiType);
+        if (resolved == null) {
+            return false;
+        }
+        if (InheritanceUtil.isInheritor(resolved, CommonClassNames.JAVA_UTIL_DATE)
+                || InheritanceUtil.isInheritor(resolved, "java.time.LocalDate")
+                || InheritanceUtil.isInheritor(resolved, "java.time.LocalTime")) {
+            return true;
+        }
+        return DATE_CLASS_NAMES.contains(psiType.getCanonicalText());
+    }
+
+    /**
      * 是自定义类型
      *
      * @param psiType 类型
      */
     public static boolean isCustomType(@Nullable PsiType psiType) {
-        // 是否为基础类型或包装类判断
-        if (isPrimitiveOrBoxType(psiType)) {
-            return false;
-        }
-        // 是否为String
-        if (isString(psiType)) {
-            return false;
-        }
-        // 是否为集合判断
-        if (isCollectionOrMapType(psiType)) {
+        if (isPrimitiveOrBoxType(psiType)
+                || isString(psiType)
+                || isCollectionOrMapType(psiType)
+                || isDateType(psiType)
+        ) {
             return false;
         }
         // 上述类型都不成立,且为类对象,则为自定义对象
