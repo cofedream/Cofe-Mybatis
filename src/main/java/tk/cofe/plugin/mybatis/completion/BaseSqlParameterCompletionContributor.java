@@ -35,12 +35,12 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.ui.RowIcon;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
@@ -57,7 +57,7 @@ import java.util.function.Consumer;
  * @author : zhengrf
  * @date : 2019-08-11
  */
-abstract class BaseSqlParameterCompletionContributor extends CompletionContributor {
+abstract class BaseSqlParameterCompletionContributor extends CompletionContributor implements VariantsProvider<CompletionResultSet> {
 
     /**
      * 权重
@@ -76,41 +76,41 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
         if (isSupport(parameters)) {
             DomUtils.getDomElement(getTargetElement(psiFile, parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
-                    .ifPresent(psiMethod -> {
-                        addVariants(getPrefixText(result), getPrefixArray(result.getPrefixMatcher().getPrefix()), psiMethod.getParameterList().getParameters(), result);
-                    });
+                    .ifPresent(psiMethod -> provider(getPrefixText(result), getPrefixArray(result.getPrefixMatcher().getPrefix()), psiMethod.getParameterList().getParameters(), result));
         }
     }
 
-    private void addVariants(@NotNull final String prefixText, @NotNull String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull CompletionResultSet result) {
-        if (ArrayUtil.isEmpty(parameters)) {
-            return;
-        }
-        // 根据 paramters 和 prefix 获取元素
-        if (ArrayUtil.isEmpty(prefixArr)) {
-            if (parameters.length == 1) {
-                PsiParameter firstParam = parameters[0]; // 第一个参数
-                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-                if (value == null) {
-                    // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                        addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) firstParam.getType(), result);
-                    }
-                } else {
-                    result.addElement(createLookupElement(prefixText, value.getValue(), firstParam.getType().getPresentableText(), AllIcons.Nodes.Parameter));
+    @Override
+    public void existPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+        if (parameters.length == 1) {
+            PsiParameter firstParam = parameters[0]; // 第一个参数
+            Annotation.Value value = Annotation.PARAM.getValue(firstParam);
+            if (value == null) {
+                // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+                if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                    addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) firstParam.getType(), result);
                 }
             } else {
-                for (PsiParameter psiParameter : parameters) {
-                    Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(prefixText, value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
-                }
+                result.addElement(createLookupElement(prefixText, value.getValue(), firstParam.getType().getPresentableText(), AllIcons.Nodes.Parameter));
             }
         } else {
-            PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
-            // 自定义类类型则取字段和方法
-            if (PsiTypeUtils.isCustomType(type)) {
-                addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), result);
+            for (PsiParameter psiParameter : parameters) {
+                Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(prefixText, value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
             }
         }
+    }
+
+    @Override
+    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+        PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+        // 自定义类类型则取字段和方法
+        if (PsiTypeUtils.isCustomType(type)) {
+            addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), result);
+        }
+    }
+
+    @Override
+    public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
         addParamsVariants(prefixText, result, prefixArr, parameters);
         result.stopHere();
     }

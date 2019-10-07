@@ -22,7 +22,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import ognl.ASTChain;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -49,7 +49,7 @@ import java.util.Set;
  * @author : zhengrf
  * @date : 2019-08-10
  */
-public class TestConverter extends ResolvingConverter.StringConverter {
+public class TestConverter extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {
     private static String getPrefix(Node node) {
         if (node instanceof ASTChain) {
             return node.toString();
@@ -100,42 +100,43 @@ public class TestConverter extends ResolvingConverter.StringConverter {
         if (classElement == null) {
             return Collections.emptySet();
         }
-        return classElement.getIdMethod().map(method -> {
-            Set<String> res = new HashSet<>();
-            addVariants(getCompletionPrefix(originPrefix), getPrefix(originPrefix), (PsiParameter[]) method.getParameters(), res);
-            return res;
-        }).orElse(Collections.emptySet());
+        return classElement.getIdMethod()
+                .map(method -> provider(getCompletionPrefix(originPrefix), getPrefix(originPrefix), (PsiParameter[]) method.getParameters(), new HashSet<>()))
+                .orElse(Collections.emptySet());
     }
 
-    // 完成的前缀内容
-    private void addVariants(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
-        if (ArrayUtil.isEmpty(parameters)) {
-            return;
-        }
-        if (ArrayUtil.isEmpty(prefixArr)) {
-            if (parameters.length == 1) {
-                PsiParameter firstParam = parameters[0];
-                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-                if (value == null) {
-                    // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                        addPsiClassTypeVariants(prefixText, (PsiClassType) firstParam.getType(), res);
-                    }
-                } else {
-                    res.add(prefixText + value.getValue());
+    @Override
+    public void existPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+        if (parameters.length == 1) {
+            PsiParameter firstParam = parameters[0];
+            Annotation.Value value = Annotation.PARAM.getValue(firstParam);
+            if (value == null) {
+                // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
+                if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                    addPsiClassTypeVariants(prefixText, (PsiClassType) firstParam.getType(), res);
                 }
             } else {
-                for (PsiParameter psiParameter : parameters) {
-                    Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
-                }
+                res.add(prefixText + value.getValue());
             }
         } else {
-            PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
-            // 自定义类类型则取字段和方法
-            if (PsiTypeUtils.isCustomType(type)) {
-                addPsiClassTypeVariants(prefixText, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
+            for (PsiParameter psiParameter : parameters) {
+                Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
             }
         }
+    }
+
+    @Override
+    public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+        PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
+        // 自定义类类型则取字段和方法
+        if (PsiTypeUtils.isCustomType(type)) {
+            addPsiClassTypeVariants(prefixText, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
+        }
+    }
+
+    @Override
+    public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> result) {
+
     }
 
     private boolean isSupport(@Nullable String prefix) {
@@ -229,5 +230,4 @@ public class TestConverter extends ResolvingConverter.StringConverter {
             }
         }
     }
-
 }

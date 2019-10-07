@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -94,7 +95,7 @@ public class ForeachConverter {
         }
     }
 
-    public static class Collection extends ResolvingConverter.StringConverter {
+    public static class Collection extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {
 
         @NotNull
         @Override
@@ -107,43 +108,9 @@ public class ForeachConverter {
             if (classElement == null) {
                 return Collections.emptyList();
             }
-            return classElement.getIdMethod().map(method -> {
-                PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
-                if (ArrayUtil.isEmpty(parameters)) {
-                    return Collections.<String>emptySet();
-                }
-                String[] prefixArr = CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue()));
-                Set<String> res = new HashSet<>();
-                if (ArrayUtil.isEmpty(prefixArr)) {
-                    if (parameters.length == 1) {
-                        PsiParameter firstParam = parameters[0];
-                        Annotation.Value value = Annotation.PARAM.getValue(firstParam);
-                        if (value == null) {
-                            if (PsiTypeUtils.isCustomType(firstParam.getType())) {
-                                Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
-                            } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
-                                res.add("list");
-                            } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
-                                res.add("array");
-                            }
-                        } else {
-                            res.add(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
-                        }
-                    } else {
-                        for (int i = 0; i < parameters.length; i++) {
-                            Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
-                            if (value == null) {
-                                res.add("param" + (i + 1));
-                            } else {
-                                res.add(value.getValue());
-                            }
-                        }
-                    }
-                } else {
-                    addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters)), res);
-                }
-                return res;
-            }).orElse(Collections.emptySet());
+            return classElement.getIdMethod()
+                    .map(method -> provider(xmlAttributeValue.getValue(), CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue())), (PsiParameter[]) method.getParameters(), new HashSet<>()))
+                    .orElse(Collections.emptySet());
         }
 
         @Nullable
@@ -200,6 +167,44 @@ public class ForeachConverter {
         @Override
         public LookupElement createLookupElement(String s) {
             return LookupElementBuilder.create(s).withIcon(AllIcons.Nodes.Parameter);
+        }
+
+        @Override
+        public void existPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+            if (parameters.length == 1) {
+                PsiParameter firstParam = parameters[0];
+                Annotation.Value value = Annotation.PARAM.getValue(firstParam);
+                if (value == null) {
+                    if (PsiTypeUtils.isCustomType(firstParam.getType())) {
+                        Optional.ofNullable(((PsiClassType) firstParam.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
+                    } else if (PsiTypeUtils.isCollectionType(firstParam.getType())) {
+                        res.add("list");
+                    } else if (PsiTypeUtils.isArrayType(firstParam.getType())) {
+                        res.add("array");
+                    }
+                } else {
+                    res.add(Annotation.PARAM.getValue(firstParam, firstParam::getName).getValue());
+                }
+            } else {
+                for (int i = 0; i < parameters.length; i++) {
+                    Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
+                    if (value == null) {
+                        res.add("param" + (i + 1));
+                    } else {
+                        res.add(value.getValue());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
+            addPsiClassVariants(String.join(",", prefixArr).concat("."), CompletionUtils.getTargetPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters)), res);
+        }
+
+        @Override
+        public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> result) {
+
         }
     }
 
