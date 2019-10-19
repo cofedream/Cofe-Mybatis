@@ -24,6 +24,7 @@ import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
@@ -33,6 +34,7 @@ import tk.cofe.plugin.mybatis.dom.model.tag.Select;
 import tk.cofe.plugin.mybatis.dom.model.tag.Update;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -109,6 +111,29 @@ public interface Mapper extends DomElement {
             classElements.addAll(getSelects());
         }
         return classElements;
+    }
+
+    /**
+     * 获取ID标签对应的元素
+     *
+     * @param id ID标签
+     */
+    default List<? extends IdAttribute> getIdElements(IdAttribute id) {
+        if (id instanceof Sql) {
+            return getSqls();
+        } else if (id instanceof Insert) {
+            return getInserts();
+        } else if (id instanceof Select) {
+            return getSelects();
+        } else if (id instanceof Update) {
+            return getUpdates();
+        } else if (id instanceof Delete) {
+            return getDeletes();
+        }else if (id instanceof ResultMap){
+            return getResultMaps();
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @SubTagList("insert")

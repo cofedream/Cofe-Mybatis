@@ -24,15 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
-import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.model.tag.Update;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,30 +53,13 @@ public class MapperXmlAnnotator implements Annotator {
 
     private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
         Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
-            if (getIdAttributes(domElement, mapper).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
+            if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {
                     holder.createErrorAnnotation(element, errorMessage);
                 }
             }
         });
-    }
-
-    @NotNull
-    private List<? extends IdAttribute> getIdAttributes(final IdAttribute domElement, final Mapper mapper) {
-        if (domElement instanceof Sql) {
-            return mapper.getSqls();
-        } else if (domElement instanceof Insert) {
-            return mapper.getInserts();
-        } else if (domElement instanceof Select) {
-            return mapper.getSqls();
-        } else if (domElement instanceof Update) {
-            return mapper.getUpdates();
-        } else if (domElement instanceof Delete) {
-            return mapper.getDeletes();
-        } else {
-            return Collections.emptyList();
-        }
     }
 
 }

@@ -30,11 +30,12 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>调整 &lt;foreach/&gt;标签 内参数提示</li>
+            <li>调整 &lt;foreach/&gt;标签 内属性参数提示</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
             <li>修正 Class Field引用多处问题</li>
+            <li>修正 Select/ResultMap标签重复无提示问题</li>
         </ul>
     ]]></change-notes>
 
