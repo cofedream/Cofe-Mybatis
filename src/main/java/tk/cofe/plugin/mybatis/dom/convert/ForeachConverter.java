@@ -77,7 +77,7 @@ public class ForeachConverter {
         @Nullable
         @Override
         public PsiElement resolve(String text, ConvertContext context) {
-            if (StringUtil.isEmpty(text)) {
+            if (StringUtil.isEmpty(text) || text.trim().endsWith(".")) {
                 return null;
             }
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);

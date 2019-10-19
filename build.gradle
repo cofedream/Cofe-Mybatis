@@ -1,11 +1,11 @@
 plugins {
-    id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
+    id "org.jetbrains.grammarkit" version "2019.3"
 }
 
-apply plugin: 'idea'
-apply plugin: 'org.jetbrains.intellij'
-apply plugin: 'java'
+//apply plugin: 'idea'
+//apply plugin: 'org.jetbrains.intellij'
+//apply plugin: 'org.jetbrains.grammarkit'
 
 group 'tk.cofedream.plugin'
 version pluginVersion
@@ -27,10 +27,19 @@ intellij {
     pluginName 'Cofe-Mybatis'
     version '2018.3.2'
     type "IU"
-    plugins 'Spring','SpringBoot', 'DatabaseTools'
+    plugins 'Spring', 'DatabaseTools'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
 }
+
+// https://github.com/JetBrains/gradle-grammar-kit-plugin
+//grammarKit {
+//    // version of IntelliJ patched JFlex (see bintray link below), Default is 1.7.0-1
+//    jflexRelease = '1.7.0-1'
+//
+//    // tag or short commit hash of Grammar-Kit to use (see link below). Default is 2019.1.1
+//    grammarKitRelease = '6452fde524'
+//}
 patchPluginXml{
     version pluginVersion
     sinceBuild '183'
@@ -38,3 +47,19 @@ patchPluginXml{
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
+//task generatePerlLexer(type: GenerateLexer) {
+//    // source flex file
+//    source = "grammar/mybatis.flex"
+//
+//    // target directory for lexer
+//    targetDir = "gen/tk.cofe/lang/mybatis/lexer/"
+//
+//    // target classname, target file will be targetDir/targetClass.java
+//    targetClass = "MybatisLexer"
+//
+//    // optional, path to the task-specific skeleton file. Default: none
+////    skeleton = '/some/specific/skeleton'
+//
+//    // if set, plugin will remove a lexer output file before generating new one. Default: false
+//    purgeOldFiles = true
+//}
