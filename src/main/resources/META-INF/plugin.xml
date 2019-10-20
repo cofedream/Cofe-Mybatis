@@ -111,6 +111,7 @@
         <!--<referencesSearch implementation="tk.cofe.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
         <!--<psi.referenceContributor language="XML"-->
         <!--implementation="tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
+        <psi.referenceContributor implementation="tk.cofe.plugin.mybatis.psi.SqlParamReferenceContributor"/>
         <!--<refactoring.elementListenerProvider implementation="tk.cofe.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
         <!--<renamePsiElementProcessor implementation="tk.cofe.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 

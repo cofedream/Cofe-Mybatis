@@ -5,6 +5,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <completion.contributor id="database-sql-param-completion" language="SQL" order="first"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.SqlFileSqlParameterCompletionContributor"/>
+        <lang.parserDefinition language="GenericSQL" implementationClass="com.intellij.sql.dialects.generic.GenericParserDefinition"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij.database">
     </extensions>

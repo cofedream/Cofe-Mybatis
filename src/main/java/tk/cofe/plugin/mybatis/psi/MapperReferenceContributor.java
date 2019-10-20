@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.psi;
 
+import com.intellij.patterns.XmlAttributeValuePattern;
 import com.intellij.patterns.XmlNamedElementPattern;
 import com.intellij.patterns.XmlPatterns;
 import com.intellij.patterns.XmlTagPattern;
@@ -44,9 +45,10 @@ public class MapperReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
         //registrar.registerReferenceProvider(XML_ATTRIBUTE_VALUE_PATTERN, new XmlAttributeValueReferenceProvider());
-        registrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue()
-                        .withParent(ID_ATTRIBUTE
-                                .withParent(CLASS_ELEMENT_PATTERN))
+        XmlAttributeValuePattern pattern = XmlPatterns.xmlAttributeValue()
+                .withParent(ID_ATTRIBUTE
+                        .withParent(CLASS_ELEMENT_PATTERN));
+        registrar.registerReferenceProvider(pattern
                 , new ClassElementReferenceProvider.Id());
         // <include refid=""></include> 标签匹配
         //registrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue()
