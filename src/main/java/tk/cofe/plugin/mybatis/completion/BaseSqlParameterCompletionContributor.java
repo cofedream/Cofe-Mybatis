@@ -171,30 +171,26 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         if (psiClass == null) {
             return;
         }
-        String prefiex = String.join(".", prefixs);
-        if (prefiex.length() > 0) {
-            prefiex = prefiex + ".";
-        }
         if (psiClass.isEnum()) {
-            addMethodsVariants(originPrefix, prefiex, psiClass.getMethods(), result);
+            addMethodsVariants(originPrefix, psiClass.getMethods(), result);
         } else {
-            addFieldsVariants(originPrefix, prefiex, psiClass.getAllFields(), result);
-            addMethodsVariants(originPrefix, prefiex, psiClass.getAllMethods(), result);
+            addFieldsVariants(originPrefix, psiClass.getAllFields(), result);
+            addMethodsVariants(originPrefix, psiClass.getAllMethods(), result);
         }
     }
 
-    private void addFieldsVariants(final String originPrefix, final String prefiex, final PsiField[] fields, @NotNull final CompletionResultSet result) {
+    private void addFieldsVariants(final String originPrefix, final PsiField[] fields, @NotNull final CompletionResultSet result) {
         for (PsiField field : fields) {
             if (CompletionUtils.isTargetField(field)) {
-                createLookupElement(originPrefix, prefiex, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
+                createLookupElement(originPrefix, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
             }
         }
     }
 
-    private void addMethodsVariants(final String originPrefix, final String prefiex, final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
+    private void addMethodsVariants(final String originPrefix, final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
         for (PsiMethod method : methods) {
             if (CompletionUtils.isTargetMethod(method) && method.getReturnType() != null) {
-                createLookupElement(originPrefix, prefiex, PsiJavaUtils.processGetMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
+                createLookupElement(originPrefix, PsiJavaUtils.processGetMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }
     }
@@ -220,11 +216,11 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     /**
      * 创建提示
      */
-    private void createLookupElement(@NotNull String originPrefix, @Nullable final String prefix, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
+    private void createLookupElement(@NotNull String originPrefix, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
         if (StringUtil.isEmpty(name) || StringUtil.isEmpty(typeText)) {
             return;
         }
-        consumer.accept(createLookupElement(originPrefix, prefix + name, typeText, icon));
+        consumer.accept(createLookupElement(originPrefix, name, typeText, icon));
     }
 
     @NotNull

@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,11 @@ public class XmlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
     @NotNull
     String getPrefixText(@NotNull CompletionResultSet result) {
         String prefix = result.getPrefixMatcher().getPrefix();
-        return prefix.substring(0, prefix.lastIndexOf("{") + 1);
+        String subPrefix = prefix.substring(prefix.lastIndexOf("{"));
+        if (StringUtil.isEmpty(subPrefix) || !subPrefix.contains(".")) {
+            return "";
+        }
+        return subPrefix.substring(0, prefix.lastIndexOf(".") + 1);
     }
 
     /**
