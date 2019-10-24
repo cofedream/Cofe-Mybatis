@@ -85,9 +85,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         Annotation.Value value = Annotation.PARAM.getValue(parameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-            if (PsiTypeUtils.isCustomType(parameter.getType())) {
-                addPsiClassTypeVariants(prefixText, prefixArr, (PsiClassType) parameter.getType(), result);
-            }
+            PsiTypeUtils.isCustomType(parameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, prefixArr, psiClassType, result));
         } else {
             result.addElement(createLookupElement(prefixText, value.getValue(), parameter.getType().getPresentableText(), AllIcons.Nodes.Parameter));
         }
@@ -104,9 +102,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
-        if (PsiTypeUtils.isCustomType(type)) {
-            addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
-        }
+        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(prefixText, prefixArr, CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
     }
 
     @Override
@@ -189,7 +185,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
 
     private void addMethodsVariants(final String originPrefix, final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
         for (PsiMethod method : methods) {
-            if (CompletionUtils.isTargetMethod(method) && method.getReturnType() != null) {
+            if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
                 createLookupElement(originPrefix, PsiJavaUtils.processGetMethodName(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }

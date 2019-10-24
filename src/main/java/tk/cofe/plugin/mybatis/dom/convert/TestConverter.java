@@ -110,9 +110,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
         Annotation.Value value = Annotation.PARAM.getValue(parameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-            if (PsiTypeUtils.isCustomType(parameter.getType())) {
-                addPsiClassTypeVariants(prefixText, (PsiClassType) parameter.getType(), res);
-            }
+            PsiTypeUtils.isCustomType(parameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, psiClassType, res));
         } else {
             res.add(prefixText + value.getValue());
         }
@@ -129,9 +127,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
-        if (PsiTypeUtils.isCustomType(type)) {
-            addPsiClassTypeVariants(prefixText, CompletionUtils.getTargetPsiClass(prefixArr, type), res);
-        }
+        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(prefixText, CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
     }
 
     private boolean isSupport(@Nullable String prefix) {
@@ -220,7 +216,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
 
     private void addMethodsVariants(final String prefix, final Set<String> res, final PsiMethod[] methods) {
         for (PsiMethod psiMethod : methods) {
-            if (CompletionUtils.isTargetMethod(psiMethod) && psiMethod.getReturnType() != null) {
+            if (PsiJavaUtils.isGetMethod(psiMethod) && psiMethod.getReturnType() != null) {
                 res.add(prefix + PsiJavaUtils.processGetMethodName(psiMethod));
             }
         }

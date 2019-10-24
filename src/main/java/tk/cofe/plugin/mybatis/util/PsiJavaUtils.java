@@ -141,7 +141,10 @@ public final class PsiJavaUtils {
      * @param method 方法
      */
     public static boolean isGetMethod(@NotNull PsiMethod method) {
-        return method.getName().startsWith("get") && method.getName().length() > 3;
+        return isPublicMethod(method)
+                && !isVoidMethod(method)
+                && method.getName().startsWith("get")
+                && method.getName().length() > 3;
     }
 
     /**

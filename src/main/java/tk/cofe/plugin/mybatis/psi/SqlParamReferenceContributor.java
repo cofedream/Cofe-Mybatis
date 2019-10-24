@@ -47,17 +47,13 @@ public class SqlParamReferenceContributor extends PsiReferenceContributor {
                 String text = element.getText();
                 int startIndex = text.indexOf("#{");
                 int endIndex = text.indexOf("}");
-                if (startIndex > -1 && startIndex < endIndex
-                        && MybatisUtils.isElementWithMapperXMLFile(element)) {
+                if (startIndex > -1 && startIndex < endIndex && MybatisUtils.isElementWithMapperXMLFile(element)) {
                     String prefix = text.substring(startIndex + 2, endIndex);
                     if (StringUtil.isNotEmpty(prefix)) {
-                        String[] prefixArr = prefix.split("\\.");
-                        PsiReferenceBase.Immediate<PsiElement> referenceElement = new PsiReferenceBase.Immediate<PsiElement>(element, DomUtils.getDomElement(element, ClassElement.class)
-                                .flatMap(ClassElement::getIdMethod).map(psiMethod -> {
-                                    PsiElement prefixElement = CompletionUtils.getPrefixElement(prefixArr, ((PsiParameter[]) psiMethod.getParameters()));
-                                    return prefixElement;
-                                }).orElse(null));
-                        return new PsiReference[] {referenceElement};
+                        return new PsiReference[] {new PsiReferenceBase.Immediate<>(element, DomUtils.getDomElement(element, ClassElement.class)
+                                .flatMap(ClassElement::getIdMethod)
+                                .map(psiMethod -> CompletionUtils.getPrefixElement(prefix.split("\\."), ((PsiParameter[]) psiMethod.getParameters())))
+                                .orElse(null))};
                     }
                 }
                 return new PsiReference[0];

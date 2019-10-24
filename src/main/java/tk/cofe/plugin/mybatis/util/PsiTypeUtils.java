@@ -20,15 +20,18 @@ package tk.cofe.plugin.mybatis.util;
 import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author : zhengrf
@@ -36,7 +39,9 @@ import java.util.List;
  */
 public final class PsiTypeUtils {
 
-    private static final List<String> DATE_CLASS_NAMES = Arrays.asList(CommonClassNames.JAVA_UTIL_DATE, "java.time.LocalDate", "java.time.LocalTime");
+    private static final String LOCAL_DATE_CLASS_NAME = "java.time.LocalDate";
+    private static final String LOCAL_TIME_CLASS_NAME = "java.time.LocalTime";
+    private static final List<String> DATE_CLASS_NAMES = Arrays.asList(CommonClassNames.JAVA_UTIL_DATE, LOCAL_DATE_CLASS_NAME, LOCAL_TIME_CLASS_NAME);
 
     /**
      * 判断是否为 void 类型
@@ -164,8 +169,8 @@ public final class PsiTypeUtils {
             return false;
         }
         if (InheritanceUtil.isInheritor(resolved, CommonClassNames.JAVA_UTIL_DATE)
-                || InheritanceUtil.isInheritor(resolved, "java.time.LocalDate")
-                || InheritanceUtil.isInheritor(resolved, "java.time.LocalTime")) {
+                || InheritanceUtil.isInheritor(resolved, LOCAL_DATE_CLASS_NAME)
+                || InheritanceUtil.isInheritor(resolved, LOCAL_TIME_CLASS_NAME)) {
             return true;
         }
         return DATE_CLASS_NAMES.contains(psiType.getCanonicalText());
@@ -185,7 +190,22 @@ public final class PsiTypeUtils {
             return false;
         }
         // 上述类型都不成立,且为类对象,则为自定义对象
-        return psiType instanceof PsiClassReferenceType;
+        return psiType instanceof PsiClassType;
+    }
+
+    /**
+     * 是自定义类型
+     *
+     * @param psiType  类型
+     * @param consumer 为自定义类型的情况下回调执行
+     * @return 判断结果
+     */
+    public static boolean isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> consumer) {
+        if (isCustomType(psiType)) {
+            consumer.accept(((PsiClassType) psiType));
+            return true;
+        }
+        return false;
     }
 
 }
