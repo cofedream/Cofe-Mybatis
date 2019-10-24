@@ -190,11 +190,7 @@ public class ForeachConverter {
         if (field != null) {
             return field;
         }
-        return PsiJavaUtils.findPsiMethod(psiClass, processTextToGetMethodName(text)).orElse(null);
-    }
-
-    private static String processTextToGetMethodName(@NotNull final String text) {
-        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
+        return PsiJavaUtils.findPsiMethod(psiClass, CompletionUtils.processTextToGetMethodName(text)).orElse(null);
     }
 
     private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {

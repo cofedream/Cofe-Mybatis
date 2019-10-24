@@ -31,6 +31,7 @@
         <i>new features:</i>
         <ul>
             <li>调整 &lt;foreach/&gt;标签 内属性参数提示</li>
+            <li>支持 #{xxx} 跳转至定义</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>

@@ -17,6 +17,7 @@ package tk.cofe.plugin.mybatis.util;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,13 +59,14 @@ public class CompletionUtils {
             return psiParameters[num].getType();
         }
         if (psiParameters.length == 1) {
-            if (PsiTypeUtils.isCustomType(psiParameters[0].getType())) {
-                Annotation.Value value = Annotation.PARAM.getValue(psiParameters[0]);
-                if (value == null) {
-                    return getTargetPsiType(prefix, psiParameters[0].getType());
-                } else if (value.getValue().equals(prefix)) {
-                    return psiParameters[0].getType();
+            PsiParameter firstParameter = psiParameters[0];
+            Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
+            if (value == null) {
+                if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
+                    return getTargetPsiType(prefix, firstParameter.getType());
                 }
+            } else if (value.getValue().equals(prefix)) {
+                return firstParameter.getType();
             }
         } else {
             for (PsiParameter psiParameter : psiParameters) {
@@ -74,6 +77,73 @@ public class CompletionUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取前缀对应的元素
+     *
+     * @param prefix        前缀
+     * @param psiParameters 参数数组
+     * @return 前缀对应的元素
+     */
+    public static PsiElement getPrefixElement(@NotNull final String[] prefix, @NotNull final PsiParameter[] psiParameters) {
+        PsiElement element = null;
+        PsiType psiType = null;
+        for (int i = 0; i < prefix.length; i++) {
+            if (i == 0) {
+                Matcher matcher = PARAM_PATTERN.matcher(prefix[i]);
+                if (matcher.matches()) {
+                    int num = Integer.parseInt(matcher.group("num")) - 1;
+                    if (num > psiParameters.length) {
+                        return null;
+                    }
+                    element = psiParameters[num];
+                    psiType = psiParameters[num].getType();
+                } else {
+                    if (psiParameters.length == 1) {
+                        PsiParameter firstParameter = psiParameters[0];
+                        Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
+                        if (value == null) {
+                            if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
+                                element = getTargetElement(prefix[i], firstParameter.getType());
+                                psiType = getTargetPsiType(prefix[i], firstParameter.getType());
+                            }
+                        } else if (value.getValue().equals(prefix[i])) {
+                            element = firstParameter;
+                            psiType = firstParameter.getType();
+                        }
+                    } else {
+                        for (PsiParameter psiParameter : psiParameters) {
+                            Annotation.Value value = Annotation.PARAM.getValue(psiParameter);
+                            if ((value != null && prefix[i].equals(value.getValue()))) {
+                                element = psiParameter;
+                                psiType = psiParameter.getType();
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (PsiTypeUtils.isCustomType(psiType)) {
+                    PsiClass resolve = ((PsiClassType) psiType).resolve();
+                    for (PsiField field : resolve.getAllFields()) {
+                        if (Objects.equals(prefix[i], field.getName())) {
+                            element = field;
+                            psiType = field.getType();
+                        }
+                    }
+                    for (PsiMethod method : resolve.getAllMethods()) {
+                        if (Objects.equals(processTextToGetMethodName(prefix[i]), method.getName())) {
+                            element = method;
+                            psiType = method.getReturnType();
+                        }
+                    }
+                } else {
+                    element = null;
+                    psiType = null;
+                }
+            }
+        }
+        return element;
     }
 
     /**
@@ -101,6 +171,36 @@ public class CompletionUtils {
         for (PsiMember psiMember : psiClass.getAllMethods()) {
             if (prefix.equals(PsiJavaUtils.processGetMethodName(((PsiMethod) psiMember))) && isTargetMethod(((PsiMethod) psiMember))) {
                 return ((PsiMethod) psiMember).getReturnType();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     *
+     * @param prefix  前缀
+     * @param psiType 类对象
+     */
+    @Nullable
+    public static PsiElement getTargetElement(@NotNull String prefix, @Nullable PsiType psiType) {
+        if (!(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        final PsiClass psiClass = ((PsiClassType) psiType).resolve();
+        if (psiClass == null) {
+            return null;
+        }
+        for (PsiMember psiMember : psiClass.getAllFields()) {
+            // 字段名与前缀匹配 且 为自定义类型
+            if (prefix.equals(psiMember.getName())) {
+                return psiMember;
+            }
+        }
+        // 字段名和前缀匹配
+        for (PsiMember psiMember : psiClass.getAllMethods()) {
+            if (prefix.equals(PsiJavaUtils.processGetMethodName(((PsiMethod) psiMember))) && isTargetMethod(((PsiMethod) psiMember))) {
+                return psiMember;
             }
         }
         return null;
@@ -202,5 +302,9 @@ public class CompletionUtils {
             return new String[0];
         }
         return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
+    }
+
+    public static String processTextToGetMethodName(@NotNull final String text) {
+        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
     }
 }
