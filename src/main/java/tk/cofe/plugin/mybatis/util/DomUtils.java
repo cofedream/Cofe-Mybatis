@@ -46,13 +46,16 @@ public final class DomUtils extends DomUtil {
         return Optional.empty();
     }
 
+    /**
+     * strict default to true
+     */
     public static <T> T getParentOfType(final DomElement domElement, final Class<T> requiredClass) {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
     @NotNull
     @SuppressWarnings("unchecked")
-    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element,@NotNull final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, @NotNull final Class<T> requiredClass) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);

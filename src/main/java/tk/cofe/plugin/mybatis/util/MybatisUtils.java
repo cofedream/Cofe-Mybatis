@@ -22,7 +22,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiPrimitiveType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlElement;
@@ -88,16 +87,16 @@ public class MybatisUtils {
         }
     });
 
-    @Nullable
-    public static Mapper getMapper(@NotNull DomElement element) {
-        return DomUtils.getParentOfType(element, Mapper.class, true);
+    @NotNull
+    public static Optional<Mapper> getMapper(@NotNull DomElement element) {
+        return Optional.ofNullable(DomUtils.getParentOfType(element, Mapper.class));
     }
 
-    @Nullable
-    public static Mapper getMapper(@NotNull XmlElement element) {
+    @NotNull
+    public static Optional<Mapper> getMapper(@NotNull XmlElement element) {
         DomManager domManager = DomManager.getDomManager(element.getProject());
         DomFileElement<Mapper> fileElement = domManager.getFileElement(((XmlFile) element.getContainingFile()), Mapper.class);
-        return fileElement == null ? null : fileElement.getRootElement();
+        return fileElement == null ? Optional.empty() : Optional.of(fileElement.getRootElement());
     }
 
     /**
@@ -156,7 +155,7 @@ public class MybatisUtils {
     public static List<String> getResultType(@Nullable PsiType type) {
         if (type == null) {
             return Collections.emptyList();
-        } else if (PsiPrimitiveType.VOID.equals(type)) {
+        } else if (PsiTypeUtils.isVoid(type)) {
             return Collections.emptyList();
         } else if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
             return Optional.ofNullable(BaseType.get(type.getPresentableText())).orElse(Collections.emptyList());

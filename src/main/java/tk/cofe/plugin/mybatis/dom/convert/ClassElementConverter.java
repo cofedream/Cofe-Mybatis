@@ -51,7 +51,7 @@ public class ClassElementConverter {
         @NotNull
         @Override
         public Collection<? extends PsiMethod> getVariants(ConvertContext context) {
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
+            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class);
             if (classElement == null) {
                 return Collections.emptyList();
             }

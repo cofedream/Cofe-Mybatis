@@ -98,38 +98,20 @@ public final class PsiJavaUtils {
     public static void importClass(@NotNull PsiJavaFile file, @NotNull PsiClass psiClass) {
         file.importClass(psiClass);
     }
-    // 包相关
 
-    // Java 相关Element
-
-    /**
-     * 判断 PsiElement 是否为接口
-     *
-     * @param psiElement 元素
-     * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
-     */
-    public static boolean isInterface(@NotNull PsiElement psiElement) {
-        return psiElement instanceof PsiClass && ((PsiClass) psiElement).isInterface();
-    }
+    // 字段相关
 
     /**
-     * 判断 PsiElement 是否为类方法
+     * 判断是否为目标字段
      *
-     * @param psiElement 元素
-     * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
+     * @param psiField 字段
      */
-    public static boolean isInterfaceMethod(@NotNull PsiElement psiElement) {
-        return psiElement instanceof PsiMethod && isElementWithinInterface(psiElement);
+    public static boolean notSerialField(@NotNull PsiField psiField) {
+        return !"serialVersionUID".equals(psiField.getName());
     }
 
-    private static boolean isElementWithinInterface(@Nullable PsiElement element) {
-        if (element instanceof PsiClass && ((PsiClass) element).isInterface()) {
-            return true;
-        }
-        PsiClass parentOfType = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-        return parentOfType != null && parentOfType.isInterface();
-    }
-
+    // 方法相关
+    
     /**
      * 判断是否为 void 方法
      *
@@ -202,7 +184,7 @@ public final class PsiJavaUtils {
      * @return getAaaBbb->aaaBbb,或者 ""
      */
     @NotNull
-    public static String processGetMethodName(@NotNull PsiMethod method) {
+    public static String replaceGetPrefix(@NotNull PsiMethod method) {
         String methodName = method.getName();
         if (methodName.length() == 3) {
             return "";
@@ -212,6 +194,44 @@ public final class PsiJavaUtils {
             return first + methodName.substring(4);
         }
         return String.valueOf(first);
+    }
+
+    // Java 相关Element
+
+    /**
+     * 判断 PsiElement 是否为接口
+     *
+     * @param psiElement 元素
+     * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
+     */
+    public static boolean isInterface(@NotNull PsiElement psiElement) {
+        return psiElement instanceof PsiClass && ((PsiClass) psiElement).isInterface();
+    }
+
+    /**
+     * 判断 PsiElement 是否为类方法
+     *
+     * @param psiElement 元素
+     * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
+     */
+    public static boolean isInterfaceMethod(@NotNull PsiElement psiElement) {
+        return psiElement instanceof PsiMethod && isElementWithinInterface(psiElement);
+    }
+
+    private static boolean isElementWithinInterface(@Nullable PsiElement element) {
+        if (element instanceof PsiClass && ((PsiClass) element).isInterface()) {
+            return true;
+        }
+        PsiClass parentOfType = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+        return parentOfType != null && parentOfType.isInterface();
+    }
+
+    /**
+     * 转为 getXxx方法名
+     */
+    @NotNull
+    public static String toGetPrefix(@NotNull final String text) {
+        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
     }
 
     public static void psiClassProcessor(@Nullable PsiClassType psiClassType,
@@ -241,5 +261,4 @@ public final class PsiJavaUtils {
             }
         }
     }
-
 }

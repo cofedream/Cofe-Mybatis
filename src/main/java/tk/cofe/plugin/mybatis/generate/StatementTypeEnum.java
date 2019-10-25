@@ -56,15 +56,14 @@ public enum StatementTypeEnum {
             GenericAttributeValue<PsiClass> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
                 List<String> resultType = MybatisUtils.getResultType(method.getReturnType());
-                if (!resultType.isEmpty()) {
-                    resultTypeValue.setStringValue(resultType.get(0));
-                } else {
-                    Notification mybatis = new Notification(
+                if (resultType.isEmpty()) {
+                    Notifications.Bus.notify(new Notification(
                             MyBatisBundle.message("action.group.text"),
                             MyBatisBundle.message("action.generate.title"),
                             MyBatisBundle.message("action.generate.text", method.getName()),
-                            NotificationType.WARNING);
-                    Notifications.Bus.notify(mybatis);
+                            NotificationType.WARNING));
+                } else {
+                    resultTypeValue.setStringValue(resultType.get(0));
                 }
             }
             return select;
@@ -115,28 +114,29 @@ public enum StatementTypeEnum {
 
     /**
      * 指定元素动作
-     *  @param mapper   Mapper
-     * @param method   方法
-     * @param project  当前项目
+     *
+     * @param mapper  Mapper
+     * @param method  方法
+     * @param project 当前项目
      */
     public void createStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
-            ClassElement element = addClassElement(mapper, method);
-            XmlTag tag = element.getXmlTag();
-            if (tag == null) {
-                return;
-            }
-            element.setValue("\n");
-            int offset = 0;
-            GenericAttributeValue<PsiMethod> elementId = element.getId();
-            if (elementId.getXmlAttributeValue() != null) {
-                elementId.setStringValue(method.getName());
-                offset = elementId.getXmlAttributeValue().getTextOffset();
-            }
-            NavigationUtil.activateFileWithPsiElement(tag, true);
-            Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-            if (null != xmlEditor) {
-                xmlEditor.getCaretModel().moveToOffset(offset);
-                xmlEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-            }
+        ClassElement element = addClassElement(mapper, method);
+        XmlTag tag = element.getXmlTag();
+        if (tag == null) {
+            return;
+        }
+        element.setValue("\n");
+        int offset = 0;
+        GenericAttributeValue<PsiMethod> elementId = element.getId();
+        if (elementId.getXmlAttributeValue() != null) {
+            elementId.setStringValue(method.getName());
+            offset = elementId.getXmlAttributeValue().getTextOffset();
+        }
+        NavigationUtil.activateFileWithPsiElement(tag, true);
+        Editor xmlEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        if (null != xmlEditor) {
+            xmlEditor.getCaretModel().moveToOffset(offset);
+            xmlEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        }
     }
 }

@@ -112,15 +112,15 @@ public class ForeachConverter {
         if (field != null) {
             return field;
         }
-        return PsiJavaUtils.findPsiMethod(psiClass, CompletionUtils.processTextToGetMethodName(text)).orElse(null);
+        return PsiJavaUtils.findPsiMethod(psiClass, PsiJavaUtils.toGetPrefix(text)).orElse(null);
     }
 
     private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
         PsiJavaUtils.psiClassProcessor(psiClass,
-                field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && CompletionUtils.isTargetField(field),
+                field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && PsiJavaUtils.notSerialField(field),
                 field -> res.add(prefix + field.getName()),
                 method -> (PsiTypeUtils.isCollectionType(method.getReturnType()) || PsiTypeUtils.isCustomType(method.getReturnType())) && PsiJavaUtils.isGetMethod(method),
-                method -> res.add(prefix + PsiJavaUtils.processGetMethodName(method)));
+                method -> res.add(prefix + PsiJavaUtils.replaceGetPrefix(method)));
     }
 
     public static class Collection extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {
@@ -161,18 +161,18 @@ public class ForeachConverter {
         }
 
         @Override
-        public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter parameter, @NotNull final Set<String> res) {
-            Annotation.Value value = Annotation.PARAM.getValue(parameter);
+        public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final Set<String> res) {
+            Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
             if (value == null) {
-                if (PsiTypeUtils.isCustomType(parameter.getType())) {
-                    Optional.ofNullable(((PsiClassType) parameter.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
-                } else if (PsiTypeUtils.isCollectionType(parameter.getType())) {
+                if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
+                    Optional.ofNullable(((PsiClassType) firstParameter.getType()).resolve()).ifPresent(psiClass -> addPsiClassVariants("", psiClass, res));
+                } else if (PsiTypeUtils.isCollectionType(firstParameter.getType())) {
                     res.add("list");
-                } else if (PsiTypeUtils.isArrayType(parameter.getType())) {
+                } else if (PsiTypeUtils.isArrayType(firstParameter.getType())) {
                     res.add("array");
                 }
             } else {
-                res.add(Annotation.PARAM.getValue(parameter, parameter::getName).getValue());
+                res.add(Annotation.PARAM.getValue(firstParameter, firstParameter::getName).getValue());
             }
         }
 

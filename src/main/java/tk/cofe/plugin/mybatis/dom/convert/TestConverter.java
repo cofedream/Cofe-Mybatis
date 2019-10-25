@@ -106,11 +106,11 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter parameter, @NotNull final Set<String> res) {
-        Annotation.Value value = Annotation.PARAM.getValue(parameter);
+    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final Set<String> res) {
+        Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-            PsiTypeUtils.isCustomType(parameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, psiClassType, res));
+            PsiTypeUtils.isCustomType(firstParameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, psiClassType, res));
         } else {
             res.add(prefixText + value.getValue());
         }
@@ -208,7 +208,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
 
     private void addFieldsVariants(final String prefix, final Set<String> res, final PsiField[] fields) {
         for (PsiField field : fields) {
-            if (CompletionUtils.isTargetField(field)) {
+            if (PsiJavaUtils.notSerialField(field)) {
                 res.add(prefix + field.getName());
             }
         }
@@ -217,7 +217,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     private void addMethodsVariants(final String prefix, final Set<String> res, final PsiMethod[] methods) {
         for (PsiMethod psiMethod : methods) {
             if (PsiJavaUtils.isGetMethod(psiMethod) && psiMethod.getReturnType() != null) {
-                res.add(prefix + PsiJavaUtils.processGetMethodName(psiMethod));
+                res.add(prefix + PsiJavaUtils.replaceGetPrefix(psiMethod));
             }
         }
     }

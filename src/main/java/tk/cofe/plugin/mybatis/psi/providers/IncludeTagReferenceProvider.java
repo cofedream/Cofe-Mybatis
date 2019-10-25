@@ -24,7 +24,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
@@ -55,28 +54,22 @@ public class IncludeTagReferenceProvider extends PsiReferenceProvider {
         @Override
         public ResolveResult[] multiResolve(boolean incompleteCode) {
             XmlAttributeValue originalElement = (XmlAttributeValue) myElement;
-            Mapper mapper = MybatisUtils.getMapper(originalElement);
-            if (mapper == null) {
-                return new ResolveResult[0];
-            }
-            List<Sql> sqls = mapper.getSqls();
-            List<ResolveResult> result = new ArrayList<>();
-            sqls.forEach(sql -> {
-                if (sql.getXmlElement() != null && sql.isEqualsId(originalElement.getValue())) {
-                    result.add(new PsiElementResolveResult(sql.getXmlElement()));
-                }
-            });
-            return result.toArray(new ResolveResult[0]);
+            return MybatisUtils.getMapper(originalElement).map(mapper -> {
+                List<Sql> sqls = mapper.getSqls();
+                List<ResolveResult> result = new ArrayList<>();
+                sqls.forEach(sql -> {
+                    if (sql.getXmlElement() != null && sql.isEqualsId(originalElement.getValue())) {
+                        result.add(new PsiElementResolveResult(sql.getXmlElement()));
+                    }
+                });
+                return result.toArray(new ResolveResult[0]);
+            }).orElse(new ResolveResult[0]);
         }
 
         @NotNull
         @Override
         public Object[] getVariants() {
-            Mapper mapper = MybatisUtils.getMapper(((XmlAttributeValue) myElement));
-            if (mapper == null) {
-                return new Object[0];
-            }
-            return ElementPresentationManager.getInstance().createVariants(mapper.getSqls());
+            return MybatisUtils.getMapper(((XmlAttributeValue) myElement)).map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getSqls())).orElse(new Object[0]);
         }
 
     }

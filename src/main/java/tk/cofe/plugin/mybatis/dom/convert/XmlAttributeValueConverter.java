@@ -53,12 +53,10 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
     @NotNull
     @Override
     public Collection<? extends T> getVariants(ConvertContext context) {
-        Mapper mapper = MybatisUtils.getMapper(context.getInvocationElement());
-        if (mapper == null) {
-            return Collections.emptyList();
-        }
-        Collection<T> variants = getVariants(context, mapper);
-        return variants == null ? Collections.emptyList() : variants;
+        return MybatisUtils.getMapper(context.getInvocationElement()).map(mapper -> {
+            Collection<T> variants = getVariants(context, mapper);
+            return variants == null ? Collections.<T>emptyList() : variants;
+        }).orElse(Collections.emptyList());
     }
 
     @Nullable
@@ -77,11 +75,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
         if (StringUtil.isEmpty(value) || context == null) {
             return null;
         }
-        Mapper mapper = MybatisUtils.getMapper(context.getInvocationElement());
-        if (mapper == null) {
-            return null;
-        }
-        return findTargetElement(value, context, mapper);
+        return MybatisUtils.getMapper(context.getInvocationElement()).map(mapper -> findTargetElement(value, context, mapper)).orElse(null);
     }
 
     /**

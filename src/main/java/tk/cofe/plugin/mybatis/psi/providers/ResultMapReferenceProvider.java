@@ -27,7 +27,6 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.ElementPresentationManager;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
-import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -69,11 +68,7 @@ public class ResultMapReferenceProvider {
             @NotNull
             @Override
             public ResolveResult[] multiResolve(boolean incompleteCode) {
-                return DomUtils.getDomElement(myElement, ResultMap.class).flatMap(ResultMap::getExtendsValue).map(extendsValue -> {
-                    Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
-                    if (mapper == null) {
-                        return EMPTY_RESOLVE_RESULTS;
-                    }
+                return DomUtils.getDomElement(myElement, ResultMap.class).flatMap(ResultMap::getExtendsValue).map(extendsValue -> MybatisUtils.getMapper((XmlAttributeValue) myElement).map(mapper -> {
                     List<ResolveResult> result = new ArrayList<>();
                     mapper.getResultMaps().forEach(resultMap -> resultMap.getIdValue().ifPresent(id -> {
                         if (id.equals(extendsValue) && resultMap.getId().getXmlAttributeValue() != null) {
@@ -81,7 +76,7 @@ public class ResultMapReferenceProvider {
                         }
                     }));
                     return result.toArray(EMPTY_RESOLVE_RESULTS);
-                }).orElse(EMPTY_RESOLVE_RESULTS);
+                }).orElse(EMPTY_RESOLVE_RESULTS)).orElse(EMPTY_RESOLVE_RESULTS);
             }
 
             @NotNull
@@ -91,13 +86,9 @@ public class ResultMapReferenceProvider {
                 if (domElement == null) {
                     return new Object[0];
                 }
-                Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
-                if (mapper == null) {
-                    return new Object[0];
-                }
-                return ElementPresentationManager.getInstance().createVariants(mapper.getResultMaps()
+                return MybatisUtils.getMapper((XmlAttributeValue) myElement).map(mapper -> ElementPresentationManager.getInstance().createVariants(mapper.getResultMaps()
                         .stream().filter(resultMap -> resultMap.isEqualsId(domElement.getIdValue(null)))
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()))).orElse(new Object[0]);
             }
         }
     }
@@ -122,11 +113,7 @@ public class ResultMapReferenceProvider {
             @NotNull
             @Override
             public ResolveResult[] multiResolve(boolean incompleteCode) {
-                return DomUtils.getDomElement(myElement, ResultMap.class).flatMap(IdAttribute::getIdValue).map(idValue -> {
-                    Mapper mapper = MybatisUtils.getMapper((XmlAttributeValue) myElement);
-                    if (mapper == null) {
-                        return EMPTY_RESOLVE_RESULTS;
-                    }
+                return DomUtils.getDomElement(myElement, ResultMap.class).flatMap(IdAttribute::getIdValue).map(idValue -> MybatisUtils.getMapper((XmlAttributeValue) myElement).map(mapper -> {
                     List<ResolveResult> result = new ArrayList<>();
                     mapper.getResultMaps().forEach(resultMap -> resultMap.getExtendsValue().ifPresent(extendsValue -> {
                         if (extendsValue.equals(idValue) && resultMap.getXmlElement() != null) {
@@ -134,7 +121,7 @@ public class ResultMapReferenceProvider {
                         }
                     }));
                     return result.toArray(EMPTY_RESOLVE_RESULTS);
-                }).orElse(EMPTY_RESOLVE_RESULTS);
+                }).orElse(EMPTY_RESOLVE_RESULTS)).orElse(EMPTY_RESOLVE_RESULTS);
             }
 
         }
