@@ -102,34 +102,20 @@ public class CompletionUtils {
         for (int i = 0; i < prefix.length; i++) {
             if (i == 0) {
                 getPrefixType(prefix[0], psiParameters,
-                        psiParameter -> prefixClass.setElement(psiParameter)
-                                .setPsiType(psiParameter.getType()),
-                        psiParameter -> prefixClass.setElement(getTargetElement(prefix[0], psiParameter.getType(), psiField -> psiField, psiMethod -> psiMethod))
-                                .setPsiType(getPrefixPsiType(prefix[0], psiParameter.getType()))
-                );
+                        psiParameter -> prefixClass.setElement(psiParameter).setPsiType(psiParameter.getType()),
+                        psiParameter -> prefixClass.setElement(getTargetElement(prefix[0], psiParameter.getType(), psiField -> psiField, psiMethod -> psiMethod)).setPsiType(getPrefixPsiType(prefix[0], psiParameter.getType())));
             } else {
                 final String prefixStr = prefix[i];
-                if (!PsiTypeUtils.isCustomType(prefixClass.psiType, psiClassType -> {
-                    PsiClass psiClass = psiClassType.resolve();
-                    if (psiClass == null) {
-                        return;
-                    }
-                    for (PsiField field : psiClass.getAllFields()) {
-                        if (Objects.equals(prefixStr, field.getName())) {
-                            prefixClass.setElement(field).setPsiType(field.getType());
-                        }
-                    }
-                    for (PsiMethod method : psiClass.getAllMethods()) {
-                        if (Objects.equals(processTextToGetMethodName(prefixStr), method.getName())) {
-                            prefixClass.setElement(method).setPsiType(method.getReturnType());
-                        }
-                    }
-                })) {
-                    prefixClass.clear();
-                }
+                PsiTypeUtils.isCustomType(prefixClass.psiType, psiClassType -> customTypeProcessor(prefixClass, prefixStr, psiClassType), psiType -> prefixClass.clear());
             }
         }
         return prefixClass.element;
+    }
+
+    private static void customTypeProcessor(final PrefixClass prefixClass, final String prefixStr, final PsiClassType psiClassType) {
+        PsiJavaUtils.psiClassProcessor(psiClassType,
+                field -> Objects.equals(prefixStr, field.getName()), field -> prefixClass.setElement(field).setPsiType(field.getType()),
+                method -> Objects.equals(processTextToGetMethodName(prefixStr), method.getName()), method -> prefixClass.setElement(method).setPsiType(method.getReturnType()));
     }
 
     /**

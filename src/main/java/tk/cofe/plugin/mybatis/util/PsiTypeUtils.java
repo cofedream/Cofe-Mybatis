@@ -198,14 +198,24 @@ public final class PsiTypeUtils {
      *
      * @param psiType  类型
      * @param consumer 为自定义类型的情况下回调执行
-     * @return 判断结果
      */
-    public static boolean isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> consumer) {
+    public static void isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> consumer) {
+        isCustomType(psiType, consumer, falseType -> {
+        });
+    }
+
+    /**
+     * 是自定义类型
+     *
+     * @param psiType      类型
+     * @param trueConsumer 为自定义类型的情况下回调执行
+     */
+    public static void isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> trueConsumer, @NotNull Consumer<PsiType> falseConsumer) {
         if (isCustomType(psiType)) {
-            consumer.accept(((PsiClassType) psiType));
-            return true;
+            trueConsumer.accept(((PsiClassType) psiType));
+        } else {
+            falseConsumer.accept(psiType);
         }
-        return false;
     }
 
 }

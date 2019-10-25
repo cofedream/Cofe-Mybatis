@@ -116,19 +116,11 @@ public class ForeachConverter {
     }
 
     private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
-        if (psiClass == null) {
-            return;
-        }
-        for (PsiMethod info : psiClass.getAllMethods()) {
-            if ((PsiTypeUtils.isCollectionType(info.getReturnType()) || PsiTypeUtils.isCustomType(info.getReturnType())) && PsiJavaUtils.isGetMethod(info)) {
-                res.add(prefix + PsiJavaUtils.processGetMethodName(info));
-            }
-        }
-        for (PsiField info : psiClass.getAllFields()) {
-            if ((PsiTypeUtils.isCollectionType(info.getType()) || PsiTypeUtils.isCustomType(info.getType())) && CompletionUtils.isTargetField(info)) {
-                res.add(prefix + info.getName());
-            }
-        }
+        PsiJavaUtils.psiClassProcessor(psiClass,
+                field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && CompletionUtils.isTargetField(field),
+                field -> res.add(prefix + field.getName()),
+                method -> (PsiTypeUtils.isCollectionType(method.getReturnType()) || PsiTypeUtils.isCustomType(method.getReturnType())) && PsiJavaUtils.isGetMethod(method),
+                method -> res.add(prefix + PsiJavaUtils.processGetMethodName(method)));
     }
 
     public static class Collection extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {

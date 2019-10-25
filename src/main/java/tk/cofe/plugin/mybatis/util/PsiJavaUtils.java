@@ -18,7 +18,9 @@
 package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
@@ -32,6 +34,8 @@ import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * JavaPsi工具
@@ -208,6 +212,34 @@ public final class PsiJavaUtils {
             return first + methodName.substring(4);
         }
         return String.valueOf(first);
+    }
+
+    public static void psiClassProcessor(@Nullable PsiClassType psiClassType,
+                                         @NotNull Predicate<PsiField> fieldCondition, @NotNull Consumer<PsiField> fieldConsumer,
+                                         @NotNull Predicate<PsiMethod> methodCondition, @NotNull Consumer<PsiMethod> methodConsumer) {
+        if (psiClassType == null) {
+            return;
+        }
+        PsiClass psiClass = psiClassType.resolve();
+        psiClassProcessor(psiClass, fieldCondition, fieldConsumer, methodCondition, methodConsumer);
+    }
+
+    public static void psiClassProcessor(@Nullable PsiClass psiClass,
+                                         @NotNull Predicate<PsiField> fieldCondition, @NotNull Consumer<PsiField> fieldConsumer,
+                                         @NotNull Predicate<PsiMethod> methodCondition, @NotNull Consumer<PsiMethod> methodConsumer) {
+        if (psiClass == null) {
+            return;
+        }
+        for (PsiField field : psiClass.getAllFields()) {
+            if (fieldCondition.test(field)) {
+                fieldConsumer.accept(field);
+            }
+        }
+        for (PsiMethod method : psiClass.getAllMethods()) {
+            if (methodCondition.test(method)) {
+                methodConsumer.accept(method);
+            }
+        }
     }
 
 }
