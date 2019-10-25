@@ -77,16 +77,12 @@
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206110419-How-to-implement-go-to-to-implementation-
         -->
-        <!--<definitionsSearch implementation="tk.cofe.plugin.mybatis.search.MapperDefinitionSearch"/>-->
         <!--实现一致-->
         <definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.MethodToStatementImplementationsSearch"/>
-        <!--<definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.StatementToMethodImplementationsSearch"/>-->
         <!-- Add your extensions here -->
 
         <codeInsight.lineMarkerProvider language="JAVA"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
-        <!--<codeInsight.lineMarkerProvider language="JAVA"-->
-        <!--implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperMethodLineMarkerProvider"/>-->
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
@@ -95,33 +91,14 @@
         <lang.documentationProvider language="XML" order="first"
                                     implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
-        <!--<methodImplementor implementation="tk.cofe.plugin.mybatis.implementor.MybatisMethodImplementor"/>-->
-        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsageSearcher"/>-->
-        <!--<lang.findUsagesProvider language="JAVA" implementationClass="tk.cofe.plugin.mybatis.usages.ClassFieldFindUsagesProvider"/>-->
-        <!--<customUsageSearcher implementation="tk.cofe.plugin.mybatis.dom.usage.MapperXmlUsageSearcher"/>-->
-        <!--<findUsagesHandlerFactory implementation="tk.cofe.plugin.mybatis.dom.usage.MybatisFindUsagesHandlerFactory"/>-->
-        <!--<gotoDeclarationHandler implementation="tk.cofe.plugin.mybatis.navigation.MybatisGotoDeclarationHandler"/>-->
-        <!--<targetElementEvaluator language="XML" implementationClass="tk.cofe.plugin.mybatis.code.insight.MybatisTargetElementEvaluator"/>-->
-        <!--<java.elementFinder implementation=""-->
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
-        <!--<methodReferencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperMethodReferencesSearch"/>-->
-        <!--<lang.findUsagesProvider-->
 
-        <!--<psi.referenceContributor language="JAVA"-->
-        <!--implementation="tk.cofe.plugin.mybatis.java.psi.FieldReferenceContributor"/>-->
-        <!--<referencesSearch implementation="tk.cofe.plugin.mybatis.referencessearch.MapperXmlReferencesSearch"/>-->
-        <!--<psi.referenceContributor language="XML"-->
-        <!--implementation="tk.cofe.plugin.mybatis.dom.psi.MapperReferenceContributor"/>-->
         <psi.referenceContributor implementation="tk.cofe.plugin.mybatis.psi.SqlParamReferenceContributor"/>
-        <!--<refactoring.elementListenerProvider implementation="tk.cofe.plugin.mybatis.refactoring.ElementListenerProvider"/>-->
-        <!--<renamePsiElementProcessor implementation="tk.cofe.plugin.mybatis.refactoring.rename.MapperStatementRenameProcessor" order="first" id="mapperStatementRename"/>-->
 
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
         <completion.contributor id="xml-sql-param-completion" language="XML" order="first"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.XmlFileSqlParameterCompletionContributor"/>
-        <!--<completion.contributor id="mapper-example-completion" language="JAVA" order="first"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.TkMapperCompletionContributor"/>-->
         <!--纯提示-->
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>
 
