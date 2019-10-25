@@ -17,12 +17,12 @@
 
 package tk.cofe.plugin.mybatis.linemarker;
 
-import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
+import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
@@ -50,14 +50,17 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
-        return DomUtils.getDomElement(element, ClassElement.class).flatMap(ClassElement::getIdMethod).map(psiMethods -> new LineMarkerInfo<>(
-                (XmlTag) element,
-                element.getTextRange(),
-                MybatisIcons.NavigateToMethod,
-                Pass.UPDATE_ALL,
-                from -> MyBatisBundle.message("action.navigate.tip", "method"),
-                (e, from) -> ((Navigatable) psiMethods.getNavigationElement()).navigate(true),
-                GutterIconRenderer.Alignment.CENTER)).orElse(null);
+        return DomUtils.getDomElement(element, ClassElement.class).flatMap(ClassElement::getIdMethod).map(method -> {
+            XmlAttribute id = ((XmlTag) element).getAttribute("id");
+            if (id == null) {
+                return null;
+            }
+            return NavigationGutterIconBuilder.create(MybatisIcons.NavigateToMethod)
+                    .setAlignment(GutterIconRenderer.Alignment.CENTER)
+                    .setTargets(method)
+                    .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "method"))
+                    .createLineMarkerInfo(id);
+        }).orElse(null);
     }
 
     @Override

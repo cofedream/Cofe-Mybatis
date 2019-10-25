@@ -23,14 +23,12 @@ import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -70,22 +68,22 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     /**
      * 标记接口
      *
-     * @param mapperClass 类元素
-     * @param method      方法元素
-     * @param result      标记结果
+     * @param psiClass 类元素
+     * @param method   方法元素
+     * @param result   标记结果
      */
-    private void markerMethod(PsiClass mapperClass, @NotNull PsiMethod method, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-        Collection<Mapper> mappers = MapperService.getInstance(method.getProject()).findMapperXmls(mapperClass);
-        if (!mappers.isEmpty() && method.getNameIdentifier() != null) {
-            List<XmlTag> xmlMethods = mappers.stream().flatMap(mapperXml -> mapperXml.getClassElements().stream())
+    private void markerMethod(PsiClass psiClass, @NotNull PsiMethod method, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+        if (method.getNameIdentifier() != null) {
+            List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).findMapperXmls(psiClass).stream()
+                    .flatMap(mapperXml -> mapperXml.getClassElements().stream())
                     .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
             if (!xmlMethods.isEmpty()) {
-                NavigationGutterIconBuilder<PsiElement> methodBuild = NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
                         .setTargets(xmlMethods)
-                        .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "statement"));
-                result.add(methodBuild.createLineMarkerInfo(method.getNameIdentifier()));
+                        .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "statement"))
+                        .createLineMarkerInfo(method.getNameIdentifier()));
             }
         }
     }
@@ -93,18 +91,21 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     /**
      * 标记接口
      *
-     * @param mapperClass 类元素
-     * @param result      标记结果
+     * @param psiClass 类元素
+     * @param result   标记结果
      */
-    private void markerInterface(@NotNull PsiClass mapperClass, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-        Collection<Mapper> mappers = MapperService.getInstance(mapperClass.getProject()).findMapperXmls(mapperClass);
-        PsiIdentifier nameIdentifier = mapperClass.getNameIdentifier();
-        if (!mappers.isEmpty() && nameIdentifier != null) {
-            result.add(NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
-                    .setAlignment(GutterIconRenderer.Alignment.CENTER)
-                    .setTargets(mappers.stream().map(mapperXml -> mapperXml.getNamespace().getXmlTag()).collect(Collectors.toList()))
-                    .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"))
-                    .createLineMarkerInfo(nameIdentifier));
+    private void markerInterface(@NotNull PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+        if (psiClass.getNameIdentifier() != null) {
+            List<XmlTag> xmlTags = MapperService.getInstance(psiClass.getProject()).findMapperXmls(psiClass).stream()
+                    .map(mapperXml -> mapperXml.getNamespace().getXmlTag())
+                    .collect(Collectors.toList());
+            if (!xmlTags.isEmpty()) {
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
+                        .setAlignment(GutterIconRenderer.Alignment.CENTER)
+                        .setTargets(xmlTags)
+                        .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"))
+                        .createLineMarkerInfo(psiClass.getNameIdentifier()));
+            }
         }
     }
 }
