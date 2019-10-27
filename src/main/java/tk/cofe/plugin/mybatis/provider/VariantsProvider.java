@@ -17,6 +17,7 @@ package tk.cofe.plugin.mybatis.provider;
 import com.intellij.psi.PsiParameter;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.util.CompletionUtils;
 
 /**
  * 代码完成提供

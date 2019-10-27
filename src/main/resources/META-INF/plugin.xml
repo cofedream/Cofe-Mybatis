@@ -55,16 +55,12 @@
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
 
-    <!-- Actions -->
-    <actions>
-    </actions>
-
+    <xi:include href="/META-INF/MbspPlugin.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!-- Extension points defined by the plugin.
-       Extension points are registered by a plugin so that other
-       plugins can provide this plugin with certain data. The
+    Extension points are registered by a plugin so that other
+    plugins can provide this plugin with certain data. The
        "beanClass" attribute specifies the class the implementations
        of which can be used for the extension point. -->
-    <xi:include href="/META-INF/MbspPlugin.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
@@ -98,8 +94,6 @@
 
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
-        <completion.contributor id="xml-sql-param-completion" language="XML" order="first"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.XmlFileSqlParameterCompletionContributor"/>
         <!--纯提示-->
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>
 
@@ -118,5 +112,9 @@
         <!--    <className>tk.cofe.plugin.mybatis.intention.GenerateStatementIntention</className>-->
         <!--</intentionAction>-->
     </extensions>
+
+    <!-- Actions -->
+    <actions>
+    </actions>
 
 </idea-plugin>

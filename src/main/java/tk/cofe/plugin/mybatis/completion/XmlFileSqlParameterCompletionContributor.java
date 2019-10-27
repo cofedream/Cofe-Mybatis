@@ -23,7 +23,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.util.CompletionUtils;
 
 /**
  * XML 文件中的SQL 参数完成
@@ -44,21 +43,13 @@ public class XmlFileSqlParameterCompletionContributor extends BaseSqlParameterCo
     }
 
     @NotNull
-    String getPrefixText(@NotNull CompletionResultSet result) {
+    String getPrefixText(final PsiElement position, @NotNull CompletionResultSet result) {
         String prefix = result.getPrefixMatcher().getPrefix();
         String subPrefix = prefix.substring(prefix.lastIndexOf("{"));
         if (StringUtil.isEmpty(subPrefix) || !subPrefix.contains(".")) {
             return "";
         }
         return subPrefix.substring(0, prefix.lastIndexOf(".") + 1);
-    }
-
-    /**
-     * 获取前缀
-     */
-    @NotNull
-    String[] getPrefixArray(final String prefix) {
-        return CompletionUtils.getPrefixArr(prefix.substring(prefix.lastIndexOf("{") + 1));
     }
 
 }
