@@ -14,6 +14,7 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
@@ -112,7 +113,7 @@ public class CompletionUtils {
      */
     public static String getPrefixStr(final String text) {
         if (StringUtil.isNotEmpty(text)) {
-            String[] prefixArr = text.split("IntellijIdeaRulezzz ");
+            String[] prefixArr = text.split(CompletionUtilCore.DUMMY_IDENTIFIER);
             if (prefixArr.length > 0) {
                 return prefixArr[0];
             }

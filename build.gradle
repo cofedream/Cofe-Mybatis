@@ -1,11 +1,7 @@
 plugins {
+    id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
-//    id "org.jetbrains.grammarkit" version "2019.3"
 }
-
-//apply plugin: 'idea'
-//apply plugin: 'org.jetbrains.intellij'
-//apply plugin: 'org.jetbrains.grammarkit'
 
 group 'tk.cofedream.plugin'
 version pluginVersion
