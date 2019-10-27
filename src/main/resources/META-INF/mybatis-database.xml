@@ -3,8 +3,6 @@
 <idea-plugin>
 
     <extensions defaultExtensionNs="com.intellij">
-        <completion.contributor id="database-sql-param-completion" language="SQL" order="first"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.SqlFileSqlParameterCompletionContributor"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij.database">
     </extensions>
