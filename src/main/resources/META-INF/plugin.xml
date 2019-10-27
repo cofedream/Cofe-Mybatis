@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>tk.cofe.plugin.mybatis</id>
     <name>Cofe-Mybatis</name>
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
@@ -64,6 +64,7 @@
        plugins can provide this plugin with certain data. The
        "beanClass" attribute specifies the class the implementations
        of which can be used for the extension point. -->
+    <xi:include href="/META-INF/MbspPlugin.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>

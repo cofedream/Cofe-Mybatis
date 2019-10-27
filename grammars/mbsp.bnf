@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 2019 cofe
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+{
+  classHeader="gpl.txt"
+
+  psiImplUtilClass="tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil"
+
+  parserClass="tk.cofe.plugin.mbsp.parser.MbspParser"
+  parserUtilClass="tk.cofe.plugin.mbsp.parser.MbspParserUtil"
+
+  implements="tk.cofe.plugin.mbsp.psi.MbspPsiCompositeElement"
+  extends="tk.cofe.plugin.mbsp.psi.impl.MbspPsiCompositeElementBase"
+
+  psiClassPrefix="Mbsp"
+  psiImplClassSuffix="Impl"
+  psiPackage="tk.cofe.plugin.mbsp.psi"
+  psiImplPackage="tk.cofe.plugin.mbsp.psi.impl"
+
+  elementTypeHolderClass="tk.cofe.plugin.mbsp.MbspTypes"
+  elementTypePrefix=""
+  elementTypeClass="tk.cofe.plugin.mbsp.psi.MbspElementType"
+  tokenTypeClass="tk.cofe.plugin.mbsp.psi.MbspTokenType"
+
+  tokens = [
+    EXPRESSION_START="regexp:[#$]\{"
+    EXPRESSION_END="}"
+
+    DOT="."
+
+    PLAIN="regexp:[a-zA-Z0-9]+"
+  ]
+}
+
+root ::= (EXPRESSION_START rootElement EXPRESSION_END)* {
+ pin = 1
+}
+private rootRecover ::= !(EXPRESSION_END)
+private rootElement ::= expression {
+    recoverWhile="rootRecover"
+}
+
+expression ::= referenceExpression (DOT referenceExpression)*
+
+referenceExpression ::= PLAIN {
+    mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
+    methods=[getName setName getNameIdentifier]
+}
