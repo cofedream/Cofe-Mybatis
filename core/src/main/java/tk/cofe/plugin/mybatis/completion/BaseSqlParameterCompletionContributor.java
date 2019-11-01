@@ -75,7 +75,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
             return;
         }
         if (isSupport(parameters)) {
-            DomUtils.getDomElement(getTargetElement(psiFile, parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
+            DomUtils.getDomElement(getTargetElement(parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
                     .ifPresent(psiMethod -> {
                         String prefixText = getPrefixText(parameters.getPosition(), result);
                         provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);
@@ -119,7 +119,8 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
      */
     abstract PsiFile getTargetPsiFile(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
 
-    abstract PsiElement getTargetElement(@NotNull PsiFile psiFile, @NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
+    @Nullable
+    abstract PsiElement getTargetElement(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
 
     /**
      * 获取前缀,用于值填充
@@ -151,8 +152,9 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
 
     /**
      * 通过类添加提示
-     *  @param psiType      Java类类型
-     * @param result       结果集
+     *
+     * @param psiType Java类类型
+     * @param result  结果集
      */
     private void addPsiClassTypeVariants(@Nullable PsiClassType psiType, @NotNull CompletionResultSet result) {
         if (psiType == null) {
@@ -188,7 +190,8 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
 
     /**
      * 添加 param1-paramn 的提示
-     *  @param result           结果集
+     *
+     * @param result           结果集
      * @param prefixs          前缀
      * @param methodParameters 方法参数
      */

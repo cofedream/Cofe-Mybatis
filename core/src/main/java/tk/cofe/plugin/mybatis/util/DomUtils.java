@@ -26,6 +26,7 @@ import com.intellij.util.xml.DomTarget;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public final class DomUtils extends DomUtil {
 
     @NotNull
     @SuppressWarnings("unchecked")
-    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, @NotNull final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, @NotNull final Class<T> requiredClass) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);

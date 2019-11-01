@@ -16,7 +16,6 @@ package tk.cofe.plugin.mbsp.psi.impl;
 
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.Nullable;
@@ -52,9 +51,7 @@ public class MbspPsiUtil {
     }
 
     private static PsiElement getOriginElement(final PsiElement element) {
-        InjectedLanguageManager manager = InjectedLanguageManager.getInstance(element.getProject());
-        PsiFile psiFile = manager.getTopLevelFile(element);
-        return psiFile.findElementAt(InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, element.getTextOffset()));
+        return InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
     }
 
     //public static String getName(MbspExpression element) {
