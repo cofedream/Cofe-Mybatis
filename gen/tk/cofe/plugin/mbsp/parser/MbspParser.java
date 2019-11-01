@@ -49,14 +49,14 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // referenceExpression (DOT referenceExpression)*
-  static boolean expression(PsiBuilder b, int l) {
+  public static boolean expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expression")) return false;
     if (!nextTokenIs(b, VARIABLE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = referenceExpression(b, l + 1);
     r = r && expression_1(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, EXPRESSION, r);
     return r;
   }
 

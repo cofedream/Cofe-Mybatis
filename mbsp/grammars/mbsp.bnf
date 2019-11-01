@@ -48,7 +48,7 @@ private rootElement ::= expression {
     recoverWhile="rootRecover"
 }
 
-private expression ::= referenceExpression (DOT referenceExpression)*
+expression ::= referenceExpression (DOT referenceExpression)*
 
 referenceExpression ::= VARIABLE {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"

@@ -48,8 +48,8 @@
     <!-- Optional dependency on another plugin.
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
        (the format of this file conforms to the format of plugin.xml) will be loaded. -->
-    <depends optional="true" config-file="META-INF/mybatis-spring.xml">com.intellij.spring</depends>
-    <depends optional="true" config-file="META-INF/mybatis-database.xml">com.intellij.database</depends>
+    <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
+    <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <!-- Resource bundle (/messages/MyPluginBundle.properties) to be used
        with `key` attributes in extension points and implicit keys like

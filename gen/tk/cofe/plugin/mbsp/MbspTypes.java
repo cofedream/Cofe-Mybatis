@@ -22,6 +22,7 @@ import tk.cofe.plugin.mbsp.psi.impl.*;
 
 public interface MbspTypes {
 
+  IElementType EXPRESSION = new MbspElementType("EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
 
   IElementType DOT = new MbspTokenType(".");
@@ -33,7 +34,10 @@ public interface MbspTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == REFERENCE_EXPRESSION) {
+      if (type == EXPRESSION) {
+        return new MbspExpressionImpl(node);
+      }
+      else if (type == REFERENCE_EXPRESSION) {
         return new MbspReferenceExpressionImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);

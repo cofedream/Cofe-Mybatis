@@ -19,6 +19,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mbsp.MbspTypes;
+import tk.cofe.plugin.mbsp.psi.MbspReferenceExpression;
 import tk.cofe.plugin.mbsp.psi.MbspReferenceProvider;
 
 import java.util.ServiceLoader;
@@ -30,18 +31,20 @@ import java.util.ServiceLoader;
 public class MbspPsiUtil {
 
     @Nullable
-    public static PsiReference getReference(PsiElement element) {
+    public static PsiReference getReference(MbspReferenceExpression element) {
         return getReferenceProvider(MbspTypes.REFERENCE_EXPRESSION, element);
     }
 
     @Nullable
-    public static PsiReference getReferenceProvider(IElementType elementType, PsiElement element) {
-        ServiceLoader<MbspReferenceProvider> load = ServiceLoader.load(MbspReferenceProvider.class);
-        for (MbspReferenceProvider provider : load) {
+    public static <T extends PsiElement> PsiReference getReferenceProvider(IElementType elementType, T element) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(element.getClass().getClassLoader());
+        for (MbspReferenceProvider provider : ServiceLoader.load(MbspReferenceProvider.class)) {
             if (provider.isSupported(elementType)) {
                 return provider.exec(element);
             }
         }
+        Thread.currentThread().setContextClassLoader(classLoader);
         return null;
     }
     //public static String getName(MbspExpression element) {
