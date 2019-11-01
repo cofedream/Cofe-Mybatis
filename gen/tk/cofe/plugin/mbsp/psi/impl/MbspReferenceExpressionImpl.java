@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase implements MbspReferenceExpression {
 
@@ -41,6 +42,12 @@ public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase imp
   @NotNull
   public PsiElement getVariable() {
     return findNotNullChildByType(VARIABLE);
+  }
+
+  @Override
+  @Nullable
+  public PsiReference getReference() {
+    return MbspPsiUtil.getReference(this);
   }
 
 }

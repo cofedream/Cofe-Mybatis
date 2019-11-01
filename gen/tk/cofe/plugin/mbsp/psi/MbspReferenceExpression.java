@@ -16,10 +16,14 @@ package tk.cofe.plugin.mbsp.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 public interface MbspReferenceExpression extends MbspPsiCompositeElement {
 
   @NotNull
   PsiElement getVariable();
+
+  @Nullable
+  PsiReference getReference();
 
 }

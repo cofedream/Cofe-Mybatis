@@ -52,4 +52,5 @@ private expression ::= referenceExpression (DOT referenceExpression)*
 
 referenceExpression ::= VARIABLE {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
+    methods=[getReference]
 }
