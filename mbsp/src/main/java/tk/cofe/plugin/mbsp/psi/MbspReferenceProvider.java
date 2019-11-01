@@ -2,6 +2,7 @@ package tk.cofe.plugin.mbsp.psi;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceService;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -13,5 +14,6 @@ import com.intellij.psi.tree.IElementType;
 public interface MbspReferenceProvider {
     boolean isSupported(IElementType elementType);
 
-    PsiReference exec(PsiElement element);
+    PsiReference exec(PsiElement element, final PsiElement originElement);
+
 }

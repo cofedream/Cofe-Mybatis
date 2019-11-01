@@ -15,6 +15,8 @@
 package tk.cofe.plugin.mbsp.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.HintedReferenceHost;
+import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 
 /**

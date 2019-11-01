@@ -88,16 +88,16 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-            PsiTypeUtils.isCustomType(firstParameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, psiClassType, result));
+            PsiTypeUtils.isCustomType(firstParameter.getType(), psiClassType -> addPsiClassTypeVariants(psiClassType, result));
         } else {
-            result.addElement(createLookupElement(prefixText, value.getValue(), firstParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter));
+            result.addElement(createLookupElement(value.getValue(), firstParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter));
         }
     }
 
     @Override
     public void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
         for (PsiParameter psiParameter : parameters) {
-            Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(prefixText, value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
+            Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
         }
     }
 
@@ -105,12 +105,12 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
-        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(prefixText, CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
+        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
     }
 
     @Override
     public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
-        addParamsVariants(prefixText, result, prefixArr, parameters);
+        addParamsVariants(result, prefixArr, parameters);
         result.stopHere();
     }
 
@@ -151,12 +151,10 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
 
     /**
      * 通过类添加提示
-     *
-     * @param originPrefix 原前缀
-     * @param psiType      Java类类型
+     *  @param psiType      Java类类型
      * @param result       结果集
      */
-    private void addPsiClassTypeVariants(final String originPrefix, @Nullable PsiClassType psiType, @NotNull CompletionResultSet result) {
+    private void addPsiClassTypeVariants(@Nullable PsiClassType psiType, @NotNull CompletionResultSet result) {
         if (psiType == null) {
             return;
         }
@@ -165,62 +163,60 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
             return;
         }
         if (psiClass.isEnum()) {
-            addMethodsVariants(originPrefix, psiClass.getMethods(), result);
+            addMethodsVariants(psiClass.getMethods(), result);
         } else {
-            addFieldsVariants(originPrefix, psiClass.getAllFields(), result);
-            addMethodsVariants(originPrefix, psiClass.getAllMethods(), result);
+            addFieldsVariants(psiClass.getAllFields(), result);
+            addMethodsVariants(psiClass.getAllMethods(), result);
         }
     }
 
-    private void addFieldsVariants(final String originPrefix, final PsiField[] fields, @NotNull final CompletionResultSet result) {
+    private void addFieldsVariants(final PsiField[] fields, @NotNull final CompletionResultSet result) {
         for (PsiField field : fields) {
             if (PsiJavaUtils.notSerialField(field)) {
-                createLookupElement(originPrefix, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
+                createLookupElement(field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
             }
         }
     }
 
-    private void addMethodsVariants(final String originPrefix, final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
+    private void addMethodsVariants(final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
         for (PsiMethod method : methods) {
             if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
-                createLookupElement(originPrefix, PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
+                createLookupElement(PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }
     }
 
     /**
      * 添加 param1-paramn 的提示
-     *
-     * @param originPrefix     原前缀
-     * @param result           结果集
+     *  @param result           结果集
      * @param prefixs          前缀
      * @param methodParameters 方法参数
      */
-    private void addParamsVariants(final String originPrefix, @NotNull CompletionResultSet result, @NotNull String[] prefixs, PsiParameter[] methodParameters) {
+    private void addParamsVariants(@NotNull CompletionResultSet result, @NotNull String[] prefixs, PsiParameter[] methodParameters) {
         // 方法参数大于一个的时候才进行 param1->paramN的提示,否则仅提示类内部字段
         if (prefixs.length != 0 && methodParameters.length <= 1) {
             return;
         }
         for (int i = 0; i < methodParameters.length; i++) {
-            result.addElement(createLookupElement(originPrefix, "param" + (i + 1), methodParameters[i].getType().getPresentableText(), AllIcons.Nodes.Parameter, methodParameters.length - i));
+            result.addElement(createLookupElement("param" + (i + 1), methodParameters[i].getType().getPresentableText(), AllIcons.Nodes.Parameter, methodParameters.length - i));
         }
     }
 
-    private void createLookupElement(@NotNull String originPrefix, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
+    private void createLookupElement(@Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
         if (StringUtil.isEmpty(name) || StringUtil.isEmpty(typeText)) {
             return;
         }
-        consumer.accept(createLookupElement(originPrefix, name, typeText, icon));
+        consumer.accept(createLookupElement(name, typeText, icon));
     }
 
     @NotNull
-    private LookupElement createLookupElement(@NotNull String prefix, @NotNull String lookupString, @NotNull String type, @Nullable Icon icon) {
-        return createLookupElement(prefix, lookupString, type, icon, PRIORITY);
+    private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon) {
+        return createLookupElement(lookupString, type, icon, PRIORITY);
     }
 
     @NotNull
-    private LookupElement createLookupElement(final String prefix, @NotNull String lookupString, @NotNull String type, @Nullable Icon icon, double priority) {
-        return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(prefix + lookupString).withPresentableText(lookupString).withTypeText(type).bold().withIcon(icon), priority);
+    private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon, double priority) {
+        return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withPresentableText(lookupString).withTypeText(type).bold().withIcon(icon), priority);
     }
 
 }

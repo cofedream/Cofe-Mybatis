@@ -91,8 +91,6 @@
 
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
 
-        <psi.referenceContributor implementation="tk.cofe.plugin.mybatis.psi.SqlParamReferenceContributor"/>
-
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
         <!--纯提示-->
