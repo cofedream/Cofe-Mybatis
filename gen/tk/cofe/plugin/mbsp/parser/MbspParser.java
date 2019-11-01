@@ -49,14 +49,14 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // referenceExpression (DOT referenceExpression)*
-  public static boolean expression(PsiBuilder b, int l) {
+  static boolean expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expression")) return false;
-    if (!nextTokenIs(b, PLAIN)) return false;
+    if (!nextTokenIs(b, VARIABLE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = referenceExpression(b, l + 1);
     r = r && expression_1(b, l + 1);
-    exit_section_(b, m, EXPRESSION, r);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -83,38 +83,37 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // PLAIN
+  // VARIABLE
   public static boolean referenceExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "referenceExpression")) return false;
-    if (!nextTokenIs(b, PLAIN)) return false;
+    if (!nextTokenIs(b, VARIABLE)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, PLAIN);
+    r = consumeToken(b, VARIABLE);
     exit_section_(b, m, REFERENCE_EXPRESSION, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (EXPRESSION_START rootElement EXPRESSION_END)*
+  // (EXPRESSION_START | EXPRESSION_PREPARED_START) rootElement EXPRESSION_END
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!root_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "root", c)) break;
-    }
-    return true;
-  }
-
-  // EXPRESSION_START rootElement EXPRESSION_END
-  private static boolean root_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "root_0")) return false;
+    if (!nextTokenIs(b, "", EXPRESSION_PREPARED_START, EXPRESSION_START)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, EXPRESSION_START);
+    r = root_0(b, l + 1);
     r = r && rootElement(b, l + 1);
     r = r && consumeToken(b, EXPRESSION_END);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // EXPRESSION_START | EXPRESSION_PREPARED_START
+  private static boolean root_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "root_0")) return false;
+    boolean r;
+    r = consumeToken(b, EXPRESSION_START);
+    if (!r) r = consumeToken(b, EXPRESSION_PREPARED_START);
     return r;
   }
 

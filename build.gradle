@@ -1,42 +1,9 @@
-plugins {
-    id 'java'
-    id 'org.jetbrains.intellij' version '0.4.10'
-}
-
 group 'tk.cofedream.plugin'
 version pluginVersion
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+allprojects {
 
-repositories {
-    mavenCentral()
-}
-configurations {
-    all*.exclude group: 'org.javassist'
-}
-dependencies{
-    compile group: 'ognl', name: 'ognl', version: '3.2.10'
-}
-sourceSets {
-    main{
-        java.srcDirs 'src','gen'
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
     }
-}
-
-intellij {
-    pluginName 'Cofe-Mybatis'
-    version '2018.3.2'
-    type "IU"
-    plugins 'Spring', 'DatabaseTools'
-    sandboxDirectory = "$projectDir.path/.idea-sandbox"
-    updateSinceUntilBuild false
-}
-
-patchPluginXml{
-    version pluginVersion
-    sinceBuild '183'
-}
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
 }

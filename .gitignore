@@ -11,6 +11,6 @@ target
 classes
 build
 # plugin dev
-.idea-sandbox
+core/.idea-sandbox
 # gradle
 .gradle

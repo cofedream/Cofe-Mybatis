@@ -39,23 +39,8 @@ public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase imp
 
   @Override
   @NotNull
-  public PsiElement getPlain() {
-    return findNotNullChildByType(PLAIN);
-  }
-
-  @Override
-  public String getName() {
-    return MbspPsiUtil.getName(this);
-  }
-
-  @Override
-  public PsiElement setName(String newName) {
-    return MbspPsiUtil.setName(this, newName);
-  }
-
-  @Override
-  public PsiElement getNameIdentifier() {
-    return MbspPsiUtil.getNameIdentifier(this);
+  public PsiElement getVariable() {
+    return findNotNullChildByType(VARIABLE);
   }
 
 }

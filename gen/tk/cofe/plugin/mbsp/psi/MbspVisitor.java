@@ -18,10 +18,6 @@ import com.intellij.psi.PsiElementVisitor;
 
 public class MbspVisitor extends PsiElementVisitor {
 
-  public void visitExpression(@NotNull MbspExpression o) {
-    visitPsiCompositeElement(o);
-  }
-
   public void visitReferenceExpression(@NotNull MbspReferenceExpression o) {
     visitPsiCompositeElement(o);
   }

@@ -20,12 +20,6 @@ import com.intellij.psi.PsiElement;
 public interface MbspReferenceExpression extends MbspPsiCompositeElement {
 
   @NotNull
-  PsiElement getPlain();
-
-  String getName();
-
-  PsiElement setName(String newName);
-
-  PsiElement getNameIdentifier();
+  PsiElement getVariable();
 
 }

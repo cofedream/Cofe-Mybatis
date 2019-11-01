@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.10'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+configurations {
+    all*.exclude group: 'org.javassist'
+}
+dependencies{
+    compile project(":mbsp")
+    compile group: 'ognl', name: 'ognl', version: '3.2.10'
+}
+
+intellij {
+    pluginName 'Cofe-Mybatis'
+    version intellijVersion
+    type intellijType
+    plugins 'Spring', 'DatabaseTools'
+    sandboxDirectory = "$projectDir.path/.idea-sandbox"
+    updateSinceUntilBuild false
+}
+
+patchPluginXml{
+    version pluginVersion
+    sinceBuild '183'
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

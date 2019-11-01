@@ -22,21 +22,18 @@ import tk.cofe.plugin.mbsp.psi.impl.*;
 
 public interface MbspTypes {
 
-  IElementType EXPRESSION = new MbspElementType("EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
 
   IElementType DOT = new MbspTokenType(".");
   IElementType EXPRESSION_END = new MbspTokenType("}");
-  IElementType EXPRESSION_START = new MbspTokenType("EXPRESSION_START");
-  IElementType PLAIN = new MbspTokenType("PLAIN");
+  IElementType EXPRESSION_PREPARED_START = new MbspTokenType("#{");
+  IElementType EXPRESSION_START = new MbspTokenType("${");
+  IElementType VARIABLE = new MbspTokenType("VARIABLE");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == EXPRESSION) {
-        return new MbspExpressionImpl(node);
-      }
-      else if (type == REFERENCE_EXPRESSION) {
+      if (type == REFERENCE_EXPRESSION) {
         return new MbspReferenceExpressionImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
