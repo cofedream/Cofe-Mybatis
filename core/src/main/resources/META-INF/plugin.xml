@@ -31,8 +31,8 @@
         <i>new features:</i>
         <ul>
             <li>新增 #{xxx} 语法解析</li>
+            <li>支持 #{xxx} 引用解析</li>
             <li>调整 &lt;foreach/&gt;标签 内属性参数提示</li>
-            <li>支持 #{xxx} 跳转至定义</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
@@ -49,14 +49,13 @@
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
        (the format of this file conforms to the format of plugin.xml) will be loaded. -->
     <depends optional="true" config-file="mybatis-spring.xml">com.intellij.spring</depends>
-    <depends optional="true" config-file="mybatis-database.xml">com.intellij.database</depends>
 
     <!-- Resource bundle (/messages/MyPluginBundle.properties) to be used
        with `key` attributes in extension points and implicit keys like
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
 
-    <xi:include href="/META-INF/MbspPlugin.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="mybatis-language.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!-- Extension points defined by the plugin.
     Extension points are registered by a plugin so that other
     plugins can provide this plugin with certain data. The
