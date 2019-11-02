@@ -12,7 +12,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.type;
+package tk.cofe.plugin.mybatis.util;
+
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.util.PsiTypesUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,20 +28,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
  * @author : zhengrf
  * @date : 2019-09-20
  */
-public class TypeAliasRegistry {
+public class TypeAliasUtils {
 
-    private static final Map<String, Class<?>> TYPE_ALIASES;
+    private static final Map<String, String> TYPE_ALIASES_NAME = new HashMap<>();
+    private static final Map<String, List<LookupElementBuilder>> TYPE_LOOKUP = new HashMap<>();
 
     static {
-        TYPE_ALIASES = new HashMap<>();
         registerAlias("string", String.class);
 
         registerAlias("byte", Byte.class);
@@ -57,23 +62,23 @@ public class TypeAliasRegistry {
         registerAlias("float[]", Float[].class);
         registerAlias("boolean[]", Boolean[].class);
 
-        registerAlias("_byte", Byte.class);
-        registerAlias("_long", Long.class);
-        registerAlias("_short", Short.class);
-        registerAlias("_int", Integer.class);
-        registerAlias("_integer", Integer.class);
-        registerAlias("_double", Double.class);
-        registerAlias("_float", Float.class);
-        registerAlias("_boolean", Boolean.class);
+        registerAlias("_byte", byte.class);
+        registerAlias("_long", long.class);
+        registerAlias("_short", short.class);
+        registerAlias("_int", int.class);
+        registerAlias("_integer", int.class);
+        registerAlias("_double", double.class);
+        registerAlias("_float", float.class);
+        registerAlias("_boolean", boolean.class);
 
-        registerAlias("_byte[]", Byte[].class);
-        registerAlias("_long[]", Long[].class);
-        registerAlias("_short[]", Short[].class);
-        registerAlias("_int[]", Integer[].class);
-        registerAlias("_integer[]", Integer[].class);
-        registerAlias("_double[]", Double[].class);
-        registerAlias("_float[]", Float[].class);
-        registerAlias("_boolean[]", Boolean[].class);
+        registerAlias("_byte[]", byte[].class);
+        registerAlias("_long[]", long[].class);
+        registerAlias("_short[]", short[].class);
+        registerAlias("_int[]", int[].class);
+        registerAlias("_integer[]", int[].class);
+        registerAlias("_double[]", double[].class);
+        registerAlias("_float[]", float[].class);
+        registerAlias("_boolean[]", boolean[].class);
 
         registerAlias("date", Date.class);
         registerAlias("decimal", BigDecimal.class);
@@ -97,23 +102,21 @@ public class TypeAliasRegistry {
         registerAlias("ResultSet", ResultSet.class);
     }
 
-    private static void registerAlias(String alias, Class<?> value) {
-        if (alias == null) {
-            return;
-        }
-        String key = alias.toLowerCase(Locale.ENGLISH);
-        if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
-            return;
-        }
-        TYPE_ALIASES.put(key, value);
+    private static void registerAlias(@NotNull String alias, Class<?> aClass) {
+        TYPE_ALIASES_NAME.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
+        TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
+            (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias));
+            return value;
+        });
     }
 
-    public static Map<String, Class<?>> getTypeAliases() {
-        return Collections.unmodifiableMap(TYPE_ALIASES);
+    @Nullable
+    public static String getTypeName(String aliase) {
+        return TYPE_ALIASES_NAME.get(aliase);
     }
 
-    public static Class<?> getType(String aliase) {
-        return TYPE_ALIASES.get(aliase);
+    @NotNull
+    public static List<LookupElementBuilder> getTypeLookupElement(String text) {
+        return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
-
 }

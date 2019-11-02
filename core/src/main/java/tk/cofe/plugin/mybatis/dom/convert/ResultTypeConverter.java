@@ -20,7 +20,7 @@ import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.Converter;
 import com.intellij.util.xml.DomJavaUtil;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.type.TypeAliasRegistry;
+import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
 
 /**
  * @author : zhengrf
@@ -35,9 +35,9 @@ public class ResultTypeConverter extends Converter<PsiClass> {
         }
         String str = s;
         if (StringUtil.isNotEmpty(s)) {
-            Class<?> type = TypeAliasRegistry.getType(s);
-            if (type != null) {
-                str = type.getCanonicalName();
+            String typeName = TypeAliasUtils.getTypeName(s);
+            if (typeName != null) {
+                str = typeName;
             }
         }
         return DomJavaUtil.findClass(str.trim(), context.getInvocationElement());

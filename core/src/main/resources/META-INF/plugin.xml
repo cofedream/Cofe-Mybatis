@@ -83,6 +83,7 @@
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
+        <!--文档提示-->
         <lang.documentationProvider language="XML" order="first"
                                     implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"/>
         <lang.documentationProvider language="XML" order="first"
@@ -102,6 +103,7 @@
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
+
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>

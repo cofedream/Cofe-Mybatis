@@ -31,15 +31,11 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,10 +45,6 @@ import java.util.Optional;
  * @date : 2019-01-05
  */
 public class MapperXmlCompletionContributor extends CompletionContributor {
-
-    private static LookupElementBuilder createLookupElementBuilder(String lookupString) {
-        return LookupElementBuilder.create(lookupString);
-    }
 
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
@@ -73,36 +65,6 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
 
     private enum StatementAttribute {
         RESULT_TYPE("resultType") {
-            private final Map<String, List<LookupElementBuilder>> registerType;
-            {
-                HashMap<String, List<LookupElementBuilder>> type = new HashMap<>();
-                type.put("byte", Collections.singletonList(createLookupElementBuilder("_byte")));
-                type.put("long", Collections.singletonList(createLookupElementBuilder("_long")));
-                type.put("short", Collections.singletonList(createLookupElementBuilder("_short")));
-                type.put("int", Arrays.asList(createLookupElementBuilder("_int"), createLookupElementBuilder("_integer")));
-                type.put("double", Collections.singletonList(createLookupElementBuilder("_double")));
-                type.put("float", Collections.singletonList(createLookupElementBuilder("_float")));
-                type.put("boolean", Collections.singletonList(createLookupElementBuilder("_boolean")));
-                type.put("String", Arrays.asList(createLookupElementBuilder("string"), createLookupElementBuilder("java.lang.String")));
-                type.put("Byte", Arrays.asList(createLookupElementBuilder("byte"), createLookupElementBuilder("java.lang.Byte")));
-                type.put("Long", Arrays.asList(createLookupElementBuilder("long"), createLookupElementBuilder("java.lang.Long")));
-                type.put("Short", Arrays.asList(createLookupElementBuilder("short"), createLookupElementBuilder("java.lang.Short")));
-                type.put("Integer", Arrays.asList(createLookupElementBuilder("int"), createLookupElementBuilder("integer"), createLookupElementBuilder("java.lang.Integer")));
-                type.put("Double", Arrays.asList(createLookupElementBuilder("double"), createLookupElementBuilder("java.lang.Double")));
-                type.put("Float", Arrays.asList(createLookupElementBuilder("float"), createLookupElementBuilder("java.lang.Float")));
-                type.put("Boolean", Arrays.asList(createLookupElementBuilder("boolean"), createLookupElementBuilder("java.lang.Boolean")));
-                type.put("Date", Arrays.asList(createLookupElementBuilder("date"), createLookupElementBuilder("java.util.Date")));
-                type.put("Bigdecimal", Arrays.asList(createLookupElementBuilder("decimal"), createLookupElementBuilder("bigdecimal"), createLookupElementBuilder("java.math.BigDecimal")));
-                type.put("Object", Arrays.asList(createLookupElementBuilder("object"), createLookupElementBuilder("java.lang.Object")));
-                type.put("Map", Arrays.asList(createLookupElementBuilder("map"), createLookupElementBuilder("java.util.Map")));
-                type.put("Hashmap", Arrays.asList(createLookupElementBuilder("hashmap"), createLookupElementBuilder("java.util.HashMap")));
-                type.put("List", Arrays.asList(createLookupElementBuilder("list"), createLookupElementBuilder("java.util.List")));
-                type.put("Arraylist", Arrays.asList(createLookupElementBuilder("arraylist"), createLookupElementBuilder("java.util.ArrayList")));
-                type.put("Collection", Arrays.asList(createLookupElementBuilder("collection"), createLookupElementBuilder("java.util.Collection")));
-                type.put("Iterator", Arrays.asList(createLookupElementBuilder("iterator"), createLookupElementBuilder("java.util.Iterator")));
-                registerType = Collections.unmodifiableMap(type);
-            }
-
             @Override
             void process(XmlTag xmlTag, CompletionResultSet result) {
                 ClassElement classElement = (ClassElement) DomUtils.getDomElement(xmlTag);
@@ -113,20 +75,18 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                         .filter(info -> info.getReturnType() != null)
                         .map(PsiMethod::getReturnType)
                         .ifPresent(type -> {
-                            if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
-                                result.addAllElements(registerType.get(type.getPresentableText()));
-                            } else {
-                                if (type instanceof PsiClassReferenceType) {
-                                    PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                                    String referenceName = reference.getReferenceName();
-                                    if (StringUtil.isEmpty(referenceName)) {
-                                        return;
-                                    }
-                                    if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
-                                        result.addAllElements(registerType.get(referenceName));
-                                    } else {
-                                        result.addElement(createLookupElementBuilder(reference.getQualifiedName()));
-                                    }
+                            if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
+                                result.addAllElements(TypeAliasUtils.getTypeLookupElement(type.getInternalCanonicalText()));
+                            } else if (type instanceof PsiClassReferenceType) {
+                                PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+                                String name = reference.getQualifiedName();
+                                if (StringUtil.isEmpty(name)) {
+                                    return;
+                                }
+                                if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
+                                    result.addAllElements(TypeAliasUtils.getTypeLookupElement(name));
+                                } else {
+                                    result.addElement(LookupElementBuilder.create(name));
                                 }
                             }
                         });
@@ -145,6 +105,7 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         public String getValue() {
             return value;
         }
+
     }
 
     /**
