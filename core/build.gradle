@@ -18,7 +18,7 @@ dependencies {
 }
 
 intellij {
-    pluginName 'Cofe-Mybatis'
+    pluginName pluginName
     version intellijVersion
     type intellijType
     plugins 'Spring'
@@ -29,4 +29,8 @@ intellij {
 patchPluginXml {
     version pluginVersion
     sinceBuild '183'
+}
+
+buildPlugin {
+    archiveName pluginName + "-" + pluginVersion + ".zip"
 }
