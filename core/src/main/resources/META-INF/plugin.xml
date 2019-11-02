@@ -1,5 +1,5 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
-    <id>tk.cofe.plugin.mybatis</id>
+    <id>tk.cofedream.plugin.mybatis</id>
     <name>Cofe-Mybatis</name>
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
