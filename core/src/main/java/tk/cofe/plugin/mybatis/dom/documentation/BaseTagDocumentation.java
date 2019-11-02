@@ -57,7 +57,7 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
                             break;
                         }
                     }
-                    return "<pre><b>" + start + text.substring(index) + "</b></pre>";
+                    return "<pre>" + start + text.substring(index) + "</pre>";
                 }).orElse(null);
     }
 
@@ -77,4 +77,5 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
      * 获取文档目标 Dom元素
      */
     abstract Class<T> getTargetDomElement();
+
 }

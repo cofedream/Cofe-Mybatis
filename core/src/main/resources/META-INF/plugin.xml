@@ -33,6 +33,7 @@
             <li>新增 #{xxx} 语法解析</li>
             <li>支持 #{xxx} 引用解析</li>
             <li>调整 &lt;foreach/&gt;标签 内属性参数提示</li>
+            <li>调整文档提示内容</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
