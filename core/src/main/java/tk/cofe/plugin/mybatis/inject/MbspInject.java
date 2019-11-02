@@ -12,18 +12,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mbsp;
+package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbsp.MbspLanguage;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,8 +36,7 @@ public class MbspInject implements MultiHostInjector, DumbAware {
 
     @Override
     public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        final FileType fileType = context.getContainingFile().getFileType();
-        if (fileType != StdFileTypes.XML) {
+        if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
             return;
         }
         if (context.textContains('{') && context.textContains('}')) {

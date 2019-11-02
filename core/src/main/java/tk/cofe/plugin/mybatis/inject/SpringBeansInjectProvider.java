@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.spring;
+package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
 import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2018-12-31
  */
-public class BeansInjectProvider extends SpringMyBatisBeansProvider {
+public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
     private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
     // tk 相关类
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";

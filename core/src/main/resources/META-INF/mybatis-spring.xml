@@ -3,7 +3,7 @@
 <idea-plugin>
 
   <extensions defaultExtensionNs="com.intellij.spring">
-    <customLocalComponentsDiscoverer implementation="tk.cofe.plugin.mybatis.spring.BeansInjectProvider"/>
+    <customLocalComponentsDiscoverer implementation="tk.cofe.plugin.mybatis.inject.SpringBeansInjectProvider"/>
   </extensions>
 
 </idea-plugin>

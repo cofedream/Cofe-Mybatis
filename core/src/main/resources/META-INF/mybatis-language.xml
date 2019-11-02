@@ -6,7 +6,7 @@
 
         <lang.parserDefinition language="MBSP" implementationClass="tk.cofe.plugin.mbsp.MbspParserDefinition"/>
 
-        <multiHostInjector implementation="tk.cofe.plugin.mbsp.MbspInject"/>
+        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MbspInject"/>
 
         <completion.contributor id="mbsp-completion" language="MBSP"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MbspFileSqlParameterCompletionContributor"/>
