@@ -30,15 +30,15 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>新增 #{xxx} 语法解析</li>
-            <li>支持 #{xxx} 引用解析</li>
-            <li>调整 &lt;foreach/&gt;标签 内属性参数提示</li>
-            <li>调整文档提示内容</li>
+            <li>Add XML parameter grammar analysis</li>
+            <li>Add XML parameter reference analysis</li>
+            <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
+            <li>Adjust includ and resultMap attribute documention prompt content</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>修正 Class Field引用多处问题</li>
-            <li>修正 Select/ResultMap标签重复无提示问题</li>
+            <li>fix class field multi reference</li>
+            <li>fix Select/ResultMap tag duplicate error prompt</li>
         </ul>
     ]]></change-notes>
 
