@@ -30,7 +30,7 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>Support resultMap id attribute find declaration.</li>
+            <li>Support resultMap id attribute find declaration and rename.</li>
             <li>Add XML parameter reference analysis</li>
             <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
             <li>Adjust includ and resultMap attribute documention prompt content</li>
@@ -91,6 +91,7 @@
 
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
         <!--<psi.referenceContributor language="XML" implementation="tk.cofe.plugin.mybatis.psi.ResultMapPsiReferenceContributor"/>-->
+        <referencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperXmlReferenceSearch$ResultMapId"/>
 
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>

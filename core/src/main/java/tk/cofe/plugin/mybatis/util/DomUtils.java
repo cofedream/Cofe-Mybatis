@@ -64,6 +64,14 @@ public final class DomUtils extends DomUtil {
         return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
     }
 
+    public static boolean isTargetDomElement(@Nullable PsiElement element, @NotNull Class<?> requiredClass) {
+        DomElement domElement = DomUtils.getDomElement(element);
+        if (requiredClass.isInstance(domElement)) {
+            return true;
+        }
+        return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true)).isPresent();
+    }
+
     /**
      * 获取 {@code GenericAttributeValue<String> } 属性值值
      *

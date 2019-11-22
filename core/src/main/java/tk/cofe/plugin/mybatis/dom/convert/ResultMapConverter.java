@@ -24,24 +24,19 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.CustomReferenceConverter;
-import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.GenericDomValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.psi.ResultMapReference;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
-import tk.cofe.plugin.mybatis.util.RecursionUtils;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 与 ResultMap 有关的标签或属性
@@ -99,6 +94,7 @@ public class ResultMapConverter {
      * ID引
      */
     public static class IdReferencing implements CustomReferenceConverter {
+        private static final ResultMapReference RESULT_MAP_REFERENCE = new ResultMapReference((xmlAttributeValue, element) -> new PsiReferenceBase.Immediate<>(element, xmlAttributeValue));
 
         @NotNull
         @Override
@@ -106,49 +102,14 @@ public class ResultMapConverter {
             String rawText = value.getRawText();
             Optional<Mapper> mapperFile = MybatisUtils.getMapper(((XmlAttributeValue) element));
             // resultMap extends
-            PsiReference[] extendsReference = mapperFile.map(getResultMapFunction(element, rawText)).orElse(new PsiReference[0]);
+            PsiReference[] extendsReference = mapperFile.map(RESULT_MAP_REFERENCE.getResultMapFunction(element, rawText)).orElse(new PsiReference[0]);
             // select resultMap
-            PsiReference[] psiReferences = mapperFile.map(getSelectFunction(element, rawText)).orElse(new PsiReference[0]);
+            PsiReference[] psiReferences = mapperFile.map(RESULT_MAP_REFERENCE.getSelectFunction(element, rawText)).orElse(new PsiReference[0]);
             // resultMap inside resultMap Attributes
-            PsiReference[] resultMapAttributes = mapperFile.map(getResultMapAttributeFunction(element, rawText)).orElse(new PsiReference[0]);
+            PsiReference[] resultMapAttributes = mapperFile.map(RESULT_MAP_REFERENCE.getResultMapAttributeFunction(element, rawText)).orElse(new PsiReference[0]);
             return ArrayUtil.mergeArrays(ArrayUtil.mergeArrays(extendsReference, psiReferences), resultMapAttributes);
         }
 
-        /**
-         * 处理XML中 ResultMap标签
-         */
-        private Function<Mapper, PsiReference[]> getResultMapFunction(final PsiElement element, final String rawText) {
-            return mapper -> processSteam(element, getResultMapStream(rawText, mapper).map(ResultMap::getExtends));
-        }
-
-        /**
-         * 处理XML中 Select标签
-         */
-        private Function<Mapper, PsiReference[]> getSelectFunction(final PsiElement element, final String rawText) {
-            return mapper -> processSteam(element, mapper.getSelects().stream()
-                    .filter(select -> select.isTargetResultMapAttribute(rawText))
-                    .map(ResultMapAttribute::getResultMap));
-        }
-
-        /**
-         * 处理XML中 ResultMap标签内子标签的ResultMap属性
-         */
-        private Function<Mapper, PsiReference[]> getResultMapAttributeFunction(final PsiElement element, final String rawText) {
-            return mapper -> processSteam(element, getResultMapStream(rawText, mapper)
-                    .flatMap(resultMap -> RecursionUtils.recursionResultMapAttribute(resultMap).stream())
-                    .filter(resultMapAttribute -> resultMapAttribute.isTargetResultMapAttribute(rawText))
-                    .map(ResultMapAttribute::getResultMap));
-        }
-
-        private Stream<ResultMap> getResultMapStream(final String rawText, final Mapper mapper) {
-            return mapper.getResultMaps().stream().filter(resultMap -> !resultMap.isEqualsId(rawText) && Objects.equals(rawText, resultMap.getExtendsValue().orElse(null)));
-        }
-
-        private PsiReference[] processSteam(final PsiElement element, final Stream<GenericAttributeValue<ResultMap>> stream) {
-            return stream.map(GenericAttributeValue::getXmlAttributeValue)
-                    .filter(Objects::nonNull)
-                    .map(xmlAttributeValue -> new PsiReferenceBase.Immediate<>(element, xmlAttributeValue)).toArray(PsiReference[]::new);
-        }
     }
 
     /**
