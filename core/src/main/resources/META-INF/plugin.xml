@@ -30,15 +30,14 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>Add XML parameter grammar analysis</li>
+            <li>Support resultMap id attribute find declaration.</li>
             <li>Add XML parameter reference analysis</li>
             <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
             <li>Adjust includ and resultMap attribute documention prompt content</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>fix class field multi reference</li>
-            <li>fix Select/ResultMap tag duplicate error prompt</li>
+            <li>fix resultMap extends attribute prompt</li>
         </ul>
     ]]></change-notes>
 
@@ -91,9 +90,11 @@
                                     implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
+        <!--<psi.referenceContributor language="XML" implementation="tk.cofe.plugin.mybatis.psi.ResultMapPsiReferenceContributor"/>-->
 
         <completion.contributor language="XML"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
+
         <!--纯提示-->
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>
 

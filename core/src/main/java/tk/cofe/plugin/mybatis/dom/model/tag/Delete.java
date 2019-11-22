@@ -17,12 +17,11 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TimeoutAttribute;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Delete extends ClassElement, ResultMapAttribute, ParameterTypeAttribute, TimeoutAttribute, LangAttribute, DatabaseIdAttribute {
+public interface Delete extends ClassElement, ParameterTypeAttribute, TimeoutAttribute, LangAttribute, DatabaseIdAttribute {
 }

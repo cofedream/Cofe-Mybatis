@@ -19,6 +19,7 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Referencing;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * {@code <resultMap></resultMap>}
+ * ResultMap 标签
  *
  * @author : zhengrf
  * @date : 2019-01-15
@@ -43,6 +44,7 @@ public interface ResultMap extends IdAttribute {
     @NotNull
     @Required
     @Attribute("id")
+    @Referencing(value = ResultMapConverter.IdReferencing.class)
     GenericAttributeValue<String> getId();
 
     @Attribute("type")
@@ -107,4 +109,5 @@ public interface ResultMap extends IdAttribute {
             }
         };
     }
+
 }

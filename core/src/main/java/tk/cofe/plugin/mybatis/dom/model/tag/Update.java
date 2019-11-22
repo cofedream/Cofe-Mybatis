@@ -19,13 +19,12 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyPropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TimeoutAttribute;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Update extends ClassElement, ResultMapAttribute, ParameterTypeAttribute, TimeoutAttribute, KeyPropertyAttribute, KeyColumnAttribute, LangAttribute, DatabaseIdAttribute {
+public interface Update extends ClassElement, ParameterTypeAttribute, TimeoutAttribute, KeyPropertyAttribute, KeyColumnAttribute, LangAttribute, DatabaseIdAttribute {
 
 }

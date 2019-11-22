@@ -35,11 +35,19 @@ public interface ResultMapAttribute extends DomElement {
     @Attribute("resultMap")
     @Convert(ResultMapConverter.Attribute.class)
     GenericAttributeValue<ResultMap> getResultMap();
+
     /**
      * 获取 resultMap 对应的 ResultMap
      */
     @NotNull
-    default Optional<ResultMap> getResultMapElement() {
+    default Optional<ResultMap> getResultMapValue() {
         return Optional.ofNullable(getResultMap().getValue());
+    }
+
+    /**
+     * 判断是否为目标属性
+     */
+    default boolean isTargetResultMapAttribute(String value) {
+        return getResultMapValue().map(resultMap -> resultMap.isEqualsId(value)).orElse(false);
     }
 }
