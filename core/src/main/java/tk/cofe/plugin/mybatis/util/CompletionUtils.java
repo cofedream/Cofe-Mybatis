@@ -26,8 +26,6 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Objects;
@@ -53,8 +51,8 @@ public class CompletionUtils {
      * @param psiParameters 参数数组
      * @return 前缀对应的类型
      */
-    @Nullable
-    public static PsiType getPrefixType(@NotNull final String prefix, @NotNull final PsiParameter[] psiParameters) {
+
+    public static PsiType getPrefixType(final String prefix, final PsiParameter[] psiParameters) {
         return getPrefixType(prefix, psiParameters,
                 PsiParameter::getType,
                 psiParameter -> getPrefixPsiType(prefix, psiParameter.getType())
@@ -68,7 +66,7 @@ public class CompletionUtils {
      * @param psiParameters 参数数组
      * @return 前缀对应的元素
      */
-    public static PsiElement getPrefixElement(@NotNull final String[] prefix, @NotNull final PsiParameter[] psiParameters) {
+    public static PsiElement getPrefixElement(final String[] prefix, final PsiParameter[] psiParameters) {
         PrefixClass prefixClass = new PrefixClass();
         for (int i = 0; i < prefix.length; i++) {
             if (i == 0) {
@@ -95,8 +93,8 @@ public class CompletionUtils {
      * @param prefixs 前缀
      * @param psiType 类对象
      */
-    @Nullable
-    public static PsiClassType getPrefixPsiClass(final @NotNull String[] prefixs, @Nullable final PsiType psiType) {
+
+    public static PsiClassType getPrefixPsiClass(final String[] prefixs, final PsiType psiType) {
         PsiType target = psiType;
         for (int i = 1; i < prefixs.length; i++) {
             if (target == null) {
@@ -130,7 +128,7 @@ public class CompletionUtils {
      * @param prefix 前缀
      * @return 前缀数组
      */
-    public static String[] getPrefixArr(@NotNull String prefix) {
+    public static String[] getPrefixArr(String prefix) {
         if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
             return new String[0];
         }
@@ -143,21 +141,21 @@ public class CompletionUtils {
      * @param prefix  前缀
      * @param psiType 类对象
      */
-    @Nullable
-    public static PsiType getPrefixPsiType(@NotNull String prefix, @Nullable PsiType psiType) {
+
+    public static PsiType getPrefixPsiType(String prefix, PsiType psiType) {
         return getTargetElement(prefix, psiType, PsiField::getType, PsiMethod::getReturnType);
     }
 
-    @Nullable
-    private static <T> T getTargetElement(@NotNull String prefix, @Nullable PsiType psiType,
-                                          @NotNull Function<PsiField, T> fieldProcessor, @NotNull Function<PsiMethod, T> methodProcessor) {
+
+    private static <T> T getTargetElement(String prefix, PsiType psiType,
+                                          Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         return getTargetElement(prefix, psiType, psiField -> true, psiMethod -> true, fieldProcessor, methodProcessor);
     }
 
-    @Nullable
-    private static <T> T getTargetElement(@NotNull String prefix, @Nullable PsiType psiType,
-                                          @NotNull Predicate<PsiField> fieldCondition, @NotNull Predicate<PsiMethod> methodCondition,
-                                          @NotNull Function<PsiField, T> fieldProcessor, @NotNull Function<PsiMethod, T> methodProcessor) {
+
+    private static <T> T getTargetElement(String prefix, PsiType psiType,
+                                          Predicate<PsiField> fieldCondition, Predicate<PsiMethod> methodCondition,
+                                          Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         if (!(psiType instanceof PsiClassType)) {
             return null;
         }
@@ -180,10 +178,10 @@ public class CompletionUtils {
         return null;
     }
 
-    @Nullable
-    private static <T> T getPrefixType(@NotNull final String prefix, @NotNull final PsiParameter[] psiParameters,
-                                       @NotNull final Function<PsiParameter, T> psiParameterProcessor,
-                                       @NotNull final Function<PsiParameter, T> customParameterProcessor) {
+
+    private static <T> T getPrefixType(final String prefix, final PsiParameter[] psiParameters,
+                                       final Function<PsiParameter, T> psiParameterProcessor,
+                                       final Function<PsiParameter, T> customParameterProcessor) {
         Matcher matcher = PARAM_PATTERN.matcher(prefix);
         if (matcher.matches()) {
             int num = Integer.parseInt(matcher.group("num")) - 1;

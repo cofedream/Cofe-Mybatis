@@ -121,8 +121,10 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
             this.typeClass = typeClass;
         }
 
-        @NotNull
-        public static Optional<PsiClass> parse(@NotNull final DomElement domElement) {
+        public static Optional<PsiClass> parse(final DomElement domElement) {
+            if (domElement == null) {
+                return Optional.empty();
+            }
             for (DomElement curElement = domElement.getParent() == null ? domElement.getParent() : domElement.getParent().getParent();
                  curElement != null;
                  curElement = curElement.getParent()) {

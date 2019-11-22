@@ -26,8 +26,6 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +46,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isVoid(@Nullable PsiType psiType) {
+    public static boolean isVoid(PsiType psiType) {
         return PsiPrimitiveType.VOID.equals(psiType);
     }
 
@@ -57,7 +55,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isString(@Nullable PsiType psiType) {
+    public static boolean isString(PsiType psiType) {
         return psiType != null && psiType.equalsToText(CommonClassNames.JAVA_LANG_STRING);
     }
 
@@ -66,7 +64,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isPrimitiveType(@Nullable PsiType psiType) {
+    public static boolean isPrimitiveType(PsiType psiType) {
         if (psiType == null) {
             return false;
         }
@@ -85,7 +83,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isBoxPrimitiveType(@Nullable PsiType psiType) {
+    public static boolean isBoxPrimitiveType(PsiType psiType) {
         // 非Class引用类型
         if (!(psiType instanceof PsiClassReferenceType)) {
             return false;
@@ -105,7 +103,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isPrimitiveOrBoxType(@Nullable PsiType psiType) {
+    public static boolean isPrimitiveOrBoxType(PsiType psiType) {
         return isPrimitiveType(psiType) || isBoxPrimitiveType(psiType);
     }
 
@@ -114,7 +112,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isCollectionOrMapType(@Nullable PsiType psiType) {
+    public static boolean isCollectionOrMapType(PsiType psiType) {
         return com.siyeh.ig.psiutils.CollectionUtils.isCollectionClassOrInterface(psiType);
     }
 
@@ -123,7 +121,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isCollectionType(@Nullable PsiType psiType) {
+    public static boolean isCollectionType(PsiType psiType) {
         final PsiClass resolved = PsiUtil.resolveClassInClassTypeOnly(psiType);
         if (resolved == null) {
             return false;
@@ -136,7 +134,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isMapType(@Nullable PsiType psiType) {
+    public static boolean isMapType(PsiType psiType) {
         final PsiClass resolved = PsiUtil.resolveClassInClassTypeOnly(psiType);
         if (resolved == null) {
             return false;
@@ -150,7 +148,7 @@ public final class PsiTypeUtils {
      * @param psiType 类型
      * @return true 是数组类型,false 非数组类型
      */
-    public static boolean isArrayType(@Nullable PsiType psiType) {
+    public static boolean isArrayType(PsiType psiType) {
         return psiType instanceof PsiArrayType;
     }
 
@@ -160,7 +158,7 @@ public final class PsiTypeUtils {
      * @param psiType 类型
      * @return true 是时间类型,false 非时间类型
      */
-    public static boolean isDateType(@Nullable PsiType psiType) {
+    public static boolean isDateType(PsiType psiType) {
         if (psiType == null) {
             return false;
         }
@@ -181,7 +179,7 @@ public final class PsiTypeUtils {
      *
      * @param psiType 类型
      */
-    public static boolean isCustomType(@Nullable PsiType psiType) {
+    public static boolean isCustomType(PsiType psiType) {
         if (isPrimitiveOrBoxType(psiType)
                 || isString(psiType)
                 || isCollectionOrMapType(psiType)
@@ -199,7 +197,7 @@ public final class PsiTypeUtils {
      * @param psiType  类型
      * @param consumer 为自定义类型的情况下回调执行
      */
-    public static void isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> consumer) {
+    public static void isCustomType(PsiType psiType, Consumer<PsiClassType> consumer) {
         isCustomType(psiType, consumer, falseType -> {
         });
     }
@@ -210,7 +208,7 @@ public final class PsiTypeUtils {
      * @param psiType      类型
      * @param trueConsumer 为自定义类型的情况下回调执行
      */
-    public static void isCustomType(@Nullable PsiType psiType, @NotNull Consumer<PsiClassType> trueConsumer, @NotNull Consumer<PsiType> falseConsumer) {
+    public static void isCustomType(PsiType psiType, Consumer<PsiClassType> trueConsumer, Consumer<PsiType> falseConsumer) {
         if (isCustomType(psiType)) {
             trueConsumer.accept(((PsiClassType) psiType));
         } else {

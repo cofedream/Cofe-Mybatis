@@ -31,6 +31,7 @@ import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,27 +49,33 @@ public class MapperServiceImpl implements MapperService {
         this.domService = DomService.getInstance();
     }
 
-    @NotNull
     @Override
     public List<Mapper> findAllMappers() {
         return findDomElements(Mapper.class);
     }
 
     @Override
-    public boolean isMapperClass(@NotNull final PsiClass mapperClass) {
+    public boolean isMapperClass(final PsiClass mapperClass) {
+        if (mapperClass == null) {
+            return false;
+        }
         return PsiJavaUtils.hasAnnotation(mapperClass, Annotation.MAPPER) // 有 @Mapper 注解
                 || findAllMappers().stream().anyMatch(mapper -> mapper.isTargetMapper(mapperClass));
     }
 
-    @NotNull
     @Override
-    public List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass) {
+    public List<Mapper> findMapperXmls(PsiClass mapperClass) {
+        if (mapperClass == null) {
+            return Collections.emptyList();
+        }
         return findAllMappers().stream().filter(mapper -> mapper.isTargetMapper(mapperClass)).collect(Collectors.toList());
     }
 
-    @NotNull
     @Override
-    public List<ClassElement> findStatemtnts(@NotNull final PsiClass mapperClass) {
+    public List<ClassElement> findStatemtnts(final PsiClass mapperClass) {
+        if (mapperClass == null) {
+            return Collections.emptyList();
+        }
         return findMapperXmls(mapperClass).stream().flatMap(mapper -> mapper.getClassElements().stream()).collect(Collectors.toList());
     }
 
@@ -77,9 +84,11 @@ public class MapperServiceImpl implements MapperService {
         return domService.getFileElements(clazz, project, GlobalSearchScope.projectScope(project)).stream().map(DomFileElement::getRootElement).collect(Collectors.toList());
     }
 
-    @NotNull
     @Override
-    public Optional<ClassElement> findStatement(@NotNull PsiMethod method) {
+    public Optional<ClassElement> findStatement(PsiMethod method) {
+        if (method == null) {
+            return Optional.empty();
+        }
         PsiClass psiClass = method.getContainingClass();
         if (psiClass == null) {
             return Optional.empty();
@@ -88,7 +97,10 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public boolean existStatement(@NotNull final PsiMethod method) {
+    public boolean existStatement(final PsiMethod method) {
+        if (method == null) {
+            return false;
+        }
         if (method.getContainingClass() == null) {
             return false;
         }

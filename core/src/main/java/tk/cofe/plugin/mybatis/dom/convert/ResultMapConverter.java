@@ -54,12 +54,12 @@ public class ResultMapConverter {
 
         @NotNull
         @Override
-        protected List<ResultMap> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+        protected List<ResultMap> getReferenceDomElements(String value, ConvertContext context, Mapper mapper) {
             return mapper.getResultMaps();
         }
 
         @Override
-        protected boolean filterDomElement(@NotNull ResultMap targetDomElement, @NotNull String selfValue) {
+        protected boolean filterDomElement(ResultMap targetDomElement, String selfValue) {
             return targetDomElement.isEqualsId(selfValue);
         }
 
@@ -72,20 +72,7 @@ public class ResultMapConverter {
         @Nullable
         @Override
         public PsiElement resolve(final ResultMap o, final ConvertContext context) {
-            if (o == null) {
-                return super.resolve(o, context);
-            }
-            return o.getId().getXmlAttributeValue();
-        }
-
-        @Override
-        public void bindReference(final GenericDomValue<ResultMap> genericValue, final ConvertContext context, final PsiElement newTarget) {
-            super.bindReference(genericValue, context, newTarget);
-        }
-
-        @Override
-        public boolean isReferenceTo(@NotNull final PsiElement element, final String stringValue, @Nullable final ResultMap resolveResult, final ConvertContext context) {
-            return super.isReferenceTo(element, stringValue, resolveResult, context);
+            return o == null ? null : o.getId().getXmlAttributeValue();
         }
 
     }

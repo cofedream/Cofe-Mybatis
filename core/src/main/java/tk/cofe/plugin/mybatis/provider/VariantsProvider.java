@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.provider;
 import com.intellij.psi.PsiParameter;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.util.CompletionUtils;
 
 /**
  * 代码完成提供
@@ -30,7 +29,7 @@ import tk.cofe.plugin.mybatis.util.CompletionUtils;
  */
 public interface VariantsProvider<T> {
 
-    default T provider(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res) {
+    default T provider(@NotNull final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, @NotNull final T res) {
         if (ArrayUtil.isEmpty(parameters)) {
             return res;
         }
@@ -47,13 +46,13 @@ public interface VariantsProvider<T> {
         return res;
     }
 
-    void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final T res);
+    void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter firstParameter, final T res);
 
-    void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T res);
+    void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
 
-    void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T res);
+    void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
 
-    default void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final T result) {
+    default void beforeReturn(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T result) {
 
     }
 }

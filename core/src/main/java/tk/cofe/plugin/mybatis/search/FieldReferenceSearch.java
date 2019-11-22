@@ -67,7 +67,7 @@ public class FieldReferenceSearch extends QueryExecutorBase<XmlAttributeValueRef
                 .forEach(attributes -> process(attributes, psiField, consumer));
     }
 
-    private void process(@NotNull List<? extends PropertyAttribute> attributes, @NotNull PsiField psiField, @NotNull Processor<? super XmlAttributeValueReference> consumer) {
+    private void process(List<? extends PropertyAttribute> attributes, PsiField psiField, Processor<? super XmlAttributeValueReference> consumer) {
         attributes.forEach(id -> {
             XmlAttributeValue xmlAttributeValue = id.getProperty().getXmlAttributeValue();
             if (xmlAttributeValue != null && Objects.equals(psiField.getName(), xmlAttributeValue.getValue())) {

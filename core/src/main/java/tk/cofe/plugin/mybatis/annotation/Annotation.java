@@ -81,7 +81,10 @@ public class Annotation implements Cloneable {
     }
 
     @Nullable
-    public Value getValue(@NotNull PsiParameter psiParameter) {
+    public Value getValue(PsiParameter psiParameter) {
+        if (psiParameter == null) {
+            return null;
+        }
         PsiAnnotation annotation = psiParameter.getAnnotation(this.qualifiedName);
         if (annotation != null) {
             String value = AnnotationUtil.getStringAttributeValue(annotation, Value.getName());

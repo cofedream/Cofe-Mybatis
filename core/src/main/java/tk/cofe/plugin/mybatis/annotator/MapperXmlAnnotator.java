@@ -54,7 +54,7 @@ public class MapperXmlAnnotator implements Annotator {
         domElement.getIdValue().ifPresent(id -> process(holder, domElement, MyBatisBundle.message("xml.mapper.annotator.duplicate.text", "id", id), id));
     }
 
-    private void process(@NotNull final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
+    private void process(final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
         Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
             if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());

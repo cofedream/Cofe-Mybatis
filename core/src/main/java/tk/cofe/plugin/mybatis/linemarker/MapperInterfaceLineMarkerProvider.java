@@ -72,7 +72,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      * @param method   方法元素
      * @param result   标记结果
      */
-    private void markerMethod(PsiClass psiClass, @NotNull PsiMethod method, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+    private void markerMethod(PsiClass psiClass, PsiMethod method, Collection<? super RelatedItemLineMarkerInfo> result) {
         if (method.getNameIdentifier() != null) {
             List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).findMapperXmls(psiClass).stream()
                     .flatMap(mapperXml -> mapperXml.getClassElements().stream())
@@ -94,7 +94,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      * @param psiClass 类元素
      * @param result   标记结果
      */
-    private void markerInterface(@NotNull PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+    private void markerInterface(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo> result) {
         if (psiClass.getNameIdentifier() != null) {
             List<XmlTag> xmlTags = MapperService.getInstance(psiClass.getProject()).findMapperXmls(psiClass).stream()
                     .map(mapperXml -> mapperXml.getNamespace().getXmlTag())

@@ -29,7 +29,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
@@ -51,7 +50,7 @@ import java.util.List;
 public enum StatementTypeEnum {
     SELECT(Annotation.SELECT, "Select") {
         @Override
-        public Select addClassElement(@NotNull Mapper mapper, PsiMethod method) {
+        public Select addClassElement(Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
             GenericAttributeValue<PsiClass> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
@@ -70,17 +69,17 @@ public enum StatementTypeEnum {
         }
     }, INSERT(Annotation.INSERT, "Insert") {
         @Override
-        public Insert addClassElement(@NotNull Mapper mapper, PsiMethod method) {
+        public Insert addClassElement(Mapper mapper, PsiMethod method) {
             return mapper.addInsert();
         }
     }, UPDATE(Annotation.UPDATE, "Update") {
         @Override
-        public Update addClassElement(@NotNull Mapper mapper, PsiMethod method) {
+        public Update addClassElement(Mapper mapper, PsiMethod method) {
             return mapper.addUpdate();
         }
     }, DELETE(Annotation.DELETE, "Delete") {
         @Override
-        public Delete addClassElement(@NotNull Mapper mapper, PsiMethod method) {
+        public Delete addClassElement(Mapper mapper, PsiMethod method) {
             return mapper.addDelete();
         }
     },
@@ -110,7 +109,7 @@ public enum StatementTypeEnum {
      * @param method Java方法
      * @return 要创建的元素
      */
-    public abstract ClassElement addClassElement(@NotNull Mapper mapper, PsiMethod method);
+    public abstract ClassElement addClassElement(Mapper mapper, PsiMethod method);
 
     /**
      * 指定元素动作
@@ -119,7 +118,10 @@ public enum StatementTypeEnum {
      * @param method  方法
      * @param project 当前项目
      */
-    public void createStatement(Mapper mapper, PsiMethod method, @NotNull Project project) {
+    public void createStatement(Mapper mapper, PsiMethod method, Project project) {
+        if (mapper == null || method == null || project == null) {
+            return;
+        }
         ClassElement element = addClassElement(mapper, method);
         XmlTag tag = element.getXmlTag();
         if (tag == null) {

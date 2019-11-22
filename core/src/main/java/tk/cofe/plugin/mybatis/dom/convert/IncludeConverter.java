@@ -47,12 +47,12 @@ public class IncludeConverter extends XmlAttributeValueConverter<Sql> {
 
     @NotNull
     @Override
-    protected List<Sql> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper) {
+    protected List<Sql> getReferenceDomElements(String value, ConvertContext context, Mapper mapper) {
         return mapper.getSqls();
     }
 
     @Override
-    protected boolean filterDomElement(@NotNull Sql targetDomElement, @NotNull String selfValue) {
+    protected boolean filterDomElement(Sql targetDomElement, String selfValue) {
         return targetDomElement.isEqualsId(selfValue);
     }
 

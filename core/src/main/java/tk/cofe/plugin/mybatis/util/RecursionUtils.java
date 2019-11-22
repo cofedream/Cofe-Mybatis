@@ -18,7 +18,6 @@
 package tk.cofe.plugin.mybatis.util;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
@@ -36,7 +35,7 @@ import java.util.List;
  */
 public class RecursionUtils {
 
-    public static List<ResultMapAttribute> recursionResultMapAttribute(@Nullable ResultMap resultMap) {
+    public static List<ResultMapAttribute> recursionResultMapAttribute(ResultMap resultMap) {
         if (resultMap == null) {
             return Collections.emptyList();
         }

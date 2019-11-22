@@ -40,35 +40,37 @@ public interface MapperService {
 
     /**
      * 判断是否为 Mapper 接口文件
+     *
      * @param mapperClass Class文件
      */
-    boolean isMapperClass(@NotNull PsiClass mapperClass);
+    boolean isMapperClass(PsiClass mapperClass);
 
     /**
      * 判断 MapperInterface 是否存在与之对应的 Mapper 文件
+     *
      * @param mapperClass MapperInterface
      * @return 匹配到的 Mapper Xml 文件
      */
-    @NotNull
-    List<Mapper> findMapperXmls(@NotNull PsiClass mapperClass);
+    List<Mapper> findMapperXmls(PsiClass mapperClass);
 
     /**
      * 根据PsiClass 获取 Mapper Xml中的所有 Statement
+     *
      * @param mapperClass Mapper Interface
      * @return Mapper Statement
      */
-    @NotNull
-    List<ClassElement> findStatemtnts(@NotNull PsiClass mapperClass);
+    List<ClassElement> findStatemtnts(PsiClass mapperClass);
 
     /**
      * 获取Mapper Dom 文件
+     *
      * @return Mapper文件
      */
-    @NotNull
     List<Mapper> findAllMappers();
 
     /**
      * 查找 Dom 文件
+     *
      * @param <T>   {@code T extends DomElement}
      * @param clazz Domm描述类 {@code extends DomElement}
      * @return 匹配的Dom文件
@@ -77,17 +79,18 @@ public interface MapperService {
 
     /**
      * 找到 PsiMethod 对应的Mapper Statement
+     *
      * @param method 方法
      * @return Statement 集合
      */
-    @NotNull
-    Optional<ClassElement> findStatement(@NotNull PsiMethod method);
+    Optional<ClassElement> findStatement(PsiMethod method);
 
     /**
      * 查询PsiMethod对应的Mapper Statement是否存在
+     *
      * @param method 方法
      * @return true 存在, false 不存在
      */
-    boolean existStatement(@NotNull PsiMethod method);
+    boolean existStatement(PsiMethod method);
 
 }

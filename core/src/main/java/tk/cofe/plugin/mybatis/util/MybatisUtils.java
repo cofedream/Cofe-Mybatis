@@ -31,8 +31,6 @@ import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.DomService;
 import com.intellij.util.xml.XmlFileHeader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
@@ -87,13 +85,13 @@ public class MybatisUtils {
         }
     });
 
-    @NotNull
-    public static Optional<Mapper> getMapper(@NotNull DomElement element) {
+
+    public static Optional<Mapper> getMapper(DomElement element) {
         return Optional.ofNullable(DomUtils.getParentOfType(element, Mapper.class));
     }
 
-    @NotNull
-    public static Optional<Mapper> getMapper(@NotNull XmlElement element) {
+
+    public static Optional<Mapper> getMapper(XmlElement element) {
         DomManager domManager = DomManager.getDomManager(element.getProject());
         DomFileElement<Mapper> fileElement = domManager.getFileElement(((XmlFile) element.getContainingFile()), Mapper.class);
         return fileElement == null ? Optional.empty() : Optional.of(fileElement.getRootElement());
@@ -105,14 +103,14 @@ public class MybatisUtils {
      * @param file 文件
      * @return 结果
      */
-    public static boolean isMapperXmlFile(@Nullable PsiFile file) {
+    public static boolean isMapperXmlFile(PsiFile file) {
         if (!(file instanceof XmlFile)) {
             return false;
         }
         return isTargetXml(((XmlFile) file), Mapper.DTDS);
     }
 
-    public static boolean isElementWithMapperXMLFile(@Nullable PsiElement element) {
+    public static boolean isElementWithMapperXMLFile(PsiElement element) {
         return element instanceof XmlElement && isMapperXmlFile(element.getContainingFile());
     }
 
@@ -126,7 +124,7 @@ public class MybatisUtils {
      * @see Delete
      * @see Insert
      */
-    public static boolean isBaseStatement(@Nullable final XmlElement xmlElement) {
+    public static boolean isBaseStatement(final XmlElement xmlElement) {
         if (xmlElement == null) {
             return false;
         }
@@ -137,7 +135,7 @@ public class MybatisUtils {
         return Mapper.BASIC_OPERATION.stream().anyMatch(clazz -> clazz.isInstance(domElement));
     }
 
-    public static boolean isTargetXml(@NotNull XmlFile xmlFile, @Nullable String... namespaces) {
+    public static boolean isTargetXml(XmlFile xmlFile, String... namespaces) {
         if (namespaces == null || namespaces.length == 0) {
             return false;
         }
@@ -151,8 +149,8 @@ public class MybatisUtils {
      *
      * @param type 类型
      */
-    @NotNull
-    public static List<String> getResultType(@Nullable PsiType type) {
+
+    public static List<String> getResultType(PsiType type) {
         if (type == null) {
             return Collections.emptyList();
         } else if (PsiTypeUtils.isVoid(type)) {
@@ -175,7 +173,7 @@ public class MybatisUtils {
      * @param classElement 基础CRUD元素
      * @return PsiClass
      */
-    public static Optional<PsiClass> getPsiClass(@NotNull ClassElement classElement) {
+    public static Optional<PsiClass> getPsiClass(ClassElement classElement) {
         return Optional.ofNullable(DomUtils.getParentOfType(classElement, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 }

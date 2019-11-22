@@ -25,8 +25,6 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomTarget;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -36,7 +34,7 @@ import java.util.Optional;
  */
 public final class DomUtils extends DomUtil {
 
-    public static Optional<DomTarget> resolveToDomTarget(@NotNull PsiElement element) {
+    public static Optional<DomTarget> resolveToDomTarget(PsiElement element) {
         if (element instanceof DomTarget) {
             return Optional.of(((DomTarget) element));
         }
@@ -54,9 +52,9 @@ public final class DomUtils extends DomUtil {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
-    @NotNull
+
     @SuppressWarnings("unchecked")
-    public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, @NotNull final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);
@@ -64,7 +62,7 @@ public final class DomUtils extends DomUtil {
         return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
     }
 
-    public static boolean isTargetDomElement(@Nullable PsiElement element, @NotNull Class<?> requiredClass) {
+    public static boolean isTargetDomElement(PsiElement element, Class<?> requiredClass) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return true;
@@ -78,8 +76,8 @@ public final class DomUtils extends DomUtil {
      * @param attributeValue 属性值对象
      * @return NULL 则返回 {@code Optional.empty()}
      */
-    @NotNull
-    public static Optional<String> getAttributeVlaue(@NotNull GenericAttributeValue<?> attributeValue) {
+
+    public static Optional<String> getAttributeVlaue(GenericAttributeValue<?> attributeValue) {
         String value = attributeValue.getStringValue();
         if (StringUtil.isEmpty(value)) {
             return Optional.empty();

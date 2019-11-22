@@ -63,8 +63,7 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
         return null;
     }
 
-    @NotNull
-    private ProblemDescriptor problemDescriptor(@NotNull final PsiMethod method, @NotNull final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
+    private ProblemDescriptor problemDescriptor(final PsiMethod method, final InspectionManager manager, final boolean isOnTheFly, final PsiIdentifier nameIdentifier) {
         return manager.createProblemDescriptor(nameIdentifier, STATEMENT_REF_NOT_DEFINED, generateStatement(method), ProblemHighlightType.ERROR, isOnTheFly);
     }
 

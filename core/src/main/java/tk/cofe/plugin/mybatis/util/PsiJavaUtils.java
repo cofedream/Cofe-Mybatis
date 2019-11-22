@@ -28,8 +28,6 @@ import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Collection;
@@ -54,7 +52,7 @@ public final class PsiJavaUtils {
      * @param annotation 目标注解
      * @return true 有指定注解，false 没有指定注解
      */
-    public static boolean hasAnnotation(@NotNull PsiModifierListOwner target, @NotNull Annotation annotation) {
+    public static boolean hasAnnotation(PsiModifierListOwner target, Annotation annotation) {
         PsiModifierList modifierList = target.getModifierList();
         return modifierList != null && modifierList.hasAnnotation(annotation.getQualifiedName());
     }
@@ -66,7 +64,7 @@ public final class PsiJavaUtils {
      * @param annotations 目标注解集合
      * @return true 有指定注解，false 没有指定注解
      */
-    public static boolean hasAnnotations(@NotNull PsiModifierListOwner target, @NotNull Collection<Annotation> annotations) {
+    public static boolean hasAnnotations(PsiModifierListOwner target, Collection<Annotation> annotations) {
         return annotations.stream().anyMatch(annotation -> hasAnnotation(target, annotation));
     }
 
@@ -81,7 +79,7 @@ public final class PsiJavaUtils {
      * @param qualifiedName 类全限定名
      * @return true 已导入，false 未导入
      */
-    public static boolean hasImportClass(@NotNull PsiJavaFile file, @NotNull String qualifiedName) {
+    public static boolean hasImportClass(PsiJavaFile file, String qualifiedName) {
         PsiImportList importList = file.getImportList();
         if (importList == null) {
             return false;
@@ -95,7 +93,7 @@ public final class PsiJavaUtils {
      * @param file     Java文件
      * @param psiClass 要导入的类
      */
-    public static void importClass(@NotNull PsiJavaFile file, @NotNull PsiClass psiClass) {
+    public static void importClass(PsiJavaFile file, PsiClass psiClass) {
         file.importClass(psiClass);
     }
 
@@ -106,18 +104,18 @@ public final class PsiJavaUtils {
      *
      * @param psiField 字段
      */
-    public static boolean notSerialField(@NotNull PsiField psiField) {
+    public static boolean notSerialField(PsiField psiField) {
         return !"serialVersionUID".equals(psiField.getName());
     }
 
     // 方法相关
-    
+
     /**
      * 判断是否为 void 方法
      *
      * @param method 方法
      */
-    public static boolean isVoidMethod(@NotNull PsiMethod method) {
+    public static boolean isVoidMethod(PsiMethod method) {
         return PsiTypeUtils.isVoid(method.getReturnType());
     }
 
@@ -126,7 +124,7 @@ public final class PsiJavaUtils {
      *
      * @param method 方法
      */
-    public static boolean isGetMethod(@NotNull PsiMethod method) {
+    public static boolean isGetMethod(PsiMethod method) {
         return isPublicMethod(method)
                 && !isVoidMethod(method)
                 && method.getName().startsWith("get")
@@ -138,7 +136,7 @@ public final class PsiJavaUtils {
      *
      * @param method 方法
      */
-    public static boolean isNativeMethod(@NotNull PsiMethod method) {
+    public static boolean isNativeMethod(PsiMethod method) {
         return hasModifierProperty(method, PsiModifier.NATIVE);
     }
 
@@ -147,7 +145,7 @@ public final class PsiJavaUtils {
      *
      * @param method 方法
      */
-    public static boolean isPublicMethod(@NotNull PsiMethod method) {
+    public static boolean isPublicMethod(PsiMethod method) {
         return hasModifierProperty(method, PsiModifier.PUBLIC);
     }
 
@@ -157,7 +155,7 @@ public final class PsiJavaUtils {
      * @param method   方法
      * @param modifier 标识符 {@link PsiModifier}
      */
-    private static boolean hasModifierProperty(@NotNull PsiMethod method, String modifier) {
+    private static boolean hasModifierProperty(PsiMethod method, String modifier) {
         return method.getModifierList().hasModifierProperty(modifier);
     }
 
@@ -168,7 +166,7 @@ public final class PsiJavaUtils {
      * @param methodName 方法名称
      * @return 方法信息
      */
-    public static Optional<PsiMethod> findPsiMethod(@NotNull PsiClass psiClass, @NotNull String methodName) {
+    public static Optional<PsiMethod> findPsiMethod(PsiClass psiClass, String methodName) {
         PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
         if (methods.length == 0) {
             return Optional.empty();
@@ -183,8 +181,8 @@ public final class PsiJavaUtils {
      * @param method java方法
      * @return getAaaBbb->aaaBbb,或者 ""
      */
-    @NotNull
-    public static String replaceGetPrefix(@NotNull PsiMethod method) {
+
+    public static String replaceGetPrefix(PsiMethod method) {
         String methodName = method.getName();
         if (methodName.length() == 3) {
             return "";
@@ -204,7 +202,7 @@ public final class PsiJavaUtils {
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
-    public static boolean isInterface(@NotNull PsiElement psiElement) {
+    public static boolean isInterface(PsiElement psiElement) {
         return psiElement instanceof PsiClass && ((PsiClass) psiElement).isInterface();
     }
 
@@ -214,11 +212,11 @@ public final class PsiJavaUtils {
      * @param psiElement 元素
      * @return 如果是接口则返回 {@code true}，否则返回 {@code false}
      */
-    public static boolean isInterfaceMethod(@NotNull PsiElement psiElement) {
+    public static boolean isInterfaceMethod(PsiElement psiElement) {
         return psiElement instanceof PsiMethod && isElementWithinInterface(psiElement);
     }
 
-    private static boolean isElementWithinInterface(@Nullable PsiElement element) {
+    private static boolean isElementWithinInterface(PsiElement element) {
         if (element instanceof PsiClass && ((PsiClass) element).isInterface()) {
             return true;
         }
@@ -229,14 +227,14 @@ public final class PsiJavaUtils {
     /**
      * 转为 getXxx方法名
      */
-    @NotNull
-    public static String toGetPrefix(@NotNull final String text) {
+
+    public static String toGetPrefix(final String text) {
         return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
     }
 
-    public static void psiClassProcessor(@Nullable PsiClassType psiClassType,
-                                         @NotNull Predicate<PsiField> fieldCondition, @NotNull Consumer<PsiField> fieldConsumer,
-                                         @NotNull Predicate<PsiMethod> methodCondition, @NotNull Consumer<PsiMethod> methodConsumer) {
+    public static void psiClassProcessor(PsiClassType psiClassType,
+                                         Predicate<PsiField> fieldCondition, Consumer<PsiField> fieldConsumer,
+                                         Predicate<PsiMethod> methodCondition, Consumer<PsiMethod> methodConsumer) {
         if (psiClassType == null) {
             return;
         }
@@ -244,9 +242,9 @@ public final class PsiJavaUtils {
         psiClassProcessor(psiClass, fieldCondition, fieldConsumer, methodCondition, methodConsumer);
     }
 
-    public static void psiClassProcessor(@Nullable PsiClass psiClass,
-                                         @NotNull Predicate<PsiField> fieldCondition, @NotNull Consumer<PsiField> fieldConsumer,
-                                         @NotNull Predicate<PsiMethod> methodCondition, @NotNull Consumer<PsiMethod> methodConsumer) {
+    public static void psiClassProcessor(PsiClass psiClass,
+                                         Predicate<PsiField> fieldCondition, Consumer<PsiField> fieldConsumer,
+                                         Predicate<PsiMethod> methodCondition, Consumer<PsiMethod> methodConsumer) {
         if (psiClass == null) {
             return;
         }

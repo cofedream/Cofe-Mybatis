@@ -22,7 +22,6 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * SQL 文件中的SQL 参数完成
@@ -33,19 +32,18 @@ import org.jetbrains.annotations.NotNull;
 public class MbspFileSqlParameterCompletionContributor extends BaseSqlParameterCompletionContributor {
 
     @Override
-    PsiFile getTargetPsiFile(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result) {
+    PsiFile getTargetPsiFile(final CompletionParameters parameters, final CompletionResultSet result) {
         PsiElement position = parameters.getPosition();
         return InjectedLanguageManager.getInstance(position.getProject()).getTopLevelFile(position);
     }
 
     @Override
-    PsiElement getTargetElement(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result) {
+    PsiElement getTargetElement(final CompletionParameters parameters, final CompletionResultSet result) {
         PsiElement position = parameters.getPosition();
         return InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
     }
 
-    @NotNull
-    String getPrefixText(final PsiElement position, @NotNull CompletionResultSet result) {
+    String getPrefixText(final PsiElement position, CompletionResultSet result) {
         String resStr = "";
         PsiElement prevSibling = position.getParent();
         while ((prevSibling = prevSibling.getPrevSibling()) != null) {

@@ -27,8 +27,6 @@ import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -56,7 +54,10 @@ public class JavaPsiServiceImpl implements JavaPsiService {
     }
 
     @Override
-    public void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation) {
+    public void addAnnotation(PsiModifierListOwner psiModifierListOwner, Annotation annotation) {
+        if (psiModifierListOwner == null || annotation == null) {
+            return;
+        }
         PsiModifierList modifierList = psiModifierListOwner.getModifierList();
         if (modifierList != null) {
             importClass((PsiJavaFile) psiModifierListOwner.getContainingFile(), annotation.getQualifiedName());
@@ -64,16 +65,17 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         }
     }
 
-    @NotNull
     @Override
-    public Optional<PsiClass> findPsiClass(@NotNull String qualifiedName) {
+    public Optional<PsiClass> findPsiClass(String qualifiedName) {
+        if (qualifiedName == null) {
+            return Optional.empty();
+        }
         PsiClass aClass = javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project));
         return Optional.ofNullable(aClass == null ? javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.allScope(project)) : aClass);
     }
 
-    @NotNull
     @Override
-    public Optional<PsiMethod> findPsiMethod(@Nullable final String qualifiedName, @Nullable final String methodName) {
+    public Optional<PsiMethod> findPsiMethod(final String qualifiedName, final String methodName) {
         if (StringUtil.isEmpty(qualifiedName) || StringUtil.isEmpty(methodName)) {
             return Optional.empty();
         }

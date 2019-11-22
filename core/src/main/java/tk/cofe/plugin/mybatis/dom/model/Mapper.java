@@ -98,7 +98,6 @@ public interface Mapper extends DomElement {
     @SubTagList("resultMap")
     List<ResultMap> getResultMaps();
 
-    @NotNull
     default List<ClassElement> getClassElements() {
         List<ClassElement> classElements = new LinkedList<>();
         if (getInserts() != null) {
@@ -132,7 +131,7 @@ public interface Mapper extends DomElement {
             return getUpdates();
         } else if (id instanceof Delete) {
             return getDeletes();
-        }else if (id instanceof ResultMap){
+        } else if (id instanceof ResultMap) {
             return getResultMaps();
         } else {
             return Collections.emptyList();

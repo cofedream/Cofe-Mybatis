@@ -102,7 +102,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * @return Id属性列表
      */
     @NotNull
-    protected abstract List<T> getReferenceDomElements(@NotNull String value, @NotNull ConvertContext context, @NotNull Mapper mapper);
+    protected abstract List<T> getReferenceDomElements(String value, ConvertContext context, Mapper mapper);
 
     /**
      * 判断是否为目标元素
@@ -111,7 +111,7 @@ public abstract class XmlAttributeValueConverter<T extends DomElement> extends R
      * @param selfValue        当前值
      * @return {@code true} 则为目标元素
      */
-    protected abstract boolean filterDomElement(@NotNull T targetDomElement, @NotNull String selfValue);
+    protected abstract boolean filterDomElement(T targetDomElement, String selfValue);
 
     @Nullable
     @Override

@@ -24,7 +24,6 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Optional;
@@ -38,8 +37,7 @@ public interface JavaPsiService {
         return ServiceManager.getService(project, JavaPsiService.class);
     }
 
-    @NotNull
-    Optional<PsiMethod> findPsiMethod(@Nullable String qualifiedName, @Nullable String methodName);
+    Optional<PsiMethod> findPsiMethod(String qualifiedName, String methodName);
 
     /**
      * 查找PsiClass
@@ -47,8 +45,7 @@ public interface JavaPsiService {
      * @param qualifiedName 类全限定名
      * @return PsiClass
      */
-    @NotNull
-    Optional<PsiClass> findPsiClass(@NotNull String qualifiedName);
+    Optional<PsiClass> findPsiClass(String qualifiedName);
 
     /**
      * 导包
@@ -64,6 +61,6 @@ public interface JavaPsiService {
      * @param psiModifierListOwner 目标元素
      * @param annotation           注解
      */
-    void addAnnotation(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Annotation annotation);
+    void addAnnotation(PsiModifierListOwner psiModifierListOwner, Annotation annotation);
 
 }

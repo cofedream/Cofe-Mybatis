@@ -109,7 +109,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final Set<String> res) {
+    public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter firstParameter, final Set<String> res) {
         Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
@@ -120,14 +120,14 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     }
 
     @Override
-    public void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
+    public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
         for (PsiParameter psiParameter : parameters) {
             Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> res.add(value.getValue()));
         }
     }
 
     @Override
-    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
+    public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
         PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(prefixText, CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
@@ -176,8 +176,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
     /**
      * 获取前缀
      */
-    @NotNull
-    private String[] getPrefix(@NotNull String prefix) {
+    private String[] getPrefix(String prefix) {
         if (StringUtil.isEmpty(prefix)) {
             return new String[0];
         }
@@ -193,7 +192,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
         return CompletionUtils.getPrefixArr(getPrefix(node));
     }
 
-    private void addPsiClassTypeVariants(final String prefix, @Nullable final PsiClassType psiType, @NotNull final Set<String> res) {
+    private void addPsiClassTypeVariants(final String prefix, @Nullable final PsiClassType psiType, final Set<String> res) {
         if (psiType == null) {
             return;
         }

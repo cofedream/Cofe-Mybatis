@@ -19,8 +19,6 @@ package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.util.PsiTypesUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -105,7 +103,7 @@ public class TypeAliasUtils {
         registerAlias("ResultSet", ResultSet.class);
     }
 
-    private static void registerAlias(@NotNull String alias, Class<?> aClass) {
+    private static void registerAlias(String alias, Class<?> aClass) {
         TYPE_ALIASES_NAME.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
         TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
             (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias));
@@ -113,12 +111,12 @@ public class TypeAliasUtils {
         });
     }
 
-    @Nullable
+
     public static String getTypeName(String aliase) {
         return TYPE_ALIASES_NAME.get(aliase);
     }
 
-    @NotNull
+
     public static List<LookupElementBuilder> getTypeLookupElement(String text) {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }

@@ -63,18 +63,31 @@ import java.util.stream.Collectors;
  * @date : 2018-12-31
  */
 public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
-    private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
     // tk 相关类
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";
     private static final String TK_MAPPER_SCANNER_CONFIGURER = "tk.mybatis.spring.mapper.MapperScannerConfigurer";
     private static final String TK_MAPPER_SCAN = "tk.mybatis.spring.annotation.MapperScan";
-
     // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
+    private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
+
+    private static void processBasePackage(GlobalSearchScope scope, @Nullable PsiPackage psiPackage, Collection<CommonSpringBean> mappers) {
+        if (psiPackage == null) {
+            return;
+        }
+        for (PsiClass psiClass : psiPackage.getClasses(scope)) {
+            if (psiClass.isInterface()) {
+                mappers.add(new CustomSpringComponent(psiClass));
+            }
+        }
+        for (PsiPackage subPackage : psiPackage.getSubPackages(scope)) {
+            processBasePackage(scope, subPackage, mappers);
+        }
+    }
 
     @NotNull
     @Override
-    public Collection<CommonSpringBean> getCustomComponents(@NotNull LocalModel springModel) {
+    public Collection<CommonSpringBean> getCustomComponents(LocalModel springModel) {
         Module module = springModel.getModule();
         if (module != null && !DumbService.isDumb(module.getProject())) {
             Collection<CommonSpringBean> mappers = new LinkedList<>();
@@ -90,7 +103,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
         return Collections.emptyList();
     }
 
-    private void collectMappers(@NotNull LocalAnnotationModel springModel, Module module, Collection<CommonSpringBean> mappers, String annotationClassName) {
+    private void collectMappers(LocalAnnotationModel springModel, Module module, Collection<CommonSpringBean> mappers, String annotationClassName) {
         if (SpringCommonUtils.findLibraryClass(module, annotationClassName) == null) {
             return;
         }
@@ -146,21 +159,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
         }
     }
 
-    private static void processBasePackage(@NotNull GlobalSearchScope scope, @Nullable PsiPackage psiPackage, @NotNull Collection<CommonSpringBean> mappers) {
-        if (psiPackage == null) {
-            return;
-        }
-        for (PsiClass psiClass : psiPackage.getClasses(scope)) {
-            if (psiClass.isInterface()) {
-                mappers.add(new CustomSpringComponent(psiClass));
-            }
-        }
-        for (PsiPackage subPackage : psiPackage.getSubPackages(scope)) {
-            processBasePackage(scope, subPackage, mappers);
-        }
-    }
-
-    private void processQueryPsiClass(@NotNull Query<PsiClass> search, @NotNull Collection<CommonSpringBean> mappers) {
+    private void processQueryPsiClass(Query<PsiClass> search, Collection<CommonSpringBean> mappers) {
         for (PsiClass aClass : search.findAll()) {
             if (aClass.isInterface()) {
                 mappers.add(new CustomSpringComponent(aClass));
@@ -168,14 +167,12 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
         }
     }
 
-    @NotNull
-    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull JvmAnnotationConstantValue attributeValue) {
+    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, JvmAnnotationConstantValue attributeValue) {
         Object value = attributeValue.getConstantValue();
         return value == null ? Collections.emptyList() : getPsiPackage(facade, value.toString());
     }
 
-    @NotNull
-    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull PsiAnnotationMemberValue annotationMemberValue) {
+    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, PsiAnnotationMemberValue annotationMemberValue) {
         List<PsiPackage> res = new LinkedList<>();
         for (PsiElement child : annotationMemberValue.getChildren()) {
             if (!(child instanceof PsiExpression)) {
@@ -194,8 +191,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
         return res;
     }
 
-    @NotNull
-    private List<PsiPackage> getPsiPackage(@NotNull JavaPsiFacade facade, @NotNull String qualifiedName) {
+    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, String qualifiedName) {
         if (qualifiedName.contains("*")) {
             PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
                     .replaceAll("\\.", "\\\\.")

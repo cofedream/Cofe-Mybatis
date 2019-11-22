@@ -161,7 +161,7 @@ public class ForeachConverter {
         }
 
         @Override
-        public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final Set<String> res) {
+        public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter firstParameter, final Set<String> res) {
             Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
             if (value == null) {
                 if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
@@ -177,7 +177,7 @@ public class ForeachConverter {
         }
 
         @Override
-        public void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
+        public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
             for (int i = 0; i < parameters.length; i++) {
                 Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
                 if (value == null) {
@@ -189,7 +189,7 @@ public class ForeachConverter {
         }
 
         @Override
-        public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final Set<String> res) {
+        public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final Set<String> res) {
             final PsiClassType psiClassType = CompletionUtils.getPrefixPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters));
             if (psiClassType != null) {
                 addPsiClassVariants(String.join(",", prefixArr).concat("."), psiClassType.resolve(), res);

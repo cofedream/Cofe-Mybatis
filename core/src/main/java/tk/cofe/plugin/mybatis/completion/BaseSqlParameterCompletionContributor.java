@@ -84,7 +84,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     }
 
     @Override
-    public void singleParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter firstParameter, @NotNull final CompletionResultSet result) {
+    public void singleParam(final String prefixText, final String[] prefixArr, final PsiParameter firstParameter, final CompletionResultSet result) {
         Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
@@ -95,21 +95,21 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     }
 
     @Override
-    public void multiParam(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+    public void multiParam(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final CompletionResultSet result) {
         for (PsiParameter psiParameter : parameters) {
             Optional.ofNullable(Annotation.PARAM.getValue(psiParameter)).ifPresent(value -> result.addElement(createLookupElement(value.getValue(), psiParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter)));
         }
     }
 
     @Override
-    public void emptyPrefix(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet res) {
+    public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final CompletionResultSet res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
         PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
     }
 
     @Override
-    public void beforeReturn(@NotNull final String prefixText, @NotNull final String[] prefixArr, @NotNull final PsiParameter[] parameters, @NotNull final CompletionResultSet result) {
+    public void beforeReturn(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final CompletionResultSet result) {
         addParamsVariants(result, prefixArr, parameters);
         result.stopHere();
     }
@@ -117,20 +117,20 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     /**
      * 获取需要代码提示的文件
      */
-    abstract PsiFile getTargetPsiFile(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
+    abstract PsiFile getTargetPsiFile(final CompletionParameters parameters, final CompletionResultSet result);
 
     @Nullable
-    abstract PsiElement getTargetElement(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result);
+    abstract PsiElement getTargetElement(final CompletionParameters parameters, final CompletionResultSet result);
 
     /**
      * 获取前缀,用于值填充
      */
-    abstract String getPrefixText(final PsiElement position, @NotNull final CompletionResultSet result);
+    abstract String getPrefixText(final PsiElement position, final CompletionResultSet result);
 
     /**
      * 判断是否支持代码完成
      */
-    private boolean isSupport(@NotNull CompletionParameters parameters) {
+    private boolean isSupport(CompletionParameters parameters) {
         String text = parameters.getOriginalFile().getText();
         for (int i = parameters.getOffset() - 1; i > 0; i--) {
             char c = text.charAt(i);
@@ -156,7 +156,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
      * @param psiType Java类类型
      * @param result  结果集
      */
-    private void addPsiClassTypeVariants(@Nullable PsiClassType psiType, @NotNull CompletionResultSet result) {
+    private void addPsiClassTypeVariants(@Nullable PsiClassType psiType, CompletionResultSet result) {
         if (psiType == null) {
             return;
         }
@@ -172,7 +172,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
     }
 
-    private void addFieldsVariants(final PsiField[] fields, @NotNull final CompletionResultSet result) {
+    private void addFieldsVariants(final PsiField[] fields, final CompletionResultSet result) {
         for (PsiField field : fields) {
             if (PsiJavaUtils.notSerialField(field)) {
                 createLookupElement(field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
@@ -180,7 +180,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
     }
 
-    private void addMethodsVariants(final PsiMethod[] methods, @NotNull final CompletionResultSet result) {
+    private void addMethodsVariants(final PsiMethod[] methods, final CompletionResultSet result) {
         for (PsiMethod method : methods) {
             if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
                 createLookupElement(PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
@@ -195,7 +195,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
      * @param prefixs          前缀
      * @param methodParameters 方法参数
      */
-    private void addParamsVariants(@NotNull CompletionResultSet result, @NotNull String[] prefixs, PsiParameter[] methodParameters) {
+    private void addParamsVariants(CompletionResultSet result, String[] prefixs, PsiParameter[] methodParameters) {
         // 方法参数大于一个的时候才进行 param1->paramN的提示,否则仅提示类内部字段
         if (prefixs.length != 0 && methodParameters.length <= 1) {
             return;
@@ -213,12 +213,12 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     }
 
     @NotNull
-    private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon) {
+    private LookupElement createLookupElement(String lookupString, String type, @Nullable Icon icon) {
         return createLookupElement(lookupString, type, icon, PRIORITY);
     }
 
     @NotNull
-    private LookupElement createLookupElement(@NotNull String lookupString, @NotNull String type, @Nullable Icon icon, double priority) {
+    private LookupElement createLookupElement(String lookupString, String type, @Nullable Icon icon, double priority) {
         return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withPresentableText(lookupString).withTypeText(type).bold().withIcon(icon), priority);
     }
 
