@@ -21,13 +21,12 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiModifier;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericDomValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public class PropertyConverter extends ResolvingConverter<PsiField> {
+public class PropertyConverter extends ResolvingConverter<PsiMember> {
 
     private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
 
@@ -58,7 +57,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
 
     @NotNull
     @Override
-    public Collection<? extends PsiField> getVariants(ConvertContext context) {
+    public Collection<? extends PsiMember> getVariants(ConvertContext context) {
         return PropertyType.parse(context.getInvocationElement())
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields())
                         .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
@@ -68,13 +67,13 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
 
     @Nullable
     @Override
-    public LookupElement createLookupElement(PsiField psiMember) {
+    public LookupElement createLookupElement(PsiMember psiMember) {
         return psiMember == null || psiMember.getName() == null ? null : LookupElementBuilder.create(psiMember.getName()).withIcon(PRIVATE_FIELD_ICON);
     }
 
     @Nullable
     @Override
-    public PsiField fromString(@Nullable final String member, final ConvertContext context) {
+    public PsiMember fromString(@Nullable final String member, final ConvertContext context) {
         if (StringUtil.isEmpty(member)) {
             return null;
         }
@@ -85,13 +84,8 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
 
     @Nullable
     @Override
-    public String toString(@Nullable final PsiField psiMember, final ConvertContext context) {
+    public String toString(@Nullable final PsiMember psiMember, final ConvertContext context) {
         return psiMember == null ? null : psiMember.getName();
-    }
-
-    @Override
-    public void handleElementRename(final GenericDomValue<PsiField> genericValue, final ConvertContext context, final String newElementName) {
-        super.handleElementRename(genericValue, context, newElementName);
     }
 
     private enum PropertyType {
@@ -125,7 +119,7 @@ public class PropertyConverter extends ResolvingConverter<PsiField> {
             if (domElement == null) {
                 return Optional.empty();
             }
-            for (DomElement curElement = domElement.getParent() == null ? domElement.getParent() : domElement.getParent().getParent();
+            for (DomElement curElement = domElement.getParent() == null ? null : domElement.getParent().getParent();
                  curElement != null;
                  curElement = curElement.getParent()) {
                 for (PropertyType type : values()) {

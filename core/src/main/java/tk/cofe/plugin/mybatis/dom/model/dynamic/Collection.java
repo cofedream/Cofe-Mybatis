@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.dom.model.dynamic;
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
@@ -44,12 +45,14 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * collection 标签
  * @author : zhengrf
  * @date : 2019-01-21
  */
 public interface Collection extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
         SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
 
+    @Required
     @Attribute("ofType")
     GenericAttributeValue<PsiClass> getOfType();
 

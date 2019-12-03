@@ -31,7 +31,7 @@
         <i>new features:</i>
         <ul>
             <li>Support resultMap id attribute find declaration and rename.</li>
-            <li>Add XML parameter reference analysis</li>
+            <li>XML Add more checks</li>
             <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
             <li>Adjust includ and resultMap attribute documention prompt content</li>
         </ul>

@@ -17,6 +17,10 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
+import com.intellij.psi.PsiClass;
+import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnAttribute;
@@ -35,13 +39,17 @@ import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import java.util.List;
 
 /**
- * {@code <association></association>}
+ * association 标签
  *
  * @author : zhengrf
  * @date : 2019-01-21
  */
 public interface Association extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
         SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
+
+    @Required
+    @Attribute("javaType")
+    GenericAttributeValue<PsiClass> getJavaType();
 
     @SubTag("constructor")
     Constructor getConstructor();
