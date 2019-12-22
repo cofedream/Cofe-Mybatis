@@ -106,7 +106,9 @@
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
-
+        <!--<implicitUsageProvider implementation=""-->
+        <!--<lang.inspectionSuppressor-->
+        <xml.xmlSuppressionProvider order="first" implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>
