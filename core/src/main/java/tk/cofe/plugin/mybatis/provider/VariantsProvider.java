@@ -29,20 +29,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface VariantsProvider<T> {
 
-    default T provider(@NotNull final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, @NotNull final T res) {
+    default T provider(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, @NotNull final T res) {
         if (ArrayUtil.isEmpty(parameters)) {
             return res;
         }
+        final String prefix = prefixText == null ? "" : prefixText;
         if (ArrayUtil.isEmpty(prefixArr)) {
             if (parameters.length == 1) {
-                singleParam(prefixText, prefixArr, parameters[0], res);
+                singleParam(prefix, prefixArr, parameters[0], res);
             } else {
-                multiParam(prefixText, prefixArr, parameters, res);
+                multiParam(prefix, prefixArr, parameters, res);
             }
         } else {
-            emptyPrefix(prefixText, prefixArr, parameters, res);
+            emptyPrefix(prefix, prefixArr, parameters, res);
         }
-        beforeReturn(prefixText, prefixArr, parameters, res);
+        beforeReturn(prefix, prefixArr, parameters, res);
         return res;
     }
 

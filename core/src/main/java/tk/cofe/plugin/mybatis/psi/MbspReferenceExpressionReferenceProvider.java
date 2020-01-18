@@ -19,7 +19,6 @@ package tk.cofe.plugin.mybatis.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.tree.IElementType;
@@ -54,7 +53,7 @@ public class MbspReferenceExpressionReferenceProvider implements MbspReferencePr
         }
         PsiElement resolveTo = DomUtils.getDomElement(originElement, ClassElement.class)
                 .flatMap(ClassElement::getIdMethod)
-                .map(psiMethod -> CompletionUtils.getPrefixElement(res.toArray(new String[0]), ((PsiParameter[]) psiMethod.getParameters())))
+                .map(psiMethod -> CompletionUtils.getPrefixElement(res.toArray(new String[0]), psiMethod.getParameterList().getParameters()))
                 .orElse(null);
         if (resolveTo == null) {
             return null;

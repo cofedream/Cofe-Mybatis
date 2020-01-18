@@ -104,7 +104,7 @@ public class TestConverter extends ResolvingConverter.StringConverter implements
             return Collections.emptySet();
         }
         return classElement.getIdMethod()
-                .map(method -> provider(getCompletionPrefix(originPrefix), getPrefix(originPrefix), (PsiParameter[]) method.getParameters(), new HashSet<>()))
+                .map(method -> provider(getCompletionPrefix(originPrefix), getPrefix(originPrefix), method.getParameterList().getParameters(), new HashSet<>()))
                 .orElse(Collections.emptySet());
     }
 

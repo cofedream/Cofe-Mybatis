@@ -57,7 +57,7 @@ import java.util.Set;
 public class ForeachConverter {
 
     private static PsiElement resloaveProvider(final String text, final PsiMethod method) {
-        PsiParameter[] parameters = (PsiParameter[]) method.getParameters();
+        PsiParameter[] parameters = method.getParameterList().getParameters();
         if (ArrayUtil.isEmpty(parameters)) {
             return null;
         }
@@ -137,7 +137,7 @@ public class ForeachConverter {
                 return Collections.emptyList();
             }
             return classElement.getIdMethod()
-                    .map(method -> provider(xmlAttributeValue.getValue(), CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue())), (PsiParameter[]) method.getParameters(), new HashSet<>()))
+                    .map(method -> provider(xmlAttributeValue.getValue(), CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue())), method.getParameterList().getParameters(), new HashSet<>()))
                     .orElse(Collections.emptySet());
         }
 
