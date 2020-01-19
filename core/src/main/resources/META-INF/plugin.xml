@@ -41,7 +41,7 @@
         </ul>
         <i>other:</i>
         <ul>
-            <li>change reference implements</li>
+            <li>optimize spring mapper bean scan</li>
         </ul>
     ]]></change-notes>
 

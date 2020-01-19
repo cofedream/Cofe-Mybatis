@@ -25,8 +25,10 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.PsiPackage;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
@@ -39,11 +41,11 @@ import java.util.Optional;
  */
 public class JavaPsiServiceImpl implements JavaPsiService {
     private final Project project;
-    private final JavaPsiFacade javaPsiFacade;
+    private final JavaPsiFacade facade;
 
     public JavaPsiServiceImpl(Project project) {
         this.project = project;
-        this.javaPsiFacade = JavaPsiFacade.getInstance(project);
+        this.facade = JavaPsiFacade.getInstance(project);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         PsiModifierList modifierList = psiModifierListOwner.getModifierList();
         if (modifierList != null) {
             importClass((PsiJavaFile) psiModifierListOwner.getContainingFile(), annotation.getQualifiedName());
-            modifierList.add(javaPsiFacade.getElementFactory().createAnnotationFromText(annotation.toString(), psiModifierListOwner));
+            modifierList.add(facade.getElementFactory().createAnnotationFromText(annotation.toString(), psiModifierListOwner));
         }
     }
 
@@ -70,8 +72,20 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         if (qualifiedName == null) {
             return Optional.empty();
         }
-        PsiClass aClass = javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.projectScope(project));
-        return Optional.ofNullable(aClass == null ? javaPsiFacade.findClass(qualifiedName, GlobalSearchScope.allScope(project)) : aClass);
+        PsiClass aClass = facade.findClass(qualifiedName, GlobalSearchScope.projectScope(project));
+        return Optional.ofNullable(aClass == null ? facade.findClass(qualifiedName, GlobalSearchScope.allScope(project)) : aClass);
+    }
+
+    @Override
+    public PsiPackage getPsiPackage(@Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return null;
+        }
+        final String qualifiedName = psiClass.getQualifiedName();
+        if (StringUtil.isEmpty(qualifiedName)) {
+            return null;
+        }
+        return facade.findPackage(qualifiedName.substring(0, qualifiedName.lastIndexOf(".")));
     }
 
     @Override

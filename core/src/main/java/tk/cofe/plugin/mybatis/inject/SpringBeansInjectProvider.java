@@ -17,25 +17,22 @@
 
 package tk.cofe.plugin.mybatis.inject;
 
-import com.intellij.lang.jvm.annotation.JvmAnnotationArrayValue;
-import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
-import com.intellij.lang.jvm.annotation.JvmAnnotationAttributeValue;
-import com.intellij.lang.jvm.annotation.JvmAnnotationClassValue;
-import com.intellij.lang.jvm.annotation.JvmAnnotationConstantValue;
+import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
+import com.intellij.psi.PsiArrayInitializerMemberValue;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.psi.search.searches.ClassesWithAnnotatedMembersSearch;
+import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.spring.contexts.model.LocalAnnotationModel;
 import com.intellij.spring.contexts.model.LocalModel;
 import com.intellij.spring.contexts.model.LocalXmlModel;
@@ -45,18 +42,18 @@ import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import com.siyeh.ig.psiutils.ExpressionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author : zhengrf
@@ -70,20 +67,6 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
     // 原生mybatis的接口
     private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
     private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
-
-    private static void processBasePackage(GlobalSearchScope scope, @Nullable PsiPackage psiPackage, Collection<CommonSpringBean> mappers) {
-        if (psiPackage == null) {
-            return;
-        }
-        for (PsiClass psiClass : psiPackage.getClasses(scope)) {
-            if (psiClass.isInterface()) {
-                mappers.add(new CustomSpringComponent(psiClass));
-            }
-        }
-        for (PsiPackage subPackage : psiPackage.getSubPackages(scope)) {
-            processBasePackage(scope, subPackage, mappers);
-        }
-    }
 
     @NotNull
     @Override
@@ -114,117 +97,100 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
         }
         GlobalSearchScope scope = GlobalSearchScope.projectScope(module.getProject());
         JavaPsiFacade facade = JavaPsiFacade.getInstance(config.getProject());
-        for (JvmAnnotationAttribute attribute : annotation.getAttributes()) {
-            JvmAnnotationAttributeValue attributeValue = attribute.getAttributeValue();
-            if (attributeValue == null) {
-                continue;
-            }
-            PsiClass psiClass;
-            switch (attribute.getAttributeName()) {
-                case "value":
-                case "basePackages":
-                    if (attributeValue instanceof JvmAnnotationConstantValue) {
-                        getPsiPackage(facade, ((JvmAnnotationConstantValue) attributeValue)).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
-                    } else if (attributeValue instanceof JvmAnnotationArrayValue) {
-                        PsiAnnotationMemberValue basePackages = annotation.findAttributeValue(attribute.getAttributeName());
-                        if (basePackages != null) {
-                            getPsiPackage(facade, basePackages).forEach(psiPackage -> processBasePackage(scope, psiPackage, mappers));
-                        }
+        final JavaPsiService psiService = JavaPsiService.getInstance(config.getProject());
+        Arrays.stream(annotation.getParameterList().getAttributes())
+                .filter(info -> info.getAttributeValue() != null)
+                .flatMap(attribute -> {
+                    final PsiAnnotationMemberValue attributeValue = attribute.getValue();
+                    switch (attribute.getAttributeName()) {
+                        case "value":
+                        case "basePackages":
+                            return annotation(facade, attributeValue).flatMap(psiPackage -> scanPackage(scope, psiPackage));
+                        case "basePackageClasses":
+                            return getPsiClass(attributeValue, psiClass -> scanPackage(scope, psiService.getPsiPackage(psiClass)));
+                        case "annotationClass":
+                            return getPsiClass(attributeValue, psiClass -> queryPsiClass(ClassesWithAnnotatedMembersSearch.search(psiClass, scope)));
+                        case "markerInterface":
+                            return getPsiClass(attributeValue, psiClass -> queryPsiClass(ClassInheritorsSearch.search(psiClass)));
+                        default:
+                            return Stream.empty();
                     }
-                    break;
-                case "basePackageClasses":
-                    psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                    if (psiClass != null) {
-                        String classQualifiedName = psiClass.getQualifiedName();
-                        if (StringUtil.isEmpty(classQualifiedName)) {
-                            return;
-                        }
-                        processBasePackage(scope, facade.findPackage(classQualifiedName.substring(0, classQualifiedName.lastIndexOf("."))), mappers);
-                    }
-                    break;
-                case "annotationClass":
-                    psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                    if (psiClass != null) {
-                        processQueryPsiClass(ClassesWithAnnotatedMembersSearch.search(psiClass, scope), mappers);
-                    }
-                    break;
-                case "markerInterface":
-                    psiClass = (PsiClass) ((JvmAnnotationClassValue) attributeValue).getClazz();
-                    if (psiClass != null) {
-                        processQueryPsiClass(ClassInheritorsSearch.search(psiClass), mappers);
-                    }
-                default:
-                    break;
-            }
+                }).forEach(psiClass -> mappers.add(new CustomSpringComponent(psiClass)));
+    }
+
+    private static Stream<PsiClass> scanPackage(GlobalSearchScope scope, @Nullable PsiPackage psiPackage) {
+        if (psiPackage == null) {
+            return Stream.empty();
+        }
+        return Stream.concat(Arrays.stream(psiPackage.getClasses(scope)).filter(PsiClass::isInterface),
+                Arrays.stream(psiPackage.getSubPackages(scope)).flatMap(info -> scanPackage(scope, info)));
+    }
+
+    private Stream<PsiClass> getPsiClass(final PsiAnnotationMemberValue value, final Function<PsiClass, Stream<PsiClass>> scan) {
+        if (value instanceof PsiClassObjectAccessExpression) {
+            final PsiTypeElement operand = ((PsiClassObjectAccessExpression) value).getOperand();
+            final PsiClass psiClass = PsiTypesUtil.getPsiClass(operand.getType());
+            return psiClass == null ? Stream.empty() : scan.apply(psiClass);
+        }
+        return Stream.empty();
+    }
+
+    private Stream<PsiClass> queryPsiClass(Query<PsiClass> search) {
+        return search.findAll().stream().filter(PsiClass::isInterface);
+    }
+
+    @NotNull
+    private Stream<PsiPackage> annotation(final JavaPsiFacade facade, final PsiAnnotationMemberValue value) {
+        if (value == null) {
+            return Stream.empty();
+        }
+        if (value instanceof PsiArrayInitializerMemberValue) {
+            return AnnotationUtil.arrayAttributeValues(value).stream().flatMap(info -> getPsiPackage(facade, info));
+        } else {
+            return getPsiPackage(facade, value);
         }
     }
 
-    private void processQueryPsiClass(Query<PsiClass> search, Collection<CommonSpringBean> mappers) {
-        for (PsiClass aClass : search.findAll()) {
-            if (aClass.isInterface()) {
-                mappers.add(new CustomSpringComponent(aClass));
+    @NotNull
+    private Stream<PsiPackage> getPsiPackage(final JavaPsiFacade facade, @NotNull final PsiAnnotationMemberValue info) {
+        if (info instanceof PsiClassObjectAccessExpression) {
+            final PsiClass psiClass = PsiTypesUtil.getPsiClass(((PsiClassObjectAccessExpression) info).getOperand().getType());
+            if (psiClass != null) {
+                return getPsiPackage(facade, psiClass.getQualifiedName());
             }
         }
+        return getPsiPackage(facade, info.getText().replaceAll("\"", ""));
     }
 
-    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, JvmAnnotationConstantValue attributeValue) {
-        Object value = attributeValue.getConstantValue();
-        return value == null ? Collections.emptyList() : getPsiPackage(facade, value.toString());
-    }
-
-    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, PsiAnnotationMemberValue annotationMemberValue) {
-        List<PsiPackage> res = new LinkedList<>();
-        for (PsiElement child : annotationMemberValue.getChildren()) {
-            if (!(child instanceof PsiExpression)) {
-                continue;
-            }
-            PsiLiteralExpression literal = ExpressionUtils.getLiteral(((PsiExpression) child));
-            if (literal == null) {
-                continue;
-            }
-            String text = literal.getText();
-            if (text == null) {
-                continue;
-            }
-            res.addAll(getPsiPackage(facade, text.replaceAll("\"", "")));
+    private Stream<PsiPackage> getPsiPackage(JavaPsiFacade facade, @Nullable String qualifiedName) {
+        if (StringUtil.isEmpty(qualifiedName)) {
+            return Stream.empty();
         }
-        return res;
-    }
-
-    private List<PsiPackage> getPsiPackage(JavaPsiFacade facade, String qualifiedName) {
         if (qualifiedName.contains("*")) {
             PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
                     .replaceAll("\\.", "\\\\.")
                     .replaceAll("\\*\\*", ".*?")
                     .replaceAll("\\*", "[^.]+") + ".*"));
-            return getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*")))).stream()
-                    .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches())
-                    .collect(Collectors.toList());
+            return getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*"))))
+                    .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches());
         } else {
             PsiPackage psiPackage = facade.findPackage(qualifiedName);
             if (psiPackage != null) {
-                return Collections.singletonList(psiPackage);
+                return Stream.of(psiPackage);
             }
         }
-        return Collections.emptyList();
+        return Stream.empty();
     }
 
-    private List<PsiPackage> getLeafPsiPackage(@Nullable PsiPackage psiPackage) {
+    private Stream<PsiPackage> getLeafPsiPackage(@Nullable PsiPackage psiPackage) {
         if (psiPackage == null) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
-        List<PsiPackage> psiPackages = new ArrayList<>();
         PsiPackage[] subPackages = psiPackage.getSubPackages();
         if (subPackages.length != 0) {
-            for (PsiPackage subPackage : subPackages) {
-                psiPackages.addAll(getLeafPsiPackage(subPackage));
-            }
+            return Stream.concat(Arrays.stream(subPackages).flatMap(this::getLeafPsiPackage), Stream.of(psiPackage));
         } else {
-            psiPackages.add(psiPackage);
+            return Stream.of(psiPackage);
         }
-        return psiPackages;
     }
 }
-
-
-

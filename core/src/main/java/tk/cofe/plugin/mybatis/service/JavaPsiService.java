@@ -23,7 +23,9 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.PsiPackage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Optional;
@@ -36,6 +38,8 @@ public interface JavaPsiService {
     static JavaPsiService getInstance(@NotNull Project project) {
         return ServiceManager.getService(project, JavaPsiService.class);
     }
+
+    PsiPackage getPsiPackage(@Nullable PsiClass psiClass);
 
     Optional<PsiMethod> findPsiMethod(String qualifiedName, String methodName);
 
