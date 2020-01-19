@@ -35,7 +35,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspInject implements MultiHostInjector, DumbAware {
+public class MbspParamInject implements MultiHostInjector, DumbAware {
 
     @Override
     public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {

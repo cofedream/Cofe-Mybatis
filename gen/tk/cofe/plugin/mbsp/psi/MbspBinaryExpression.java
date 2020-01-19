@@ -26,6 +26,15 @@
 
 package tk.cofe.plugin.mbsp.psi;
 
-public interface MbspExpression extends MbspPsiCompositeElement {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public interface MbspBinaryExpression extends MbspExpression {
+
+    @NotNull
+    MbspExpression getLeft();
+
+    @Nullable
+    MbspExpression getRight();
 
 }

@@ -51,7 +51,6 @@ public class CompletionUtils {
      * @param psiParameters 参数数组
      * @return 前缀对应的类型
      */
-
     public static PsiType getPrefixType(final String prefix, final PsiParameter[] psiParameters) {
         return getPrefixType(prefix, psiParameters,
                 PsiParameter::getType,

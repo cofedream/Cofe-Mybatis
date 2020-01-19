@@ -30,10 +30,9 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>Support resultMap id/attribute find declaration and rename.</li>
+            <li>Support test attribute value inject.</li>
+            <li>Support resultMap id attribute find declaration and rename.</li>
             <li>XML Add more checks</li>
-            <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
-            <li>Adjust includ and resultMap attribute documention prompt content</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
@@ -112,7 +111,8 @@
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->
-        <xml.xmlSuppressionProvider order="first" implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
+        <xml.xmlSuppressionProvider order="first"
+                                    implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>

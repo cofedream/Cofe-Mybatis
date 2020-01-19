@@ -28,19 +28,23 @@ package tk.cofe.plugin.mbsp.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbsp.psi.MbspReferenceExpression;
+import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mbsp.psi.MbspBinaryExpression;
+import tk.cofe.plugin.mbsp.psi.MbspExpression;
 import tk.cofe.plugin.mbsp.psi.MbspVisitor;
 
-public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase implements MbspReferenceExpression {
+import java.util.List;
 
-    public MbspReferenceExpressionImpl(@NotNull ASTNode node) {
+public class MbspBinaryExpressionImpl extends MbspExpressionImpl implements MbspBinaryExpression {
+
+    public MbspBinaryExpressionImpl(@NotNull ASTNode node) {
         super(node);
     }
 
     public void accept(@NotNull MbspVisitor visitor) {
-        visitor.visitReferenceExpression(this);
+        visitor.visitBinaryExpression(this);
     }
 
     public void accept(@NotNull PsiElementVisitor visitor) {
@@ -53,8 +57,16 @@ public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase imp
 
     @Override
     @NotNull
-    public PsiReference[] getReferences() {
-        return MbspPsiUtil.getReferences(this);
+    public MbspExpression getLeft() {
+        List<MbspExpression> p1 = PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
+        return p1.get(0);
+    }
+
+    @Override
+    @Nullable
+    public MbspExpression getRight() {
+        List<MbspExpression> p1 = PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
+        return p1.size() < 2 ? null : p1.get(1);
     }
 
 }

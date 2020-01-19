@@ -26,16 +26,22 @@ EOL=\R
 WHITE_SPACE=\s+
 
 EXPRESSION_START=[$#]\{
-VARIABLE=[a-zA-Z0-9]+
+SPACE=[ \t\n\x0B\f\r]+
+VARIABLE=[a-zA-Z0-9]+?
 
 %%
 <YYINITIAL> {
   {WHITE_SPACE}           { return WHITE_SPACE; }
 
   "}"                     { return EXPRESSION_END; }
+  "!="                    { return NOT_EQUAL; }
+  "=="                    { return EQUAL; }
+  "and"                   { return AND_KEYWORD; }
+  "or"                    { return OR_KEYWORD; }
   "."                     { return DOT; }
 
   {EXPRESSION_START}      { return EXPRESSION_START; }
+  {SPACE}                 { return SPACE; }
   {VARIABLE}              { return VARIABLE; }
 
 }

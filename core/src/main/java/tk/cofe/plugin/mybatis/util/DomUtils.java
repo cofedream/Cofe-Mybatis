@@ -52,14 +52,20 @@ public final class DomUtils extends DomUtil {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
+    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass) {
+        return getDomElement(element, requiredClass, true);
+    }
 
     @SuppressWarnings("unchecked")
-    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass, boolean scanParent) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);
         }
-        return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
+        if (scanParent) {
+            return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
+        }
+        return Optional.empty();
     }
 
     public static boolean isTargetDomElement(PsiElement element, Class<?> requiredClass) {

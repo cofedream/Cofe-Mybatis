@@ -35,13 +35,10 @@ public class MbspReferenceProvider extends PsiReferenceProvider {
                 res.push(prevSibling.getText());
             }
         }
-        PsiElement resolveTo = DomUtils.getDomElement(originElement, ClassElement.class)
+        return DomUtils.getDomElement(originElement, ClassElement.class)
                 .flatMap(ClassElement::getIdMethod)
                 .map(psiMethod -> CompletionUtils.getPrefixElement(res.toArray(new String[0]), psiMethod.getParameterList().getParameters()))
-                .orElse(null);
-        if (resolveTo == null) {
-            return PsiReference.EMPTY_ARRAY;
-        }
-        return new PsiReference[]{new PsiReferenceBase.Immediate<>(element, new TextRange(0, element.getTextLength()), resolveTo)};
+                .map(resolveTo -> new PsiReference[] {new PsiReferenceBase.Immediate<>(element, new TextRange(0, element.getTextLength()), resolveTo)})
+                .orElse(PsiReference.EMPTY_ARRAY);
     }
 }

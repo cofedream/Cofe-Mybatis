@@ -32,24 +32,51 @@
   elementTypeClass="tk.cofe.plugin.mbsp.psi.MbspElementType"
   tokenTypeClass="tk.cofe.plugin.mbsp.psi.MbspTokenType"
 
+  extends(".*(Expression|Literal)")="expression"
   tokens = [
     EXPRESSION_START="regexp:[$#]\{"
     EXPRESSION_END="}"
+    SPACE='regexp:\s+'
+    NOT_EQUAL="!="
+    EQUAL="=="
+
+    AND_KEYWORD="and"
+    OR_KEYWORD="or"
 
     DOT="."
-    VARIABLE="regexp:[a-zA-Z0-9]+"
+    VARIABLE="regexp:[a-zA-Z0-9]+?"
   ]
 }
 
-root ::= EXPRESSION_START rootElement EXPRESSION_END
+root ::= EXPRESSION_START rootElement EXPRESSION_END {pin=1}
 private rootRecover ::= !(EXPRESSION_END)
 private rootElement ::= expression {
     recoverWhile="rootRecover"
 }
 
-expression ::= referenceExpression (DOT referenceExpression)*
+expression ::= referenceExpression |
+            binaryExpression
 
-referenceExpression ::= VARIABLE {
+referenceExpression ::= VARIABLE
+                        ('.' VARIABLE)* {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
     methods=[getReferences]
+}
+
+// binary ----------------------------------------------------------------
+private booleanOperations ::= "and" | "or"
+private equalityOperations ::= "==" | "!="
+private relationalOperations ::= '<'  | "<="  | '>'  | ">="
+private binaryOperations ::=
+                           booleanOperations |
+                           equalityOperations |
+                           relationalOperations
+//                           { name="operator" }
+binaryExpression ::= expression binaryOperations expression {
+  methods=[
+    expression=""
+    left="expression[0]"
+    right="expression[1]"
+//    getOperator
+  ]
 }
