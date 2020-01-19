@@ -27,8 +27,7 @@ public interface MbspTypes {
 
   IElementType DOT = new MbspTokenType(".");
   IElementType EXPRESSION_END = new MbspTokenType("}");
-  IElementType EXPRESSION_PREPARED_START = new MbspTokenType("#{");
-  IElementType EXPRESSION_START = new MbspTokenType("${");
+  IElementType EXPRESSION_START = new MbspTokenType("EXPRESSION_START");
   IElementType VARIABLE = new MbspTokenType("VARIABLE");
 
   class Factory {

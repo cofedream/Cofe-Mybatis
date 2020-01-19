@@ -25,18 +25,18 @@ import static tk.cofe.plugin.mbsp.MbspTypes.*;
 EOL=\R
 WHITE_SPACE=\s+
 
+EXPRESSION_START=[$#]\{
 VARIABLE=[a-zA-Z0-9]+
 
 %%
 <YYINITIAL> {
-  {WHITE_SPACE}      { return WHITE_SPACE; }
+  {WHITE_SPACE}           { return WHITE_SPACE; }
 
-  "${"               { return EXPRESSION_START; }
-  "#{"               { return EXPRESSION_PREPARED_START; }
-  "}"                { return EXPRESSION_END; }
-  "."                { return DOT; }
+  "}"                     { return EXPRESSION_END; }
+  "."                     { return DOT; }
 
-  {VARIABLE}         { return VARIABLE; }
+  {EXPRESSION_START}      { return EXPRESSION_START; }
+  {VARIABLE}              { return VARIABLE; }
 
 }
 

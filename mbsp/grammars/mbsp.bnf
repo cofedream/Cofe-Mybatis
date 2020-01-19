@@ -33,9 +33,7 @@
   tokenTypeClass="tk.cofe.plugin.mbsp.psi.MbspTokenType"
 
   tokens = [
-    EXPRESSION_START="${"
-    EXPRESSION_PREPARED_START="#{"
-//    EXPRESSION_START="regexp:[$@]\{"
+    EXPRESSION_START="regexp:[$#]\{"
     EXPRESSION_END="}"
 
     DOT="."
@@ -43,7 +41,7 @@
   ]
 }
 
-root ::= (EXPRESSION_START | EXPRESSION_PREPARED_START) rootElement EXPRESSION_END
+root ::= EXPRESSION_START rootElement EXPRESSION_END
 private rootRecover ::= !(EXPRESSION_END)
 private rootElement ::= expression {
     recoverWhile="rootRecover"

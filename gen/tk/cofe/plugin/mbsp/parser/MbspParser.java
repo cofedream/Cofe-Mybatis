@@ -95,25 +95,16 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (EXPRESSION_START | EXPRESSION_PREPARED_START) rootElement EXPRESSION_END
+  // EXPRESSION_START rootElement EXPRESSION_END
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
-    if (!nextTokenIs(b, "", EXPRESSION_PREPARED_START, EXPRESSION_START)) return false;
+    if (!nextTokenIs(b, EXPRESSION_START)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = root_0(b, l + 1);
+    r = consumeToken(b, EXPRESSION_START);
     r = r && rootElement(b, l + 1);
     r = r && consumeToken(b, EXPRESSION_END);
     exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // EXPRESSION_START | EXPRESSION_PREPARED_START
-  private static boolean root_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "root_0")) return false;
-    boolean r;
-    r = consumeToken(b, EXPRESSION_START);
-    if (!r) r = consumeToken(b, EXPRESSION_PREPARED_START);
     return r;
   }
 
