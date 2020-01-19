@@ -45,9 +45,9 @@ public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase imp
   }
 
   @Override
-  @Nullable
-  public PsiReference getReference() {
-    return MbspPsiUtil.getReference(this);
+  @NotNull
+  public PsiReference[] getReferences() {
+    return MbspPsiUtil.getReferences(this);
   }
 
 }

@@ -10,6 +10,9 @@
 
         <completion.contributor id="mbsp-completion" language="MBSP"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MbspFileSqlParameterCompletionContributor"/>
+        <psi.referenceContributor id="msbsp-reference_contributor" language="MBSP"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.MbspReferenceContributor"/>
+
     </extensions>
 
 </idea-plugin>

@@ -17,13 +17,10 @@ package tk.cofe.plugin.mbsp.psi.impl;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mbsp.MbspTypes;
 import tk.cofe.plugin.mbsp.psi.MbspReferenceExpression;
-import tk.cofe.plugin.mbsp.psi.MbspReferenceProvider;
-
-import java.util.ServiceLoader;
 
 /**
  * @author : zhengrf
@@ -31,26 +28,13 @@ import java.util.ServiceLoader;
  */
 public class MbspPsiUtil {
 
-    @Nullable
-    public static PsiReference getReference(MbspReferenceExpression element) {
-        return getReferenceProvider(MbspTypes.REFERENCE_EXPRESSION, element);
+    @NotNull
+    public static PsiReference[] getReferences(MbspReferenceExpression element) {
+        return ReferenceProvidersRegistry.getReferencesFromProviders(element);
     }
 
     @Nullable
-    public static <T extends PsiElement> PsiReference getReferenceProvider(IElementType elementType, T element) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(element.getClass().getClassLoader());
-        for (MbspReferenceProvider provider : ServiceLoader.load(MbspReferenceProvider.class)) {
-            if (provider.isSupported(elementType)) {
-                Thread.currentThread().setContextClassLoader(classLoader);
-                return provider.exec(element, getOriginElement(element));
-            }
-        }
-        Thread.currentThread().setContextClassLoader(classLoader);
-        return null;
-    }
-
-    private static PsiElement getOriginElement(final PsiElement element) {
+    public static PsiElement getOriginElement(final PsiElement element) {
         return InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
     }
 

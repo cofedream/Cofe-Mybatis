@@ -23,7 +23,7 @@ public interface MbspReferenceExpression extends MbspPsiCompositeElement {
   @NotNull
   PsiElement getVariable();
 
-  @Nullable
-  PsiReference getReference();
+  @NotNull
+  PsiReference[] getReferences();
 
 }

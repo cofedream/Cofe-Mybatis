@@ -35,6 +35,7 @@
   tokens = [
     EXPRESSION_START="${"
     EXPRESSION_PREPARED_START="#{"
+//    EXPRESSION_START="regexp:[$@]\{"
     EXPRESSION_END="}"
 
     DOT="."
@@ -52,5 +53,5 @@ expression ::= referenceExpression (DOT referenceExpression)*
 
 referenceExpression ::= VARIABLE {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
-    methods=[getReference]
+    methods=[getReferences]
 }

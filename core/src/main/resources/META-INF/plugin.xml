@@ -30,7 +30,7 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>Support resultMap id attribute find declaration and rename.</li>
+            <li>Support resultMap id/attribute find declaration and rename.</li>
             <li>XML Add more checks</li>
             <li>Add &lt;foreach/&gt; tag inner attribute parameter prompt</li>
             <li>Adjust includ and resultMap attribute documention prompt content</li>
@@ -38,6 +38,10 @@
         <i>fixed bugs:</i>
         <ul>
             <li>fix resultMap extends attribute prompt</li>
+        </ul>
+        <i>other:</i>
+        <ul>
+            <li>change reference implements</li>
         </ul>
     ]]></change-notes>
 
