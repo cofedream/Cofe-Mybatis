@@ -1,10 +1,6 @@
-configurations {
-    all*.exclude group: 'org.javassist'
-}
 dependencies {
     compile project(":mbsp")
 }
-
 intellij {
     pluginName pluginName
     version intellijVersion
@@ -13,12 +9,10 @@ intellij {
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
     updateSinceUntilBuild false
 }
-
 patchPluginXml {
     version pluginVersion
     sinceBuild '183'
 }
-
 buildPlugin {
     archiveName pluginName + "-" + pluginVersion + ".zip"
 }
