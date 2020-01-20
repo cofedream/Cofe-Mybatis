@@ -68,7 +68,7 @@ public interface Mapper extends DomElement {
     String NAMESPACE_KEY = "mapper namespace";
     String TAG_NAME = "mapper";
 
-    List<Class<? extends ClassElement>> BASIC_OPERATION = Arrays.asList(Select.class, Update.class, Insert.class, Delete.class);
+    List<Class<? extends ClassElement>> BASIC_OPERATION = Collections.unmodifiableList(Arrays.asList(Select.class, Update.class, Insert.class, Delete.class));
 
     @NotNull
     @Required

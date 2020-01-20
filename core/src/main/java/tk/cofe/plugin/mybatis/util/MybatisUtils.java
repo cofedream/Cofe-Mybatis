@@ -54,34 +54,38 @@ import java.util.stream.Collectors;
  * @date : 2019-06-23
  */
 public class MybatisUtils {
-    private static final Map<String, List<String>> BaseType = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
+    private static final Map<String, List<String>> BASE_TYPE = Collections.unmodifiableMap(new HashMap<String, List<String>>() {
         private static final long serialVersionUID = -7375291625150519393L;
 
         {
-            this.put("byte", Collections.singletonList("_byte"));
-            this.put("long", Collections.singletonList("_long"));
-            this.put("short", Collections.singletonList("_short"));
-            this.put("int", Arrays.asList("_int", "_integer"));
-            this.put("double", Collections.singletonList("_double"));
-            this.put("float", Collections.singletonList("_float"));
-            this.put("boolean", Collections.singletonList("_boolean"));
-            this.put("String", Collections.singletonList("string"));
-            this.put("Byte", Collections.singletonList("byte"));
-            this.put("Long", Collections.singletonList("long"));
-            this.put("Short", Collections.singletonList("short"));
-            this.put("Integer", Arrays.asList("int", "integer"));
-            this.put("Double", Collections.singletonList("double"));
-            this.put("Float", Collections.singletonList("float"));
-            this.put("Boolean", Collections.singletonList("boolean"));
-            this.put("Date", Collections.singletonList("date"));
-            this.put("Bigdecimal", Arrays.asList("decimal", "bigdecimal"));
-            this.put("Object", Collections.singletonList("object"));
-            this.put("Map", Collections.singletonList("map"));
-            this.put("Hashmap", Collections.singletonList("hashmap"));
-            this.put("List", Collections.singletonList("list"));
-            this.put("Arraylist", Collections.singletonList("arraylist"));
-            this.put("Collection", Collections.singletonList("collection"));
-            this.put("Iterator", Collections.singletonList("iterator"));
+            put("byte", "_byte");
+            put("long", "_long");
+            put("short", "_short");
+            put("int", "_int", "_integer");
+            put("double", "_double");
+            put("float", "_float");
+            put("boolean", "_boolean");
+            put("String", "string");
+            put("Byte", "byte");
+            put("Long", "long");
+            put("Short", "short");
+            put("Integer", "int", "integer");
+            put("Double", "double");
+            put("Float", "float");
+            put("Boolean", "boolean");
+            put("Date", "date");
+            put("Bigdecimal", "decimal", "bigdecimal");
+            put("Object", "object");
+            put("Map", "map");
+            put("Hashmap", "hashmap");
+            put("List", "list");
+            put("Arraylist", "arraylist");
+            put("Collection", "collection");
+            put("Iterator", "iterator");
+        }
+
+        private void put(final String s, final String... values) {
+            this.put(s, Arrays.asList(values));
         }
     });
 
@@ -89,7 +93,6 @@ public class MybatisUtils {
     public static Optional<Mapper> getMapper(DomElement element) {
         return Optional.ofNullable(DomUtils.getParentOfType(element, Mapper.class));
     }
-
 
     public static Optional<Mapper> getMapper(XmlElement element) {
         DomManager domManager = DomManager.getDomManager(element.getProject());
@@ -156,9 +159,9 @@ public class MybatisUtils {
         } else if (PsiTypeUtils.isVoid(type)) {
             return Collections.emptyList();
         } else if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
-            return Optional.ofNullable(BaseType.get(type.getPresentableText())).orElse(Collections.emptyList());
+            return Optional.ofNullable(BASE_TYPE.get(type.getPresentableText())).orElse(Collections.emptyList());
         } else if (PsiTypeUtils.isMapType(type)) {
-            return Optional.ofNullable(BaseType.get(((PsiClassReferenceType) type).getClassName())).orElse(Collections.emptyList());
+            return Optional.ofNullable(BASE_TYPE.get(((PsiClassReferenceType) type).getClassName())).orElse(Collections.emptyList());
         } else if (PsiTypeUtils.isCollectionType(type)) {
             return Arrays.stream(((PsiClassReferenceType) type).getParameters()).map(PsiType::getCanonicalText).collect(Collectors.toList());
         } else {

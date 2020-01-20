@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -44,7 +45,7 @@ public class Annotation implements Cloneable {
     public static final Annotation ALIAS = new Annotation("@Alias", "org.apache.ibatis.type.Alias");
     public static final Annotation AUTOWIRED = new Annotation("@Autowired", "org.springframework.beans.factory.annotation.Autowired");
     public static final Annotation RESOURCE = new Annotation("@Resource", "javax.annotation.Resource");
-    public static final List<Annotation> STATEMENT_ANNOTATIONS = Arrays.asList(SELECT, UPDATE, INSERT, DELETE);
+    public static final List<Annotation> STATEMENT_ANNOTATIONS = Collections.unmodifiableList(Arrays.asList(SELECT, UPDATE, INSERT, DELETE));
 
     private final String label;
     private final String qualifiedName;
