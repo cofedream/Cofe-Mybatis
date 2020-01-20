@@ -36,7 +36,6 @@
   tokens = [
     EXPRESSION_START="regexp:[$#]\{"
     EXPRESSION_END="}"
-    SPACE='regexp:\s+'
     NOT_EQUAL="!="
     EQUAL="=="
 
@@ -44,7 +43,7 @@
     OR_KEYWORD="or"
 
     DOT="."
-    VARIABLE="regexp:[a-zA-Z0-9]+?"
+    VARIABLE="regexp:[a-zA-Z0-9']+"
   ]
 }
 

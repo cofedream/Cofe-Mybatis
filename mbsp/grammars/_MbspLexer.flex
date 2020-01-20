@@ -26,8 +26,7 @@ EOL=\R
 WHITE_SPACE=\s+
 
 EXPRESSION_START=[$#]\{
-SPACE=[ \t\n\x0B\f\r]+
-VARIABLE=[a-zA-Z0-9]+?
+VARIABLE=[a-zA-Z0-9']+
 
 %%
 <YYINITIAL> {
@@ -41,7 +40,6 @@ VARIABLE=[a-zA-Z0-9]+?
   "."                     { return DOT; }
 
   {EXPRESSION_START}      { return EXPRESSION_START; }
-  {SPACE}                 { return SPACE; }
   {VARIABLE}              { return VARIABLE; }
 
 }
