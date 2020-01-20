@@ -25,9 +25,9 @@ import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
-import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
+import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 /**
  * @author : zhengrf
@@ -42,13 +42,12 @@ public class MapperXmlSuppressionProvider extends XmlSuppressionProvider {
     @Override
     public boolean isSuppressedFor(@NotNull final PsiElement element, @NotNull final String inspectionId) {
         if (element instanceof XmlAttributeValue) {
-            if (DomUtils.isTargetDomElement(element.getParent(), PropertyAttribute.class)) {
-                return DomUtils.isTargetDomElement(element.getParent(), Collection.class);
-            }
-        }
-        if (element instanceof XmlTag) {
-            if (DomUtils.isTargetDomElement(element, Result.class)) {
-                return DomUtils.isTargetDomElement(element.getParent(), Collection.class);
+            final XmlTag xmlTag = DomUtils.getXmlTag(element);
+            if (DomUtils.isTargetDomElement(xmlTag, PropertyAttribute.class)) {
+                return DomUtils.getDomElement(xmlTag.getParentTag(), Collection.class, false)
+                        .flatMap(Collection::getOfTypeValue)
+                        .map(PsiTypeUtils::notCustomType)
+                        .orElse(false);
             }
         }
         return false;

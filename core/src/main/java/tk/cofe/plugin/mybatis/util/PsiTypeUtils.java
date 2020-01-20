@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.psi.CommonClassNames;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
@@ -172,6 +173,15 @@ public final class PsiTypeUtils {
             return true;
         }
         return DATE_CLASS_NAMES.contains(psiType.getCanonicalText());
+    }
+
+    /**
+     * 非自定义类型
+     *
+     * @param psiClass 类
+     */
+    public static boolean notCustomType(PsiClass psiClass) {
+        return !isCustomType(JavaPsiFacade.getInstance(psiClass.getProject()).getElementFactory().createType(psiClass));
     }
 
     /**

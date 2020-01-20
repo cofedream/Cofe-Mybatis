@@ -21,10 +21,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.xml.XmlElement;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomTarget;
 import com.intellij.util.xml.DomUtil;
 import com.intellij.util.xml.GenericAttributeValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -52,12 +56,12 @@ public final class DomUtils extends DomUtil {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
-    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass) {
+    public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, final Class<T> requiredClass) {
         return getDomElement(element, requiredClass, true);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends DomElement> Optional<T> getDomElement(PsiElement element, final Class<T> requiredClass, boolean scanParent) {
+    public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, final Class<T> requiredClass, boolean scanParent) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);
@@ -68,12 +72,43 @@ public final class DomUtils extends DomUtil {
         return Optional.empty();
     }
 
+    /**
+     * 是否为目标类型元素
+     *
+     * @param xmlTag        元素
+     * @param requiredClass 目标类型
+     */
+    public static boolean isTargetDomElement(@Nullable XmlTag xmlTag, @NotNull Class<?> requiredClass) {
+        final DomElement domElement = DomUtils.getDomElement(xmlTag);
+        if (domElement == null) {
+            return false;
+        }
+        return requiredClass.isInstance(domElement);
+    }
+
+    /**
+     * 是否为目标类型元素或目标元素的子级元素
+     *
+     * @param element       元素
+     * @param requiredClass 目标类型
+     */
     public static boolean isTargetDomElement(PsiElement element, Class<?> requiredClass) {
+        return isTargetDomElement(element, requiredClass, true);
+    }
+
+    /**
+     * 是否为目标类型元素或目标元素的子级元素
+     *
+     * @param element       元素
+     * @param requiredClass 目标类型
+     * @param scanParent    是否扫描父级
+     */
+    public static boolean isTargetDomElement(PsiElement element, Class<?> requiredClass, boolean scanParent) {
         DomElement domElement = DomUtils.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return true;
         }
-        return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true)).isPresent();
+        return scanParent && Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true)).isPresent();
     }
 
     /**
@@ -82,12 +117,22 @@ public final class DomUtils extends DomUtil {
      * @param attributeValue 属性值对象
      * @return NULL 则返回 {@code Optional.empty()}
      */
-
     public static Optional<String> getAttributeVlaue(GenericAttributeValue<?> attributeValue) {
         String value = attributeValue.getStringValue();
         if (StringUtil.isEmpty(value)) {
             return Optional.empty();
         }
         return StringUtil.isEmpty(value.trim()) ? Optional.empty() : Optional.of(value.trim());
+    }
+
+    public static XmlTag getXmlTag(@Nullable final PsiElement element) {
+        if (!(element instanceof XmlElement)) {
+            return null;
+        }
+        final DomElement domElement = DomUtils.getDomElement(element);
+        if (domElement == null) {
+            return null;
+        }
+        return domElement.getXmlTag();
     }
 }

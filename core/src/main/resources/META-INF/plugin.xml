@@ -111,8 +111,7 @@
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->
-        <xml.xmlSuppressionProvider order="first"
-                                    implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
+        <xml.xmlSuppressionProvider implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>
