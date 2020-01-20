@@ -16,7 +16,6 @@ package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
@@ -28,7 +27,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2020-01-20
  */
-public abstract class BaseInjector implements MultiHostInjector, DumbAware {
+public abstract class BaseInjector implements MultiHostInjector {
 
     @Override
     public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
