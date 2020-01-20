@@ -24,9 +24,9 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Namespace;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTagList;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
@@ -47,25 +47,9 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-01
  */
-@Namespace(Mapper.NAMESPACE_KEY)
+@Namespace(MybatisConstants.MAPPER_NAMESPACE_KEY)
 public interface Mapper extends DomElement {
 
-    @NonNls
-    String MAPPER_DTD_URL = "http://mybatis.org/dtd/mybatis-3-mapper.dtd";
-    @NonNls
-    String MAPPER_DTD_ID = "-//mybatis.org//DTD Mapper 3.0//EN";
-    /**
-     * All mapper.xml DTD-IDs/URIs.
-     */
-    @NonNls
-    String[] DTDS = {
-            MAPPER_DTD_URL, MAPPER_DTD_ID
-    };
-    /**
-     * DOM-Namespace-Key for mapper.xml
-     */
-    @NonNls
-    String NAMESPACE_KEY = "mapper namespace";
     String TAG_NAME = "mapper";
 
     List<Class<? extends ClassElement>> BASIC_OPERATION = Collections.unmodifiableList(Arrays.asList(Select.class, Update.class, Insert.class, Delete.class));

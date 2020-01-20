@@ -28,11 +28,6 @@ public class MbspLanguage extends Language implements InjectableLanguage {
     @NonNls
     public static final String ID = "MBSP";
 
-    @NonNls
-    public static final String EXPRESSION_PREFIX = "#{";
-    @NonNls
-    public static final String EXPRESSION_SUFFIX = "}";
-
     public static final MbspLanguage INSTANCE = new MbspLanguage();
 
     private MbspLanguage() {

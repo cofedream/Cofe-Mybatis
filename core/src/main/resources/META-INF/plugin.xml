@@ -32,10 +32,12 @@
         <i>中文</i>
         <ul>
             <li>修正Collection标签下的错误信息抑制处理</li>
+            <li>添加DTD文件</li>
         </ul>
         <i>英文</i>
         <ul>
             <li>fix collection tag error suppress</li>
+            <li>add DTD files</li>
         </ul>
     ]]></change-notes>
 
@@ -104,6 +106,7 @@
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
+        <standardResourceProvider implementation="tk.cofe.plugin.mybatis.config.MybatisResourceProvider"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->
         <xml.xmlSuppressionProvider implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>

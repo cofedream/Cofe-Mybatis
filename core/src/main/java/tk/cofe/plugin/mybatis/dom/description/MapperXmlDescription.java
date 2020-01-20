@@ -21,6 +21,7 @@ import com.intellij.util.xml.DomFileDescription;
 import com.intellij.util.xml.highlighting.DomElementsAnnotator;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.icons.MybatisIcons;
+import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class MapperXmlDescription extends DomFileDescription<Mapper> {
 
     @Override
     protected void initializeFileDescription() {
-        registerNamespacePolicy(Mapper.NAMESPACE_KEY, Mapper.DTDS);
+        registerNamespacePolicy(MybatisConstants.MAPPER_NAMESPACE_KEY, MybatisConstants.MAPPER_NAME_SPACES);
     }
 
     @Nullable

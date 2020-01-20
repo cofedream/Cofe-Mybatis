@@ -19,30 +19,14 @@ package tk.cofe.plugin.mybatis.dom.model;
 
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.Namespace;
-import org.jetbrains.annotations.NonNls;
+import tk.cofe.plugin.mybatis.config.MybatisConstants;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-@Namespace(Configuration.NAMESPACE_KEY)
+@Namespace(MybatisConstants.CONFIG_NAMESPACE_KEY)
 public interface Configuration extends DomElement {
 
-    @NonNls
-    String DTD_URL = "http://mybatis.org/dtd/mybatis-3-config.dtd";
-    @NonNls
-    String DTD_ID = "-//mybatis.org//DTD Config 3.0//EN";
-    /**
-     * All config.xml DTD-IDs/URIs.
-     */
-    @NonNls
-    String[] DTDS = {
-            DTD_URL, DTD_ID
-    };
-    /**
-     * DOM-Namespace-Key for config.xml
-     */
-    @NonNls
-    String NAMESPACE_KEY = "configuration namespace";
     String TAG_NAME = "configuration";
 }

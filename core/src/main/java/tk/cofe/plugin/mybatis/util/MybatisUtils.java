@@ -31,6 +31,7 @@ import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
 import com.intellij.util.xml.DomService;
 import com.intellij.util.xml.XmlFileHeader;
+import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
@@ -110,7 +111,7 @@ public class MybatisUtils {
         if (!(file instanceof XmlFile)) {
             return false;
         }
-        return isTargetXml(((XmlFile) file), Mapper.DTDS);
+        return isTargetXml(((XmlFile) file), MybatisConstants.MAPPER_NAME_SPACES);
     }
 
     public static boolean isElementWithMapperXMLFile(PsiElement element) {
