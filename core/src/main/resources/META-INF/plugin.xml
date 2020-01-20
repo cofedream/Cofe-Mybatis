@@ -31,13 +31,15 @@
     <change-notes><![CDATA[
         <i>中文</i>
         <ul>
-            <li>修正Collection标签下的错误信息抑制处理</li>
             <li>添加DTD文件</li>
+            <li>修正Collection标签下的错误信息抑制处理</li>
+            <li>修正XML参数中使用','添加额外配置时,报错的问题</li>
         </ul>
         <i>英文</i>
         <ul>
-            <li>fix collection tag error suppress</li>
             <li>add DTD files</li>
+            <li>fix collection tag error suppress</li>
+            <li>fix error when XML param with extra set,like '#{demo,javaType=double}'</li>
         </ul>
     ]]></change-notes>
 

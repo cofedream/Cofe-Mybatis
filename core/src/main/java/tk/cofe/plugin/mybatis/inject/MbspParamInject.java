@@ -46,10 +46,14 @@ public class MbspParamInject implements MultiHostInjector, DumbAware {
             String text = context.getText();
             int index = 0;
             while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
+                // 开始节点
                 int lbrace = text.indexOf('{', index);
-                int rbrace = text.indexOf('}', index);
+                int rbrace = text.indexOf('}', lbrace);
+                int split = text.indexOf(",", lbrace);
+                // 结束节点
+                int end = split > 0 && split < rbrace ? split : rbrace;
                 registrar.startInjecting(MbspLanguage.INSTANCE)
-                        .addPlace("", "", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, rbrace + 1))
+                        .addPlace("", "}", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, end))
                         .doneInjecting();
                 index = rbrace + 1;
             }
