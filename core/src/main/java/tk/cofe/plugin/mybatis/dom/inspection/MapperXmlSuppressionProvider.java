@@ -43,14 +43,28 @@ public class MapperXmlSuppressionProvider extends XmlSuppressionProvider {
     public boolean isSuppressedFor(@NotNull final PsiElement element, @NotNull final String inspectionId) {
         if (element instanceof XmlAttributeValue) {
             final XmlTag xmlTag = DomUtils.getXmlTag(element);
-            if (DomUtils.isTargetDomElement(xmlTag, PropertyAttribute.class)) {
-                return DomUtils.getDomElement(xmlTag.getParentTag(), Collection.class, false)
-                        .flatMap(Collection::getOfTypeValue)
-                        .map(PsiTypeUtils::notCustomType)
-                        .orElse(false);
+            if (isProperty(xmlTag)) {
+                return property(xmlTag);
+            }
+        }
+        if (element instanceof XmlTag) {
+            final XmlTag xmlTag = (XmlTag) element;
+            if (isProperty(xmlTag)) {
+                return property(xmlTag);
             }
         }
         return false;
+    }
+
+    private boolean property(final XmlTag xmlTag) {
+        return DomUtils.getDomElement(xmlTag.getParentTag(), Collection.class, false)
+                .flatMap(Collection::getOfTypeValue)
+                .map(PsiTypeUtils::notCustomType)
+                .orElse(false);
+    }
+
+    private boolean isProperty(final XmlTag xmlTag) {
+        return DomUtils.isTargetDomElement(xmlTag, PropertyAttribute.class);
     }
 
     @Override
