@@ -21,7 +21,6 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 
 /**
  * SQL 文件中的SQL 参数完成
@@ -30,12 +29,6 @@ import com.intellij.psi.PsiFile;
  * @date : 2019-08-11
  */
 public class MbspFileSqlParameterCompletionContributor extends BaseSqlParameterCompletionContributor {
-
-    @Override
-    PsiFile getTargetPsiFile(final CompletionParameters parameters, final CompletionResultSet result) {
-        PsiElement position = parameters.getPosition();
-        return InjectedLanguageManager.getInstance(position.getProject()).getTopLevelFile(position);
-    }
 
     @Override
     PsiElement getTargetElement(final CompletionParameters parameters, final CompletionResultSet result) {

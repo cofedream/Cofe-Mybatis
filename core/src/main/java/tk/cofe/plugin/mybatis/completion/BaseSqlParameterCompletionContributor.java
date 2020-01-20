@@ -30,7 +30,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
@@ -43,7 +42,6 @@ import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
@@ -70,17 +68,11 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         if (parameters.getCompletionType() != CompletionType.BASIC) {
             return;
         }
-        PsiFile psiFile = getTargetPsiFile(parameters, result);
-        if (!MybatisUtils.isMapperXmlFile(psiFile)) {
-            return;
-        }
-        if (isSupport(parameters)) {
-            DomUtils.getDomElement(getTargetElement(parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
-                    .ifPresent(psiMethod -> {
-                        String prefixText = getPrefixText(parameters.getPosition(), result);
-                        provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);
-                    });
-        }
+        DomUtils.getDomElement(getTargetElement(parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
+                .ifPresent(psiMethod -> {
+                    String prefixText = getPrefixText(parameters.getPosition(), result);
+                    provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);
+                });
     }
 
     @Override
@@ -114,11 +106,6 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         result.stopHere();
     }
 
-    /**
-     * 获取需要代码提示的文件
-     */
-    abstract PsiFile getTargetPsiFile(final CompletionParameters parameters, final CompletionResultSet result);
-
     @Nullable
     abstract PsiElement getTargetElement(final CompletionParameters parameters, final CompletionResultSet result);
 
@@ -126,29 +113,6 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
      * 获取前缀,用于值填充
      */
     abstract String getPrefixText(final PsiElement position, final CompletionResultSet result);
-
-    /**
-     * 判断是否支持代码完成
-     */
-    private boolean isSupport(CompletionParameters parameters) {
-        String text = parameters.getOriginalFile().getText();
-        for (int i = parameters.getOffset() - 1; i > 0; i--) {
-            char c = text.charAt(i);
-            if (c == '}') {
-                return false;
-            }
-            char beforeChart = text.charAt(i - 1);
-            if (c == '{' && (beforeChart == '#' || beforeChart == '$')) {
-                for (int j = parameters.getOffset(); j < text.length(); j++) {
-                    if (text.charAt(j) == '}') {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-        return false;
-    }
 
     /**
      * 通过类添加提示

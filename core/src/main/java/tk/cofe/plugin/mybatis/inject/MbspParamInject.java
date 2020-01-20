@@ -42,13 +42,20 @@ public class MbspParamInject implements MultiHostInjector, DumbAware {
         if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
             return;
         }
-        if (context.textContains('{') && context.textContains('}')) {
+        if ((context.textContains('#') || context.textContains('$'))
+                && context.textContains('{')
+                && context.textContains('}')) {
             String text = context.getText();
             int index = 0;
-            while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
-                // 开始节点
-                int lbrace = text.indexOf('{', index);
-                int rbrace = text.indexOf('}', lbrace);
+            int start;
+            int lbrace;
+            int rbrace;
+            while (((start = text.indexOf('#', index)) != -1
+                    || (start = text.indexOf('$', index)) != -1) // 判断开头节点
+                    // 开始节点
+                    && (lbrace = text.indexOf('{', start)) != -1
+                    && (rbrace = text.indexOf('}', lbrace)) != -1) {
+                // 设置分隔节点
                 int split = text.indexOf(",", lbrace);
                 // 结束节点
                 int end = split > 0 && split < rbrace ? split : rbrace;
