@@ -17,31 +17,22 @@
 
 package tk.cofe.plugin.mybatis.inject;
 
-import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbsp.MbspLanguage;
-import tk.cofe.plugin.mybatis.util.MybatisUtils;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspParamInject implements MultiHostInjector, DumbAware {
+public class MbspParamInject extends BaseInjector {
 
     @Override
-    public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
-            return;
-        }
+    void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
         if ((context.textContains('#') || context.textContains('$'))
                 && context.textContains('{')
                 && context.textContains('}')) {
@@ -51,7 +42,7 @@ public class MbspParamInject implements MultiHostInjector, DumbAware {
             int lbrace;
             int rbrace;
             while (((start = text.indexOf('#', index)) != -1
-                    || (start = text.indexOf('$', index)) != -1) // 判断开头节点
+                    || (start = text.indexOf('$', index)) != -1) // 判断头节点
                     // 开始节点
                     && (lbrace = text.indexOf('{', start)) != -1
                     && (rbrace = text.indexOf('}', lbrace)) != -1) {
@@ -67,9 +58,7 @@ public class MbspParamInject implements MultiHostInjector, DumbAware {
         }
     }
 
-    @NotNull
-    @Override
-    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Collections.singletonList(XmlText.class);
+    Class<XmlText> targetElement() {
+        return XmlText.class;
     }
 }

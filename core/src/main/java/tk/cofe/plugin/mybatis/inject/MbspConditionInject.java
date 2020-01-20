@@ -17,9 +17,7 @@
 
 package tk.cofe.plugin.mybatis.inject;
 
-import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
@@ -29,22 +27,15 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbsp.MbspLanguage;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-import tk.cofe.plugin.mybatis.util.MybatisUtils;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspConditionInject implements MultiHostInjector, DumbAware {
+public class MbspConditionInject extends BaseInjector {
 
     @Override
-    public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
-            return;
-        }
+    void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
         DomUtils.getDomElement(context, TestAttribute.class)
                 .map(TestAttribute::getTest)
                 .map(GenericAttributeValue::getXmlAttributeValue)
@@ -56,9 +47,7 @@ public class MbspConditionInject implements MultiHostInjector, DumbAware {
                 });
     }
 
-    @NotNull
-    @Override
-    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Collections.singletonList(XmlAttributeValue.class);
+    Class<XmlAttributeValue> targetElement() {
+        return XmlAttributeValue.class;
     }
 }
