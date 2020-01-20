@@ -19,6 +19,7 @@
             Support Mybatis.
             <ul>
                 <li>SQL parameter completion.</li>
+                <li>XML tag condition completion.</li>
                 <li>Mapper XML Validate.</li>
             </ul>
         </li>
@@ -28,19 +29,13 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <i>new features:</i>
+        <i>中文</i>
         <ul>
-            <li>Support test attribute value inject.</li>
-            <li>Support resultMap id attribute find declaration and rename.</li>
-            <li>XML Add more checks</li>
+            <li>修正Collection标签下的错误信息抑制处理</li>
         </ul>
-        <i>fixed bugs:</i>
+        <i>英文</i>
         <ul>
-            <li>fix resultMap extends attribute prompt</li>
-        </ul>
-        <i>other:</i>
-        <ul>
-            <li>optimize spring mapper bean scan</li>
+            <li>fix collection tag error suppress</li>
         </ul>
     ]]></change-notes>
 
