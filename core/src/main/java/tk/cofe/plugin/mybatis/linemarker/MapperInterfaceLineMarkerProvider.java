@@ -72,9 +72,9 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      * @param method   方法元素
      * @param result   标记结果
      */
-    private void markerMethod(PsiClass psiClass, PsiMethod method, Collection<? super RelatedItemLineMarkerInfo> result) {
+    private void markerMethod(PsiClass psiClass, PsiMethod method, Collection<? super RelatedItemLineMarkerInfo<PsiElement>> result) {
         if (method.getNameIdentifier() != null) {
-            List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).findMapperXmls(psiClass).stream()
+            List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).getMapperStream(psiClass)
                     .flatMap(mapperXml -> mapperXml.getClassElements().stream())
                     .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
@@ -94,9 +94,9 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
      * @param psiClass 类元素
      * @param result   标记结果
      */
-    private void markerInterface(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo> result) {
+    private void markerInterface(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo<PsiElement>> result) {
         if (psiClass.getNameIdentifier() != null) {
-            List<XmlTag> xmlTags = MapperService.getInstance(psiClass.getProject()).findMapperXmls(psiClass).stream()
+            List<XmlTag> xmlTags = MapperService.getInstance(psiClass.getProject()).getMapperStream(psiClass)
                     .map(mapperXml -> mapperXml.getNamespace().getXmlTag())
                     .collect(Collectors.toList());
             if (!xmlTags.isEmpty()) {

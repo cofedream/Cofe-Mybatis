@@ -21,13 +21,14 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author : zhengrf
@@ -51,7 +52,7 @@ public interface MapperService {
      * @param mapperClass MapperInterface
      * @return 匹配到的 Mapper Xml 文件
      */
-    List<Mapper> findMapperXmls(PsiClass mapperClass);
+    List<Mapper> findMapperXmls(@Nullable PsiClass mapperClass);
 
     /**
      * 根据PsiClass 获取 Mapper Xml中的所有 Statement
@@ -59,23 +60,7 @@ public interface MapperService {
      * @param mapperClass Mapper Interface
      * @return Mapper Statement
      */
-    List<ClassElement> findStatemtnts(PsiClass mapperClass);
-
-    /**
-     * 获取Mapper Dom 文件
-     *
-     * @return Mapper文件
-     */
-    List<Mapper> findAllMappers();
-
-    /**
-     * 查找 Dom 文件
-     *
-     * @param <T>   {@code T extends DomElement}
-     * @param clazz Domm描述类 {@code extends DomElement}
-     * @return 匹配的Dom文件
-     */
-    <T extends DomElement> List<T> findDomElements(@NotNull Class<T> clazz);
+    List<ClassElement> findStatemtnts(@Nullable PsiClass mapperClass);
 
     /**
      * 找到 PsiMethod 对应的Mapper Statement
@@ -93,4 +78,19 @@ public interface MapperService {
      */
     boolean existStatement(PsiMethod method);
 
+    /**
+     * 获取Mapper流
+     *
+     * @return Mapper流
+     */
+    @NotNull
+    Stream<Mapper> getMapperStream();
+
+    /**
+     * 获取Mapper流
+     *
+     * @return Mapper流
+     */
+    @NotNull
+    Stream<Mapper> getMapperStream(@Nullable PsiClass mapperClass);
 }
