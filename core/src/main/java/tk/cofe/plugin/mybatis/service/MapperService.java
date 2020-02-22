@@ -44,7 +44,7 @@ public interface MapperService {
      *
      * @param mapperClass Class文件
      */
-    boolean isMapperClass(PsiClass mapperClass);
+    boolean isMapperClass(@Nullable PsiClass mapperClass);
 
     /**
      * 判断 MapperInterface 是否存在与之对应的 Mapper 文件

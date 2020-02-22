@@ -51,7 +51,7 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public boolean isMapperClass(final PsiClass mapperClass) {
+    public boolean isMapperClass(@Nullable final PsiClass mapperClass) {
         if (mapperClass == null) {
             return false;
         }
