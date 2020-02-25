@@ -44,7 +44,12 @@
     OR_KEYWORD="or"
 
     DOT="."
-    VARIABLE="regexp:[a-zA-Z0-9]+?"
+    VARIABLE="regexp:[a-zA-Z0-9']+"
+    NMETHOD="regexp:[a-zA-Z0-9]+\([a-zA-Z0-9]*\)"
+
+    TRUE_KEYWORD="true"
+    FALSE_KEYWORD="false"
+    NULL_KEYWORD="null"
   ]
 }
 
@@ -58,7 +63,7 @@ expression ::= referenceExpression |
             binaryExpression
 
 referenceExpression ::= VARIABLE
-                        ('.' VARIABLE)* {
+                        ('.' VARIABLE | '.' NMETHOD)* {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
     methods=[getReferences]
 }

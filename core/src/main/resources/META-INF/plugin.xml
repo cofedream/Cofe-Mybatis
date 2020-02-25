@@ -36,12 +36,12 @@
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>fix MapperScan</li>
-            <li>fix Mapper Method inspection</li>
+            <li>fix MapperScan.</li>
+            <li>fix Mapper Method inspection.</li>
         </ul>
         <i>other:</i>
         <ul>
-            <li></li>
+            <li>Adjust the grammar.</li>
         </ul>
     ]]></change-notes>
 

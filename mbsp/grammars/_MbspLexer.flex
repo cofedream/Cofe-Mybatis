@@ -27,7 +27,8 @@ WHITE_SPACE=\s+
 
 EXPRESSION_START=[$#]\{
 SPACE=[ \t\n\x0B\f\r]+
-VARIABLE=[a-zA-Z0-9]+?
+VARIABLE=[a-zA-Z0-9']+
+NMETHOD=[a-zA-Z0-9]+\([a-zA-Z0-9]*\)
 
 %%
 <YYINITIAL> {
@@ -43,6 +44,7 @@ VARIABLE=[a-zA-Z0-9]+?
   {EXPRESSION_START}      { return EXPRESSION_START; }
   {SPACE}                 { return SPACE; }
   {VARIABLE}              { return VARIABLE; }
+  {NMETHOD}               { return NMETHOD; }
 
 }
 
