@@ -37,15 +37,29 @@
     EXPRESSION_START="regexp:[$#]\{"
     EXPRESSION_END="}"
     SPACE='regexp:\s+'
+
+    NEGATE="!"
     NOT_EQUAL="!="
     EQUAL="=="
+    EQ="="
+    LESS="<"
+    LESS_EQUAL="<="
+    GREATER=">"
+    GREATER_EQUAL=">="
 
     AND_KEYWORD="and"
     OR_KEYWORD="or"
 
+//    JAVA_TYPE_KEYWORD="javaType"
+//    JDBC_TYPE_KEYWORD="jdbcType"
+//    TYPE_HANDLER_KEYWORD="typeHandler"
+
     DOT="."
+    COMMA=","
+
     VARIABLE="regexp:[a-zA-Z0-9']+"
     NMETHOD="regexp:[a-zA-Z0-9]+\([a-zA-Z0-9]*\)"
+//    EXTRA_PARAM_VALUE="regexp:=[a-zA-Z]+"
 
     TRUE_KEYWORD="true"
     FALSE_KEYWORD="false"
@@ -61,12 +75,23 @@ private rootElement ::= expression {
 
 expression ::= referenceExpression |
             binaryExpression
+//            extraParamExpression
 
 referenceExpression ::= VARIABLE
                         ('.' VARIABLE | '.' NMETHOD)* {
     mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
     methods=[getReferences]
 }
+//
+//// extraParam ------------------------------------------------------------
+//
+//private javaType ::= "javaType"
+//private jdbcType ::= "jdbcType"
+//private typeHandler ::= "typeHandler"
+//
+//private extraParamKey ::= (',' javaType | ',' jdbcType | ',' typeHandler) EXTRA_PARAM_VALUE
+//
+//extraParamExpression ::= expression extraParamKey
 
 // binary ----------------------------------------------------------------
 private booleanOperations ::= "and" | "or"
