@@ -88,7 +88,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
         if (value == null) {
             // 如果是自定义类型,则读取类字段,如果不是则不做处理使用后续的 param1
-            PsiTypeUtils.isCustomType(firstParameter.getType(), psiClassType -> addPsiClassTypeVariants(psiClassType, result));
+            PsiTypeUtils.isCustomType(firstParameter.getType(), psiClassType -> addPsiClassTypeVariants(prefixText, psiClassType, result));
         } else {
             result.addElement(createLookupElement(value.getValue(), firstParameter.getType().getPresentableText(), AllIcons.Nodes.Parameter));
         }
@@ -105,7 +105,7 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     public void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final CompletionResultSet res) {
         PsiType type = CompletionUtils.getPrefixType(prefixArr[0], parameters);
         // 自定义类类型则取字段和方法
-        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
+        PsiTypeUtils.isCustomType(type, psiClassType -> addPsiClassTypeVariants(prefixText, CompletionUtils.getPrefixPsiClass(prefixArr, type), res));
     }
 
     @Override
@@ -153,10 +153,11 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
     /**
      * 通过类添加提示
      *
-     * @param psiType Java类类型
-     * @param result  结果集
+     * @param prefixText
+     * @param psiType    Java类类型
+     * @param result     结果集
      */
-    private void addPsiClassTypeVariants(@Nullable PsiClassType psiType, CompletionResultSet result) {
+    private void addPsiClassTypeVariants(final String prefixText, @Nullable PsiClassType psiType, CompletionResultSet result) {
         if (psiType == null) {
             return;
         }
@@ -165,25 +166,25 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
             return;
         }
         if (psiClass.isEnum()) {
-            addMethodsVariants(psiClass.getMethods(), result);
+            addMethodsVariants(prefixText, psiClass.getMethods(), result);
         } else {
-            addFieldsVariants(psiClass.getAllFields(), result);
-            addMethodsVariants(psiClass.getAllMethods(), result);
+            addFieldsVariants(prefixText, psiClass.getAllFields(), result);
+            addMethodsVariants(prefixText, psiClass.getAllMethods(), result);
         }
     }
 
-    private void addFieldsVariants(final PsiField[] fields, final CompletionResultSet result) {
+    private void addFieldsVariants(final String prefixText, final PsiField[] fields, final CompletionResultSet result) {
         for (PsiField field : fields) {
             if (PsiJavaUtils.notSerialField(field)) {
-                createLookupElement(field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
+                createLookupElement(prefixText, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
             }
         }
     }
 
-    private void addMethodsVariants(final PsiMethod[] methods, final CompletionResultSet result) {
+    private void addMethodsVariants(final String prefixText, final PsiMethod[] methods, final CompletionResultSet result) {
         for (PsiMethod method : methods) {
             if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
-                createLookupElement(PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
+                createLookupElement(prefixText, PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
             }
         }
     }
@@ -205,11 +206,11 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         }
     }
 
-    private void createLookupElement(@Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
+    private void createLookupElement(final String preFix, @Nullable final String name, final String typeText, final Icon icon, final Consumer<LookupElement> consumer) {
         if (StringUtil.isEmpty(name) || StringUtil.isEmpty(typeText)) {
             return;
         }
-        consumer.accept(createLookupElement(name, typeText, icon));
+        consumer.accept(PrioritizedLookupElement.withPriority(LookupElementBuilder.create(preFix + name).withPresentableText(name).withTypeText(typeText).bold().withIcon(icon), PRIORITY));
     }
 
     @NotNull
