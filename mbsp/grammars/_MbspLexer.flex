@@ -35,11 +35,20 @@ NMETHOD=[a-zA-Z0-9]+\([a-zA-Z0-9]*\)
   {WHITE_SPACE}           { return WHITE_SPACE; }
 
   "}"                     { return EXPRESSION_END; }
+  "!"                     { return NEGATE; }
   "!="                    { return NOT_EQUAL; }
   "=="                    { return EQUAL; }
+  "="                     { return EQ; }
+  "<"                     { return LESS; }
+  "<="                    { return LESS_EQUAL; }
+  ">"                     { return GREATER; }
+  ">="                    { return GREATER_EQUAL; }
   "and"                   { return AND_KEYWORD; }
   "or"                    { return OR_KEYWORD; }
   "."                     { return DOT; }
+  ","                     { return COMMA; }
+  "true"                  { return TRUE_KEYWORD; }
+  "false"                 { return FALSE_KEYWORD; }
 
   {EXPRESSION_START}      { return EXPRESSION_START; }
   {SPACE}                 { return SPACE; }

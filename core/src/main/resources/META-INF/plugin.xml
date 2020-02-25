@@ -39,6 +39,7 @@
             <li>fix MapperScan.</li>
             <li>fix Mapper Method inspection.</li>
             <li>fix error when extra param.</li>
+            <li>fix param reference error.</li>
         </ul>
         <i>other:</i>
         <ul>

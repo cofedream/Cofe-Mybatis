@@ -96,10 +96,10 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "relationalOperations")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, "<");
-    if (!r) r = consumeToken(b, "<=");
-    if (!r) r = consumeToken(b, ">");
-    if (!r) r = consumeToken(b, ">=");
+    r = consumeToken(b, LESS);
+    if (!r) r = consumeToken(b, LESS_EQUAL);
+    if (!r) r = consumeToken(b, GREATER);
+    if (!r) r = consumeToken(b, GREATER_EQUAL);
     exit_section_(b, m, null, r);
     return r;
   }

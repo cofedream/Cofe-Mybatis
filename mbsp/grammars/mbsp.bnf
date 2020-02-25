@@ -63,7 +63,7 @@
 
     TRUE_KEYWORD="true"
     FALSE_KEYWORD="false"
-    NULL_KEYWORD="null"
+//    NULL_KEYWORD="null"
   ]
 }
 

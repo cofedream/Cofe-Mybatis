@@ -7,13 +7,13 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbsp.psi.MbspReferenceExpression;
 import tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
-import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author : zhengrf
@@ -27,14 +27,14 @@ public class MbspReferenceProvider extends PsiReferenceProvider {
         if (originElement == null) {
             return PsiReference.EMPTY_ARRAY;
         }
-        LinkedList<String> res = new LinkedList<>();
-        res.push(element.getText());
-        PsiElement prevSibling = element;
-        while ((prevSibling = prevSibling.getPrevSibling()) != null) {
-            if (prevSibling instanceof MbspReferenceExpression) {
-                res.push(prevSibling.getText());
-            }
-        }
+        String text = element.getText();
+        List<String> res = Arrays.asList(text.split("\\."));
+        //PsiElement prevSibling = element;
+        //while ((prevSibling = prevSibling.getPrevSibling()) != null) {
+        //    if (prevSibling instanceof MbspReferenceExpression) {
+        //        res.push(prevSibling.getText());
+        //    }
+        //}
         return DomUtils.getDomElement(originElement, ClassElement.class)
                 .flatMap(ClassElement::getIdMethod)
                 .map(psiMethod -> CompletionUtils.getPrefixElement(res.toArray(new String[0]), psiMethod.getParameterList().getParameters()))
