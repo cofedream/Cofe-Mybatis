@@ -25,6 +25,7 @@ public interface MbspTypes {
   IElementType BINARY_EXPRESSION = new MbspElementType("BINARY_EXPRESSION");
   IElementType EXPRESSION = new MbspElementType("EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
+  IElementType UNARY_EXPRESSION = new MbspElementType("UNARY_EXPRESSION");
 
   IElementType AND_KEYWORD = new MbspTokenType("and");
   IElementType COMMA = new MbspTokenType(",");
@@ -53,6 +54,9 @@ public interface MbspTypes {
       }
       else if (type == REFERENCE_EXPRESSION) {
         return new MbspReferenceExpressionImpl(node);
+      }
+      else if (type == UNARY_EXPRESSION) {
+        return new MbspUnaryExpressionImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

@@ -11,31 +11,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package tk.cofe.plugin.mbsp.psi;
+package tk.cofe.plugin.mbsp.psi.impl;
 
+import java.util.List;
 import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import static tk.cofe.plugin.mbsp.MbspTypes.*;
+import tk.cofe.plugin.mbsp.psi.*;
 
-public class MbspVisitor extends PsiElementVisitor {
+public class MbspUnaryExpressionImpl extends MbspExpressionImpl implements MbspUnaryExpression {
 
-  public void visitBinaryExpression(@NotNull MbspBinaryExpression o) {
-    visitExpression(o);
+  public MbspUnaryExpressionImpl(@NotNull ASTNode node) {
+    super(node);
   }
 
-  public void visitExpression(@NotNull MbspExpression o) {
-    visitPsiCompositeElement(o);
+  public void accept(@NotNull MbspVisitor visitor) {
+    visitor.visitUnaryExpression(this);
   }
 
-  public void visitReferenceExpression(@NotNull MbspReferenceExpression o) {
-    visitExpression(o);
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof MbspVisitor) accept((MbspVisitor)visitor);
+    else super.accept(visitor);
   }
 
-  public void visitUnaryExpression(@NotNull MbspUnaryExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitPsiCompositeElement(@NotNull MbspPsiCompositeElement o) {
-    visitElement(o);
+  @Override
+  @Nullable
+  public MbspExpression getExpression() {
+    return findChildByClass(MbspExpression.class);
   }
 
 }

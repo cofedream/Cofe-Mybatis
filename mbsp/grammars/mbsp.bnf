@@ -73,7 +73,8 @@ private rootElement ::= expression {
     recoverWhile="rootRecover"
 }
 
-expression ::= referenceExpression |
+expression ::= unaryExpression |
+            referenceExpression |
             binaryExpression
 //            extraParamExpression
 
@@ -110,3 +111,7 @@ binaryExpression ::= expression binaryOperations expression {
 //    getOperator
   ]
 }
+
+private bitwiseOperations ::= '!'
+
+unaryExpression ::= bitwiseOperations expression

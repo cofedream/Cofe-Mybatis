@@ -48,7 +48,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
-    create_token_set_(BINARY_EXPRESSION, EXPRESSION, REFERENCE_EXPRESSION),
+    create_token_set_(BINARY_EXPRESSION, EXPRESSION, REFERENCE_EXPRESSION, UNARY_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -62,6 +62,12 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!r) r = equalityOperations(b, l + 1);
     if (!r) r = relationalOperations(b, l + 1);
     return r;
+  }
+
+  /* ********************************************************** */
+  // '!'
+  static boolean bitwiseOperations(PsiBuilder b, int l) {
+    return consumeToken(b, NEGATE);
   }
 
   /* ********************************************************** */
@@ -144,15 +150,18 @@ public class MbspParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // Expression root: expression
   // Operator priority table:
-  // 0: ATOM(referenceExpression)
-  // 1: BINARY(binaryExpression)
+  // 0: PREFIX(unaryExpression)
+  // 1: ATOM(referenceExpression)
+  // 2: BINARY(binaryExpression)
   public static boolean expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expression")) return false;
     addVariant(b, "<expression>");
-    if (!nextTokenIsSmart(b, VARIABLE)) return false;
+    if (!nextTokenIsSmart(b, VARIABLE) &&
+        !nextTokenIs(b, "<expression>", NEGATE)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, "<expression>");
-    r = referenceExpression(b, l + 1);
+    r = unaryExpression(b, l + 1);
+    if (!r) r = referenceExpression(b, l + 1);
     p = r;
     r = r && expression_0(b, l + 1, g);
     exit_section_(b, l, m, null, r, p, null);
@@ -164,8 +173,8 @@ public class MbspParser implements PsiParser, LightPsiParser {
     boolean r = true;
     while (true) {
       Marker m = enter_section_(b, l, _LEFT_, null);
-      if (g < 1 && binaryOperations(b, l + 1)) {
-        r = expression(b, l, 1);
+      if (g < 2 && binaryOperations(b, l + 1)) {
+        r = expression(b, l, 2);
         exit_section_(b, l, m, BINARY_EXPRESSION, r, true, null);
       }
       else {
@@ -174,6 +183,18 @@ public class MbspParser implements PsiParser, LightPsiParser {
       }
     }
     return r;
+  }
+
+  public static boolean unaryExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "unaryExpression")) return false;
+    if (!nextTokenIsSmart(b, NEGATE)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = bitwiseOperations(b, l + 1);
+    p = r;
+    r = p && expression(b, l, 0);
+    exit_section_(b, l, m, UNARY_EXPRESSION, r, p, null);
+    return r || p;
   }
 
   // VARIABLE
