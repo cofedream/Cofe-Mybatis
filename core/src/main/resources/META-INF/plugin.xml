@@ -36,11 +36,12 @@
         </ul>
         <i>fixed bugs:</i>
         <ul>
-            <li>fix resultMap extends attribute prompt</li>
+            <li>fix MapperScan</li>
+            <li>fix Mapper Method inspection</li>
         </ul>
         <i>other:</i>
         <ul>
-            <li>optimize spring mapper bean scan</li>
+            <li></li>
         </ul>
     ]]></change-notes>
 
