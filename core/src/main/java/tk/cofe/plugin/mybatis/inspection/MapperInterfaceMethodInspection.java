@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.util.PsiEditorUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +53,16 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
         if (psiClass == null) {
             return null;
         }
+        if (method.hasModifierProperty(PsiModifier.PRIVATE) // 非私有方法
+                || method.hasModifierProperty(PsiModifier.DEFAULT) // 非默认方法
+                || method.hasModifierProperty(PsiModifier.STATIC) // 非静态方法
+        ) {
+            return null;
+        }
         MapperService mapperService = MapperService.getInstance(method.getProject());
-        if (mapperService.isMapperClass(psiClass) && !mapperService.existStatement(method)) {
+        if (mapperService.isMapperClass(psiClass) // 非Mapper接口
+                && !mapperService.existStatement(method) // 缺失映射
+        ) {
             // 不存在Method对应的Statement则提示
             PsiIdentifier nameIdentifier = method.getNameIdentifier();
             if (nameIdentifier != null) {
