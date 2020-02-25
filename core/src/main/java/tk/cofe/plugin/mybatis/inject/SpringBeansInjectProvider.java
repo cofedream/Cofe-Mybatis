@@ -42,6 +42,7 @@ import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
@@ -171,7 +172,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
                     .replaceAll("\\.", "\\\\.")
                     .replaceAll("\\*\\*", ".*?")
                     .replaceAll("\\*", "[^.]+") + ".*"));
-            return getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*"))))
+            return getLeafPsiPackage(facade.findPackage(qualifiedName.contains(".*") ? qualifiedName.substring(0, qualifiedName.indexOf(".*")) : qualifiedName))
                     .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches());
         } else {
             PsiPackage psiPackage = facade.findPackage(qualifiedName);
