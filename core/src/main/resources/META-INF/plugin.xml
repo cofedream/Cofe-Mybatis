@@ -45,6 +45,7 @@
         <i>other:</i>
         <ul>
             <li>Adjust the grammar.</li>
+            <li>Support ResultType Reference Resolve.</li>
         </ul>
     ]]></change-notes>
 

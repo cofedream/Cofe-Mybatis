@@ -30,6 +30,9 @@ import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopeUtil;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.search.searches.AnnotationTargetsSearch;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.psi.search.searches.ClassesWithAnnotatedMembersSearch;
 import com.intellij.psi.util.PsiTypesUtil;
@@ -42,7 +45,6 @@ import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
@@ -74,6 +76,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
     public Collection<CommonSpringBean> getCustomComponents(LocalModel springModel) {
         Module module = springModel.getModule();
         if (module != null && !DumbService.isDumb(module.getProject())) {
+
             Collection<CommonSpringBean> mappers = new LinkedList<>();
             if (springModel instanceof LocalXmlModel) {
                 super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_FACTORY_BEAN);

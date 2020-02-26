@@ -111,11 +111,9 @@ public class TypeAliasUtils {
         });
     }
 
-
     public static String getTypeName(String aliase) {
         return TYPE_ALIASES_NAME.get(aliase);
     }
-
 
     public static List<LookupElementBuilder> getTypeLookupElement(String text) {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());

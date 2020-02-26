@@ -19,9 +19,15 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.Converter;
+import com.intellij.util.xml.CustomReferenceConverter;
 import com.intellij.util.xml.DomJavaUtil;
+import com.intellij.util.xml.GenericDomValue;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
 
@@ -29,7 +35,7 @@ import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
  * @author : zhengrf
  * @date : 2019-09-20
  */
-public class ResultTypeConverter extends Converter<PsiClass> {
+public class ResultTypeConverter extends Converter<PsiClass> implements CustomReferenceConverter<PsiClass> {
 
     @Override
     public PsiClass fromString(final String s, final ConvertContext context) {
@@ -52,4 +58,14 @@ public class ResultTypeConverter extends Converter<PsiClass> {
         return psiClass == null ? null : psiClass.getQualifiedName();
     }
 
+
+    @NotNull
+    @Override
+    public PsiReference[] createReferences(final GenericDomValue<PsiClass> value, final PsiElement element, final ConvertContext context) {
+        PsiClass psiClass = value.getValue();
+        if (psiClass == null) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+        return new PsiReference[] {new PsiReferenceBase.Immediate<>(element, psiClass)};
+    }
 }
