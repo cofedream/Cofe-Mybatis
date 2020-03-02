@@ -38,7 +38,7 @@ public class MbspFileSqlParameterCompletionContributor extends BaseSqlParameterC
 
     String getPrefixText(final PsiElement position, CompletionResultSet result) {
         String resStr = "";
-        PsiElement prevSibling = position.getParent();
+        PsiElement prevSibling = position;
         while ((prevSibling = prevSibling.getPrevSibling()) != null) {
             String text = prevSibling.getText();
             if (text != null) {

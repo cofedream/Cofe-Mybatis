@@ -17,48 +17,53 @@
 
 package tk.cofe.plugin.mybatis.inject;
 
+import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbsp.MbspLanguage;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspParamInject extends BaseInjector {
+public class MbspParamInject implements MultiHostInjector, DumbAware {
 
     @Override
-    void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        if ((context.textContains('#') || context.textContains('$'))
-                && context.textContains('{')
-                && context.textContains('}')) {
+    public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
+        if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
+            return;
+        }
+        if (context.textContains('{') && context.textContains('}')) {
             String text = context.getText();
             int index = 0;
-            int start;
-            int lbrace;
-            int rbrace;
-            while (((start = text.indexOf('#', index)) != -1
-                    || (start = text.indexOf('$', index)) != -1) // 判断头节点
-                    // 开始节点
-                    && (lbrace = text.indexOf('{', start)) != -1
-                    && (rbrace = text.indexOf('}', lbrace)) != -1) {
-                // 设置分隔节点
-                int split = text.indexOf(",", lbrace);
-                // 结束节点
-                int end = split > 0 && split < rbrace ? split : rbrace;
-                registrar.startInjecting(MbspLanguage.INSTANCE)
-                        .addPlace("", "}", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, end))
-                        .doneInjecting();
+            while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
+                int lbrace = text.indexOf('{', index);
+                int rbrace = text.indexOf('}', lbrace);
+                int extra = text.indexOf(',', lbrace);
+                registrar.startInjecting(MbspLanguage.INSTANCE);
+                if (extra > 0 && extra < rbrace) {
+                    registrar.addPlace("", "}", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, extra));
+                } else {
+                    registrar.addPlace("", "", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, rbrace + 1));
+                }
+                registrar.doneInjecting();
                 index = rbrace + 1;
             }
         }
     }
 
-    Class<XmlText> targetElement() {
-        return XmlText.class;
+    @NotNull
+    @Override
+    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
+        return Collections.singletonList(XmlText.class);
     }
 }

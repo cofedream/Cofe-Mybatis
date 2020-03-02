@@ -25,7 +25,6 @@ import com.intellij.psi.PsiImportList;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
-import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.psi.util.PsiTreeUtil;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
@@ -53,8 +52,7 @@ public final class PsiJavaUtils {
      * @return true 有指定注解，false 没有指定注解
      */
     public static boolean hasAnnotation(PsiModifierListOwner target, Annotation annotation) {
-        PsiModifierList modifierList = target.getModifierList();
-        return modifierList != null && modifierList.hasAnnotation(annotation.getQualifiedName());
+        return target.hasAnnotation(annotation.getQualifiedName());
     }
 
     /**
@@ -181,7 +179,6 @@ public final class PsiJavaUtils {
      * @param method java方法
      * @return getAaaBbb->aaaBbb,或者 ""
      */
-
     public static String replaceGetPrefix(PsiMethod method) {
         String methodName = method.getName();
         if (methodName.length() == 3) {

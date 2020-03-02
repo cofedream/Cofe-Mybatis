@@ -22,6 +22,7 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Referencing;
 import tk.cofe.plugin.mybatis.dom.convert.ResultTypeConverter;
 
 /**
@@ -32,5 +33,6 @@ public interface ResultTypeAttribute extends DomElement {
 
     @Attribute("resultType")
     @Convert(ResultTypeConverter.class)
+    @Referencing(ResultTypeConverter.class)
     GenericAttributeValue<PsiClass> getResultType();
 }

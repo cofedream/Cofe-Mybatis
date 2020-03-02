@@ -13,29 +13,13 @@
  */
 package tk.cofe.plugin.mbsp.psi;
 
+import java.util.List;
 import org.jetbrains.annotations.*;
-import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiElement;
 
-public class MbspVisitor extends PsiElementVisitor {
+public interface MbspUnaryExpression extends MbspExpression {
 
-  public void visitBinaryExpression(@NotNull MbspBinaryExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitExpression(@NotNull MbspExpression o) {
-    visitPsiCompositeElement(o);
-  }
-
-  public void visitReferenceExpression(@NotNull MbspReferenceExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitUnaryExpression(@NotNull MbspUnaryExpression o) {
-    visitExpression(o);
-  }
-
-  public void visitPsiCompositeElement(@NotNull MbspPsiCompositeElement o) {
-    visitElement(o);
-  }
+  @Nullable
+  MbspExpression getExpression();
 
 }

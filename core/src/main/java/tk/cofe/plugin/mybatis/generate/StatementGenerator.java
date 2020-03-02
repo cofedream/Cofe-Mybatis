@@ -78,7 +78,7 @@ public final class StatementGenerator {
             }
 
             @Override
-            public PopupStep onChosen(StatementTypeEnum value, boolean finalChoice) {
+            public PopupStep<?> onChosen(StatementTypeEnum value, boolean finalChoice) {
                 return doFinalStep(() -> WriteCommandAction.writeCommandAction(project, file).run(() -> {
                     PsiClass psiClass = method.getContainingClass();
                     if (null == psiClass) {

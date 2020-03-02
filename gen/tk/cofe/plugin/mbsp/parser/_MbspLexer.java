@@ -55,9 +55,10 @@ public class _MbspLexer implements FlexLexer {
 
   /* The ZZ_CMAP_A table has 640 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\5\1\22\0\1\1\1\6\1\0\2\2\2\0\1\4\6\0\1\15\1\0\12\4\3\0\1\7\3\0\32\4"+
-    "\6\0\1\10\2\4\1\12\11\4\1\11\1\13\2\4\1\14\10\4\1\3\1\0\1\5\7\0\1\1\32\0\1"+
-    "\1\337\0\1\1\177\0\13\1\35\0\2\1\5\0\1\1\57\0\1\1\40\0");
+    "\11\0\5\1\22\0\1\1\1\11\1\0\2\2\2\0\1\4\1\6\1\7\2\0\1\23\1\0\1\22\1\0\12\5"+
+    "\2\0\1\13\1\12\1\14\2\0\32\5\6\0\1\15\2\5\1\17\1\26\1\27\5\5\1\30\1\5\1\16"+
+    "\1\20\2\5\1\21\1\31\1\24\1\25\5\5\1\3\1\0\1\10\7\0\1\1\32\0\1\1\337\0\1\1"+
+    "\177\0\13\1\35\0\2\1\5\0\1\1\57\0\1\1\40\0");
 
   /** 
    * Translates DFA states to action switch labels.
@@ -65,11 +66,13 @@ public class _MbspLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\1\1\3\1\4\2\1\2\3"+
-    "\1\5\1\6\1\7\1\10\1\3\1\11\1\12";
+    "\1\0\1\1\1\2\1\1\2\3\1\4\1\5\1\6"+
+    "\1\7\1\10\2\3\1\11\1\12\2\3\1\13\1\0"+
+    "\1\14\1\15\1\16\1\17\1\3\1\20\2\3\1\21"+
+    "\1\22\2\3\1\23\1\3\1\24";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[17];
+    int [] result = new int[34];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -94,12 +97,14 @@ public class _MbspLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\16\0\34\0\52\0\70\0\16\0\106\0\124"+
-    "\0\142\0\160\0\16\0\16\0\16\0\16\0\176\0\70"+
-    "\0\70";
+    "\0\0\0\32\0\64\0\116\0\150\0\202\0\32\0\234"+
+    "\0\266\0\320\0\352\0\u0104\0\u011e\0\32\0\32\0\u0138"+
+    "\0\u0152\0\32\0\u016c\0\32\0\32\0\32\0\32\0\u0186"+
+    "\0\202\0\u01a0\0\u01ba\0\32\0\202\0\u01d4\0\u01ee\0\202"+
+    "\0\u0208\0\202";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[17];
+    int [] result = new int[34];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -122,15 +127,28 @@ public class _MbspLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\1\3\1\4\1\2\1\5\1\6\1\7\1\10"+
-    "\1\11\2\5\1\12\1\5\1\13\17\0\1\3\17\0"+
-    "\1\14\16\0\1\5\3\0\5\5\10\0\1\15\15\0"+
-    "\1\16\12\0\1\5\3\0\1\5\1\17\3\5\5\0"+
-    "\1\5\3\0\4\5\1\20\5\0\1\5\3\0\2\5"+
-    "\1\21\2\5\1\0";
+    "\1\2\1\3\1\4\1\2\1\5\1\6\2\2\1\7"+
+    "\1\10\1\11\1\12\1\13\1\14\2\6\1\15\1\6"+
+    "\1\16\1\17\1\20\2\6\1\21\2\6\33\0\1\3"+
+    "\33\0\1\22\32\0\2\5\7\0\5\5\2\0\6\5"+
+    "\4\0\1\5\1\6\1\23\6\0\5\6\2\0\6\6"+
+    "\12\0\1\24\31\0\1\25\31\0\1\26\31\0\1\27"+
+    "\23\0\1\5\1\6\1\23\6\0\1\6\1\30\3\6"+
+    "\2\0\6\6\4\0\1\5\1\6\1\23\6\0\4\6"+
+    "\1\31\2\0\6\6\4\0\1\5\1\6\1\23\6\0"+
+    "\4\6\1\32\2\0\6\6\4\0\1\5\1\6\1\23"+
+    "\6\0\1\33\4\6\2\0\6\6\5\0\1\23\1\0"+
+    "\1\34\5\0\5\23\2\0\6\23\4\0\1\5\1\6"+
+    "\1\23\6\0\2\6\1\35\2\6\2\0\6\6\4\0"+
+    "\1\5\1\6\1\23\6\0\5\6\2\0\1\6\1\36"+
+    "\4\6\4\0\1\5\1\6\1\23\6\0\5\6\2\0"+
+    "\4\6\1\37\1\6\4\0\1\5\1\6\1\23\6\0"+
+    "\5\6\2\0\2\6\1\40\3\6\4\0\1\5\1\6"+
+    "\1\23\6\0\5\6\2\0\5\6\1\41\4\0\1\5"+
+    "\1\6\1\23\6\0\5\6\2\0\2\6\1\42\3\6";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[140];
+    int [] result = new int[546];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -168,10 +186,11 @@ public class _MbspLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\3\1\1\11\4\1\4\11\3\1";
+    "\1\0\1\11\4\1\1\11\6\1\2\11\2\1\1\11"+
+    "\1\0\4\11\4\1\1\11\6\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[17];
+    int [] result = new int[34];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -480,52 +499,102 @@ public class _MbspLexer implements FlexLexer {
             { return BAD_CHARACTER;
             } 
             // fall through
-          case 11: break;
+          case 21: break;
           case 2: 
             { return WHITE_SPACE;
             } 
             // fall through
-          case 12: break;
+          case 22: break;
           case 3: 
             { return VARIABLE;
             } 
             // fall through
-          case 13: break;
+          case 23: break;
           case 4: 
             { return EXPRESSION_END;
             } 
             // fall through
-          case 14: break;
+          case 24: break;
           case 5: 
+            { return NEGATE;
+            } 
+            // fall through
+          case 25: break;
+          case 6: 
+            { return EQ;
+            } 
+            // fall through
+          case 26: break;
+          case 7: 
+            { return LESS;
+            } 
+            // fall through
+          case 27: break;
+          case 8: 
+            { return GREATER;
+            } 
+            // fall through
+          case 28: break;
+          case 9: 
             { return DOT;
             } 
             // fall through
-          case 15: break;
-          case 6: 
+          case 29: break;
+          case 10: 
+            { return COMMA;
+            } 
+            // fall through
+          case 30: break;
+          case 11: 
             { return EXPRESSION_START;
             } 
             // fall through
-          case 16: break;
-          case 7: 
+          case 31: break;
+          case 12: 
             { return NOT_EQUAL;
             } 
             // fall through
-          case 17: break;
-          case 8: 
+          case 32: break;
+          case 13: 
             { return EQUAL;
             } 
             // fall through
-          case 18: break;
-          case 9: 
+          case 33: break;
+          case 14: 
+            { return LESS_EQUAL;
+            } 
+            // fall through
+          case 34: break;
+          case 15: 
+            { return GREATER_EQUAL;
+            } 
+            // fall through
+          case 35: break;
+          case 16: 
             { return OR_KEYWORD;
             } 
             // fall through
-          case 19: break;
-          case 10: 
+          case 36: break;
+          case 17: 
+            { return NMETHOD;
+            } 
+            // fall through
+          case 37: break;
+          case 18: 
             { return AND_KEYWORD;
             } 
             // fall through
-          case 20: break;
+          case 38: break;
+          case 19: 
+            { return TRUE_KEYWORD;
+            } 
+            // fall through
+          case 39: break;
+          case 20: 
+            { return FALSE_KEYWORD;
+            } 
+            // fall through
+          case 40: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

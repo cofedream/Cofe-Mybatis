@@ -60,7 +60,7 @@ public class FieldReferenceSearch extends QueryExecutorBase<XmlAttributeValueRef
         if (StringUtil.isEmpty(classQualifiedName)) {
             return;
         }
-        MapperService.getInstance(queryParameters.getProject()).findAllMappers().stream()
+        MapperService.getInstance(queryParameters.getProject()).getMapperStream()
                 .flatMap(mapper -> mapper.getResultMaps().stream())
                 .filter(resultMap -> resultMap.getTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false))
                 .map(ResultMap::getPropertyAttributes)

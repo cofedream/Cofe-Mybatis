@@ -21,10 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author : zhengrf
@@ -50,38 +51,25 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public List<Mapper> findAllMappers() {
-        return findDomElements(Mapper.class);
-    }
-
-    @Override
-    public boolean isMapperClass(final PsiClass mapperClass) {
+    public boolean isMapperClass(@Nullable final PsiClass mapperClass) {
         if (mapperClass == null) {
             return false;
         }
         return PsiJavaUtils.hasAnnotation(mapperClass, Annotation.MAPPER) // 有 @Mapper 注解
-                || findAllMappers().stream().anyMatch(mapper -> mapper.isTargetMapper(mapperClass));
+                || getMapperStream().anyMatch(mapper -> mapper.isTargetMapper(mapperClass));
     }
 
     @Override
-    public List<Mapper> findMapperXmls(PsiClass mapperClass) {
+    public List<Mapper> findMapperXmls(@Nullable PsiClass mapperClass) {
+        return getMapperStream(mapperClass).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClassElement> findStatemtnts(@Nullable final PsiClass mapperClass) {
         if (mapperClass == null) {
             return Collections.emptyList();
         }
-        return findAllMappers().stream().filter(mapper -> mapper.isTargetMapper(mapperClass)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ClassElement> findStatemtnts(final PsiClass mapperClass) {
-        if (mapperClass == null) {
-            return Collections.emptyList();
-        }
-        return findMapperXmls(mapperClass).stream().flatMap(mapper -> mapper.getClassElements().stream()).collect(Collectors.toList());
-    }
-
-    @Override
-    public <T extends DomElement> List<T> findDomElements(@NotNull Class<T> clazz) {
-        return domService.getFileElements(clazz, project, GlobalSearchScope.projectScope(project)).stream().map(DomFileElement::getRootElement).collect(Collectors.toList());
+        return findStatementsStream(mapperClass).collect(Collectors.toList());
     }
 
     @Override
@@ -93,7 +81,7 @@ public class MapperServiceImpl implements MapperService {
         if (psiClass == null) {
             return Optional.empty();
         }
-        return findStatemtnts(psiClass).stream().filter(classElement -> classElement.isTargetMethod(method)).findFirst();
+        return findStatementsStream(psiClass).filter(classElement -> classElement.isTargetMethod(method)).findFirst();
     }
 
     @Override
@@ -109,6 +97,30 @@ public class MapperServiceImpl implements MapperService {
                 return true;
             }
         }
-        return findStatemtnts(method.getContainingClass()).stream().anyMatch(classElement -> classElement.isTargetMethod(method));
+        return findStatementsStream(method.getContainingClass()).anyMatch(classElement -> classElement.isTargetMethod(method));
+    }
+
+    @Override
+    @NotNull
+    public Stream<Mapper> getMapperStream() {
+        return domService.getFileElements(Mapper.class, project, GlobalSearchScope.projectScope(project)).stream()
+                .map(DomFileElement::getRootElement);
+    }
+
+    @NotNull
+    private Stream<ClassElement> findStatementsStream(@Nullable final PsiClass mapperClass) {
+        if (mapperClass == null) {
+            return Stream.empty();
+        }
+        return getMapperStream(mapperClass).flatMap(mapper -> mapper.getClassElements().stream());
+    }
+
+    @Override
+    @NotNull
+    public Stream<Mapper> getMapperStream(@Nullable final PsiClass mapperClass) {
+        if (mapperClass == null) {
+            return Stream.empty();
+        }
+        return getMapperStream().filter(mapper -> mapper.isTargetMapper(mapperClass));
     }
 }

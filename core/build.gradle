@@ -16,3 +16,18 @@ patchPluginXml {
 buildPlugin {
     archiveName pluginName + "-" + pluginVersion + ".zip"
 }
+task cleanJar(type: Delete,dependsOn: [':common:clean',':mbsp:clean',':core:clean'])
+task copyJar(type: Copy,dependsOn:[':common:jar',':mbsp:jar',':core:jar']) {
+    from configurations.runtime,'build/libs'
+    into('build/zip/'+pluginName+'/lib')
+}
+task preRelease(type: Zip,dependsOn:['cleanJar','copyJar']){
+    from 'build/zip'
+    destinationDir file('../')
+    baseName pluginName
+    version pluginVersion
+    extension 'zip'
+    doLast {
+        delete 'build','../common/build','../mbsp/build'
+    }
+}

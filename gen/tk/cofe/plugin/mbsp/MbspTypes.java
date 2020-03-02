@@ -25,14 +25,25 @@ public interface MbspTypes {
   IElementType BINARY_EXPRESSION = new MbspElementType("BINARY_EXPRESSION");
   IElementType EXPRESSION = new MbspElementType("EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
+  IElementType UNARY_EXPRESSION = new MbspElementType("UNARY_EXPRESSION");
 
   IElementType AND_KEYWORD = new MbspTokenType("and");
+  IElementType COMMA = new MbspTokenType(",");
   IElementType DOT = new MbspTokenType(".");
+  IElementType EQ = new MbspTokenType("=");
   IElementType EQUAL = new MbspTokenType("==");
   IElementType EXPRESSION_END = new MbspTokenType("}");
   IElementType EXPRESSION_START = new MbspTokenType("EXPRESSION_START");
+  IElementType FALSE_KEYWORD = new MbspTokenType("false");
+  IElementType GREATER = new MbspTokenType(">");
+  IElementType GREATER_EQUAL = new MbspTokenType(">=");
+  IElementType LESS = new MbspTokenType("<");
+  IElementType LESS_EQUAL = new MbspTokenType("<=");
+  IElementType NEGATE = new MbspTokenType("!");
+  IElementType NMETHOD = new MbspTokenType("NMETHOD");
   IElementType NOT_EQUAL = new MbspTokenType("!=");
   IElementType OR_KEYWORD = new MbspTokenType("or");
+  IElementType TRUE_KEYWORD = new MbspTokenType("true");
   IElementType VARIABLE = new MbspTokenType("VARIABLE");
 
   class Factory {
@@ -43,6 +54,9 @@ public interface MbspTypes {
       }
       else if (type == REFERENCE_EXPRESSION) {
         return new MbspReferenceExpressionImpl(node);
+      }
+      else if (type == UNARY_EXPRESSION) {
+        return new MbspUnaryExpressionImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

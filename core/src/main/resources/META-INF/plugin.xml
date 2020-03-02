@@ -19,7 +19,6 @@
             Support Mybatis.
             <ul>
                 <li>SQL parameter completion.</li>
-                <li>XML tag condition completion.</li>
                 <li>Mapper XML Validate.</li>
             </ul>
         </li>
@@ -29,17 +28,24 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <i>中文</i>
+        <i>new features:</i>
         <ul>
-            <li>添加DTD文件</li>
-            <li>修正Collection标签下的错误信息抑制处理</li>
-            <li>修正XML参数中使用','添加额外配置时,报错的问题</li>
+            <li>Support test attribute value inject.</li>
+            <li>Support resultMap id attribute find declaration and rename.</li>
+            <li>XML Add more checks</li>
         </ul>
-        <i>英文</i>
+        <i>fixed bugs:</i>
         <ul>
-            <li>add DTD files</li>
-            <li>fix collection tag error suppress</li>
-            <li>fix error when XML param with extra set,like '#{demo,javaType=double}'</li>
+            <li>fix MapperScan.</li>
+            <li>fix Mapper Method inspection.</li>
+            <li>fix error when extra param.</li>
+            <li>fix param reference error.</li>
+            <li>fix param completion.</li>
+        </ul>
+        <i>other:</i>
+        <ul>
+            <li>Adjust the grammar.</li>
+            <li>Support ResultType Reference Resolve.</li>
         </ul>
     ]]></change-notes>
 
@@ -108,10 +114,10 @@
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
                          language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
-        <standardResourceProvider implementation="tk.cofe.plugin.mybatis.config.MybatisResourceProvider"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->
-        <xml.xmlSuppressionProvider implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
+        <xml.xmlSuppressionProvider order="first"
+                                    implementation="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlSuppressionProvider"/>
         <intentionAction>
             <className>tk.cofe.plugin.mybatis.intention.AddParamAnnotationIntention</className>
             <categoryKey>intention.category.key</categoryKey>

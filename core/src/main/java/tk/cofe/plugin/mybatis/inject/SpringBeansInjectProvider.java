@@ -30,6 +30,9 @@ import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopeUtil;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.search.searches.AnnotationTargetsSearch;
 import com.intellij.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.psi.search.searches.ClassesWithAnnotatedMembersSearch;
 import com.intellij.psi.util.PsiTypesUtil;
@@ -73,6 +76,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
     public Collection<CommonSpringBean> getCustomComponents(LocalModel springModel) {
         Module module = springModel.getModule();
         if (module != null && !DumbService.isDumb(module.getProject())) {
+
             Collection<CommonSpringBean> mappers = new LinkedList<>();
             if (springModel instanceof LocalXmlModel) {
                 super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_FACTORY_BEAN);
@@ -171,7 +175,7 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
                     .replaceAll("\\.", "\\\\.")
                     .replaceAll("\\*\\*", ".*?")
                     .replaceAll("\\*", "[^.]+") + ".*"));
-            return getLeafPsiPackage(facade.findPackage(qualifiedName.substring(0, qualifiedName.indexOf(".*"))))
+            return getLeafPsiPackage(facade.findPackage(qualifiedName.contains(".*") ? qualifiedName.substring(0, qualifiedName.indexOf(".*")) : qualifiedName))
                     .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches());
         } else {
             PsiPackage psiPackage = facade.findPackage(qualifiedName);
