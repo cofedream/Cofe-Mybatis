@@ -85,22 +85,6 @@ public interface ResultMap extends IdAttribute {
         return Optional.ofNullable(getType().getValue());
     }
 
-    /**
-     * 获取 Extends 值
-     *
-     * @return Extends 值 如果为Null 则返回 ""
-     */
-    @NotNull
-    default Optional<String> getExtendsValue() {
-        if (getExtends() != null) {
-            XmlAttributeValue xmlAttributeValue = getExtends().getXmlAttributeValue();
-            if (xmlAttributeValue != null) {
-                return Optional.of(xmlAttributeValue.getValue());
-            }
-        }
-        return Optional.empty();
-    }
-
     @NotNull
     default List<PropertyAttribute> getPropertyAttributes() {
         return new ArrayList<PropertyAttribute>() {

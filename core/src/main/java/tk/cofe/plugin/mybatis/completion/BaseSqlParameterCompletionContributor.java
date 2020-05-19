@@ -80,11 +80,8 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
                 .ifPresent(psiMethod -> {
                     DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
                             .flatMap(info -> info.getBinds().stream())
-                            .map(Bind::getName)
-                            .map(GenericAttributeValue::getXmlAttributeValue)
+                            .map(bind->DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
                             .filter(Objects::nonNull)
-                            .map(XmlAttributeValue::getValue)
-                            .filter(StringUtil::isNotEmpty)
                             .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
                     String prefixText = getPrefixText(parameters.getPosition(), result);
                     provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);

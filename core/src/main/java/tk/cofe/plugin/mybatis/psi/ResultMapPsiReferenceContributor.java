@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.util.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Objects;
@@ -73,7 +74,7 @@ public class ResultMapPsiReferenceContributor extends PsiReferenceContributor {
                             return MybatisUtils.getMapper(xmlTag)
                                     .map(Mapper::getResultMaps)
                                     .map(resultMaps -> resultMaps.stream()
-                                            .filter(resultMap -> !resultMap.isEqualsId(value) && Objects.equals(value, resultMap.getExtendsValue().orElse(null)))
+                                            .filter(resultMap -> !resultMap.isEqualsId(value) && Objects.equals(value, DomUtils.getAttributeVlaue(resultMap.getExtends()).orElse(null)))
                                             .map((Function<ResultMap, Object>) ResultMap::getExtends)
                                             .map(o -> ((GenericAttributeValue) o).getXmlAttributeValue())
                                             .filter(Objects::nonNull)

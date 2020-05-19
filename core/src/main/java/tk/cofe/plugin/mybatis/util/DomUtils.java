@@ -22,6 +22,7 @@ import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
@@ -146,12 +147,19 @@ public final class DomUtils extends DomUtil {
      * @param attributeValue 属性值对象
      * @return NULL 则返回 {@code Optional.empty()}
      */
-    public static Optional<String> getAttributeVlaue(GenericAttributeValue<?> attributeValue) {
-        String value = attributeValue.getStringValue();
+    public static Optional<String> getAttributeVlaue(@Nullable GenericAttributeValue<?> attributeValue) {
+        if (attributeValue == null) {
+            return Optional.empty();
+        }
+        final XmlAttributeValue xmlAttributeValue = attributeValue.getXmlAttributeValue();
+        if (xmlAttributeValue == null) {
+            return Optional.empty();
+        }
+        String value = xmlAttributeValue.getValue().trim();
         if (StringUtil.isEmpty(value)) {
             return Optional.empty();
         }
-        return StringUtil.isEmpty(value.trim()) ? Optional.empty() : Optional.of(value.trim());
+        return Optional.of(value.trim());
     }
 
     public static XmlTag getXmlTag(@Nullable final PsiElement element) {
