@@ -30,9 +30,7 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>Support test attribute value inject.</li>
-            <li>Support resultMap id attribute find declaration and rename.</li>
-            <li>XML Add more checks</li>
+            <li>xml param support &lt;bind/&gt; name attribute prompt.</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>

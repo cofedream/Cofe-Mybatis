@@ -17,10 +17,12 @@
 
 package tk.cofe.plugin.mybatis.dom.model.dynamic;
 
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+
 /**
  * {@code <trim></trim>} 标签
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Trim extends DynamicTag, DynamicSql {
+public interface Trim extends DynamicTag, DynamicSql, BindInclude {
 }

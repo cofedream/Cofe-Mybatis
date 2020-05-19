@@ -33,11 +33,17 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
+import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
@@ -46,6 +52,7 @@ import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
 import javax.swing.*;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -68,8 +75,17 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         if (parameters.getCompletionType() != CompletionType.BASIC) {
             return;
         }
-        DomUtils.getDomElement(getTargetElement(parameters, result), ClassElement.class).flatMap(ClassElement::getIdMethod)
+        final PsiElement targetElement = getTargetElement(parameters, result);
+        DomUtils.getDomElement(targetElement, ClassElement.class).flatMap(ClassElement::getIdMethod)
                 .ifPresent(psiMethod -> {
+                    DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
+                            .flatMap(info -> info.getBinds().stream())
+                            .map(Bind::getName)
+                            .map(GenericAttributeValue::getXmlAttributeValue)
+                            .filter(Objects::nonNull)
+                            .map(XmlAttributeValue::getValue)
+                            .filter(StringUtil::isNotEmpty)
+                            .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
                     String prefixText = getPrefixText(parameters.getPosition(), result);
                     provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);
                 });

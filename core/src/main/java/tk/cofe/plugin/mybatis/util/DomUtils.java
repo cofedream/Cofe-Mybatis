@@ -21,6 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
@@ -30,6 +31,9 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,6 +58,31 @@ public final class DomUtils extends DomUtil {
      */
     public static <T> T getParentOfType(final DomElement domElement, final Class<T> requiredClass) {
         return DomUtils.getParentOfType(domElement, requiredClass, true);
+    }
+
+    @NotNull
+    public static <T extends DomElement> List<T> getParents(@Nullable final PsiElement element, Class<? extends PsiElement> psiElementType, final Class<T> domElementType) {
+        return getParents(element, psiElementType, domElementType, true);
+    }
+
+    @NotNull
+    public static <T extends DomElement> List<T> getParents(@Nullable final PsiElement element, Class<? extends PsiElement> psiElementType, final Class<T> domElementType, final boolean strict) {
+        if (element == null) {
+            return Collections.emptyList();
+        }
+        PsiElement currentElement = element;
+        if (strict) {
+            currentElement = PsiTreeUtil.getParentOfType(element, psiElementType);
+        }
+        final T domElement = getDomElement(currentElement, domElementType).orElse(null);
+        if (domElement == null) {
+            return Collections.emptyList();
+        } else {
+            List<T> res = new ArrayList<>();
+            res.add(domElement);
+            res.addAll(getParents(currentElement, psiElementType, domElementType));
+            return res;
+        }
     }
 
     public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, final Class<T> requiredClass) {

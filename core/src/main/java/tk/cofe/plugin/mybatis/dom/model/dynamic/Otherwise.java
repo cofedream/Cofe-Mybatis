@@ -17,9 +17,11 @@
 
 package tk.cofe.plugin.mybatis.dom.model.dynamic;
 
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+
 /**
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Otherwise extends DynamicTag, DynamicSql {
+public interface Otherwise extends DynamicTag, DynamicSql, BindInclude {
 }

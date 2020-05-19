@@ -23,12 +23,13 @@ import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.convert.ForeachConverter;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Foreach extends DynamicTag, DynamicSql {
+public interface Foreach extends DynamicTag, DynamicSql, BindInclude {
 
     @Required
     @Attribute("collection")

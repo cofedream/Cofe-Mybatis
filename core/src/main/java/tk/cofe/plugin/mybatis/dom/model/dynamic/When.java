@@ -18,10 +18,11 @@
 package tk.cofe.plugin.mybatis.dom.model.dynamic;
 
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface When extends TestAttribute, DynamicTag, DynamicSql {
+public interface When extends TestAttribute, DynamicTag, DynamicSql, BindInclude {
 }

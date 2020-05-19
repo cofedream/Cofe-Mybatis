@@ -21,10 +21,11 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyPropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface SelectKey extends ResultTypeAttribute, KeyPropertyAttribute, KeyColumnAttribute, DatabaseIdAttribute {
+public interface SelectKey extends BindInclude, ResultTypeAttribute, KeyPropertyAttribute, KeyColumnAttribute, DatabaseIdAttribute {
 }

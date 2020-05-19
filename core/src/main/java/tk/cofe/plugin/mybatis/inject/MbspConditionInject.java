@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlAttributeValue;
@@ -28,6 +29,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbsp.MbspLanguage;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.function.Function;
@@ -40,24 +42,6 @@ public class MbspConditionInject extends BaseInjector {
 
     @Override
     void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        //DomUtils.getDomElement(context, TestAttribute.class)
-        //        .map(TestAttribute::getTest)
-        //        .map(GenericAttributeValue::getXmlAttributeValue)
-        //        .ifPresent(xmlAttributeValue -> {
-        //            final String text1 = xmlAttributeValue.getText();
-        //            registrar.startInjecting(MbspLanguage.INSTANCE)
-        //                    .addPlace("#{", "}", (PsiLanguageInjectionHost) xmlAttributeValue, new TextRange(1, text1.length() - 1))
-        //                    .doneInjecting();
-        //        });
-        //DomUtils.getDomElement(context, Foreach.class)
-        //        .map(Foreach::getCollection)
-        //        .map(GenericAttributeValue::getXmlAttributeValue)
-        //        .ifPresent(xmlAttributeValue -> {
-        //            final String text1 = xmlAttributeValue.getText();
-        //            registrar.startInjecting(MbspLanguage.INSTANCE)
-        //                    .addPlace("#{", "}", (PsiLanguageInjectionHost) xmlAttributeValue, new TextRange(1, text1.length() - 1))
-        //                    .doneInjecting();
-        //        });
         inject(context, TestAttribute.class, TestAttribute::getTest, registrar);
         // todo Collection注入报错
         //inject(context, Foreach.class, Foreach::getCollection, registrar);
@@ -76,6 +60,10 @@ public class MbspConditionInject extends BaseInjector {
                 .map(GenericAttributeValue::getXmlAttributeValue)
                 .ifPresent(xmlAttributeValue -> {
                     final String text = xmlAttributeValue.getText();
+                    if (StringUtil.isEmpty(text)) {
+                        // 空文本则不注入
+                        return;
+                    }
                     registrar.startInjecting(MbspLanguage.INSTANCE)
                             .addPlace("#{", "}", (PsiLanguageInjectionHost) xmlAttributeValue, new TextRange(1, text.length() - 1))
                             .doneInjecting();

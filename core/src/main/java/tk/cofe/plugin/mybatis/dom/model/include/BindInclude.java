@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2020 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.include;
 
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.SubTagList;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
+
+import java.util.List;
 
 /**
+ * 标记包含 `bind` 标签的标签
+ *
  * @author : zhengrf
- * @date : 2019-01-20
+ * @date : 2020-05-18
  */
-public interface Set extends DynamicTag, DynamicSql, BindInclude {
+public interface BindInclude extends DomElement {
+
+    /**
+     * 获取 bind 标签列表
+     * @return bind 标签列表
+     */
+    @SubTagList("bind")
+    List<Bind> getBinds();
 }

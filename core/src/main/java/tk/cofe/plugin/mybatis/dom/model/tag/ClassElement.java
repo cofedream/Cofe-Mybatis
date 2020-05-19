@@ -29,6 +29,7 @@ import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.DynamicSql;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -37,7 +38,7 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface ClassElement extends IdAttribute, DynamicSql, ParameterTypeAttribute {
+public interface ClassElement extends DynamicSql, BindInclude, IdAttribute, ParameterTypeAttribute {
 
     @NotNull
     @Required

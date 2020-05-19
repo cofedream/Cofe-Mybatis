@@ -25,12 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Sql extends DomElement, DynamicSql, IdAttribute, LangAttribute, DatabaseIdAttribute {
+public interface Sql extends DomElement, DynamicSql, BindInclude, IdAttribute, LangAttribute, DatabaseIdAttribute {
 
     @NotNull
     @Required
