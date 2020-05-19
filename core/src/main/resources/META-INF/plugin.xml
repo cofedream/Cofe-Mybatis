@@ -30,7 +30,7 @@
     <change-notes><![CDATA[
         <i>new features:</i>
         <ul>
-            <li>xml param support &lt;bind/&gt; name attribute prompt.</li>
+            <li>xml param support &lt;bind/&gt; name attribute prompt and navigate.</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>
