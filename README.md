@@ -12,6 +12,13 @@
 
 项目源起于2018年11月份,原本 fork 自 [free-idea-mybatis](https://github.com/wuzhizhan/free-idea-mybatis),但后续写着觉得难受就删了重来
 
+## 相关快捷键
+
+| 说明| 快捷键| 
+| --- | --- | 
+| 接口方法生成XML定义提示 | Alt+Enter |
+| 接口方法跳转XML定义 | Ctrl+B |
+| 接口方法生成@Param注解 | Alt+Enter |
 
 ## 功能演示
 
