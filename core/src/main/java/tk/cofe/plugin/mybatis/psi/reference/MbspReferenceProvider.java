@@ -11,6 +11,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
@@ -40,7 +41,20 @@ public class MbspReferenceProvider extends PsiReferenceProvider {
         String text = element.getText();
         final String[] splitText = text.split("\\.");
         // bind 标签
-        final List<PsiReference> binds = DomUtils.getParents(originElement, XmlTag.class, BindInclude.class).stream()
+        final List<PsiReference> binds = getBinds(element, originElement, text);
+        // foreach 标签
+        final List<PsiReference> foreach = getForeach(element, originElement, text);
+        // 方法参数
+        final List<PsiReference> methodParam = getMethodParam(element, originElement, splitText);
+        List<PsiReference> res = new ArrayList<>(binds.size() + methodParam.size() + foreach.size());
+        res.addAll(binds);
+        res.addAll(foreach);
+        res.addAll(methodParam);
+        return res.toArray(PsiReference.EMPTY_ARRAY);
+    }
+
+    private List<PsiReference> getBinds(@NotNull final PsiElement element, final PsiElement originElement, final String text) {
+        return DomUtils.getParents(originElement, XmlTag.class, BindInclude.class).stream()
                 .flatMap(info -> info.getBinds().stream())
                 .map(NameAttribute::getName)
                 .filter(bind -> Objects.equals(text, DomUtils.getAttributeVlaue(bind).orElse(null)))
@@ -48,16 +62,25 @@ public class MbspReferenceProvider extends PsiReferenceProvider {
                 .filter(Objects::nonNull)
                 .map(bind -> new PsiReferenceBase.Immediate<>(element, new TextRange(0, bind.getTextLength()), bind))
                 .collect(Collectors.toList());
-        // 方法参数
-        final List<PsiReference> methodParam = DomUtils.getDomElement(originElement, ClassElement.class)
+    }
+
+    private List<PsiReference> getForeach(@NotNull final PsiElement element, final PsiElement originElement, final String text) {
+        return DomUtils.getParents(originElement, XmlTag.class, Foreach.class).stream()
+                .map(Foreach::getItem)
+                .filter(Objects::nonNull)
+                .filter(item -> Objects.equals(text, DomUtils.getAttributeVlaue(item).orElse(null)))
+                .map(GenericAttributeValue::getXmlAttributeValue)
+                .filter(Objects::nonNull)
+                .map(bind -> new PsiReferenceBase.Immediate<>(element, new TextRange(0, bind.getTextLength()), bind))
+                .collect(Collectors.toList());
+    }
+
+    private List<PsiReference> getMethodParam(@NotNull final PsiElement element, final PsiElement originElement, final String[] splitText) {
+        return DomUtils.getDomElement(originElement, ClassElement.class)
                 .flatMap(ClassElement::getIdMethod)
                 .map(psiMethod -> CompletionUtils.getPrefixElement(splitText, psiMethod.getParameterList().getParameters()))
                 .map(resolveTo -> Collections.<PsiReference>singletonList(new PsiReferenceBase.Immediate<>(element, new TextRange(0, element.getTextLength()), resolveTo)))
                 .orElse(Collections.emptyList());
-        List<PsiReference> res = new ArrayList<>(binds.size() + methodParam.size());
-        res.addAll(binds);
-        res.addAll(methodParam);
-        return res.toArray(PsiReference.EMPTY_ARRAY);
     }
 
 }

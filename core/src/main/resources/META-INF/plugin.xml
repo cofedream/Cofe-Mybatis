@@ -31,6 +31,7 @@
         <i>new features:</i>
         <ul>
             <li>xml param support &lt;bind/&gt; name attribute prompt and navigate.</li>
+            <li>xml param support &lt;foreach/&gt; item attribute prompt and navigate.</li>
         </ul>
         <i>fixed bugs:</i>
         <ul>

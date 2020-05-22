@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
@@ -78,14 +79,29 @@ abstract class BaseSqlParameterCompletionContributor extends CompletionContribut
         final PsiElement targetElement = getTargetElement(parameters, result);
         DomUtils.getDomElement(targetElement, ClassElement.class).flatMap(ClassElement::getIdMethod)
                 .ifPresent(psiMethod -> {
-                    DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
-                            .flatMap(info -> info.getBinds().stream())
-                            .map(bind->DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
-                            .filter(Objects::nonNull)
-                            .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
+                    bindTag(result, targetElement);
+                    foreachTag(result, targetElement);
                     String prefixText = getPrefixText(parameters.getPosition(), result);
                     provider(prefixText, CompletionUtils.getPrefixArr(prefixText), psiMethod.getParameterList().getParameters(), result);
                 });
+    }
+
+    /**
+     * 处理 &lt;bind&gt; 标签
+     */
+    private void bindTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
+        DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
+                .flatMap(info -> info.getBinds().stream())
+                .map(bind->DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
+                .filter(Objects::nonNull)
+                .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
+    }
+
+    private void foreachTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
+        DomUtils.getParents(targetElement, XmlTag.class, Foreach.class).stream()
+                .map(foreach->DomUtils.getAttributeVlaue(foreach.getItem()).orElse(null))
+                .filter(Objects::nonNull)
+                .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
     }
 
     @Override
