@@ -29,12 +29,16 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlElement;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
+import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
@@ -47,6 +51,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * foreach标签转换器
@@ -128,17 +133,40 @@ public class ForeachConverter {
         @NotNull
         @Override
         public java.util.Collection<? extends String> getVariants(ConvertContext context) {
-            XmlAttribute xmlAttributeValue = (XmlAttribute) context.getXmlElement();
-            if (xmlAttributeValue == null) {
+            XmlAttribute xmlAttribute = (XmlAttribute) context.getXmlElement();
+            if (xmlAttribute == null) {
                 return Collections.emptySet();
             }
+            Set<String> res = new HashSet<>();
+            // 添加Bind标签
+            res.addAll(getBindTags(context.getTag()));
+            // 添加Foreach标签
+            res.addAll(getForeachTags(context.getTag()));
+            // statement定义无对应方法
             ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class);
-            if (classElement == null) {
-                return Collections.emptyList();
+            if (classElement != null) {
+                res.addAll(classElement.getIdMethod()
+                        .map(method -> provider(xmlAttribute.getValue(), CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttribute.getValue())), method.getParameterList().getParameters(), new HashSet<>()))
+                        .orElse(Collections.emptySet()));
             }
-            return classElement.getIdMethod()
-                    .map(method -> provider(xmlAttributeValue.getValue(), CompletionUtils.getPrefixArr(CompletionUtils.getPrefixStr(xmlAttributeValue.getValue())), method.getParameterList().getParameters(), new HashSet<>()))
-                    .orElse(Collections.emptySet());
+            return res;
+        }
+
+        @NotNull
+        private Set<String> getBindTags(@Nullable final XmlElement element) {
+            return DomUtils.getParents(element, XmlTag.class, BindInclude.class).stream()
+                    .flatMap(info -> info.getBinds().stream())
+                    .map(info -> DomUtils.getAttributeVlaue(info.getName()).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+        }
+
+        @NotNull
+        private Set<String> getForeachTags(@Nullable final XmlElement element) {
+            return DomUtils.getParents(element, XmlTag.class, Foreach.class).stream()
+                    .map(info -> DomUtils.getAttributeVlaue(info.getItem()).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
         }
 
         @Nullable
