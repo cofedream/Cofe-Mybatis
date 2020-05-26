@@ -29,10 +29,13 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xml.ConvertContext;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -175,11 +178,42 @@ public class ForeachConverter {
             if (StringUtil.isEmpty(text) || text.trim().endsWith(".")) {
                 return null;
             }
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
+            final DomElement element = context.getInvocationElement();
+            final XmlElement xmlElement = element.getXmlElement();
+            final XmlAttributeValue bindName = getBindName(text, xmlElement);
+            if (bindName != null) {
+                return bindName;
+            }
+            final XmlAttributeValue item = getItem(text, xmlElement);
+            if (item != null) {
+                return item;
+            }
+            ClassElement classElement = DomUtils.getParentOfType(element, ClassElement.class, true);
             if (classElement == null) {
                 return null;
             }
             return classElement.getIdMethod().map(method -> resloaveProvider(text, method)).orElse(null);
+        }
+
+        private XmlAttributeValue getBindName(final String text, final XmlElement xmlElement) {
+            return DomUtils.getParents(xmlElement, XmlTag.class, BindInclude.class).stream()
+                    .flatMap(info -> info.getBinds().stream())
+                    .filter(info -> DomUtils.getAttributeVlaue(info.getName()).map(name -> Objects.equals(name, text)).orElse(false))
+                    .map(bind -> bind.getName().getXmlAttributeValue())
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        private XmlAttributeValue getItem(final String text, final XmlElement xmlElement) {
+            return DomUtils.getParents(xmlElement, XmlTag.class, Foreach.class).stream()
+                    .filter(info -> DomUtils.getAttributeVlaue(info.getItem()).map(name -> Objects.equals(name, text)).orElse(false))
+                    .map(Foreach::getItem)
+                    .filter(Objects::nonNull)
+                    .map(GenericAttributeValue::getXmlAttributeValue)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
         }
 
         @Nullable
@@ -221,6 +255,24 @@ public class ForeachConverter {
             final PsiClassType psiClassType = CompletionUtils.getPrefixPsiClass(prefixArr, CompletionUtils.getPrefixType(prefixArr[0], parameters));
             if (psiClassType != null) {
                 addPsiClassVariants(String.join(",", prefixArr).concat("."), psiClassType.resolve(), res);
+            }
+        }
+
+        private static class ComplexPsiElement {
+            private String text;
+            private PsiElement element;
+
+            public ComplexPsiElement(final String text, final PsiElement element) {
+                this.text = text;
+                this.element = element;
+            }
+
+            public String getText() {
+                return text;
+            }
+
+            public PsiElement getElement() {
+                return element;
             }
         }
 
