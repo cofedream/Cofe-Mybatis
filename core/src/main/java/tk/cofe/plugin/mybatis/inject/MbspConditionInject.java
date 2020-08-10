@@ -43,8 +43,6 @@ public class MbspConditionInject extends BaseInjector {
     @Override
     void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
         inject(context, TestAttribute.class, TestAttribute::getTest, registrar);
-        // todo Collection注入报错
-        //inject(context, Foreach.class, Foreach::getCollection, registrar);
     }
 
     private <T extends DomElement> void inject(final PsiElement context,
