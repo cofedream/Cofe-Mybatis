@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.4.15' apply false
+    id 'org.jetbrains.intellij' version '0.6.3' apply false
 }
 allprojects {
     apply plugin: 'java'
