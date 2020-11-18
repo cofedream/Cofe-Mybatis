@@ -35,7 +35,7 @@ import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
  * @author : zhengrf
  * @date : 2019-09-20
  */
-public class ResultTypeConverter extends Converter<PsiClass> implements CustomReferenceConverter<PsiClass> {
+public class ClassTypeConverter extends Converter<PsiClass> implements CustomReferenceConverter<PsiClass> {
 
     @Override
     public PsiClass fromString(final String s, final ConvertContext context) {

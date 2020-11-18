@@ -111,8 +111,8 @@ public class TypeAliasUtils {
         });
     }
 
-    public static String getTypeName(String aliase) {
-        return TYPE_ALIASES_NAME.get(aliase);
+    public static String getTypeName(String alias) {
+        return TYPE_ALIASES_NAME.get(alias);
     }
 
     public static List<LookupElementBuilder> getTypeLookupElement(String text) {
