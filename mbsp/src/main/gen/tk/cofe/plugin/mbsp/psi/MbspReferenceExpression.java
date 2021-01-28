@@ -20,7 +20,6 @@ import com.intellij.psi.PsiReference;
 
 public interface MbspReferenceExpression extends MbspExpression {
 
-  @NotNull
-  PsiReference[] getReferences();
+  @NotNull PsiReference[] getReferences();
 
 }

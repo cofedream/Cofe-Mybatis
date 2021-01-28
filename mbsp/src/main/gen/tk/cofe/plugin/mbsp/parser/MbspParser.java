@@ -76,10 +76,8 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "booleanOperations")) return false;
     if (!nextTokenIs(b, "", AND_KEYWORD, OR_KEYWORD)) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeToken(b, AND_KEYWORD);
     if (!r) r = consumeToken(b, OR_KEYWORD);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -89,10 +87,8 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "equalityOperations")) return false;
     if (!nextTokenIs(b, "", EQUAL, NOT_EQUAL)) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeToken(b, EQUAL);
     if (!r) r = consumeToken(b, NOT_EQUAL);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -101,12 +97,10 @@ public class MbspParser implements PsiParser, LightPsiParser {
   static boolean relationalOperations(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "relationalOperations")) return false;
     boolean r;
-    Marker m = enter_section_(b);
     r = consumeToken(b, LESS);
     if (!r) r = consumeToken(b, LESS_EQUAL);
     if (!r) r = consumeToken(b, GREATER);
     if (!r) r = consumeToken(b, GREATER_EQUAL);
-    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -132,7 +126,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
     r = expression(b, l + 1, -1);
-    exit_section_(b, l, m, r, false, rootRecover_parser_);
+    exit_section_(b, l, m, r, false, MbspParser::rootRecover);
     return r;
   }
 
@@ -232,9 +226,4 @@ public class MbspParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  static final Parser rootRecover_parser_ = new Parser() {
-    public boolean parse(PsiBuilder b, int l) {
-      return rootRecover(b, l + 1);
-    }
-  };
 }

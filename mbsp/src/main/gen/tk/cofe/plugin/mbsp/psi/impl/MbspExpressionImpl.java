@@ -21,27 +21,21 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
-import com.intellij.psi.PsiReference;
 
-public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase implements MbspReferenceExpression {
+public abstract class MbspExpressionImpl extends MbspPsiCompositeElementBase implements MbspExpression {
 
-  public MbspReferenceExpressionImpl(@NotNull ASTNode node) {
+  public MbspExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitReferenceExpression(this);
-  }
-
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof MbspVisitor) accept((MbspVisitor)visitor);
-    else super.accept(visitor);
+    visitor.visitExpression(this);
   }
 
   @Override
-  @NotNull
-  public PsiReference[] getReferences() {
-    return MbspPsiUtil.getReferences(this);
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof MbspVisitor) accept((MbspVisitor)visitor);
+    else super.accept(visitor);
   }
 
 }

@@ -22,33 +22,27 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
 
-public class MbspBinaryExpressionImpl extends MbspExpressionImpl implements MbspBinaryExpression {
+public class MbspUnaryExpressionImpl extends MbspExpressionImpl implements MbspUnaryExpression {
 
-  public MbspBinaryExpressionImpl(@NotNull ASTNode node) {
+  public MbspUnaryExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitBinaryExpression(this);
+    visitor.visitUnaryExpression(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof MbspVisitor) accept((MbspVisitor)visitor);
     else super.accept(visitor);
   }
 
   @Override
-  @NotNull
-  public MbspExpression getLeft() {
-    List<MbspExpression> p1 = PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
-    return p1.get(0);
-  }
-
-  @Override
   @Nullable
-  public MbspExpression getRight() {
-    List<MbspExpression> p1 = PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
-    return p1.size() < 2 ? null : p1.get(1);
+  public MbspExpression getExpression() {
+    return findChildByClass(MbspExpression.class);
   }
 
 }
