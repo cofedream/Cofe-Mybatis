@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.6.3' apply false
+    id 'org.jetbrains.intellij' version '0.6.5' apply false
 }
 allprojects {
     apply plugin: 'java'
@@ -19,3 +19,19 @@ allprojects {
 }
 group 'tk.cofedream.plugin'
 version pluginVersion
+
+task cleanJar(type: Delete,dependsOn: [':common:clean',':mbsp:clean',':core:clean'])
+task copyJar(type: Copy,dependsOn:[':common:jar',':mbsp:jar',':core:jar']) {
+    from 'common/build/libs','mbsp/build/libs','core/build/libs'
+    into('build/zip/'+pluginName+'/lib')
+}
+task preRelease(type: Zip,dependsOn:['cleanJar','copyJar']){
+    from 'build/zip'
+    destinationDir file('/')
+    baseName pluginName
+    version pluginVersion
+    extension 'zip'
+    doLast {
+        delete 'common/build','mbsp/build','core/build'
+    }
+}
