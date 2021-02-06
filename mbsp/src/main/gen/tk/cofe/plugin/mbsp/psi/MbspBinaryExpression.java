@@ -25,4 +25,6 @@ public interface MbspBinaryExpression extends MbspExpression {
   @Nullable
   MbspExpression getRight();
 
+  @NotNull MbspTokenType getOperator();
+
 }

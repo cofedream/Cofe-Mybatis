@@ -21,16 +21,15 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
-import com.intellij.psi.PsiType;
 
-public abstract class MbspExpressionImpl extends MbspPsiCompositeElementBase implements MbspExpression {
+public class MbspParameterListImpl extends MbspPsiCompositeElementBase implements MbspParameterList {
 
-  public MbspExpressionImpl(@NotNull ASTNode node) {
+  public MbspParameterListImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitExpression(this);
+    visitor.visitParameterList(this);
   }
 
   @Override
@@ -40,8 +39,14 @@ public abstract class MbspExpressionImpl extends MbspPsiCompositeElementBase imp
   }
 
   @Override
-  public @Nullable PsiType getType() {
-    return MbspPsiUtil.getType(this);
+  @NotNull
+  public List<MbspExpression> getParametersList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
+  }
+
+  @Override
+  public int getParameterCount() {
+    return MbspPsiUtil.getParameterCount(this);
   }
 
 }

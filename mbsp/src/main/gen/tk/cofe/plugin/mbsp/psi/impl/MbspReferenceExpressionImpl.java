@@ -40,6 +40,12 @@ public class MbspReferenceExpressionImpl extends MbspReferenceExpressionBase imp
   }
 
   @Override
+  @NotNull
+  public List<MbspExpression> getExpressionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
+  }
+
+  @Override
   public @NotNull PsiReference[] getReferences() {
     return MbspPsiUtil.getReferences(this);
   }

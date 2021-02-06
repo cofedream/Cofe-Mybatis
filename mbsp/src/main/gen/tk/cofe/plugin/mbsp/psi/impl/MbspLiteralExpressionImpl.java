@@ -21,16 +21,16 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
-import com.intellij.psi.PsiType;
 
-public abstract class MbspExpressionImpl extends MbspPsiCompositeElementBase implements MbspExpression {
+public class MbspLiteralExpressionImpl extends MbspExpressionImpl implements MbspLiteralExpression {
 
-  public MbspExpressionImpl(@NotNull ASTNode node) {
+  public MbspLiteralExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitExpression(this);
+    visitor.visitLiteralExpression(this);
   }
 
   @Override
@@ -40,8 +40,32 @@ public abstract class MbspExpressionImpl extends MbspPsiCompositeElementBase imp
   }
 
   @Override
-  public @Nullable PsiType getType() {
-    return MbspPsiUtil.getType(this);
+  @Nullable
+  public PsiElement getCharacterLiteral() {
+    return findChildByType(CHARACTER_LITERAL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getDoubleLiteral() {
+    return findChildByType(DOUBLE_LITERAL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getIntegerLiteral() {
+    return findChildByType(INTEGER_LITERAL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteral() {
+    return findChildByType(STRING_LITERAL);
+  }
+
+  @Override
+  public @Nullable Object getConstantValue() {
+    return MbspPsiUtil.getConstantValue(this);
   }
 
 }

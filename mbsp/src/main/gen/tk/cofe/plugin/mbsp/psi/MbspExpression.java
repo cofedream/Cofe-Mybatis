@@ -16,7 +16,10 @@ package tk.cofe.plugin.mbsp.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiType;
 
 public interface MbspExpression extends MbspPsiCompositeElement {
+
+  @Nullable PsiType getType();
 
 }

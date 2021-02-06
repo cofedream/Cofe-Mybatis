@@ -45,4 +45,9 @@ public class MbspUnaryExpressionImpl extends MbspExpressionImpl implements MbspU
     return findChildByClass(MbspExpression.class);
   }
 
+  @Override
+  public @NotNull MbspTokenType getUnaryOperator() {
+    return MbspPsiUtil.getUnaryOperator(this);
+  }
+
 }
