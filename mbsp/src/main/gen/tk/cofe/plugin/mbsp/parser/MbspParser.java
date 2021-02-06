@@ -270,7 +270,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // EXPRESSION_START rootElement RBRACE
+  // 'regexp:[$#]\{' rootElement '}'
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
     if (!nextTokenIs(b, EXPRESSION_START)) return false;
@@ -296,7 +296,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(RBRACE)
+  // !('}')
   static boolean rootRecover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "rootRecover")) return false;
     boolean r;
