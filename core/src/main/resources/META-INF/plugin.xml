@@ -28,23 +28,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <i>new features:</i>
         <ul>
-            <li>xml param support &lt;bind/&gt; name attribute prompt and navigate.</li>
-            <li>xml param support &lt;foreach/&gt; item attribute prompt and navigate.</li>
-        </ul>
-        <i>fixed bugs:</i>
-        <ul>
-            <li>fix MapperScan.</li>
-            <li>fix Mapper Method inspection.</li>
-            <li>fix error when extra param.</li>
-            <li>fix param reference error.</li>
-            <li>fix param completion.</li>
-        </ul>
-        <i>other:</i>
-        <ul>
-            <li>Adjust the grammar.</li>
-            <li>Support ResultType Reference Resolve.</li>
+            <li>参数提示中添加bind标签name</li>
+            <li>foreach标签,item添加提示</li>
+            <li>语法优化调整</li>
+            <li>README调整</li>
         </ul>
     ]]></change-notes>
 

@@ -17,11 +17,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface MbspUnaryExpression extends MbspExpression {
+public interface MbspVariableExpression extends MbspExpression {
 
-  @Nullable
-  MbspExpression getExpression();
-
-  @NotNull MbspTokenType getUnaryOperator();
+  @NotNull
+  PsiElement getIdentifier();
 
 }

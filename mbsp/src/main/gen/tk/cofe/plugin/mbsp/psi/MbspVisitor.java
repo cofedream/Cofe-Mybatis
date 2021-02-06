@@ -22,15 +22,51 @@ public class MbspVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitConditionalExpression(@NotNull MbspConditionalExpression o) {
+    visitExpression(o);
+  }
+
   public void visitExpression(@NotNull MbspExpression o) {
     visitPsiCompositeElement(o);
+  }
+
+  public void visitIndexedExpression(@NotNull MbspIndexedExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitLiteralExpression(@NotNull MbspLiteralExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitMethodCallExpression(@NotNull MbspMethodCallExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitParameterList(@NotNull MbspParameterList o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitParenthesizedExpression(@NotNull MbspParenthesizedExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitProjectionExpression(@NotNull MbspProjectionExpression o) {
+    visitExpression(o);
   }
 
   public void visitReferenceExpression(@NotNull MbspReferenceExpression o) {
     visitExpression(o);
   }
 
+  public void visitSelectionExpression(@NotNull MbspSelectionExpression o) {
+    visitExpression(o);
+  }
+
   public void visitUnaryExpression(@NotNull MbspUnaryExpression o) {
+    visitExpression(o);
+  }
+
+  public void visitVariableExpression(@NotNull MbspVariableExpression o) {
     visitExpression(o);
   }
 

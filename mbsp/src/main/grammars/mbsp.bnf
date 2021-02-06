@@ -1,23 +1,26 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 {
   classHeader="gpl.txt"
 
   psiImplUtilClass="tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil"
 
   parserClass="tk.cofe.plugin.mbsp.parser.MbspParser"
-  parserUtilClass="tk.cofe.plugin.mbsp.parser.MbspParserUtil"
 
   implements="tk.cofe.plugin.mbsp.psi.MbspPsiCompositeElement"
   extends="tk.cofe.plugin.mbsp.psi.impl.MbspPsiCompositeElementBase"
@@ -33,10 +36,25 @@
   tokenTypeClass="tk.cofe.plugin.mbsp.psi.MbspTokenType"
 
   extends(".*(Expression|Literal)")="expression"
-  tokens = [
+  tokens=[
     EXPRESSION_START="regexp:[$#]\{"
-    EXPRESSION_END="}"
-    SPACE='regexp:\s+'
+//    EXPRESSION_END="}"
+
+    DOT="."
+    COMMA=","
+
+    LPARENTH="("
+    RPARENTH=")"
+    LBRACKET="["
+    RBRACKET="]"
+    LBRACE="{"
+    RBRACE="}"
+
+    PLUS="+"
+    MINUS="-"
+    MULTIPLY="*"
+    DIVISION="/"
+    MODULO="%"
 
     NEGATE="!"
     NOT_EQUAL="!="
@@ -47,71 +65,198 @@
     GREATER=">"
     GREATER_EQUAL=">="
 
+    EQ_KEYWORD="eq"
+    NEQ_KEYWORD="neq"
+    LT_KEYWORD="lt"
+    LT_EQ_KEYWORD="lte"
+    GT_KEYWORD="gt"
+    GT_EQ_KEYWORD="gte"
+
+    AND_AND="&&"
+    OR_OR="||"
     AND_KEYWORD="and"
     OR_KEYWORD="or"
+    NOT_KEYWORD="not"
 
-//    JAVA_TYPE_KEYWORD="javaType"
-//    JDBC_TYPE_KEYWORD="jdbcType"
-//    TYPE_HANDLER_KEYWORD="typeHandler"
+    OR="|"
+    XOR="^"
+    AND="&"
+    NOT="~"
 
-    DOT="."
-    COMMA=","
+    BAND_KEYWORD="band"
+    BOR_KEYWORD="bor"
+    XOR_KEYWORD="xor"
 
-    VARIABLE="regexp:[a-zA-Z0-9']+"
-    NMETHOD="regexp:[a-zA-Z0-9]+\([a-zA-Z0-9]*\)"
-//    EXTRA_PARAM_VALUE="regexp:=[a-zA-Z]+"
-
+    NEW_KEYWORD="new"
     TRUE_KEYWORD="true"
     FALSE_KEYWORD="false"
-//    NULL_KEYWORD="null"
+    NULL_KEYWORD="null"
+
+    INSTANCEOF_KEYWORD="instanceof"
+    NOT_IN_KEYWORD="not in"
+    IN_KEYWORD="in"
+
+    SHIFT_LEFT="<<"
+    SHIFT_RIGHT=">>"
+    SHIFT_RIGHT_LOGICAL=">>>"
+
+    SHIFT_LEFT_KEYWORD="shl"
+    SHIFT_RIGHT_KEYWORD="shr"
+    SHIFT_RIGHT_LOGICAL_KEYWORD="ushr"
+
+    AT_KEYWORD="@"
+    DOLLAR_KEYWORD="$"
+
+    QUESTION="?"
+    COLON=":"
+
+    WHITE_SPACE_CHAR='regexp:\p{Space}+'
+
+    IDENTIFIER="regexp:\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*"
+
+    INTEGER_LITERAL="regexp:\p{Digit}*" // [0-9]
+    DOUBLE_LITERAL="regexp:\p{Digit}+\.\p{Digit}+" // [0-9]+\.[0-9]+
+
+    CHARACTER_LITERAL="regexp:'[^\r\n]*'"
+    STRING_LITERAL="regexp:\"[^\r\n]*\""
   ]
 }
 
-root ::= EXPRESSION_START rootElement EXPRESSION_END {pin=1}
-private rootRecover ::= !(EXPRESSION_END)
+root ::= EXPRESSION_START rootElement RBRACE {pin=1}
+private rootRecover ::= !(RBRACE)
 private rootElement ::= expression {
     recoverWhile="rootRecover"
 }
 
 expression ::= unaryExpression |
             referenceExpression |
-            binaryExpression
-//            extraParamExpression
-
-referenceExpression ::= VARIABLE
-                        ('.' VARIABLE | '.' NMETHOD)* {
-    mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
-    methods=[getReferences]
+            parenthesizedExpression |
+            conditionalExpression |
+            binaryExpression |
+            methodCallExpression |
+            indexedExpression |
+            variableExpression |
+            literalExpression
+{
+  methods=[
+    getType
+  ]
 }
-//
-//// extraParam ------------------------------------------------------------
-//
-//private javaType ::= "javaType"
-//private jdbcType ::= "jdbcType"
-//private typeHandler ::= "typeHandler"
-//
-//private extraParamKey ::= (',' javaType | ',' jdbcType | ',' typeHandler) EXTRA_PARAM_VALUE
-//
-//extraParamExpression ::= expression extraParamKey
+
+private bitwiseOperations ::= '!' | '~'
+private unaryOperator ::= bitwiseOperations |
+                          '+' | '-' | 'not'
+unaryExpression ::= unaryOperator expression {
+  methods=[
+    getUnaryOperator
+  ]
+}
+
+projectionExpression ::= '{' expression '}'
+{
+  methods=[
+    projectionExpression="expression"
+  ]
+}
+selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
+{
+  methods=[
+    selectorExpression="expression"
+  ]
+}
+
+referenceExpression ::= (variableExpression | ('@')? IDENTIFIER)
+                        ('.' IDENTIFIER)* ('@' IDENTIFIER)?
+                        ('.'  selectionExpression)?
+                        ('.'  projectionExpression )?
+{
+   mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
+   methods=[getReferences]
+}
+
+parenthesizedExpression ::= LPARENTH expression RPARENTH { pin=1 }
+
+private conditionalExpressionTail ::= ':' expression {pin=1}
+conditionalExpression ::= expression '?' expression conditionalExpressionTail {
+  methods=[
+    expression=""
+    condition="expression[0]"
+    then="expression[1]"
+    else="expression[2]"
+  ]
+}
 
 // binary ----------------------------------------------------------------
-private booleanOperations ::= "and" | "or"
-private equalityOperations ::= "==" | "!="
-private relationalOperations ::= '<'  | "<="  | '>'  | ">="
+private plusMinusOperations ::= '+' | '-'
+private divideMultiplyOperations ::=  '*' | '/' | '%'
+private booleanOperations ::= "&&" | "||" |
+                              "and" | "or" |
+                              "not"
+private bitwiseBooleanOperations ::=  "|" | "^" | "&" | "band" | "bor" | "xor"
+private equalityOperations ::= "==" | "!=" |
+                               "eq" | "neq"
+private relationalOperations ::= '<'  | "<="  | '>'  | ">=" |
+                                 "lt" | "lte" | "gt" | "gte"
+private shiftOperations ::= "<<" | ">>" | ">>>" |
+                            "shl" | "shr" | "ushr"
+private instanceOfOperation ::= "instanceof"
+private setOperations ::= "not in" | "in"
 private binaryOperations ::=
+                           plusMinusOperations |
+                           divideMultiplyOperations |
+                           bitwiseBooleanOperations |
+                           instanceOfOperation |
+                           shiftOperations |
                            booleanOperations |
                            equalityOperations |
-                           relationalOperations
-//                           { name="operator" }
+                           relationalOperations |
+                           setOperations
+                           { name="operator" }
 binaryExpression ::= expression binaryOperations expression {
   methods=[
     expression=""
     left="expression[0]"
     right="expression[1]"
-//    getOperator
+    getOperator
   ]
 }
 
-private bitwiseOperations ::= '!'
+parameterList ::= expression? (',' expression)* {
+  methods=[
+    parametersList="expression"
+    getParameterCount
+  ]
+}
+methodCallExpression ::= referenceExpression '(' parameterList ')'  {
+  methods=[
+    method="expression"
+  ]
+  pin(".*")="'\('"
+}
 
-unaryExpression ::= bitwiseOperations expression
+indexedExpression ::= (referenceExpression | variableExpression) '[' expression ']'
+                      ('.' IDENTIFIER)*
+                      ('.'  selectionExpression | projectionExpression)? {
+  methods=[
+    expression=""
+    referenceQualifier="expression[0]"
+    indexExpression="expression[1]"
+  ]
+  pin=2
+}
+
+variableExpression ::= '#' IDENTIFIER {
+  mixin="tk.cofe.plugin.mbsp.psi.impl.MbspVariableExpressionBase"
+}
+
+private numberLiteralExpression ::= INTEGER_LITERAL | DOUBLE_LITERAL
+private textLiteralExpression ::= STRING_LITERAL | CHARACTER_LITERAL
+private booleanLiteralExpression ::= TRUE_KEYWORD | FALSE_KEYWORD
+literalExpression ::= numberLiteralExpression |
+                      textLiteralExpression |
+                      booleanLiteralExpression |
+                      NULL_KEYWORD {
+  methods=[
+    getConstantValue
+  ]
+}

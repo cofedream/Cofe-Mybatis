@@ -53,4 +53,9 @@ public class MbspBinaryExpressionImpl extends MbspExpressionImpl implements Mbsp
     return p1.size() < 2 ? null : p1.get(1);
   }
 
+  @Override
+  public @NotNull MbspTokenType getOperator() {
+    return MbspPsiUtil.getOperator(this);
+  }
+
 }
