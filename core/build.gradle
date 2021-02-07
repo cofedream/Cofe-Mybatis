@@ -3,8 +3,8 @@ dependencies {
 }
 intellij {
     pluginName pluginName
-    plugins 'Spring'
-    sandboxDirectory = "$projectDir.path/.idea-sandbox"
+    plugins 'java', 'Spring'
+    sandboxDirectory = "$rootDir.path/.idea-sandbox"
 }
 patchPluginXml {
     version pluginVersion
@@ -13,4 +13,11 @@ patchPluginXml {
 }
 buildPlugin {
     archiveName pluginName + "-" + pluginVersion + ".zip"
+}
+
+runPluginVerifier {
+    ideVersions sdkVersion
+    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
+    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
+    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
 }

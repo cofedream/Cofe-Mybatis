@@ -17,6 +17,7 @@ package tk.cofe.plugin.mbsp;
 import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.ui.JBUI;
@@ -33,17 +34,6 @@ import javax.swing.*;
 public class MbspFileType extends LanguageFileType {
 
     public static final MbspFileType INSTANCE = new MbspFileType();
-
-    private static final NotNullLazyValue<LayeredIcon> ICON = new AtomicNotNullLazyValue<LayeredIcon>() {
-        @NotNull
-        @Override
-        protected LayeredIcon compute() {
-            final LayeredIcon icon = new LayeredIcon(2);
-            icon.setIcon(FileTypes.PLAIN_TEXT.getIcon(), 0);
-            icon.setIcon(MybatisIcons.MAIN, 1, 0, 6);
-            return JBUI.scale(icon);
-        }
-    };
 
     private MbspFileType() {
         super(MbspLanguage.INSTANCE);
@@ -70,6 +60,6 @@ public class MbspFileType extends LanguageFileType {
     @Nullable
     @Override
     public Icon getIcon() {
-        return ICON.getValue();
+        return MybatisIcons.MAIN;
     }
 }

@@ -12,6 +12,8 @@ classes
 build
 # plugin dev
 .idea-sandbox
+IDEA_SDK_HOME
+reports
 idea-flex.skeleton
 jflex-*.jar
 # gradle
