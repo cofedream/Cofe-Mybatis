@@ -11,7 +11,7 @@ target
 classes
 build
 # plugin dev
-core/.idea-sandbox
+.idea-sandbox
 idea-flex.skeleton
 jflex-*.jar
 # gradle
