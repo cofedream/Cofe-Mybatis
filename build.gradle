@@ -10,8 +10,8 @@ allprojects {
         mavenCentral()
     }
     intellij {
-        version intellijVersion
-        type intellijType
+        version sdkVersion
+        updateSinceUntilBuild false
     }
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"

@@ -3,16 +3,13 @@ dependencies {
 }
 intellij {
     pluginName pluginName
-    version intellijVersion
-    type intellijType
     plugins 'Spring'
     sandboxDirectory = "$projectDir.path/.idea-sandbox"
-    updateSinceUntilBuild false
 }
 patchPluginXml {
     version pluginVersion
-    sinceBuild intellijSinceBuild
-    untilBuild intellijUntilBuild
+    sinceBuild sdkSinceBuild
+    untilBuild sdkUntilBuild
 }
 buildPlugin {
     archiveName pluginName + "-" + pluginVersion + ".zip"
