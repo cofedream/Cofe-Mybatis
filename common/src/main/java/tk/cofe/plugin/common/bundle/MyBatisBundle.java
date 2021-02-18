@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package tk.cofe.plugin.common.bundle;
 
-import com.intellij.CommonBundle;
+import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
@@ -39,7 +39,7 @@ public class MyBatisBundle {
     private static final String BUNDLE = "messages.MyBatisBundle";
 
     public static String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, @NotNull Object... params) {
-        return CommonBundle.message(getBundle(), key, params);
+        return AbstractBundle.message(getBundle(), key, params);
     }
 
     private static ResourceBundle getBundle() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,9 +44,9 @@ import java.util.Optional;
 public final class DomUtils extends DomUtil {
 
     public static Optional<DomTarget> resolveToDomTarget(PsiElement element) {
-        if (element instanceof DomTarget) {
-            return Optional.of(((DomTarget) element));
-        }
+        // if (element instanceof DomTarget) {
+        //     return Optional.of(((DomTarget) element));
+        // }
         if (element instanceof PomTargetPsiElement) {
             PomTarget target = ((PomTargetPsiElement) element).getTarget();
             return target instanceof DomTarget ? Optional.of(((DomTarget) target)) : Optional.empty();

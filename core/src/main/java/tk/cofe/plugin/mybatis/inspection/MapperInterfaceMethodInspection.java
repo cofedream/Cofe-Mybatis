@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,10 @@ package tk.cofe.plugin.mybatis.inspection;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.LocalQuickFixBase;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.util.IntentionFamilyName;
+import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -80,7 +81,18 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
      * 生成标签
      */
     private LocalQuickFix generateStatement(@NotNull final PsiMethod method) {
-        return new LocalQuickFixBase(MyBatisBundle.message("action.generate.intention", "statement")) {
+        final String name = MyBatisBundle.message("action.generate.intention", "statement");
+        return new LocalQuickFix() {
+            @Override
+            public @IntentionName @NotNull String getName() {
+                return name;
+            }
+
+            @Override
+            public @IntentionFamilyName @NotNull String getFamilyName() {
+                return name;
+            }
+
             @Override
             public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
                 Editor editor = PsiEditorUtil.Service.getInstance().findEditorByPsiElement(method);
