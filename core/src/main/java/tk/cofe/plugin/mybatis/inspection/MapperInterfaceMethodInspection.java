@@ -22,8 +22,6 @@ import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.util.IntentionFamilyName;
-import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
@@ -84,12 +82,12 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
         final String name = MyBatisBundle.message("action.generate.intention", "statement");
         return new LocalQuickFix() {
             @Override
-            public @IntentionName @NotNull String getName() {
+            public @NotNull String getName() {
                 return name;
             }
 
             @Override
-            public @IntentionFamilyName @NotNull String getFamilyName() {
+            public @NotNull String getFamilyName() {
                 return name;
             }
 

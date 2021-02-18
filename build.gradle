@@ -31,7 +31,6 @@ allprojects {
     }
     intellij {
         version sdkVersion
-        plugins 'com.intellij.java'
         updateSinceUntilBuild false
     }
     tasks.withType(JavaCompile) {

@@ -15,26 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    compile project(":mbsp")
-}
-intellij {
-    pluginName pluginName
-    plugins 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
-}
+package tk.cofe.plugin.mbsp;
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author : zhengrf
+ * @date : 2021-02-18
+ */
+public class MbspFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@NotNull final FileTypeConsumer consumer) {
+        consumer.consume(MbspFileType.INSTANCE);
+    }
 }

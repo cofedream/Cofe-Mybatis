@@ -82,8 +82,8 @@
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.JavaPsiServiceImpl"/>
         <!--If your plugin targets 2019.1 or later,
         please use extension point com.intellij.dom.fileMetaData instead and specify rootTagName and domVersion/stubVersion in plugin.xml-->
-        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.MapperXmlDescription" rootTagName="mapper"/>
-        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.ConfigurationXmlDescription" rootTagName="configuration"/>
+        <dom.fileDescription implementation="tk.cofe.plugin.mybatis.dom.description.MapperXmlDescription"/>
+        <dom.fileDescription implementation="tk.cofe.plugin.mybatis.dom.description.ConfigurationXmlDescription"/>
         <!--参考
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206110419-How-to-implement-go-to-to-implementation-
