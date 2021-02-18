@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
@@ -59,7 +60,10 @@ public class MapperXmlAnnotator implements Annotator {
             if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {
-                    holder.createErrorAnnotation(element, errorMessage);
+                    holder.newAnnotation(HighlightSeverity.ERROR, errorMessage)
+                            .range(element)
+                            .tooltip(errorMessage)
+                            .create();
                 }
             }
         });
