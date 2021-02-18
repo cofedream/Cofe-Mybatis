@@ -20,7 +20,7 @@ dependencies {
 }
 intellij {
     pluginName pluginName
-    plugins 'Spring'
+    plugins 'java', 'Spring'
     sandboxDirectory = "$rootDir.path/.idea-sandbox"
 }
 patchPluginXml {

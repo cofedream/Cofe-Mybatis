@@ -19,7 +19,10 @@
 <idea-plugin>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="tk.cofe.plugin.mbsp.MbspFileTypeFactory"/>
+        <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
+        <!--<fileTypeFactory implementation="tk.cofe.plugin.mbsp.MbspFileTypeFactory"/>-->
+        <fileType name="Mybatis Mapper File" implementationClass="tk.cofe.plugin.mbsp.MbspFileType"
+                  fileNames="INSTANCE" language="MBSP" extensions="mbsp"/>
 
         <lang.parserDefinition language="MBSP" implementationClass="tk.cofe.plugin.mbsp.MbspParserDefinition"/>
 
