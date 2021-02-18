@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
@@ -32,7 +33,7 @@ import tk.cofe.plugin.mybatis.util.DomUtils;
 import java.util.Optional;
 
 /**
- * Mapper xml 提示,<a href="http://www.jetbrains.org/intellij/sdk/docs/tutorials/custom_language_support/annotator.html">详情</a>
+ * Mapper xml 提示,<a href="https://plugins.jetbrains.com/docs/intellij/annotator.html">详情</a>
  *
  * @author : zhengrf
  * @date : 2019-07-06
@@ -59,7 +60,10 @@ public class MapperXmlAnnotator implements Annotator {
             if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {
-                    holder.createErrorAnnotation(element, errorMessage);
+                    holder.newAnnotation(HighlightSeverity.ERROR, errorMessage)
+                            .range(element)
+                            .tooltip(errorMessage)
+                            .create();
                 }
             }
         });
