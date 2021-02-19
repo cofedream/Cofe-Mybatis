@@ -17,48 +17,26 @@
 
 package tk.cofe.plugin.mybatis.inject;
 
-import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbsp.MbspLanguage;
-import tk.cofe.plugin.mybatis.util.MybatisUtils;
-
-import java.util.Collections;
-import java.util.List;
+import tk.cofe.plugin.mbsp.MbspLanguageInjector;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspParamInject implements MultiHostInjector, DumbAware {
+public class MbspParamInject extends BaseInjector {
 
     @Override
-    public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
-            return;
-        }
-        if (context.textContains('{') && context.textContains('}')) {
-            String text = context.getText();
-            int index = 0;
-            while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
-                int lbrace = text.indexOf('{', index);
-                int rbrace = text.indexOf('}', lbrace);
-                registrar.startInjecting(MbspLanguage.INSTANCE);
-                registrar.addPlace("", "", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, rbrace + 1));
-                registrar.doneInjecting();
-                index = rbrace + 1;
-            }
-        }
+    void inject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+        MbspLanguageInjector.injectOccurrences(registrar, (PsiLanguageInjectionHost) context);
     }
 
-    @NotNull
     @Override
-    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Collections.singletonList(XmlText.class);
+    Class<? extends PsiElement> targetElement() {
+        return XmlText.class;
     }
 }

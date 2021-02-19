@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,21 +18,15 @@
 package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbsp.MbspLanguage;
+import tk.cofe.plugin.mbsp.MbspLanguageInjector;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.util.DomUtils;
-
-import java.util.function.Function;
 
 /**
  * @author : zhengrf
@@ -42,30 +36,20 @@ public class MbspConditionInject extends BaseInjector {
 
     @Override
     void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
-        inject(context, TestAttribute.class, TestAttribute::getTest, registrar);
+        inject(context, TestAttribute.class, registrar);
     }
 
     private <T extends DomElement> void inject(final PsiElement context,
                                                final Class<T> requiredClass,
-                                               final Function<T, GenericAttributeValue<String>> mapper,
                                                final MultiHostRegistrar registrar) {
         final XmlTag xmlTag = DomUtils.getXmlTag(context);
         if (!DomUtils.isTargetDomElement(xmlTag, requiredClass)) {
             return;
         }
-        DomUtils.getDomElement(xmlTag, requiredClass)
-                .map(mapper)
-                .map(GenericAttributeValue::getXmlAttributeValue)
-                .ifPresent(xmlAttributeValue -> {
-                    final String text = xmlAttributeValue.getText();
-                    if (StringUtil.isEmpty(text)) {
-                        // 空文本则不注入
-                        return;
-                    }
-                    registrar.startInjecting(MbspLanguage.INSTANCE)
-                            .addPlace("#{", "}", (PsiLanguageInjectionHost) xmlAttributeValue, new TextRange(1, text.length() - 1))
-                            .doneInjecting();
-                });
+        if (!(context instanceof PsiLanguageInjectionHost)) {
+            return;
+        }
+        MbspLanguageInjector.injectWithPrefixSuffix(registrar, (PsiLanguageInjectionHost) context);
     }
 
     Class<XmlAttributeValue> targetElement() {
