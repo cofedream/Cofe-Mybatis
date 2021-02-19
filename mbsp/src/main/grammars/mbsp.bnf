@@ -107,18 +107,26 @@
     AT_KEYWORD="@"
     DOLLAR_KEYWORD="$"
 
+    MODE_KEYWORD='mode'
+    JAVA_TYPE_KEYWORD='javaType'
+    JDBC_TYPE_KEYWORD='jdbcType'
+    JDBC_TYPE_KEYWORD_NAME='jdbcTypeName'
+    NUMERIC_SCALE_KEYWORD='numericScale'
+    TYPE_HANDLER_KEYWORD='typeHandler'
+    RESULT_MAP_KEYWORD='resultMap'
+
     QUESTION="?"
     COLON=":"
 
     WHITE_SPACE_CHAR='regexp:\p{Space}+'
-
-    IDENTIFIER="regexp:\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*"
 
     INTEGER_LITERAL="regexp:\p{Digit}*" // [0-9]
     DOUBLE_LITERAL="regexp:\p{Digit}+\.\p{Digit}+" // [0-9]+\.[0-9]+
 
     CHARACTER_LITERAL="regexp:'[^\r\n]*'"
     STRING_LITERAL="regexp:\"[^\r\n]*\""
+
+    IDENTIFIER="regexp:\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*"
   ]
 }
 
@@ -136,7 +144,8 @@ expression ::= unaryExpression |
             methodCallExpression |
             indexedExpression |
             variableExpression |
-            literalExpression
+            literalExpression |
+            paramConfigExpression
 {
   methods=[
     getType
@@ -259,4 +268,30 @@ literalExpression ::= numberLiteralExpression |
   methods=[
     getConstantValue
   ]
+}
+
+private classNameExpression ::= IDENTIFIER ('.' IDENTIFIER)*
+private modeExpression ::= 'mode' '=' IDENTIFIER {
+  pin = 1
+}
+private javaTypeExpression ::= 'javaType' '=' classNameExpression {
+  pin = 1
+}
+private jdbcTypeExpression ::= 'jdbcType' '=' IDENTIFIER {
+  pin = 1
+}
+private jdbcTypeNameExpression ::= 'jdbcTypeName' '=' IDENTIFIER {
+  pin = 1
+}
+private numericScaleExpression ::= 'numericScale' '=' INTEGER_LITERAL {
+  pin = 1
+}
+private typeHandlerExpression ::= 'typeHandler' '=' classNameExpression {
+  pin = 1
+}
+private resultMapExpression ::= 'resultMap' '=' IDENTIFIER {
+  pin = 1
+}
+paramConfigExpression ::= expression ',' (modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression) {
+  pin = 2
 }

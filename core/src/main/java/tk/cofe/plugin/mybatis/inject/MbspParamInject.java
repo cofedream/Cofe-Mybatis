@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,13 +48,8 @@ public class MbspParamInject implements MultiHostInjector, DumbAware {
             while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
                 int lbrace = text.indexOf('{', index);
                 int rbrace = text.indexOf('}', lbrace);
-                int extra = text.indexOf(',', lbrace);
                 registrar.startInjecting(MbspLanguage.INSTANCE);
-                if (extra > 0 && extra < rbrace) {
-                    registrar.addPlace("", "}", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, extra));
-                } else {
-                    registrar.addPlace("", "", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, rbrace + 1));
-                }
+                registrar.addPlace("", "", (PsiLanguageInjectionHost) context, new TextRange(lbrace - 1, rbrace + 1));
                 registrar.doneInjecting();
                 index = rbrace + 1;
             }

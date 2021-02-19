@@ -1,15 +1,18 @@
-/*
- * Copyright (C) 2019 cofe
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/*
+ * Copyright (C) 2019-2021 cofe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package tk.cofe.plugin.mbsp;
 
@@ -29,6 +32,7 @@ public interface MbspTypes {
   IElementType LITERAL_EXPRESSION = new MbspElementType("LITERAL_EXPRESSION");
   IElementType METHOD_CALL_EXPRESSION = new MbspElementType("METHOD_CALL_EXPRESSION");
   IElementType PARAMETER_LIST = new MbspElementType("PARAMETER_LIST");
+  IElementType PARAM_CONFIG_EXPRESSION = new MbspElementType("PARAM_CONFIG_EXPRESSION");
   IElementType PARENTHESIZED_EXPRESSION = new MbspElementType("PARENTHESIZED_EXPRESSION");
   IElementType PROJECTION_EXPRESSION = new MbspElementType("PROJECTION_EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
@@ -62,6 +66,9 @@ public interface MbspTypes {
   IElementType INSTANCEOF_KEYWORD = new MbspTokenType("instanceof");
   IElementType INTEGER_LITERAL = new MbspTokenType("INTEGER_LITERAL");
   IElementType IN_KEYWORD = new MbspTokenType("in");
+  IElementType JAVA_TYPE_KEYWORD = new MbspTokenType("javaType");
+  IElementType JDBC_TYPE_KEYWORD = new MbspTokenType("jdbcType");
+  IElementType JDBC_TYPE_KEYWORD_NAME = new MbspTokenType("jdbcTypeName");
   IElementType LBRACE = new MbspTokenType("{");
   IElementType LBRACKET = new MbspTokenType("[");
   IElementType LESS = new MbspTokenType("<");
@@ -70,6 +77,7 @@ public interface MbspTypes {
   IElementType LT_EQ_KEYWORD = new MbspTokenType("lte");
   IElementType LT_KEYWORD = new MbspTokenType("lt");
   IElementType MINUS = new MbspTokenType("-");
+  IElementType MODE_KEYWORD = new MbspTokenType("mode");
   IElementType MODULO = new MbspTokenType("%");
   IElementType MULTIPLY = new MbspTokenType("*");
   IElementType NEGATE = new MbspTokenType("!");
@@ -80,6 +88,7 @@ public interface MbspTypes {
   IElementType NOT_IN_KEYWORD = new MbspTokenType("not in");
   IElementType NOT_KEYWORD = new MbspTokenType("not");
   IElementType NULL_KEYWORD = new MbspTokenType("null");
+  IElementType NUMERIC_SCALE_KEYWORD = new MbspTokenType("numericScale");
   IElementType OR = new MbspTokenType("|");
   IElementType OR_KEYWORD = new MbspTokenType("or");
   IElementType OR_OR = new MbspTokenType("||");
@@ -87,6 +96,7 @@ public interface MbspTypes {
   IElementType QUESTION = new MbspTokenType("?");
   IElementType RBRACE = new MbspTokenType("}");
   IElementType RBRACKET = new MbspTokenType("]");
+  IElementType RESULT_MAP_KEYWORD = new MbspTokenType("resultMap");
   IElementType RPARENTH = new MbspTokenType(")");
   IElementType SHIFT_LEFT = new MbspTokenType("<<");
   IElementType SHIFT_LEFT_KEYWORD = new MbspTokenType("shl");
@@ -96,6 +106,7 @@ public interface MbspTypes {
   IElementType SHIFT_RIGHT_LOGICAL_KEYWORD = new MbspTokenType("ushr");
   IElementType STRING_LITERAL = new MbspTokenType("STRING_LITERAL");
   IElementType TRUE_KEYWORD = new MbspTokenType("true");
+  IElementType TYPE_HANDLER_KEYWORD = new MbspTokenType("typeHandler");
   IElementType XOR = new MbspTokenType("^");
   IElementType XOR_KEYWORD = new MbspTokenType("xor");
 
@@ -119,6 +130,9 @@ public interface MbspTypes {
       }
       else if (type == PARAMETER_LIST) {
         return new MbspParameterListImpl(node);
+      }
+      else if (type == PARAM_CONFIG_EXPRESSION) {
+        return new MbspParamConfigExpressionImpl(node);
       }
       else if (type == PARENTHESIZED_EXPRESSION) {
         return new MbspParenthesizedExpressionImpl(node);

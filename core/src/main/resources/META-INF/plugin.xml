@@ -46,10 +46,7 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>参数提示中添加bind标签name</li>
-            <li>foreach标签,item添加提示</li>
-            <li>语法优化调整</li>
-            <li>README调整</li>
+            <li>语法调整,支持#{}中的jdbcType等参数配置</li>
         </ul>
     ]]></change-notes>
 

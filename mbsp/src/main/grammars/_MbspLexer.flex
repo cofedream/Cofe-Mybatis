@@ -27,12 +27,11 @@ WHITE_SPACE=\s+
 
 EXPRESSION_START=[$#]\{
 WHITE_SPACE_CHAR=[ \t\n\x0B\f\r]+
-//IDENTIFIER=\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*
-IDENTIFIER=[:jletter:][:jletterdigit:]*
 INTEGER_LITERAL=[:digit:]*
 DOUBLE_LITERAL=[:digit:]+\.[:digit:]+
 CHARACTER_LITERAL='[^\r\n]*'
 STRING_LITERAL=\"[^\r\n]*\"
+IDENTIFIER=[:jletter:][:jletterdigit:]*
 
 %%
 <YYINITIAL> {
@@ -92,16 +91,23 @@ STRING_LITERAL=\"[^\r\n]*\"
   "ushr"                   { return SHIFT_RIGHT_LOGICAL_KEYWORD; }
   "@"                      { return AT_KEYWORD; }
   "$"                      { return DOLLAR_KEYWORD; }
+  "mode"                   { return MODE_KEYWORD; }
+  "javaType"               { return JAVA_TYPE_KEYWORD; }
+  "jdbcType"               { return JDBC_TYPE_KEYWORD; }
+  "jdbcTypeName"           { return JDBC_TYPE_KEYWORD_NAME; }
+  "numericScale"           { return NUMERIC_SCALE_KEYWORD; }
+  "typeHandler"            { return TYPE_HANDLER_KEYWORD; }
+  "resultMap"              { return RESULT_MAP_KEYWORD; }
   "?"                      { return QUESTION; }
   ":"                      { return COLON; }
 
   {EXPRESSION_START}       { return EXPRESSION_START; }
   {WHITE_SPACE_CHAR}       { return WHITE_SPACE_CHAR; }
-  {IDENTIFIER}             { return IDENTIFIER; }
   {INTEGER_LITERAL}        { return INTEGER_LITERAL; }
   {DOUBLE_LITERAL}         { return DOUBLE_LITERAL; }
   {CHARACTER_LITERAL}      { return CHARACTER_LITERAL; }
   {STRING_LITERAL}         { return STRING_LITERAL; }
+  {IDENTIFIER}             { return IDENTIFIER; }
 
 }
 

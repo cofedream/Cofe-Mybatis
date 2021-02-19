@@ -1,15 +1,18 @@
-/*
- * Copyright (C) 2019 cofe
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/*
+ * Copyright (C) 2019-2021 cofe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package tk.cofe.plugin.mbsp.parser;
 
@@ -49,8 +52,9 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(BINARY_EXPRESSION, CONDITIONAL_EXPRESSION, EXPRESSION, INDEXED_EXPRESSION,
-      LITERAL_EXPRESSION, METHOD_CALL_EXPRESSION, PARENTHESIZED_EXPRESSION, PROJECTION_EXPRESSION,
-      REFERENCE_EXPRESSION, SELECTION_EXPRESSION, UNARY_EXPRESSION, VARIABLE_EXPRESSION),
+      LITERAL_EXPRESSION, METHOD_CALL_EXPRESSION, PARAM_CONFIG_EXPRESSION, PARENTHESIZED_EXPRESSION,
+      PROJECTION_EXPRESSION, REFERENCE_EXPRESSION, SELECTION_EXPRESSION, UNARY_EXPRESSION,
+      VARIABLE_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -132,6 +136,40 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // IDENTIFIER ('.' IDENTIFIER)*
+  static boolean classNameExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classNameExpression")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    r = r && classNameExpression_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ('.' IDENTIFIER)*
+  private static boolean classNameExpression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classNameExpression_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!classNameExpression_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "classNameExpression_1", c)) break;
+    }
+    return true;
+  }
+
+  // '.' IDENTIFIER
+  private static boolean classNameExpression_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classNameExpression_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, DOT, IDENTIFIER);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // ':' expression
   static boolean conditionalExpressionTail(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "conditionalExpressionTail")) return false;
@@ -176,6 +214,59 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // 'javaType' '=' classNameExpression
+  static boolean javaTypeExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "javaTypeExpression")) return false;
+    if (!nextTokenIs(b, JAVA_TYPE_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, JAVA_TYPE_KEYWORD, EQ);
+    p = r; // pin = 1
+    r = r && classNameExpression(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // 'jdbcType' '=' IDENTIFIER
+  static boolean jdbcTypeExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "jdbcTypeExpression")) return false;
+    if (!nextTokenIs(b, JDBC_TYPE_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, JDBC_TYPE_KEYWORD, EQ, IDENTIFIER);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // 'jdbcTypeName' '=' IDENTIFIER
+  static boolean jdbcTypeNameExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "jdbcTypeNameExpression")) return false;
+    if (!nextTokenIs(b, JDBC_TYPE_KEYWORD_NAME)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, JDBC_TYPE_KEYWORD_NAME, EQ, IDENTIFIER);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // 'mode' '=' IDENTIFIER
+  static boolean modeExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "modeExpression")) return false;
+    if (!nextTokenIs(b, MODE_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, MODE_KEYWORD, EQ, IDENTIFIER);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // INTEGER_LITERAL | DOUBLE_LITERAL
   static boolean numberLiteralExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "numberLiteralExpression")) return false;
@@ -184,6 +275,19 @@ public class MbspParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INTEGER_LITERAL);
     if (!r) r = consumeToken(b, DOUBLE_LITERAL);
     return r;
+  }
+
+  /* ********************************************************** */
+  // 'numericScale' '=' INTEGER_LITERAL
+  static boolean numericScaleExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "numericScaleExpression")) return false;
+    if (!nextTokenIs(b, NUMERIC_SCALE_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, NUMERIC_SCALE_KEYWORD, EQ, INTEGER_LITERAL);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -270,7 +374,20 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // 'regexp:[$#]\{' rootElement '}'
+  // 'resultMap' '=' IDENTIFIER
+  static boolean resultMapExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "resultMapExpression")) return false;
+    if (!nextTokenIs(b, RESULT_MAP_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, RESULT_MAP_KEYWORD, EQ, IDENTIFIER);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // EXPRESSION_START rootElement RBRACE
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
     if (!nextTokenIs(b, EXPRESSION_START)) return false;
@@ -296,7 +413,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !('}')
+  // !(RBRACE)
   static boolean rootRecover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "rootRecover")) return false;
     boolean r;
@@ -369,6 +486,20 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // 'typeHandler' '=' classNameExpression
+  static boolean typeHandlerExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeHandlerExpression")) return false;
+    if (!nextTokenIs(b, TYPE_HANDLER_KEYWORD)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_);
+    r = consumeTokens(b, 1, TYPE_HANDLER_KEYWORD, EQ);
+    p = r; // pin = 1
+    r = r && classNameExpression(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  /* ********************************************************** */
   // bitwiseOperations |
   //                           '+' | '-' | 'not'
   static boolean unaryOperator(PsiBuilder b, int l) {
@@ -393,6 +524,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   // 6: ATOM(indexedExpression)
   // 7: ATOM(variableExpression)
   // 8: ATOM(literalExpression)
+  // 9: POSTFIX(paramConfigExpression)
   public static boolean expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expression")) return false;
     addVariant(b, "<expression>");
@@ -427,6 +559,10 @@ public class MbspParser implements PsiParser, LightPsiParser {
       else if (g < 5 && leftMarkerIs(b, REFERENCE_EXPRESSION) && methodCallExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, METHOD_CALL_EXPRESSION, r, true, null);
+      }
+      else if (g < 9 && paramConfigExpression_0(b, l + 1)) {
+        r = true;
+        exit_section_(b, l, m, PARAM_CONFIG_EXPRESSION, r, true, null);
       }
       else {
         exit_section_(b, l, m, null, false, false, null);
@@ -695,6 +831,31 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!r) r = booleanLiteralExpression(b, l + 1);
     if (!r) r = consumeTokenSmart(b, NULL_KEYWORD);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // ',' (modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression)
+  private static boolean paramConfigExpression_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paramConfigExpression_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokenSmart(b, COMMA);
+    r = r && paramConfigExpression_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression
+  private static boolean paramConfigExpression_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paramConfigExpression_0_1")) return false;
+    boolean r;
+    r = modeExpression(b, l + 1);
+    if (!r) r = javaTypeExpression(b, l + 1);
+    if (!r) r = jdbcTypeExpression(b, l + 1);
+    if (!r) r = jdbcTypeNameExpression(b, l + 1);
+    if (!r) r = numericScaleExpression(b, l + 1);
+    if (!r) r = typeHandlerExpression(b, l + 1);
+    if (!r) r = resultMapExpression(b, l + 1);
     return r;
   }
 
