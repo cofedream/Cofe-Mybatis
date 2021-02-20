@@ -20,13 +20,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface MbspParamConfigExpression extends MbspExpression {
-
-  @NotNull
-  MbspExpression getExpression();
-
-  @Nullable
-  PsiElement getIdentifier();
+public interface MbspNumericScaleConfig extends MbspPsiCompositeElement {
 
   @Nullable
   PsiElement getIntegerLiteral();

@@ -52,9 +52,8 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
     create_token_set_(BINARY_EXPRESSION, CONDITIONAL_EXPRESSION, EXPRESSION, INDEXED_EXPRESSION,
-      LITERAL_EXPRESSION, METHOD_CALL_EXPRESSION, PARAM_CONFIG_EXPRESSION, PARENTHESIZED_EXPRESSION,
-      PROJECTION_EXPRESSION, REFERENCE_EXPRESSION, SELECTION_EXPRESSION, UNARY_EXPRESSION,
-      VARIABLE_EXPRESSION),
+      LITERAL_EXPRESSION, METHOD_CALL_EXPRESSION, PARENTHESIZED_EXPRESSION, PROJECTION_EXPRESSION,
+      REFERENCE_EXPRESSION, SELECTION_EXPRESSION, UNARY_EXPRESSION, VARIABLE_EXPRESSION),
   };
 
   /* ********************************************************** */
@@ -215,11 +214,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'javaType' '=' classNameExpression
-  static boolean javaTypeExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "javaTypeExpression")) return false;
+  public static boolean javaTypeConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "javaTypeConfig")) return false;
     if (!nextTokenIs(b, JAVA_TYPE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, JAVA_TYPE_CONFIG, null);
     r = consumeTokens(b, 1, JAVA_TYPE_KEYWORD, EQ);
     p = r; // pin = 1
     r = r && classNameExpression(b, l + 1);
@@ -229,11 +228,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'jdbcType' '=' IDENTIFIER
-  static boolean jdbcTypeExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jdbcTypeExpression")) return false;
+  public static boolean jdbcTypeConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "jdbcTypeConfig")) return false;
     if (!nextTokenIs(b, JDBC_TYPE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, JDBC_TYPE_CONFIG, null);
     r = consumeTokens(b, 1, JDBC_TYPE_KEYWORD, EQ, IDENTIFIER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
@@ -242,11 +241,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'jdbcTypeName' '=' IDENTIFIER
-  static boolean jdbcTypeNameExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jdbcTypeNameExpression")) return false;
+  public static boolean jdbcTypeNameConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "jdbcTypeNameConfig")) return false;
     if (!nextTokenIs(b, JDBC_TYPE_KEYWORD_NAME)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, JDBC_TYPE_NAME_CONFIG, null);
     r = consumeTokens(b, 1, JDBC_TYPE_KEYWORD_NAME, EQ, IDENTIFIER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
@@ -255,11 +254,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'mode' '=' IDENTIFIER
-  static boolean modeExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "modeExpression")) return false;
+  public static boolean modeConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "modeConfig")) return false;
     if (!nextTokenIs(b, MODE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, MODE_CONFIG, null);
     r = consumeTokens(b, 1, MODE_KEYWORD, EQ, IDENTIFIER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
@@ -279,15 +278,57 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'numericScale' '=' INTEGER_LITERAL
-  static boolean numericScaleExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "numericScaleExpression")) return false;
+  public static boolean numericScaleConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "numericScaleConfig")) return false;
     if (!nextTokenIs(b, NUMERIC_SCALE_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, NUMERIC_SCALE_CONFIG, null);
     r = consumeTokens(b, 1, NUMERIC_SCALE_KEYWORD, EQ, INTEGER_LITERAL);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
     return r || p;
+  }
+
+  /* ********************************************************** */
+  // (',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig))+
+  public static boolean paramConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paramConfig")) return false;
+    if (!nextTokenIs(b, COMMA)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = paramConfig_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!paramConfig_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "paramConfig", c)) break;
+    }
+    exit_section_(b, m, PARAM_CONFIG, r);
+    return r;
+  }
+
+  // ',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig)
+  private static boolean paramConfig_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paramConfig_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && paramConfig_0_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig
+  private static boolean paramConfig_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paramConfig_0_1")) return false;
+    boolean r;
+    r = modeConfig(b, l + 1);
+    if (!r) r = javaTypeConfig(b, l + 1);
+    if (!r) r = jdbcTypeConfig(b, l + 1);
+    if (!r) r = jdbcTypeNameConfig(b, l + 1);
+    if (!r) r = numericScaleConfig(b, l + 1);
+    if (!r) r = typeHandlerConfig(b, l + 1);
+    if (!r) r = resultMapConfig(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -375,11 +416,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'resultMap' '=' IDENTIFIER
-  static boolean resultMapExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "resultMapExpression")) return false;
+  public static boolean resultMapConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "resultMapConfig")) return false;
     if (!nextTokenIs(b, RESULT_MAP_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, RESULT_MAP_CONFIG, null);
     r = consumeTokens(b, 1, RESULT_MAP_KEYWORD, EQ, IDENTIFIER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
@@ -402,14 +443,22 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // expression
+  // expression paramConfig?
   static boolean rootElement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "rootElement")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_);
     r = expression(b, l + 1, -1);
+    r = r && rootElement_1(b, l + 1);
     exit_section_(b, l, m, r, false, MbspParser::rootRecover);
     return r;
+  }
+
+  // paramConfig?
+  private static boolean rootElement_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "rootElement_1")) return false;
+    paramConfig(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */
@@ -487,11 +536,11 @@ public class MbspParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // 'typeHandler' '=' classNameExpression
-  static boolean typeHandlerExpression(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeHandlerExpression")) return false;
+  public static boolean typeHandlerConfig(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeHandlerConfig")) return false;
     if (!nextTokenIs(b, TYPE_HANDLER_KEYWORD)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_);
+    Marker m = enter_section_(b, l, _NONE_, TYPE_HANDLER_CONFIG, null);
     r = consumeTokens(b, 1, TYPE_HANDLER_KEYWORD, EQ);
     p = r; // pin = 1
     r = r && classNameExpression(b, l + 1);
@@ -524,7 +573,6 @@ public class MbspParser implements PsiParser, LightPsiParser {
   // 6: ATOM(indexedExpression)
   // 7: ATOM(variableExpression)
   // 8: ATOM(literalExpression)
-  // 9: POSTFIX(paramConfigExpression)
   public static boolean expression(PsiBuilder b, int l, int g) {
     if (!recursion_guard_(b, l, "expression")) return false;
     addVariant(b, "<expression>");
@@ -559,10 +607,6 @@ public class MbspParser implements PsiParser, LightPsiParser {
       else if (g < 5 && leftMarkerIs(b, REFERENCE_EXPRESSION) && methodCallExpression_0(b, l + 1)) {
         r = true;
         exit_section_(b, l, m, METHOD_CALL_EXPRESSION, r, true, null);
-      }
-      else if (g < 9 && paramConfigExpression_0(b, l + 1)) {
-        r = true;
-        exit_section_(b, l, m, PARAM_CONFIG_EXPRESSION, r, true, null);
       }
       else {
         exit_section_(b, l, m, null, false, false, null);
@@ -831,31 +875,6 @@ public class MbspParser implements PsiParser, LightPsiParser {
     if (!r) r = booleanLiteralExpression(b, l + 1);
     if (!r) r = consumeTokenSmart(b, NULL_KEYWORD);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // ',' (modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression)
-  private static boolean paramConfigExpression_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "paramConfigExpression_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokenSmart(b, COMMA);
-    r = r && paramConfigExpression_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression
-  private static boolean paramConfigExpression_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "paramConfigExpression_0_1")) return false;
-    boolean r;
-    r = modeExpression(b, l + 1);
-    if (!r) r = javaTypeExpression(b, l + 1);
-    if (!r) r = jdbcTypeExpression(b, l + 1);
-    if (!r) r = jdbcTypeNameExpression(b, l + 1);
-    if (!r) r = numericScaleExpression(b, l + 1);
-    if (!r) r = typeHandlerExpression(b, l + 1);
-    if (!r) r = resultMapExpression(b, l + 1);
     return r;
   }
 

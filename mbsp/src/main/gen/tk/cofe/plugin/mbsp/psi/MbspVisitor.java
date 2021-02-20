@@ -37,6 +37,18 @@ public class MbspVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitJavaTypeConfig(@NotNull MbspJavaTypeConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitJdbcTypeConfig(@NotNull MbspJdbcTypeConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitJdbcTypeNameConfig(@NotNull MbspJdbcTypeNameConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitLiteralExpression(@NotNull MbspLiteralExpression o) {
     visitExpression(o);
   }
@@ -45,8 +57,16 @@ public class MbspVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
-  public void visitParamConfigExpression(@NotNull MbspParamConfigExpression o) {
-    visitExpression(o);
+  public void visitModeConfig(@NotNull MbspModeConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitNumericScaleConfig(@NotNull MbspNumericScaleConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
+  public void visitParamConfig(@NotNull MbspParamConfig o) {
+    visitPsiCompositeElement(o);
   }
 
   public void visitParameterList(@NotNull MbspParameterList o) {
@@ -65,8 +85,16 @@ public class MbspVisitor extends PsiElementVisitor {
     visitExpression(o);
   }
 
+  public void visitResultMapConfig(@NotNull MbspResultMapConfig o) {
+    visitPsiCompositeElement(o);
+  }
+
   public void visitSelectionExpression(@NotNull MbspSelectionExpression o) {
     visitExpression(o);
+  }
+
+  public void visitTypeHandlerConfig(@NotNull MbspTypeHandlerConfig o) {
+    visitPsiCompositeElement(o);
   }
 
   public void visitUnaryExpression(@NotNull MbspUnaryExpression o) {

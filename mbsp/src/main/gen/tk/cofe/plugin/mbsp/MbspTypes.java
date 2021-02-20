@@ -29,14 +29,21 @@ public interface MbspTypes {
   IElementType CONDITIONAL_EXPRESSION = new MbspElementType("CONDITIONAL_EXPRESSION");
   IElementType EXPRESSION = new MbspElementType("EXPRESSION");
   IElementType INDEXED_EXPRESSION = new MbspElementType("INDEXED_EXPRESSION");
+  IElementType JAVA_TYPE_CONFIG = new MbspElementType("JAVA_TYPE_CONFIG");
+  IElementType JDBC_TYPE_CONFIG = new MbspElementType("JDBC_TYPE_CONFIG");
+  IElementType JDBC_TYPE_NAME_CONFIG = new MbspElementType("JDBC_TYPE_NAME_CONFIG");
   IElementType LITERAL_EXPRESSION = new MbspElementType("LITERAL_EXPRESSION");
   IElementType METHOD_CALL_EXPRESSION = new MbspElementType("METHOD_CALL_EXPRESSION");
+  IElementType MODE_CONFIG = new MbspElementType("MODE_CONFIG");
+  IElementType NUMERIC_SCALE_CONFIG = new MbspElementType("NUMERIC_SCALE_CONFIG");
   IElementType PARAMETER_LIST = new MbspElementType("PARAMETER_LIST");
-  IElementType PARAM_CONFIG_EXPRESSION = new MbspElementType("PARAM_CONFIG_EXPRESSION");
+  IElementType PARAM_CONFIG = new MbspElementType("PARAM_CONFIG");
   IElementType PARENTHESIZED_EXPRESSION = new MbspElementType("PARENTHESIZED_EXPRESSION");
   IElementType PROJECTION_EXPRESSION = new MbspElementType("PROJECTION_EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
+  IElementType RESULT_MAP_CONFIG = new MbspElementType("RESULT_MAP_CONFIG");
   IElementType SELECTION_EXPRESSION = new MbspElementType("SELECTION_EXPRESSION");
+  IElementType TYPE_HANDLER_CONFIG = new MbspElementType("TYPE_HANDLER_CONFIG");
   IElementType UNARY_EXPRESSION = new MbspElementType("UNARY_EXPRESSION");
   IElementType VARIABLE_EXPRESSION = new MbspElementType("VARIABLE_EXPRESSION");
 
@@ -122,17 +129,32 @@ public interface MbspTypes {
       else if (type == INDEXED_EXPRESSION) {
         return new MbspIndexedExpressionImpl(node);
       }
+      else if (type == JAVA_TYPE_CONFIG) {
+        return new MbspJavaTypeConfigImpl(node);
+      }
+      else if (type == JDBC_TYPE_CONFIG) {
+        return new MbspJdbcTypeConfigImpl(node);
+      }
+      else if (type == JDBC_TYPE_NAME_CONFIG) {
+        return new MbspJdbcTypeNameConfigImpl(node);
+      }
       else if (type == LITERAL_EXPRESSION) {
         return new MbspLiteralExpressionImpl(node);
       }
       else if (type == METHOD_CALL_EXPRESSION) {
         return new MbspMethodCallExpressionImpl(node);
       }
+      else if (type == MODE_CONFIG) {
+        return new MbspModeConfigImpl(node);
+      }
+      else if (type == NUMERIC_SCALE_CONFIG) {
+        return new MbspNumericScaleConfigImpl(node);
+      }
       else if (type == PARAMETER_LIST) {
         return new MbspParameterListImpl(node);
       }
-      else if (type == PARAM_CONFIG_EXPRESSION) {
-        return new MbspParamConfigExpressionImpl(node);
+      else if (type == PARAM_CONFIG) {
+        return new MbspParamConfigImpl(node);
       }
       else if (type == PARENTHESIZED_EXPRESSION) {
         return new MbspParenthesizedExpressionImpl(node);
@@ -143,8 +165,14 @@ public interface MbspTypes {
       else if (type == REFERENCE_EXPRESSION) {
         return new MbspReferenceExpressionImpl(node);
       }
+      else if (type == RESULT_MAP_CONFIG) {
+        return new MbspResultMapConfigImpl(node);
+      }
       else if (type == SELECTION_EXPRESSION) {
         return new MbspSelectionExpressionImpl(node);
+      }
+      else if (type == TYPE_HANDLER_CONFIG) {
+        return new MbspTypeHandlerConfigImpl(node);
       }
       else if (type == UNARY_EXPRESSION) {
         return new MbspUnaryExpressionImpl(node);

@@ -18,8 +18,6 @@
 {
   classHeader="gpl.txt"
 
-  psiImplUtilClass="tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil"
-
   parserClass="tk.cofe.plugin.mbsp.parser.MbspParser"
 
   implements="tk.cofe.plugin.mbsp.psi.MbspPsiCompositeElement"
@@ -35,7 +33,10 @@
   elementTypeClass="tk.cofe.plugin.mbsp.psi.MbspElementType"
   tokenTypeClass="tk.cofe.plugin.mbsp.psi.MbspTokenType"
 
+  psiImplUtilClass="tk.cofe.plugin.mbsp.psi.impl.MbspPsiUtil"
+
   extends(".*(Expression|Literal)")="expression"
+  pin(".*Config")=1
   tokens=[
     EXPRESSION_START="regexp:[$#]\{"
 //    EXPRESSION_END="}"
@@ -132,7 +133,7 @@
 
 root ::= EXPRESSION_START rootElement RBRACE {pin=1}
 private rootRecover ::= !(RBRACE)
-private rootElement ::= expression {
+private rootElement ::= expression paramConfig? {
     recoverWhile="rootRecover"
 }
 
@@ -144,8 +145,7 @@ expression ::= unaryExpression |
             methodCallExpression |
             indexedExpression |
             variableExpression |
-            literalExpression |
-            paramConfigExpression
+            literalExpression
 {
   methods=[
     getType
@@ -270,28 +270,13 @@ literalExpression ::= numberLiteralExpression |
   ]
 }
 
+//https://mybatis.org/mybatis-3/sqlmap-xml.html#Parameters
 private classNameExpression ::= IDENTIFIER ('.' IDENTIFIER)*
-private modeExpression ::= 'mode' '=' IDENTIFIER {
-  pin = 1
-}
-private javaTypeExpression ::= 'javaType' '=' classNameExpression {
-  pin = 1
-}
-private jdbcTypeExpression ::= 'jdbcType' '=' IDENTIFIER {
-  pin = 1
-}
-private jdbcTypeNameExpression ::= 'jdbcTypeName' '=' IDENTIFIER {
-  pin = 1
-}
-private numericScaleExpression ::= 'numericScale' '=' INTEGER_LITERAL {
-  pin = 1
-}
-private typeHandlerExpression ::= 'typeHandler' '=' classNameExpression {
-  pin = 1
-}
-private resultMapExpression ::= 'resultMap' '=' IDENTIFIER {
-  pin = 1
-}
-paramConfigExpression ::= expression ',' (modeExpression | javaTypeExpression | jdbcTypeExpression | jdbcTypeNameExpression | numericScaleExpression | typeHandlerExpression | resultMapExpression) {
-  pin = 2
-}
+modeConfig ::= 'mode' '=' IDENTIFIER
+javaTypeConfig ::= 'javaType' '=' classNameExpression
+jdbcTypeConfig ::= 'jdbcType' '=' IDENTIFIER
+jdbcTypeNameConfig ::= 'jdbcTypeName' '=' IDENTIFIER
+numericScaleConfig ::= 'numericScale' '=' INTEGER_LITERAL
+typeHandlerConfig ::= 'typeHandler' '=' classNameExpression
+resultMapConfig ::= 'resultMap' '=' IDENTIFIER
+paramConfig ::= (',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig))+

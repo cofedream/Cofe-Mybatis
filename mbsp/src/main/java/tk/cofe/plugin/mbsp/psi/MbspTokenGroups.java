@@ -66,4 +66,5 @@ public class MbspTokenGroups implements MbspTypes {
 
     public static final TokenSet OPERATIONS = TokenSet.orSet(OPERATION_SIGNS,
             OPERATION_KEYWORDS);
+
 }

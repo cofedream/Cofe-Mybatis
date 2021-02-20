@@ -25,15 +25,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
 
-public class MbspParamConfigExpressionImpl extends MbspExpressionImpl implements MbspParamConfigExpression {
+public class MbspJdbcTypeConfigImpl extends MbspPsiCompositeElementBase implements MbspJdbcTypeConfig {
 
-  public MbspParamConfigExpressionImpl(@NotNull ASTNode node) {
+  public MbspJdbcTypeConfigImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitParamConfigExpression(this);
+    visitor.visitJdbcTypeConfig(this);
   }
 
   @Override
@@ -43,21 +42,9 @@ public class MbspParamConfigExpressionImpl extends MbspExpressionImpl implements
   }
 
   @Override
-  @NotNull
-  public MbspExpression getExpression() {
-    return findNotNullChildByClass(MbspExpression.class);
-  }
-
-  @Override
   @Nullable
   public PsiElement getIdentifier() {
     return findChildByType(IDENTIFIER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getIntegerLiteral() {
-    return findChildByType(INTEGER_LITERAL);
   }
 
 }
