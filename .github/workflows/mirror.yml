@@ -1,0 +1,14 @@
+name: Gitee Sync
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            git@gitee.com:cofedream/Cofe-Mybatis.git
+          ssh_private_key:
+            ${{ secrets.GITEE_PRIVATE_KEY }}
