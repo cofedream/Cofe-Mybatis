@@ -18,7 +18,6 @@
 package tk.cofe.plugin.mbsp;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * @author : zhengrf
@@ -28,21 +27,37 @@ public final class MbspKeyword {
     private MbspKeyword() {
     }
 
-    public static final class Mode {
-        public static final String IN = "IN";
-        public static final String OUT = "OUT";
-        public static final String INOUT = "INOUT";
-        public static final String[] STRINGS = {IN, OUT, INOUT};
+    public static final String MODE = "mode";
+    public static final String JAVA_TYPE = "javaType";
+    public static final String JDBC_TYPE = "jdbcType";
+    public static final String JDBC_TYPE_NAME = "jdbcTypeName";
+    public static final String NUMERIC_SCALE = "numericScale";
+    public static final String TYPE_HANDLER = "typeHandler";
+    public static final String RESULT_MAP = "resultMap";
+
+    public static final String[] STRINGS = {MODE, JAVA_TYPE, JDBC_TYPE, JDBC_TYPE_NAME, NUMERIC_SCALE, TYPE_HANDLER, RESULT_MAP};
+
+    public enum Mode {
+        IN,
+        OUT,
+        INOUT,
+        ;
+        public static final String[] STRINGS = getStrings(values());
     }
 
     public enum JdbcType {
 
-        BIT,        FLOAT,       CHAR,          TIMESTAMP,      OTHER,    UNDEFINED,
-        TINYINT,    REAL,        VARCHAR,       BINARY,         BLOB,     NVARCHAR,
-        SMALLINT,   DOUBLE,      LONGVARCHAR,   VARBINARY,      CLOB,     NCHAR,
-        INTEGER,    NUMERIC,     DATE,          LONGVARBINARY,  BOOLEAN,  NCLOB,
-        BIGINT,     DECIMAL,     TIME,          NULL,           CURSOR,   ARRAY,
+        BIT, FLOAT, CHAR, TIMESTAMP, OTHER, UNDEFINED,
+        TINYINT, REAL, VARCHAR, BINARY, BLOB, NVARCHAR,
+        SMALLINT, DOUBLE, LONGVARCHAR, VARBINARY, CLOB, NCHAR,
+        INTEGER, NUMERIC, DATE, LONGVARBINARY, BOOLEAN, NCLOB,
+        BIGINT, DECIMAL, TIME, NULL, CURSOR, ARRAY,
         ;
-        public static final String[] STRINGS = Arrays.stream(values()).map(Enum::toString).collect(Collectors.toList()).toArray(new String[0]);
+        public static final String[] STRINGS = getStrings(values());
+
+    }
+
+    private static String[] getStrings(Enum<?>[] enums) {
+        return Arrays.stream(enums).map(Enum::toString).toArray(String[]::new);
     }
 }

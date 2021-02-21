@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,15 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Element 工具类
@@ -66,5 +70,10 @@ public class PsiElementUtils {
             return null;
         }
         return PsiTreeUtil.getParentOfType(element, target);
+    }
+
+    public static PsiLanguageInjectionHost getInjectionHost(@NotNull CompletionParameters parameters) {
+        PsiElement position = parameters.getPosition();
+        return InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
     }
 }
