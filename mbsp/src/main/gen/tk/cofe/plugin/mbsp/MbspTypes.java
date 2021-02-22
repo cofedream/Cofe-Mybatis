@@ -37,7 +37,7 @@ public interface MbspTypes {
   IElementType MODE_CONFIG = new MbspElementType("MODE_CONFIG");
   IElementType NUMERIC_SCALE_CONFIG = new MbspElementType("NUMERIC_SCALE_CONFIG");
   IElementType PARAMETER_LIST = new MbspElementType("PARAMETER_LIST");
-  IElementType PARAM_CONFIG = new MbspElementType("PARAM_CONFIG");
+  IElementType PARAM_CONFIG_LIST = new MbspElementType("PARAM_CONFIG_LIST");
   IElementType PARENTHESIZED_EXPRESSION = new MbspElementType("PARENTHESIZED_EXPRESSION");
   IElementType PROJECTION_EXPRESSION = new MbspElementType("PROJECTION_EXPRESSION");
   IElementType REFERENCE_EXPRESSION = new MbspElementType("REFERENCE_EXPRESSION");
@@ -153,8 +153,8 @@ public interface MbspTypes {
       else if (type == PARAMETER_LIST) {
         return new MbspParameterListImpl(node);
       }
-      else if (type == PARAM_CONFIG) {
-        return new MbspParamConfigImpl(node);
+      else if (type == PARAM_CONFIG_LIST) {
+        return new MbspParamConfigListImpl(node);
       }
       else if (type == PARENTHESIZED_EXPRESSION) {
         return new MbspParenthesizedExpressionImpl(node);

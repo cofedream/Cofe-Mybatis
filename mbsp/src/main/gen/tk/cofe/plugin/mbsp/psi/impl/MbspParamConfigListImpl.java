@@ -25,14 +25,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbsp.MbspTypes.*;
 import tk.cofe.plugin.mbsp.psi.*;
 
-public class MbspParamConfigImpl extends MbspPsiCompositeElementBase implements MbspParamConfig {
+public class MbspParamConfigListImpl extends MbspPsiCompositeElementBase implements MbspParamConfigList {
 
-  public MbspParamConfigImpl(@NotNull ASTNode node) {
+  public MbspParamConfigListImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull MbspVisitor visitor) {
-    visitor.visitParamConfig(this);
+    visitor.visitParamConfigList(this);
   }
 
   @Override

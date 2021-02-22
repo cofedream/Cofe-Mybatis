@@ -20,7 +20,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface MbspParamConfig extends MbspPsiCompositeElement {
+public interface MbspParamConfigList extends MbspPsiCompositeElement {
 
   @NotNull
   List<MbspJavaTypeConfig> getJavaTypeConfigList();

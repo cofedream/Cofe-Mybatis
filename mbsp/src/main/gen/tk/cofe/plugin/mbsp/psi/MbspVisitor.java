@@ -65,7 +65,7 @@ public class MbspVisitor extends PsiElementVisitor {
     visitPsiCompositeElement(o);
   }
 
-  public void visitParamConfig(@NotNull MbspParamConfig o) {
+  public void visitParamConfigList(@NotNull MbspParamConfigList o) {
     visitPsiCompositeElement(o);
   }
 

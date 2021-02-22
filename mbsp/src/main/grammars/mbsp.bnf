@@ -133,22 +133,34 @@
 
 root ::= EXPRESSION_START rootElement RBRACE {pin=1}
 private rootRecover ::= !(RBRACE)
-private rootElement ::= expression paramConfig? {
-    recoverWhile="rootRecover"
+private rootElement ::= expression paramConfigList? {
+  recoverWhile="rootRecover"
 }
 
-expression ::= unaryExpression |
-            referenceExpression |
+expression ::= literalExpression |
+            unaryExpression |
             parenthesizedExpression |
+            variableExpression |
             conditionalExpression |
             binaryExpression |
+            referenceExpression |
             methodCallExpression |
-            indexedExpression |
-            variableExpression |
-            literalExpression
+            indexedExpression
 {
   methods=[
     getType
+  ]
+}
+
+private numberLiteralExpression ::= INTEGER_LITERAL | DOUBLE_LITERAL
+private textLiteralExpression ::= STRING_LITERAL | CHARACTER_LITERAL
+private booleanLiteralExpression ::= TRUE_KEYWORD | FALSE_KEYWORD
+literalExpression ::= numberLiteralExpression |
+                      textLiteralExpression |
+                      booleanLiteralExpression |
+                      NULL_KEYWORD {
+  methods=[
+    getConstantValue
   ]
 }
 
@@ -156,9 +168,16 @@ private bitwiseOperations ::= '!' | '~'
 private unaryOperator ::= bitwiseOperations |
                           '+' | '-' | 'not'
 unaryExpression ::= unaryOperator expression {
+  pin=1
   methods=[
     getUnaryOperator
   ]
+}
+
+parenthesizedExpression ::= LPARENTH expression RPARENTH { pin=1 }
+
+variableExpression ::= '#' IDENTIFIER {
+  mixin="tk.cofe.plugin.mbsp.psi.impl.MbspVariableExpressionBase"
 }
 
 projectionExpression ::= '{' expression '}'
@@ -174,16 +193,16 @@ selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
   ]
 }
 
-referenceExpression ::= (variableExpression | ('@')? IDENTIFIER)
+private referenceRecover ::= !('}' | ',' | '(')
+referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
                         ('.' IDENTIFIER)* ('@' IDENTIFIER)?
-                        ('.'  selectionExpression)?
-                        ('.'  projectionExpression )?
+                        ('.' selectionExpression)?
+                        ('.' projectionExpression)?
 {
-   mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
-   methods=[getReferences]
+  mixin="tk.cofe.plugin.mbsp.psi.impl.MbspReferenceExpressionBase"
+  methods=[getReferences]
+  recoverWhile="referenceRecover"
 }
-
-parenthesizedExpression ::= LPARENTH expression RPARENTH { pin=1 }
 
 private conditionalExpressionTail ::= ':' expression {pin=1}
 conditionalExpression ::= expression '?' expression conditionalExpressionTail {
@@ -230,13 +249,16 @@ binaryExpression ::= expression binaryOperations expression {
   ]
 }
 
+private parameterRecover ::= !(')')
 parameterList ::= expression? (',' expression)* {
   methods=[
     parametersList="expression"
     getParameterCount
   ]
+  recoverWhile="parameterRecover"
 }
-methodCallExpression ::= referenceExpression '(' parameterList ')'  {
+
+methodCallExpression ::= referenceExpression '(' parameterList ')' referenceExpression? {
   methods=[
     method="expression"
   ]
@@ -254,22 +276,6 @@ indexedExpression ::= (referenceExpression | variableExpression) '[' expression 
   pin=2
 }
 
-variableExpression ::= '#' IDENTIFIER {
-  mixin="tk.cofe.plugin.mbsp.psi.impl.MbspVariableExpressionBase"
-}
-
-private numberLiteralExpression ::= INTEGER_LITERAL | DOUBLE_LITERAL
-private textLiteralExpression ::= STRING_LITERAL | CHARACTER_LITERAL
-private booleanLiteralExpression ::= TRUE_KEYWORD | FALSE_KEYWORD
-literalExpression ::= numberLiteralExpression |
-                      textLiteralExpression |
-                      booleanLiteralExpression |
-                      NULL_KEYWORD {
-  methods=[
-    getConstantValue
-  ]
-}
-
 //https://mybatis.org/mybatis-3/sqlmap-xml.html#Parameters
 private classNameExpression ::= IDENTIFIER ('.' IDENTIFIER)*
 modeConfig ::= 'mode' '=' IDENTIFIER
@@ -279,4 +285,8 @@ jdbcTypeNameConfig ::= 'jdbcTypeName' '=' IDENTIFIER
 numericScaleConfig ::= 'numericScale' '=' INTEGER_LITERAL
 typeHandlerConfig ::= 'typeHandler' '=' classNameExpression
 resultMapConfig ::= 'resultMap' '=' IDENTIFIER
-paramConfig ::= (',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig))+
+private configRecover ::= !('}' | ',')
+private paramConfig ::= ',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig){
+  recoverWhile = "configRecover"
+}
+paramConfigList ::= paramConfig+
