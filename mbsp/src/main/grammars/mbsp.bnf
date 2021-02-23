@@ -193,7 +193,7 @@ selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
   ]
 }
 
-private referenceRecover ::= !('}' | ',' | '(')
+private referenceRecover ::= !('}' | ',' | '(' | ')' | binaryOperations)
 referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
                         ('.' IDENTIFIER)* ('@' IDENTIFIER)?
                         ('.' selectionExpression)?
@@ -258,7 +258,7 @@ parameterList ::= expression? (',' expression)* {
   recoverWhile="parameterRecover"
 }
 
-methodCallExpression ::= referenceExpression '(' parameterList ')' referenceExpression? {
+methodCallExpression ::= referenceExpression '(' parameterList ')' {
   methods=[
     method="expression"
   ]

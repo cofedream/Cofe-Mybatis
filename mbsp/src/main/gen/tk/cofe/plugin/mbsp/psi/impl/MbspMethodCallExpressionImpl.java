@@ -49,9 +49,9 @@ public class MbspMethodCallExpressionImpl extends MbspExpressionImpl implements 
   }
 
   @Override
-  @NotNull
-  public List<MbspExpression> getMethod() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, MbspExpression.class);
+  @Nullable
+  public MbspExpression getMethod() {
+    return findChildByClass(MbspExpression.class);
   }
 
 }

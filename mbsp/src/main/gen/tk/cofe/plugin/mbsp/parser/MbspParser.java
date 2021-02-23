@@ -431,7 +431,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !('}' | ',' | '(')
+  // !('}' | ',' | '(' | ')' | binaryOperations)
   static boolean referenceRecover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "referenceRecover")) return false;
     boolean r;
@@ -441,13 +441,15 @@ public class MbspParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '}' | ',' | '('
+  // '}' | ',' | '(' | ')' | binaryOperations
   private static boolean referenceRecover_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "referenceRecover_0")) return false;
     boolean r;
     r = consumeToken(b, RBRACE);
     if (!r) r = consumeToken(b, COMMA);
     if (!r) r = consumeToken(b, LPARENTH);
+    if (!r) r = consumeToken(b, RPARENTH);
+    if (!r) r = binaryOperations(b, l + 1);
     return r;
   }
 
@@ -843,7 +845,7 @@ public class MbspParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '(' parameterList ')' referenceExpression?
+  // '(' parameterList ')'
   private static boolean methodCallExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "methodCallExpression_0")) return false;
     boolean r, p;
@@ -851,17 +853,9 @@ public class MbspParser implements PsiParser, LightPsiParser {
     r = consumeTokenSmart(b, LPARENTH);
     p = r; // pin = '\('
     r = r && report_error_(b, parameterList(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, RPARENTH)) && r;
-    r = p && methodCallExpression_0_3(b, l + 1) && r;
+    r = p && consumeToken(b, RPARENTH) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // referenceExpression?
-  private static boolean methodCallExpression_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "methodCallExpression_0_3")) return false;
-    referenceExpression(b, l + 1);
-    return true;
   }
 
   // (referenceExpression | variableExpression) '[' expression ']'

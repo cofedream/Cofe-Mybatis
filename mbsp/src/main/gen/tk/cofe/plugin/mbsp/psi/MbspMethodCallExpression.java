@@ -25,7 +25,7 @@ public interface MbspMethodCallExpression extends MbspExpression {
   @Nullable
   MbspParameterList getParameterList();
 
-  @NotNull
-  List<MbspExpression> getMethod();
+  @Nullable
+  MbspExpression getMethod();
 
 }
