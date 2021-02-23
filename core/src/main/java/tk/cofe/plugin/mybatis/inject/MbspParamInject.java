@@ -18,6 +18,7 @@
 package tk.cofe.plugin.mybatis.inject;
 
 import com.intellij.lang.injection.MultiHostRegistrar;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
@@ -28,15 +29,14 @@ import tk.cofe.plugin.mbsp.MbspLanguageInjector;
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbspParamInject extends BaseInjector {
+public class MbspParamInject extends BaseInjector implements DumbAware {
+    public MbspParamInject() {
+        super(XmlText.class);
+    }
 
     @Override
     void inject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
         MbspLanguageInjector.injectOccurrences(registrar, (PsiLanguageInjectionHost) context);
     }
 
-    @Override
-    Class<? extends PsiElement> targetElement() {
-        return XmlText.class;
-    }
 }

@@ -69,7 +69,7 @@ public final class MbspLanguageInjector {
             int lbrace = text.indexOf('{', index);
             int rbrace = text.indexOf('}', lbrace);
             registrar.startInjecting(MbspLanguage.INSTANCE)
-                    .addPlace("", "", element, new TextRange(lbrace - 1, rbrace + 1))
+                    .addPlace(null, null, element, new TextRange(lbrace - 1, rbrace + 1))
                     .doneInjecting();
             index = rbrace + 1;
         }
