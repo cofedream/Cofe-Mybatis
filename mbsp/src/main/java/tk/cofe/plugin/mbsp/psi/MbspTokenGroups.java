@@ -67,4 +67,8 @@ public class MbspTokenGroups implements MbspTypes {
     public static final TokenSet OPERATIONS = TokenSet.orSet(OPERATION_SIGNS,
             OPERATION_KEYWORDS);
 
+    // parameter config
+    public static final TokenSet PARAM_CONFIG_KEYWORDS = TokenSet.create(MODE_KEYWORD, JAVA_TYPE_KEYWORD,
+            JDBC_TYPE_KEYWORD, JDBC_TYPE_KEYWORD_NAME, NUMERIC_SCALE_KEYWORD, TYPE_HANDLER_KEYWORD, RESULT_MAP_KEYWORD);
+
 }
