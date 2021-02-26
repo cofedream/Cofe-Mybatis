@@ -15,8 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.psi.impl;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbl.psi.MblPsiCompositeElement;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public abstract class MblPsiCompositeElementBase extends ASTWrapperPsiElement implements MblPsiCompositeElement {
+    public MblPsiCompositeElementBase(@NotNull final ASTNode node) {
+        super(node);
+    }
+    @Override
+    public String toString() {
+        return getNode().getElementType().toString();
+    }
+}

@@ -15,8 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mybatis.psi.reference;
 
+import com.intellij.patterns.PlatformPatterns;
+import com.intellij.psi.PsiReferenceContributor;
+import com.intellij.psi.PsiReferenceRegistrar;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbl.MblTypes;
+
+/**
+ * @author : zhengrf
+ * @date : 2020-01-19
+ */
+public class MblReferenceContributor extends PsiReferenceContributor {
+    @Override
+    public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
+        registrar.registerReferenceProvider(PlatformPatterns.psiElement(MblTypes.REFERENCE_EXPRESSION), new MblReferenceProvider());
+    }
+}

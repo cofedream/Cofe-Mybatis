@@ -15,8 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.psi.impl;
 
+import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-27
+ */
+public abstract class MblReferenceExpressionBase extends MblExpressionImpl {
+    public MblReferenceExpressionBase(@NotNull final ASTNode node) {
+        super(node);
+    }
+}

@@ -15,8 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.psi;
 
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbl.MblLanguage;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MblTokenType extends IElementType {
+    public MblTokenType(@NotNull final String debugName) {
+        super(debugName, MblLanguage.INSTANCE);
+    }
+}

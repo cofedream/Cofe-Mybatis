@@ -15,8 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.highlight;
 
+import com.intellij.lexer.FlexAdapter;
+import tk.cofe.plugin.mbl.parser._MblLexer;
+
+/**
+ * @author : zhengrf
+ * @date : 2021-02-25
+ */
+public class MblHighlightingLexer extends FlexAdapter {
+    public MblHighlightingLexer() {
+        super(new _MblLexer());
+    }
+}

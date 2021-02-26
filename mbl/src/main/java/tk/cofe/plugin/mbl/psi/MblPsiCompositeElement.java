@@ -15,8 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.psi;
 
+import com.intellij.psi.NavigatablePsiElement;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public interface MblPsiCompositeElement extends NavigatablePsiElement {
+}

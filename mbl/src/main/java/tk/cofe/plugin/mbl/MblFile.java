@@ -15,8 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl;
 
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MblFile extends PsiFileBase {
+    protected MblFile(@NotNull final FileViewProvider viewProvider) {
+        super(viewProvider, MblLanguage.INSTANCE);
+    }
+
+    @NotNull
+    @Override
+    public FileType getFileType() {
+        return MblFileType.INSTANCE;
+    }
+    @Override
+    public String toString() {
+        return "MybatisFile:" + getName();
+    }
+}

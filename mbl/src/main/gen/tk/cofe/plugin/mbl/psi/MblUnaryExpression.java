@@ -14,9 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mbl.psi;
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.psi.PsiElement;
 
+public interface MblUnaryExpression extends MblExpression {
+
+  @Nullable
+  MblExpression getExpression();
+
+  @NotNull MblTokenType getUnaryOperator();
+
+}

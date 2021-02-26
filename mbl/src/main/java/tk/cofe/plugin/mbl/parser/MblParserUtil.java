@@ -15,8 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+package tk.cofe.plugin.mbl.parser;
 
+import com.intellij.lang.parser.GeneratedParserUtilBase;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MblParserUtil extends GeneratedParserUtilBase {
+}

@@ -15,8 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'core'
-include 'mbl'
+plugins {
+    id 'java'
+}
 
+dependencies {
+    compile project(":common")
+}
+
+sourceSets {
+    main {
+        java{
+            srcDir 'src/main/gen'
+        }
+    }
+}
