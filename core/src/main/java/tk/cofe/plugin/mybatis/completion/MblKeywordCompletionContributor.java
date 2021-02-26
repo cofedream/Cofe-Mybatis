@@ -30,6 +30,7 @@ import tk.cofe.plugin.mbl.MblTypes;
 import tk.cofe.plugin.mbl.psi.MblExpression;
 import tk.cofe.plugin.mbl.psi.MblJdbcTypeConfig;
 import tk.cofe.plugin.mbl.psi.MblModeConfig;
+import tk.cofe.plugin.mbl.psi.MblReferenceExpression;
 import tk.cofe.plugin.mbl.psi.MblResultMapConfig;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.util.DomUtils;
@@ -46,9 +47,7 @@ import static tk.cofe.plugin.mbl.MblKeyword.*;
  */
 public class MblKeywordCompletionContributor extends CompletionContributor {
 
-    public static final PsiElementPattern.Capture<PsiElement> PARAM_EXPRESSION = psiElement()
-            .afterLeaf(psiElement().withElementType(MblTypes.EXPRESSION_START))
-            .andOr(psiElement().inside(MblExpression.class));
+    public static final PsiElementPattern.Capture<PsiElement> REFERENCE_EXPRESSION = psiElement().inside(MblReferenceExpression.class);
     //
     private static final PsiElementPattern.Capture<PsiElement> MODE_EXPRESSION = psiElement().inside(MblModeConfig.class);
     private static final PsiElementPattern.Capture<PsiElement> JDBC_TYPE_EXPRESSION = psiElement().inside(MblJdbcTypeConfig.class);
@@ -66,7 +65,21 @@ public class MblKeywordCompletionContributor extends CompletionContributor {
     }
 
     private void installParam() {
-        extendCompletion(PARAM_EXPRESSION, "demo", "demo.demo");
+        extendCompletion(REFERENCE_EXPRESSION, completionParameters -> {
+            // final String s = Optional.of(completionParameters.getPosition())
+            //         .map(info -> PsiTreeUtil.getParentOfType(info, MbspReferenceExpression.class))
+            //         .map(PsiElement::getText)
+            //         .orElse("");
+            // System.out.println("text:"+s);
+            // final PsiElement position = completionParameters.getPosition();
+            // PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+            // final MbspReferenceExpression parentOfType = PsiTreeUtil.getParentOfType(position, MbspReferenceExpression.class);
+            // final MbspReferenceExpression parentOfType = PsiTreeUtil.getParentOfType(position, MbspReferenceExpression.class);
+            // System.out.println("position:" + position.getText());
+            // final PsiElement originalPosition = completionParameters.getOriginalPosition();
+            // System.out.println("originalPosition:" + position.getText());
+            return new String[] {"demo", "demo.demo"};
+        });
     }
 
     private void installMode() {
