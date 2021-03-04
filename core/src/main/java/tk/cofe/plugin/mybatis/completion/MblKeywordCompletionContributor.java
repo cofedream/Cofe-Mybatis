@@ -17,29 +17,41 @@
 
 package tk.cofe.plugin.mybatis.completion;
 
-import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionProvider;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbl.MblTypes;
 import tk.cofe.plugin.mbl.psi.MblExpression;
 import tk.cofe.plugin.mbl.psi.MblJdbcTypeConfig;
 import tk.cofe.plugin.mbl.psi.MblModeConfig;
 import tk.cofe.plugin.mbl.psi.MblReferenceExpression;
 import tk.cofe.plugin.mbl.psi.MblResultMapConfig;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
 
 import java.util.Optional;
 import java.util.function.Function;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static tk.cofe.plugin.mbl.MblKeyword.*;
+import static tk.cofe.plugin.mbl.MblKeyword.JdbcType;
+import static tk.cofe.plugin.mbl.MblKeyword.Mode;
+import static tk.cofe.plugin.mbl.MblKeyword.STRINGS;
 
 /**
  * @author : zhengrf
@@ -66,21 +78,70 @@ public class MblKeywordCompletionContributor extends CompletionContributor {
 
     private void installParam() {
         extendCompletion(REFERENCE_EXPRESSION, completionParameters -> {
-            // final String s = Optional.of(completionParameters.getPosition())
-            //         .map(info -> PsiTreeUtil.getParentOfType(info, MbspReferenceExpression.class))
-            //         .map(PsiElement::getText)
-            //         .orElse("");
-            // System.out.println("text:"+s);
-            // final PsiElement position = completionParameters.getPosition();
+            final PsiElement position = completionParameters.getPosition();
+            // 获取前缀
+            final String prefix = Optional.of(position)
+                    .map(info -> PsiTreeUtil.getParentOfType(info, MblReferenceExpression.class))
+                    .map(PsiElement::getText)
+                    .orElse("");
+            if (prefix.contains(".")) {
+                return CompletionUtils.EMPTY_STRING_ARRAY;
+            }
+            // System.out.println("text:" + prefixStr);
             // PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
-            // final MbspReferenceExpression parentOfType = PsiTreeUtil.getParentOfType(position, MbspReferenceExpression.class);
-            // final MbspReferenceExpression parentOfType = PsiTreeUtil.getParentOfType(position, MbspReferenceExpression.class);
-            // System.out.println("position:" + position.getText());
-            // final PsiElement originalPosition = completionParameters.getOriginalPosition();
-            // System.out.println("originalPosition:" + position.getText());
-            return new String[] {"demo", "demo.demo"};
+            // final String[] strings = DomUtils.getDomElement(injectionHost, ClassElement.class).flatMap(ClassElement::getIdMethod)
+            //         .map(psiMethod -> {
+            //             // 方法参数
+            //             if (!psiMethod.hasParameters()) {
+            //                 return CompletionUtils.EMPTY_STRING_ARRAY;
+            //             }
+            //             final PsiParameterList parameterList = psiMethod.getParameterList();
+            //             if (parameterList.getParametersCount() == 1) {
+            //                 return new String[] {"param"};
+            //             }
+            //             final PsiParameter[] parameters = parameterList.getParameters();
+            //             String[] vars = new String[parameters.length];
+            //             for (int i = 0; i < parameters.length; i++) {
+            //                 vars[i] = "param" + (i + 1);
+            //             }
+            //             return vars;
+            //         }).orElse(new String[0]);
+            System.out.println("strings");
+            return new String[]{"demo","demo.demo"};
         });
     }
+    // private void installParam() {
+    //     extendCompletion(REFERENCE_EXPRESSION, completionParameters -> {
+    //         final PsiElement position = completionParameters.getPosition();
+    //         // 获取前缀
+    //         // final String prefixStr = Optional.of(position)
+    //         //         .map(info -> PsiTreeUtil.getParentOfType(info, MblReferenceExpression.class))
+    //         //         .map(PsiElement::getText)
+    //         //         .map(CompletionUtils::getPrefixStr)
+    //         //         .orElse("");
+    //         // System.out.println("text:" + prefixStr);
+    //         // PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+    //         // final String[] strings = DomUtils.getDomElement(injectionHost, ClassElement.class).flatMap(ClassElement::getIdMethod)
+    //         //         .map(psiMethod -> {
+    //         //             // 方法参数
+    //         //             if (!psiMethod.hasParameters()) {
+    //         //                 return CompletionUtils.EMPTY_STRING_ARRAY;
+    //         //             }
+    //         //             final PsiParameterList parameterList = psiMethod.getParameterList();
+    //         //             if (parameterList.getParametersCount() == 1) {
+    //         //                 return new String[] {"param"};
+    //         //             }
+    //         //             final PsiParameter[] parameters = parameterList.getParameters();
+    //         //             String[] vars = new String[parameters.length];
+    //         //             for (int i = 0; i < parameters.length; i++) {
+    //         //                 vars[i] = "param" + (i + 1);
+    //         //             }
+    //         //             return vars;
+    //         //         }).orElse(new String[0]);
+    //         System.out.println("strings");
+    //         return CompletionUtils.EMPTY_STRING_ARRAY;
+    //     });
+    // }
 
     private void installMode() {
         extendCompletion(MODE_EXPRESSION, Mode.STRINGS);

@@ -31,12 +31,12 @@
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MblParamInject"/>
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MblConditionInject"/>
 
-        <!--<completion.contributor language="MBL"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MblKeywordCompletionContributor"/>-->
         <completion.contributor language="MBL"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.MblFileSqlParameterCompletionContributor"/>
-        <psi.referenceContributor language="MBL"
-                                  implementation="tk.cofe.plugin.mybatis.psi.reference.MblReferenceContributor"/>
+                                implementationClass="tk.cofe.plugin.mybatis.completion.MblKeywordCompletionContributor"/>
+        <!--<completion.contributor language="MBL"-->
+        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MblFileSqlParameterCompletionContributor"/>-->
+        <!--<psi.referenceContributor language="MBL"-->
+        <!--                          implementation="tk.cofe.plugin.mybatis.psi.reference.MblReferenceContributor"/>-->
 
         <colorSettingsPage implementation="tk.cofe.plugin.mbl.highlight.MblColorSettingsPage"/>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,10 @@ import java.util.regex.Pattern;
  */
 public class CompletionUtils {
 
+    /**
+     * 空字符串数组
+     */
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final Pattern PARAM_PATTERN = Pattern.compile("param(?<num>\\d+)");
 
     /**
@@ -113,7 +117,7 @@ public class CompletionUtils {
      */
     public static String getPrefixStr(final String text) {
         if (StringUtil.isNotEmpty(text)) {
-            String[] prefixArr = text.split(CompletionUtilCore.DUMMY_IDENTIFIER);
+            String[] prefixArr = text.trim().split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED);
             if (prefixArr.length > 0) {
                 return prefixArr[0];
             }
@@ -129,7 +133,7 @@ public class CompletionUtils {
      */
     public static String[] getPrefixArr(String prefix) {
         if (StringUtil.isEmpty(prefix) || !prefix.contains(".")) {
-            return new String[0];
+            return EMPTY_STRING_ARRAY;
         }
         return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
     }
