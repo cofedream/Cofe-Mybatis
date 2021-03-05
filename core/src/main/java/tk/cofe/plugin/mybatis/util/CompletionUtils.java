@@ -26,9 +26,11 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -234,6 +236,49 @@ public class CompletionUtils {
         void clear() {
             this.element = null;
             this.psiType = null;
+        }
+    }
+
+    /**
+     * 获取类字段提示
+     *
+     * @param psiType Java类类型
+     */
+    public static void getPsiClassTypeVariants(@Nullable PsiClassType psiType, final Consumer<PsiField> fieldConsumer, final Consumer<PsiMethod> methodConsumer) {
+        if (psiType == null) {
+            return;
+        }
+        PsiClass psiClass = psiType.resolve();
+        if (psiClass == null) {
+            return;
+        }
+        if (psiClass.isEnum()) {
+            getMethodsVariants(psiClass.getMethods(), methodConsumer);
+        } else {
+            getFieldsVariants(psiClass.getAllFields(), fieldConsumer);
+            getMethodsVariants(psiClass.getAllMethods(), methodConsumer);
+        }
+    }
+
+    /**
+     * 获取字段提示
+     */
+    public static void getFieldsVariants(final PsiField[] fields, final Consumer<PsiField> fieldConsumer) {
+        for (PsiField field : fields) {
+            if (PsiJavaUtils.notSerialField(field)) {
+                fieldConsumer.accept(field);
+            }
+        }
+    }
+
+    /**
+     * 获取方法提示
+     */
+    public static void getMethodsVariants(final PsiMethod[] methods, final Consumer<PsiMethod> methodConsumer) {
+        for (PsiMethod method : methods) {
+            if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
+                methodConsumer.accept(method);
+            }
         }
     }
 }

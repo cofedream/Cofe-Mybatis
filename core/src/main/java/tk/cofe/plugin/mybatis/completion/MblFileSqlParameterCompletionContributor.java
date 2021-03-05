@@ -79,14 +79,14 @@ public class MblFileSqlParameterCompletionContributor extends CompletionContribu
     private void bindTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
         DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
                 .flatMap(info -> info.getBinds().stream())
-                .map(bind->DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
+                .map(bind -> DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
                 .filter(Objects::nonNull)
                 .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
     }
 
     private void foreachTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
         DomUtils.getParents(targetElement, XmlTag.class, Foreach.class).stream()
-                .map(foreach->DomUtils.getAttributeVlaue(foreach.getItem()).orElse(null))
+                .map(foreach -> DomUtils.getAttributeVlaue(foreach.getItem()).orElse(null))
                 .filter(Objects::nonNull)
                 .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
     }
@@ -130,35 +130,9 @@ public class MblFileSqlParameterCompletionContributor extends CompletionContribu
      * @param result     结果集
      */
     private void addPsiClassTypeVariants(final String prefixText, @Nullable PsiClassType psiType, CompletionResultSet result) {
-        if (psiType == null) {
-            return;
-        }
-        PsiClass psiClass = psiType.resolve();
-        if (psiClass == null) {
-            return;
-        }
-        if (psiClass.isEnum()) {
-            addMethodsVariants(prefixText, psiClass.getMethods(), result);
-        } else {
-            addFieldsVariants(prefixText, psiClass.getAllFields(), result);
-            addMethodsVariants(prefixText, psiClass.getAllMethods(), result);
-        }
-    }
-
-    private void addFieldsVariants(final String prefixText, final PsiField[] fields, final CompletionResultSet result) {
-        for (PsiField field : fields) {
-            if (PsiJavaUtils.notSerialField(field)) {
-                createLookupElement(prefixText, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement);
-            }
-        }
-    }
-
-    private void addMethodsVariants(final String prefixText, final PsiMethod[] methods, final CompletionResultSet result) {
-        for (PsiMethod method : methods) {
-            if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
-                createLookupElement(prefixText, PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement);
-            }
-        }
+        CompletionUtils.getPsiClassTypeVariants(psiType,
+                field -> createLookupElement(prefixText, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement),
+                method -> createLookupElement(prefixText, PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement));
     }
 
     /**
