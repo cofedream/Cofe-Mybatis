@@ -22,16 +22,16 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.patterns.PsiElementPattern;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -40,11 +40,16 @@ import tk.cofe.plugin.mbl.psi.MblJdbcTypeConfig;
 import tk.cofe.plugin.mbl.psi.MblModeConfig;
 import tk.cofe.plugin.mbl.psi.MblReferenceExpression;
 import tk.cofe.plugin.mbl.psi.MblResultMapConfig;
+import tk.cofe.plugin.mybatis.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.CompletionUtils;
 import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.util.PsiTypeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -80,34 +85,47 @@ public class MblKeywordCompletionContributor extends CompletionContributor {
         extendCompletion(REFERENCE_EXPRESSION, completionParameters -> {
             final PsiElement position = completionParameters.getPosition();
             // 获取前缀
-            final String prefix = Optional.of(position)
+            final String refExp = Optional.of(position)
                     .map(info -> PsiTreeUtil.getParentOfType(info, MblReferenceExpression.class))
                     .map(PsiElement::getText)
                     .orElse("");
-            if (prefix.contains(".")) {
+            if (refExp.contains(".")) {
                 return CompletionUtils.EMPTY_STRING_ARRAY;
             }
-            // System.out.println("text:" + prefixStr);
-            // PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
-            // final String[] strings = DomUtils.getDomElement(injectionHost, ClassElement.class).flatMap(ClassElement::getIdMethod)
-            //         .map(psiMethod -> {
-            //             // 方法参数
-            //             if (!psiMethod.hasParameters()) {
-            //                 return CompletionUtils.EMPTY_STRING_ARRAY;
-            //             }
-            //             final PsiParameterList parameterList = psiMethod.getParameterList();
-            //             if (parameterList.getParametersCount() == 1) {
-            //                 return new String[] {"param"};
-            //             }
-            //             final PsiParameter[] parameters = parameterList.getParameters();
-            //             String[] vars = new String[parameters.length];
-            //             for (int i = 0; i < parameters.length; i++) {
-            //                 vars[i] = "param" + (i + 1);
-            //             }
-            //             return vars;
-            //         }).orElse(new String[0]);
-            System.out.println("strings");
-            return new String[]{"demo","demo.demo"};
+            PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+            return DomUtils.getDomElement(injectionHost, ClassElement.class).flatMap(ClassElement::getIdMethod)
+                    .map(psiMethod -> {
+                        // 方法参数
+                        if (!psiMethod.hasParameters()) {
+                            return CompletionUtils.EMPTY_STRING_ARRAY;
+                        }
+                        final PsiParameterList parameterList = psiMethod.getParameterList();
+                        if (parameterList.getParametersCount() == 1) {
+                            return Optional.ofNullable(parameterList.getParameter(0)).map(parameter ->
+                                    Optional.ofNullable(Annotation.PARAM.getValue(parameter))
+                                            .map(Annotation.Value::getValue)
+                                            .map(val -> new String[] {val, "param1"})
+                                            .orElseGet(() ->
+                                                    Optional.of(parameter.getType())
+                                                            .filter(PsiTypeUtils::isCustomType)
+                                                            .map(PsiClassType.class::cast)
+                                                            .map(psiClassType -> {
+                                                                List<String> list = new ArrayList<>();
+                                                                CompletionUtils.getPsiClassTypeVariants((psiClassType),
+                                                                        field -> list.add(field.getName()),
+                                                                        method -> list.add(PsiJavaUtils.replaceGetPrefix(method)));
+                                                                return list.toArray(String[]::new);
+                                                            })
+                                                            .orElse(new String[] {"param1"})))
+                                    .orElse(CompletionUtils.EMPTY_STRING_ARRAY);
+                        }
+                        final PsiParameter[] parameters = parameterList.getParameters();
+                        String[] vars = new String[parameters.length];
+                        for (int i = 0; i < parameters.length; i++) {
+                            vars[i] = "param" + (i + 1);
+                        }
+                        return vars;
+                    }).orElse(CompletionUtils.EMPTY_STRING_ARRAY);
         });
     }
     // private void installParam() {
@@ -180,6 +198,7 @@ public class MblKeywordCompletionContributor extends CompletionContributor {
         extend(CompletionType.BASIC, pattern, new CompletionProvider<>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
+                final String prefix = result.getPrefixMatcher().getPrefix();
                 String[] keywords = getKeywords.apply(parameters);
                 for (String keyword : keywords) {
                     final LookupElementBuilder builder = LookupElementBuilder.create(keyword).bold();
