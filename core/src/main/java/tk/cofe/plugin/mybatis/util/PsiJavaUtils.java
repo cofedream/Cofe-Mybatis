@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,7 @@
 
 package tk.cofe.plugin.mybatis.util;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiImportList;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifier;
-import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import tk.cofe.plugin.mybatis.annotation.Annotation;
 
@@ -118,7 +110,9 @@ public final class PsiJavaUtils {
     }
 
     /**
-     * 判断是否为 getXXX 函数
+     * 判断是否为 getXXX 函数<br/>
+     * 1.方法名称getXXX<br/>
+     * 2.有返回值<br/>
      *
      * @param method 方法
      */
@@ -201,6 +195,16 @@ public final class PsiJavaUtils {
      */
     public static boolean isInterface(PsiElement psiElement) {
         return psiElement instanceof PsiClass && ((PsiClass) psiElement).isInterface();
+    }
+
+    /**
+     * 判断是否为 {@link Object}
+     */
+    public static boolean isObjectClass(PsiClass psiClass) {
+        return Optional.ofNullable(psiClass)
+                .map(PsiClass::getQualifiedName)
+                .map("java.lang.Object"::equals)
+                .orElse(false);
     }
 
     /**

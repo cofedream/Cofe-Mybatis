@@ -276,7 +276,7 @@ public class CompletionUtils {
      */
     public static void getMethodsVariants(final PsiMethod[] methods, final Consumer<PsiMethod> methodConsumer) {
         for (PsiMethod method : methods) {
-            if (PsiJavaUtils.isGetMethod(method) && method.getReturnType() != null) {
+            if (PsiJavaUtils.isGetMethod(method) && !PsiJavaUtils.isObjectClass(method.getContainingClass())) {
                 methodConsumer.accept(method);
             }
         }
