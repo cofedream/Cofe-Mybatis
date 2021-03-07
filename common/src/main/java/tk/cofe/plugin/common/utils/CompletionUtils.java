@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.util;
+package tk.cofe.plugin.common.utils;
 
 import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
@@ -27,7 +27,9 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Objects;
 import java.util.function.Consumer;

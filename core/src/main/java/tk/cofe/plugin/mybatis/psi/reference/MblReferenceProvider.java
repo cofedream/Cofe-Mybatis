@@ -31,8 +31,8 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.util.CompletionUtils;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

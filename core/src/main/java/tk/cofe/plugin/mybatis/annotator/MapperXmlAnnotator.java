@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 
 import java.util.Optional;
 

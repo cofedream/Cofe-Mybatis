@@ -26,7 +26,7 @@ import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbl.MblLanguageInjector;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 
 /**
  * @author : zhengrf

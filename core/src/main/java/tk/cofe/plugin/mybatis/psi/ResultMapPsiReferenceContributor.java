@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Objects;

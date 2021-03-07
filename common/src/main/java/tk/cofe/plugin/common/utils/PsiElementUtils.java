@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.util;
+package tk.cofe.plugin.common.utils;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.lang.injection.InjectedLanguageManager;

@@ -15,11 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.util;
+package tk.cofe.plugin.common.utils;
 
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Collection;
 import java.util.Optional;

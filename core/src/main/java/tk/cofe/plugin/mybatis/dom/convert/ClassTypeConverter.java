@@ -29,7 +29,7 @@ import com.intellij.util.xml.DomJavaUtil;
 import com.intellij.util.xml.GenericDomValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.util.TypeAliasUtils;
+import tk.cofe.plugin.common.utils.TypeAliasUtils;
 
 /**
  * @author : zhengrf
