@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,6 @@ public class ClassTypeConverter extends Converter<PsiClass> implements CustomRef
         if (psiClass == null) {
             return PsiReference.EMPTY_ARRAY;
         }
-        return new PsiReference[] {new PsiReferenceBase.Immediate<>(element, psiClass)};
+        return new PsiReference[] {PsiReferenceBase.createSelfReference(element, psiClass)};
     }
 }

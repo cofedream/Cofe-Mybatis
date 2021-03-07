@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ public class ResultMapConverter {
      * ID引
      */
     public static class IdReferencing implements CustomReferenceConverter {
-        private static final ResultMapReference RESULT_MAP_REFERENCE = new ResultMapReference((xmlAttributeValue, element) -> new PsiReferenceBase.Immediate<>(element, xmlAttributeValue));
+        private static final ResultMapReference RESULT_MAP_REFERENCE = new ResultMapReference((xmlAttributeValue, element) -> PsiReferenceBase.createSelfReference(element, xmlAttributeValue));
 
         @NotNull
         @Override

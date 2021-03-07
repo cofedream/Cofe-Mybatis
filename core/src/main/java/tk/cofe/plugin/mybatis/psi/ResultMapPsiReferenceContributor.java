@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ public class ResultMapPsiReferenceContributor extends PsiReferenceContributor {
                                             .map((Function<ResultMap, Object>) ResultMap::getExtends)
                                             .map(o -> ((GenericAttributeValue) o).getXmlAttributeValue())
                                             .filter(Objects::nonNull)
-                                            .map(xmlAttributeValue -> new PsiReferenceBase.Immediate<>(element, xmlAttributeValue)).toArray(PsiReference[]::new)).orElse(PsiReference.EMPTY_ARRAY);
+                                            .map(xmlAttributeValue -> PsiReferenceBase.createSelfReference(element, xmlAttributeValue)).toArray(PsiReference[]::new)).orElse(PsiReference.EMPTY_ARRAY);
                         }
                         break;
                 }

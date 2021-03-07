@@ -77,7 +77,7 @@ public class MblReferenceProvider extends PsiReferenceProvider {
                 .filter(bind -> Objects.equals(text, DomUtils.getAttributeVlaue(bind).orElse(null)))
                 .map(GenericAttributeValue::getXmlAttributeValue)
                 .filter(Objects::nonNull)
-                .map(bind -> new PsiReferenceBase.Immediate<>(element, new TextRange(0, bind.getTextLength()), bind))
+                .map(bind -> PsiReferenceBase.createSelfReference(element, new TextRange(0, bind.getTextLength()), bind))
                 .collect(Collectors.toList());
     }
 
@@ -88,7 +88,7 @@ public class MblReferenceProvider extends PsiReferenceProvider {
                 .filter(item -> Objects.equals(text, DomUtils.getAttributeVlaue(item).orElse(null)))
                 .map(GenericAttributeValue::getXmlAttributeValue)
                 .filter(Objects::nonNull)
-                .map(bind -> new PsiReferenceBase.Immediate<>(element, new TextRange(0, bind.getTextLength()), bind))
+                .map(bind -> PsiReferenceBase.createSelfReference(element, new TextRange(0, bind.getTextLength()), bind))
                 .collect(Collectors.toList());
     }
 
