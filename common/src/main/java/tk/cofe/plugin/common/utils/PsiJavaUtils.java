@@ -20,7 +20,6 @@ package tk.cofe.plugin.common.utils;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -101,90 +100,6 @@ public final class PsiJavaUtils {
 
     // 方法相关
 
-    /**
-     * 判断是否为 void 方法
-     *
-     * @param method 方法
-     */
-    public static boolean isVoidMethod(PsiMethod method) {
-        return PsiTypeUtils.isVoid(method.getReturnType());
-    }
-
-    /**
-     * 判断是否为 getXXX 函数<br/>
-     * 1.方法名称getXXX<br/>
-     * 2.有返回值<br/>
-     *
-     * @param method 方法
-     */
-    public static boolean isGetMethod(PsiMethod method) {
-        return isPublicMethod(method)
-                && !isVoidMethod(method)
-                && method.getName().startsWith("get")
-                && method.getName().length() > 3;
-    }
-
-    /**
-     * 判断是否为 本地方法 函数
-     *
-     * @param method 方法
-     */
-    public static boolean isNativeMethod(PsiMethod method) {
-        return hasModifierProperty(method, PsiModifier.NATIVE);
-    }
-
-    /**
-     * 判断是否为 public 函数
-     *
-     * @param method 方法
-     */
-    public static boolean isPublicMethod(PsiMethod method) {
-        return hasModifierProperty(method, PsiModifier.PUBLIC);
-    }
-
-    /**
-     * 判断是否又指定标识符
-     *
-     * @param method   方法
-     * @param modifier 标识符 {@link PsiModifier}
-     */
-    private static boolean hasModifierProperty(PsiMethod method, String modifier) {
-        return method.getModifierList().hasModifierProperty(modifier);
-    }
-
-    /**
-     * 获取指定方法
-     *
-     * @param psiClass   类信息
-     * @param methodName 方法名称
-     * @return 方法信息
-     */
-    public static Optional<PsiMethod> findPsiMethod(PsiClass psiClass, String methodName) {
-        PsiMethod[] methods = psiClass.findMethodsByName(methodName, true);
-        if (methods.length == 0) {
-            return Optional.empty();
-        }
-        return Optional.of(methods[0]);
-    }
-
-
-    /**
-     * 处理 getAaaBbb 方法名称
-     *
-     * @param method java方法
-     * @return getAaaBbb->aaaBbb,或者 ""
-     */
-    public static String replaceGetPrefix(PsiMethod method) {
-        String methodName = method.getName();
-        if (methodName.length() == 3) {
-            return "";
-        }
-        char first = Character.toLowerCase(methodName.charAt(3));
-        if (methodName.length() > 4) {
-            return first + methodName.substring(4);
-        }
-        return String.valueOf(first);
-    }
 
     // Java 相关Element
 
@@ -224,14 +139,6 @@ public final class PsiJavaUtils {
         }
         PsiClass parentOfType = PsiTreeUtil.getParentOfType(element, PsiClass.class);
         return parentOfType != null && parentOfType.isInterface();
-    }
-
-    /**
-     * 转为 getXxx方法名
-     */
-
-    public static String toGetPrefix(final String text) {
-        return "get" + Character.toUpperCase(text.charAt(0)) + (text.length() > 1 ? text.substring(1) : "");
     }
 
     public static void psiClassProcessor(PsiClassType psiClassType,

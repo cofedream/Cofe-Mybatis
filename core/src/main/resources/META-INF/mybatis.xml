@@ -37,7 +37,6 @@
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MblFileSqlParameterCompletionContributor"/>-->
         <psi.referenceContributor language="MBL"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.MblReferenceContributor"/>
-
         <colorSettingsPage implementation="tk.cofe.plugin.mbl.highlight.MblColorSettingsPage"/>
 
     </extensions>

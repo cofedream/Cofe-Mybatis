@@ -30,14 +30,11 @@ import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
-import tk.cofe.plugin.common.utils.CompletionUtils;
-import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -132,7 +129,7 @@ public class MblFileSqlParameterCompletionContributor extends CompletionContribu
     private void addPsiClassTypeVariants(final String prefixText, @Nullable PsiClassType psiType, CompletionResultSet result) {
         CompletionUtils.getPsiClassTypeVariants(psiType,
                 field -> createLookupElement(prefixText, field.getName(), field.getType().getPresentableText(), PsiTypeUtils.isCustomType(field.getType()) ? PlatformIcons.CLASS_ICON : PRIVATE_FIELD_ICON, result::addElement),
-                method -> createLookupElement(prefixText, PsiJavaUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement));
+                method -> createLookupElement(prefixText, PsiMethodUtils.replaceGetPrefix(method), method.getReturnType().getPresentableText(), PlatformIcons.METHOD_ICON, result::addElement));
     }
 
     /**

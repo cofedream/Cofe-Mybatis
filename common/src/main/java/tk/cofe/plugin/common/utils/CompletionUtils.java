@@ -28,8 +28,6 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -50,7 +48,7 @@ public class CompletionUtils {
      * 空字符串数组
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
-    private static final Pattern PARAM_PATTERN = Pattern.compile("param(?<num>\\d+)");
+    public static final Pattern PARAM_PATTERN = Pattern.compile("param(?<num>\\d+)");
 
     /**
      * 获取前缀对应的类型
@@ -91,7 +89,7 @@ public class CompletionUtils {
     private static void customTypeProcessor(final PrefixClass prefixClass, final String prefixStr, final PsiClassType psiClassType) {
         PsiJavaUtils.psiClassProcessor(psiClassType,
                 field -> Objects.equals(prefixStr, field.getName()), field -> prefixClass.setElement(field).setPsiType(field.getType()),
-                method -> Objects.equals(PsiJavaUtils.toGetPrefix(prefixStr), method.getName()), method -> prefixClass.setElement(method).setPsiType(method.getReturnType()));
+                method -> Objects.equals(PsiMethodUtils.toGetPrefix(prefixStr), method.getName()), method -> prefixClass.setElement(method).setPsiType(method.getReturnType()));
     }
 
     /**
@@ -154,13 +152,13 @@ public class CompletionUtils {
     }
 
 
-    private static <T> T getTargetElement(String prefix, PsiType psiType,
+    public static <T> T getTargetElement(String prefix, PsiType psiType,
                                           Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         return getTargetElement(prefix, psiType, psiField -> true, psiMethod -> true, fieldProcessor, methodProcessor);
     }
 
 
-    private static <T> T getTargetElement(String prefix, PsiType psiType,
+    public static <T> T getTargetElement(String prefix, PsiType psiType,
                                           Predicate<PsiField> fieldCondition, Predicate<PsiMethod> methodCondition,
                                           Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         if (!(psiType instanceof PsiClassType)) {
@@ -178,7 +176,7 @@ public class CompletionUtils {
         }
         // 字段名和前缀匹配
         for (PsiMethod method : psiClass.getAllMethods()) {
-            if (prefix.equals(PsiJavaUtils.replaceGetPrefix(method)) && PsiJavaUtils.isGetMethod(method) && methodCondition.test(method)) {
+            if (prefix.equals(PsiMethodUtils.replaceGetPrefix(method)) && PsiMethodUtils.isGetMethod(method) && methodCondition.test(method)) {
                 return methodProcessor.apply(method);
             }
         }
@@ -186,7 +184,7 @@ public class CompletionUtils {
     }
 
 
-    private static <T> T getPrefixType(final String prefix, final PsiParameter[] psiParameters,
+    public static <T> T getPrefixType(final String prefix, final PsiParameter[] psiParameters,
                                        final Function<PsiParameter, T> psiParameterProcessor,
                                        final Function<PsiParameter, T> customParameterProcessor) {
         Matcher matcher = PARAM_PATTERN.matcher(prefix);
@@ -250,7 +248,15 @@ public class CompletionUtils {
         if (psiType == null) {
             return;
         }
-        PsiClass psiClass = psiType.resolve();
+        getPsiClassTypeVariants(psiType.resolve(), fieldConsumer, methodConsumer);
+    }
+
+    /**
+     * 获取类字段提示
+     *
+     * @param psiClass Java类
+     */
+    public static void getPsiClassTypeVariants(@Nullable PsiClass psiClass, final Consumer<PsiField> fieldConsumer, final Consumer<PsiMethod> methodConsumer) {
         if (psiClass == null) {
             return;
         }
@@ -278,7 +284,7 @@ public class CompletionUtils {
      */
     public static void getMethodsVariants(final PsiMethod[] methods, final Consumer<PsiMethod> methodConsumer) {
         for (PsiMethod method : methods) {
-            if (PsiJavaUtils.isGetMethod(method) && !PsiJavaUtils.isObjectClass(method.getContainingClass())) {
+            if (PsiMethodUtils.isGetMethod(method) && !PsiJavaUtils.isObjectClass(method.getContainingClass())) {
                 methodConsumer.accept(method);
             }
         }

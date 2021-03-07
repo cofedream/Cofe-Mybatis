@@ -27,10 +27,10 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
+import tk.cofe.plugin.common.utils.PsiMethodUtils;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class ClassElementConverter {
             if (classElement == null) {
                 return null;
             }
-            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiJavaUtils.findPsiMethod(psiClass, methodName)).orElse(null);
+            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiMethodUtils.findPsiMethod(psiClass, methodName)).orElse(null);
         }
 
         @Nullable

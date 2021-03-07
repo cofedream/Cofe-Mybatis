@@ -40,14 +40,11 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
-import tk.cofe.plugin.common.utils.CompletionUtils;
-import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -120,15 +117,15 @@ public class ForeachConverter {
         if (field != null) {
             return field;
         }
-        return PsiJavaUtils.findPsiMethod(psiClass, PsiJavaUtils.toGetPrefix(text)).orElse(null);
+        return PsiMethodUtils.findPsiMethod(psiClass, PsiMethodUtils.toGetPrefix(text)).orElse(null);
     }
 
     private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
         PsiJavaUtils.psiClassProcessor(psiClass,
                 field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && PsiJavaUtils.notSerialField(field),
                 field -> res.add(prefix + field.getName()),
-                method -> (PsiTypeUtils.isCollectionType(method.getReturnType()) || PsiTypeUtils.isCustomType(method.getReturnType())) && PsiJavaUtils.isGetMethod(method),
-                method -> res.add(prefix + PsiJavaUtils.replaceGetPrefix(method)));
+                method -> (PsiTypeUtils.isCollectionType(method.getReturnType()) || PsiTypeUtils.isCustomType(method.getReturnType())) && PsiMethodUtils.isGetMethod(method),
+                method -> res.add(prefix + PsiMethodUtils.replaceGetPrefix(method)));
     }
 
     public static class Collection extends ResolvingConverter.StringConverter implements VariantsProvider<Set<String>> {

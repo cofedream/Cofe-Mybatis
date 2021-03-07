@@ -17,16 +17,8 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
-import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceContributor;
-import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.PsiReferenceRegistrar;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbl.MblTypes;
 
@@ -39,13 +31,6 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 public class MblReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
-        // registrar.registerReferenceProvider(psiElement(MblTypes.REFERENCE_EXPRESSION), new MblReferenceProvider());
-        registrar.registerReferenceProvider(psiElement(MblTypes.REFERENCE_EXPRESSION), new PsiReferenceProvider() {
-        // registrar.registerReferenceProvider(psiElement(LeafElement.class), new PsiReferenceProvider() {
-            @Override
-            public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-                return new PsiReference[0];
-            }
-        });
+        registrar.registerReferenceProvider(psiElement(MblTypes.REFERENCE_EXPRESSION), new MblReferenceProvider());
     }
 }

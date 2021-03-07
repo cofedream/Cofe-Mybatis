@@ -34,6 +34,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mbl.psi.MblExpression;
 import tk.cofe.plugin.mbl.psi.MblJdbcTypeConfig;
 import tk.cofe.plugin.mbl.psi.MblModeConfig;
@@ -42,10 +43,6 @@ import tk.cofe.plugin.mbl.psi.MblResultMapConfig;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.common.utils.CompletionUtils;
-import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +109,7 @@ public class MblKeywordCompletionContributor extends CompletionContributor {
                                                                 List<String> list = new ArrayList<>();
                                                                 CompletionUtils.getPsiClassTypeVariants((psiClassType),
                                                                         field -> list.add(field.getName()),
-                                                                        method -> list.add(PsiJavaUtils.replaceGetPrefix(method)));
+                                                                        method -> list.add(PsiMethodUtils.replaceGetPrefix(method)));
                                                                 return list.toArray(String[]::new);
                                                             })
                                                             .orElse(new String[] {"param1"})))
