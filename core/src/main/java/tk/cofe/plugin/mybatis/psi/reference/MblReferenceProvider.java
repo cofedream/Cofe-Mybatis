@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mbl.psi.MblDotReference;
+import tk.cofe.plugin.mbl.psi.MblIdentifierReference;
 import tk.cofe.plugin.mbl.psi.impl.MblPsiUtil;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
@@ -128,26 +129,6 @@ public class MblReferenceProvider extends PsiReferenceProvider {
                 }
             } else if (value.getValue().equals(prefix0)) {
                 references.addAll(buildReference(element, prefixArr, firstParameter));
-                // if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
-                //     PsiClass psiClass = ((PsiClassType) firstParameter.getType()).resolve();
-                //     int length = prefix0.length();
-                //     references.add(PsiReferenceBase.createSelfReference(element, new TextRange(0, length), firstParameter));
-                //     for (int i = 1; i < prefixArr.length; i++) {
-                //         for (PsiMethod psiMethod1 : psiClass.getMethods()) {
-                //             if (field.getName().equals(prefixArr[i])) {
-                //                 length++; // 跳过 .
-                //                 references.add(PsiReferenceBase.createSelfReference(element, new TextRange(length, length += prefixArr[i].length()), field));
-                //             }
-                //         }
-                //         for (PsiField field : psiClass.getFields()) {
-                //             if (field.getName().equals(prefixArr[i])) {
-                //                 length++; // 跳过 .
-                //                 references.add(PsiReferenceBase.createSelfReference(element, new TextRange(length, length += prefixArr[i].length()), field));
-                //             }
-                //         }
-                //         psiClass = ((PsiClassType) firstParameter.getType()).resolve();
-                //     }
-                // }
             }
         } else {
             // 如果方法有多个参数
@@ -180,7 +161,7 @@ public class MblReferenceProvider extends PsiReferenceProvider {
         PsiClass psiClass = ((PsiClassType) psiParameter.getType()).resolve();
         // 从1开始,0就是 psiParameter
         for (int i = 1; i < textArr.length; i++) {
-            references.add(new MblDotReference(sourceElement, new TextRange(offsetEnd, offsetEnd + 1), psiClass, "."));
+            references.add(new MblDotReference(sourceElement, offsetEnd, psiClass));
             String text = textArr[i];
             PsiMember psiMember = findPsiMember(text, psiClass);
             if (psiMember == null) {
@@ -188,7 +169,7 @@ public class MblReferenceProvider extends PsiReferenceProvider {
             }
             offsetStart = offsetStart + 1 + offsetEnd; // textArr[i-1].
             offsetEnd = offsetStart + text.length();
-            references.add(PsiReferenceBase.createSelfReference(sourceElement, new TextRange(offsetStart, offsetEnd), psiMember));
+            references.add(new MblIdentifierReference(sourceElement, new TextRange(offsetStart, offsetEnd),text, ((PsiMethod) psiMember)));
             PsiType psiType;
             if (psiMember instanceof PsiField) {
                 psiType = ((PsiField) psiMember).getType();

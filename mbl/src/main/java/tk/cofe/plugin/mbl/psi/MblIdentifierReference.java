@@ -19,32 +19,48 @@ package tk.cofe.plugin.mbl.psi;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.PsiType;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiMethodUtils;
-import tk.cofe.plugin.mbl.MblTypes;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author : zhengrf
  * @date : 2021-03-06
  */
-public class MblDotReference extends PsiReferenceBase<PsiElement> {
-    private static final String prefixStr = ".";
+public class MblIdentifierReference extends PsiReferenceBase<PsiElement> {
+    private final String prefixStr;
     private final PsiClass psiClass;
+    private final PsiMethod psiMethod;
 
-    public MblDotReference(@NotNull PsiElement element, int offsetStart, PsiClass psiClass) {
-        super(element, new TextRange(offsetStart, offsetStart + 1), true);
-        this.psiClass = psiClass;
+    public MblIdentifierReference(@NotNull PsiElement element, final TextRange rangeInElement, String prefixStr, PsiMethod psiMethod) {
+        super(element, rangeInElement);
+        this.psiMethod = psiMethod;
+        final PsiType psiType = psiMethod.getReturnType();
+        this.psiClass = PsiTypeUtils.isCustomType(psiType) ? ((PsiClassType) psiType).resolve() : null;
+        this.prefixStr = prefixStr;
     }
 
     @Override
     public @Nullable PsiElement resolve() {
-        return null;
+        return psiMethod;
     }
 
     @Override
