@@ -21,8 +21,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
         <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
-        <fileType name="Mybatis" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
-                  fieldName="INSTANCE" language="MOgnl" extensions="mbl"/>
+        <fileType name="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
+                  fieldName="INSTANCE" language="MOgnl" extensions="MOgnl"/>
 
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
         <!--<lang.syntaxHighlighterFactory language="MOgnl"-->
