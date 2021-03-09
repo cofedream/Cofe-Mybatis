@@ -19,8 +19,12 @@ package tk.cofe.plugin.common.utils;
 
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.PlatformIcons;
+import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 
+import javax.annotation.ParametersAreNullableByDefault;
+import javax.swing.*;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -86,20 +90,6 @@ public final class PsiJavaUtils {
     public static void importClass(PsiJavaFile file, PsiClass psiClass) {
         file.importClass(psiClass);
     }
-
-    // 字段相关
-
-    /**
-     * 判断是否为目标字段
-     *
-     * @param psiField 字段
-     */
-    public static boolean notSerialField(PsiField psiField) {
-        return !"serialVersionUID".equals(psiField.getName());
-    }
-
-    // 方法相关
-
 
     // Java 相关Element
 
@@ -167,5 +157,33 @@ public final class PsiJavaUtils {
                 methodConsumer.accept(method);
             }
         }
+    }
+
+    @Nullable
+    public static Icon getPsiMemberIcon(@Nullable PsiMember psiMember) {
+        if (psiMember == null) {
+            return null;
+        }
+        if (psiMember instanceof PsiMethod) {
+            return PlatformIcons.METHOD_ICON;
+        }
+        if (psiMember instanceof PsiField) {
+            return PlatformIcons.FIELD_ICON;
+        }
+        return null;
+    }
+
+    @Nullable
+    public static PsiType getPsiMemberType(@Nullable PsiMember psiMember) {
+        if (psiMember == null) {
+            return null;
+        }
+        if (psiMember instanceof PsiMethod) {
+            return ((PsiMethod) psiMember).getReturnType();
+        }
+        if (psiMember instanceof PsiField) {
+            return ((PsiField) psiMember).getType();
+        }
+        return null;
     }
 }

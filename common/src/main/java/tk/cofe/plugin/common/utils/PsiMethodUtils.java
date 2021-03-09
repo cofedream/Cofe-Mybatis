@@ -98,15 +98,18 @@ public class PsiMethodUtils {
 
     /**
      * 判断是否为 getXXX 函数<br/>
-     * 1.方法名称getXXX<br/>
-     * 2.有返回值<br/>
+     * 1.为Public方法<br/>
+     * 2.方法名称getAbb<br/>
+     * 3.没有参数<br/>
+     * 4.有返回值
      *
      * @param method 方法
      */
     public static boolean isGetMethod(PsiMethod method) {
         return isPublicMethod(method)
-                && !isVoidMethod(method)
-                && START_GET.matcher(method.getName()).matches();
+                && !method.hasParameters()
+                && START_GET.matcher(method.getName()).matches()
+                && !isVoidMethod(method);
     }
 
     /**

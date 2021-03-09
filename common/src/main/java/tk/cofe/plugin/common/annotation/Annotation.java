@@ -18,6 +18,7 @@
 package tk.cofe.plugin.common.annotation;
 
 import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiParameter;
 import org.jetbrains.annotations.NotNull;
@@ -89,8 +90,8 @@ public class Annotation implements Cloneable {
         PsiAnnotation annotation = psiParameter.getAnnotation(this.qualifiedName);
         if (annotation != null) {
             String value = AnnotationUtil.getStringAttributeValue(annotation, Value.getName());
-            if (value != null) {
-                return new Value(value);
+            if (StringUtil.isNotEmpty(value)) {
+                return new Value(value, annotation);
             }
         }
         return null;
@@ -115,10 +116,16 @@ public class Annotation implements Cloneable {
 
     public static class Value {
 
-        private String value;
+        private final String value;
+        private PsiAnnotation annotation;
 
         private Value(@NotNull String value) {
             this.value = value;
+        }
+
+        private Value(@NotNull String value, PsiAnnotation annotation) {
+            this.value = value;
+            this.annotation = annotation;
         }
 
         public static String getName() {
@@ -128,6 +135,10 @@ public class Annotation implements Cloneable {
         @NotNull
         public String getValue() {
             return value;
+        }
+
+        public PsiAnnotation getAnnotation() {
+            return annotation;
         }
 
         @Override

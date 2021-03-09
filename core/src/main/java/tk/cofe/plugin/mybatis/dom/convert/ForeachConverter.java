@@ -122,7 +122,7 @@ public class ForeachConverter {
 
     private static void addPsiClassVariants(@NotNull final String prefix, @Nullable final PsiClass psiClass, final Set<String> res) {
         PsiJavaUtils.psiClassProcessor(psiClass,
-                field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && PsiJavaUtils.notSerialField(field),
+                field -> (PsiTypeUtils.isCollectionType(field.getType()) || PsiTypeUtils.isCustomType(field.getType())) && PsiFieldUtils.notSerialField(field),
                 field -> res.add(prefix + field.getName()),
                 method -> (PsiTypeUtils.isCollectionType(method.getReturnType()) || PsiTypeUtils.isCustomType(method.getReturnType())) && PsiMethodUtils.isGetMethod(method),
                 method -> res.add(prefix + PsiMethodUtils.replaceGetPrefix(method)));

@@ -23,12 +23,16 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -153,14 +157,14 @@ public class CompletionUtils {
 
 
     public static <T> T getTargetElement(String prefix, PsiType psiType,
-                                          Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+                                         Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         return getTargetElement(prefix, psiType, psiField -> true, psiMethod -> true, fieldProcessor, methodProcessor);
     }
 
 
     public static <T> T getTargetElement(String prefix, PsiType psiType,
-                                          Predicate<PsiField> fieldCondition, Predicate<PsiMethod> methodCondition,
-                                          Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+                                         Predicate<PsiField> fieldCondition, Predicate<PsiMethod> methodCondition,
+                                         Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
         if (!(psiType instanceof PsiClassType)) {
             return null;
         }
@@ -185,8 +189,8 @@ public class CompletionUtils {
 
 
     public static <T> T getPrefixType(final String prefix, final PsiParameter[] psiParameters,
-                                       final Function<PsiParameter, T> psiParameterProcessor,
-                                       final Function<PsiParameter, T> customParameterProcessor) {
+                                      final Function<PsiParameter, T> psiParameterProcessor,
+                                      final Function<PsiParameter, T> customParameterProcessor) {
         Matcher matcher = PARAM_PATTERN.matcher(prefix);
         if (matcher.matches()) {
             int num = Integer.parseInt(matcher.group("num")) - 1;
@@ -239,6 +243,32 @@ public class CompletionUtils {
         }
     }
 
+    public static Map<String, PsiMember> getTheGetMethodAndField(@Nullable PsiClassType psiClassType) {
+        if (psiClassType == null) {
+            return Collections.emptyMap();
+        }
+        return getTheGetMethodAndField(psiClassType.resolve());
+    }
+
+    public static Map<String, PsiMember> getTheGetMethodAndField(@Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return Collections.emptyMap();
+        }
+        Map<String, PsiMember> res = new HashMap<>();
+        for (PsiMethod method : psiClass.getMethods()) {
+            if (PsiMethodUtils.isGetMethod(method)) {
+                res.putIfAbsent(PsiMethodUtils.replaceGetPrefix(method), method);
+            }
+        }
+        for (PsiField field : psiClass.getFields()) {
+            if (PsiFieldUtils.notSerialField(field)) {
+                res.putIfAbsent(field.getName(), field);
+            }
+        }
+        res.putAll(getTheGetMethodAndField(psiClass.getSuperClass()));
+        return res;
+    }
+
     /**
      * 获取类字段提示
      *
@@ -273,7 +303,7 @@ public class CompletionUtils {
      */
     public static void getFieldsVariants(final PsiField[] fields, final Consumer<PsiField> fieldConsumer) {
         for (PsiField field : fields) {
-            if (PsiJavaUtils.notSerialField(field)) {
+            if (PsiFieldUtils.notSerialField(field)) {
                 fieldConsumer.accept(field);
             }
         }

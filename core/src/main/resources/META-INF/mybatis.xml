@@ -30,8 +30,8 @@
 
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlConditionInject"/>
 
-        <completion.contributor language="MOgnl"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>
+        <!--<completion.contributor language="MOgnl"-->
+        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>-->
         <!--<completion.contributor language="MOgnl"-->
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
         <psi.referenceContributor language="MOgnl"
@@ -52,8 +52,8 @@
 
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlParamInject"/>
 
-        <!--<completion.contributor language="MbEL"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>-->
+        <completion.contributor language="MbEL"
+                                implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>
         <!--<completion.contributor language="MbEL"-->
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
         <!--<psi.referenceContributor language="MbEL"-->

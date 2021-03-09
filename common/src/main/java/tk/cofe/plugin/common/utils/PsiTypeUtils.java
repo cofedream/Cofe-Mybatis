@@ -80,6 +80,15 @@ public final class PsiTypeUtils {
     }
 
     /**
+     * 判断是否非基础类型
+     *
+     * @param psiType 类型
+     */
+    public static boolean notPrimitiveType(PsiType psiType) {
+        return !isPrimitiveType(psiType);
+    }
+
+    /**
      * 判断是否为包装类
      *
      * @param psiType 类型
