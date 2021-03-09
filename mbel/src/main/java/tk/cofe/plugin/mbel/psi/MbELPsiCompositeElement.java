@@ -15,27 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    compile project(":mbl")
-    compile project(":mbel")
-}
-intellij {
-    pluginName pluginName
-    plugins 'java', 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
-}
+package tk.cofe.plugin.mbel.psi;
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+import com.intellij.psi.NavigatablePsiElement;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public interface MbELPsiCompositeElement extends NavigatablePsiElement {
 }

@@ -15,29 +15,48 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.inject;
+package tk.cofe.plugin.mbel;
 
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.xml.XmlText;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbel.MbELLanguageInjector;
-import tk.cofe.plugin.mbl.MblLanguageInjector;
+import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.common.icons.MybatisIcons;
+
+import javax.swing.*;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MblParamInject extends BaseInjector implements DumbAware {
-    public MblParamInject() {
-        super(XmlText.class);
+public class MbELFileType extends LanguageFileType {
+
+    public static final MbELFileType INSTANCE = new MbELFileType();
+
+    private MbELFileType() {
+        super(MbELLanguage.INSTANCE);
     }
 
+    @NotNull
     @Override
-    void inject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-        MbELLanguageInjector.inject(registrar, (PsiLanguageInjectionHost) context);
+    public String getName() {
+        return "MbEl";
     }
 
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Mybatis(expression language)";
+    }
+
+    @NotNull
+    @Override
+    public String getDefaultExtension() {
+        return "MbEL";
+    }
+
+    @Nullable
+    @Override
+    public Icon getIcon() {
+        return MybatisIcons.MAIN;
+    }
 }

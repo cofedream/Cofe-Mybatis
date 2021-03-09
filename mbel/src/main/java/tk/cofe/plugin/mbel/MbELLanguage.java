@@ -15,29 +15,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.inject;
+package tk.cofe.plugin.mbel;
 
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.xml.XmlText;
-import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mbel.MbELLanguageInjector;
-import tk.cofe.plugin.mbl.MblLanguageInjector;
+import com.intellij.lang.InjectableLanguage;
+import com.intellij.lang.Language;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MblParamInject extends BaseInjector implements DumbAware {
-    public MblParamInject() {
-        super(XmlText.class);
+public class MbELLanguage extends Language implements InjectableLanguage {
+
+    @NonNls
+    public static final String ID = "MbEL";
+
+    public static final MbELLanguage INSTANCE = new MbELLanguage();
+
+    private MbELLanguage() {
+        super(ID);
     }
 
     @Override
-    void inject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-        MbELLanguageInjector.inject(registrar, (PsiLanguageInjectionHost) context);
+    public boolean isCaseSensitive() {
+        return true;
     }
 
+    @Override
+    public LanguageFileType getAssociatedFileType() {
+        return MbELFileType.INSTANCE;
+    }
 }

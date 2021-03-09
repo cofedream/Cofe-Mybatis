@@ -50,9 +50,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static tk.cofe.plugin.mbl.MblKeyword.JdbcType;
-import static tk.cofe.plugin.mbl.MblKeyword.Mode;
-import static tk.cofe.plugin.mbl.MblKeyword.STRINGS;
+import static tk.cofe.plugin.mbel.MbElKeyword.JdbcType;
+import static tk.cofe.plugin.mbel.MbElKeyword.Mode;
+import static tk.cofe.plugin.mbel.MbElKeyword.STRINGS;
 
 /**
  * @author : zhengrf

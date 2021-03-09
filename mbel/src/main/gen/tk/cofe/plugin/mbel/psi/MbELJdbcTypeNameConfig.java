@@ -14,28 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mbel.psi;
 
-dependencies {
-    compile project(":mbl")
-    compile project(":mbel")
-}
-intellij {
-    pluginName pluginName
-    plugins 'java', 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
-}
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.psi.PsiElement;
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+public interface MbELJdbcTypeNameConfig extends MbELPsiCompositeElement {
+
+  @Nullable
+  PsiElement getIdentifier();
+
 }

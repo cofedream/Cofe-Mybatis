@@ -15,27 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    compile project(":mbl")
-    compile project(":mbel")
-}
-intellij {
-    pluginName pluginName
-    plugins 'java', 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
+plugins {
+    id 'java'
 }
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+dependencies {
+    compile project(":common")
+}
+
+sourceSets {
+    main {
+        java{
+            srcDir 'src/main/gen'
+        }
+    }
 }

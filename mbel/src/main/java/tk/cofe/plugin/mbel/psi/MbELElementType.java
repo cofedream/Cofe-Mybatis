@@ -15,27 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    compile project(":mbl")
-    compile project(":mbel")
-}
-intellij {
-    pluginName pluginName
-    plugins 'java', 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
-}
+package tk.cofe.plugin.mbel.psi;
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbel.MbELLanguage;
+
+/**
+ * @author : zhengrf
+ * @date : 2021-03-09
+ */
+public class MbELElementType extends IElementType {
+    public MbELElementType(@NonNls @NotNull String debugName) {
+        super(debugName, MbELLanguage.INSTANCE);
+    }
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mbl;
+package tk.cofe.plugin.mbel;
 
 import java.util.Arrays;
 
@@ -23,8 +23,8 @@ import java.util.Arrays;
  * @author : zhengrf
  * @date : 2021-02-20
  */
-public final class MblKeyword {
-    private MblKeyword() {
+public final class MbElKeyword {
+    private MbElKeyword() {
     }
 
     public static final String MODE = "mode";

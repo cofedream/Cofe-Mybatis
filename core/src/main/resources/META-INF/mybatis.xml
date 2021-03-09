@@ -22,13 +22,12 @@
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
         <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
         <fileType name="Mybatis" implementationClass="tk.cofe.plugin.mbl.MblFileType"
-                  fileNames="INSTANCE" language="MBL" extensions="mbl"/>
+                  fieldName="INSTANCE" language="MBL" extensions="mbl"/>
 
         <lang.parserDefinition language="MBL" implementationClass="tk.cofe.plugin.mbl.MblParserDefinition"/>
         <lang.syntaxHighlighterFactory language="MBL"
                                        implementationClass="tk.cofe.plugin.mbl.highlight.MblSyntaxHighlighterFactory"/>
 
-        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MblParamInject"/>
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MblConditionInject"/>
 
         <completion.contributor language="MBL"
@@ -38,6 +37,28 @@
         <psi.referenceContributor language="MBL"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.MblReferenceContributor"/>
         <colorSettingsPage implementation="tk.cofe.plugin.mbl.highlight.MblColorSettingsPage"/>
+
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
+        <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
+        <fileType name="MbEl" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
+                  fieldName="INSTANCE" language="MbEL" extensions="MbEl"/>
+
+        <lang.parserDefinition language="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELParserDefinition"/>
+        <!--<lang.syntaxHighlighterFactory language="MBL"-->
+        <!--                               implementationClass="tk.cofe.plugin.mbl.highlight.MblSyntaxHighlighterFactory"/>-->
+
+        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MblParamInject"/>
+
+        <!--<completion.contributor language="MBL"-->
+        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MblKeywordCompletionContributor"/>-->
+        <!--<completion.contributor language="MBL"-->
+        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MblFileSqlParameterCompletionContributor"/>-->
+        <!--<psi.referenceContributor language="MBL"-->
+        <!--                          implementation="tk.cofe.plugin.mybatis.psi.reference.MblReferenceContributor"/>-->
+        <!--<colorSettingsPage implementation="tk.cofe.plugin.mbl.highlight.MblColorSettingsPage"/>-->
 
     </extensions>
 

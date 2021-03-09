@@ -15,27 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    compile project(":mbl")
-    compile project(":mbel")
-}
-intellij {
-    pluginName pluginName
-    plugins 'java', 'Spring'
-    sandboxDirectory = "$rootDir.path/.idea-sandbox"
-}
-patchPluginXml {
-    version pluginVersion
-    sinceBuild sdkSinceBuild
-    untilBuild sdkUntilBuild
-}
-buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
-}
+package tk.cofe.plugin.mbel.psi.impl;
 
-runPluginVerifier {
-    ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
-    downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
-    verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbel.psi.MbELPsiCompositeElement;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public abstract class MbELPsiCompositeElementBase extends ASTWrapperPsiElement implements MbELPsiCompositeElement {
+    public MbELPsiCompositeElementBase(@NotNull final ASTNode node) {
+        super(node);
+    }
+    @Override
+    public String toString() {
+        return getNode().getElementType().toString();
+    }
 }
