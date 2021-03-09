@@ -115,10 +115,10 @@
 
         <!--代码检查-->
         <localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"
-                         language="XML" displayName="mapper xml validate" level="ERROR" enabledByDefault="true"
+                         language="XML" displayName="Mapper xml validate" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.xml.text" groupPath="Mybatis"/>
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
-                         language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
+                         language="JAVA" displayName="Unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->
