@@ -15,9 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mognl.psi;
 
+import com.intellij.psi.NavigatablePsiElement;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public interface MOgnlPsiCompositeElement extends NavigatablePsiElement {
+}

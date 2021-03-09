@@ -15,9 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mognl.psi;
 
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mognl.MOgnlLanguage;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MOgnlElementType extends IElementType {
+    public MOgnlElementType(@NotNull final String debugName) {
+        super(debugName, MOgnlLanguage.INSTANCE);
+    }
+}

@@ -15,9 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mognl;
 
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MOgnlFile extends PsiFileBase {
+    protected MOgnlFile(@NotNull final FileViewProvider viewProvider) {
+        super(viewProvider, MOgnlLanguage.INSTANCE);
+    }
+
+    @NotNull
+    @Override
+    public FileType getFileType() {
+        return MOgnlFileType.INSTANCE;
+    }
+    @Override
+    public String toString() {
+        return "MybatisFile:" + getName();
+    }
+}

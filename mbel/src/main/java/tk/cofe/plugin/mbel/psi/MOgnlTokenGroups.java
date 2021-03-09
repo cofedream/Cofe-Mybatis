@@ -15,9 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mbel.psi;
 
+import com.intellij.psi.tree.TokenSet;
+import tk.cofe.plugin.mbel.MbELTypes;
+
+/**
+ * @author : zhengrf
+ * @date : 2021-02-06
+ */
+public class MOgnlTokenGroups implements MbELTypes {
+
+    // parameter config
+    public static final TokenSet PARAM_CONFIG_KEYWORDS = TokenSet.create(MODE_KEYWORD, JAVA_TYPE_KEYWORD,
+            JDBC_TYPE_KEYWORD, JDBC_TYPE_KEYWORD_NAME, NUMERIC_SCALE_KEYWORD, TYPE_HANDLER_KEYWORD, RESULT_MAP_KEYWORD);
+
+}

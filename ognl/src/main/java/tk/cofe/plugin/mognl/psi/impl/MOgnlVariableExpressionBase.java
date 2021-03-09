@@ -15,9 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mognl.psi.impl;
 
+import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author : zhengrf
+ * @date : 2021-02-06
+ */
+public class MOgnlVariableExpressionBase extends MOgnlExpressionImpl {
+    public MOgnlVariableExpressionBase(@NotNull ASTNode node) {
+        super(node);
+    }
+}

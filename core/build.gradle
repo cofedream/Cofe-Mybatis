@@ -16,8 +16,8 @@
  */
 
 dependencies {
-    compile project(":mbl")
     compile project(":mbel")
+    compile project(":ognl")
 }
 intellij {
     pluginName pluginName

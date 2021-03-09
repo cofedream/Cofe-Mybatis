@@ -15,9 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'common'
-include 'ognl'
-include 'mbel'
-include 'core'
+package tk.cofe.plugin.mognl.lexer;
 
+import com.intellij.lexer.FlexAdapter;
+import tk.cofe.plugin.mognl.parser._MOgnlLexer;
+
+/**
+ * @author : zhengrf
+ * @date : 2019-10-26
+ */
+public class MOgnlLexerAdapter extends FlexAdapter {
+    public MOgnlLexerAdapter() {
+        super(new _MOgnlLexer());
+    }
+}
