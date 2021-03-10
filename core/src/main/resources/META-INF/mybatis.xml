@@ -34,8 +34,8 @@
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>
         <!--<completion.contributor language="MOgnl"-->
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
-        <psi.referenceContributor language="MOgnl"
-                                  implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>
+        <!--<psi.referenceContributor language="MOgnl"-->
+                                  <!--implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>-->
         <!--<colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MOgnlColorSettingsPage"/>-->
 
     </extensions>
@@ -43,8 +43,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
         <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
-        <fileType name="MbEl" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
-                  fieldName="INSTANCE" language="MbEL" extensions="MbEl"/>
+        <fileType name="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
+                  fieldName="INSTANCE" language="MbEL" extensions="MbEL"/>
 
         <lang.parserDefinition language="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELParserDefinition"/>
         <lang.syntaxHighlighterFactory language="MbEL"

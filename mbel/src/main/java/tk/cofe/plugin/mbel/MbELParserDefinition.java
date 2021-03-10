@@ -74,6 +74,6 @@ public class MbELParserDefinition implements ParserDefinition {
 
     @Override
     public PsiFile createFile(final FileViewProvider viewProvider) {
-        return new MbElFile(viewProvider);
+        return new MbELFile(viewProvider);
     }
 }

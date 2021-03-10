@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MbElFile extends PsiFileBase {
-    protected MbElFile(@NotNull final FileViewProvider viewProvider) {
+public class MbELFile extends PsiFileBase {
+    protected MbELFile(@NotNull final FileViewProvider viewProvider) {
         super(viewProvider, MbELLanguage.INSTANCE);
     }
 

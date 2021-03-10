@@ -39,7 +39,7 @@ public class MbELFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "MbEl";
+        return "MbEL";
     }
 
     @NotNull

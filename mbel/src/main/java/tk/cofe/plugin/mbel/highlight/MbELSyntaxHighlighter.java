@@ -36,7 +36,7 @@ public class MbELSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final Map<IElementType, TextAttributesKey> KEY_MAP;
 
     public static final TextAttributesKey KEYWORDS =
-            TextAttributesKey.createTextAttributesKey("MbEl.KEYWORDS", DefaultLanguageHighlighterColors.KEYWORD);
+            TextAttributesKey.createTextAttributesKey("MbEL.KEYWORDS", DefaultLanguageHighlighterColors.KEYWORD);
 
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
