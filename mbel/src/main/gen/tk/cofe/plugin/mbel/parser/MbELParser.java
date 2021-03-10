@@ -259,27 +259,26 @@ public class MbELParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (HASH | DOLLAR_KEYWORD) LBRACE rootElement RBRACE
+  // (HASH_START | DOLLAR_START) rootElement RBRACE
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
-    if (!nextTokenIs(b, "", DOLLAR_KEYWORD, HASH)) return false;
+    if (!nextTokenIs(b, "", DOLLAR_START, HASH_START)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_);
     r = root_0(b, l + 1);
     p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, LBRACE));
-    r = p && report_error_(b, rootElement(b, l + 1)) && r;
+    r = r && report_error_(b, rootElement(b, l + 1));
     r = p && consumeToken(b, RBRACE) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // HASH | DOLLAR_KEYWORD
+  // HASH_START | DOLLAR_START
   private static boolean root_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root_0")) return false;
     boolean r;
-    r = consumeToken(b, HASH);
-    if (!r) r = consumeToken(b, DOLLAR_KEYWORD);
+    r = consumeToken(b, HASH_START);
+    if (!r) r = consumeToken(b, DOLLAR_START);
     return r;
   }
 

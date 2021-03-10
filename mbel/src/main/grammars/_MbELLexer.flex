@@ -33,6 +33,8 @@ IDENTIFIER=[:jletter:][:jletterdigit:]*
 <YYINITIAL> {
   {WHITE_SPACE}           { return WHITE_SPACE; }
 
+  "#{"                    { return HASH_START; }
+  "#{"                    { return DOLLAR_START; }
   "$"                     { return DOLLAR_KEYWORD; }
   "#"                     { return HASH; }
   "{"                     { return LBRACE; }

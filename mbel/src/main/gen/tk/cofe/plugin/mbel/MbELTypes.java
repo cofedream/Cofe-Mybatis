@@ -37,9 +37,11 @@ public interface MbELTypes {
 
   IElementType COMMA = new MbELTokenType(",");
   IElementType DOLLAR_KEYWORD = new MbELTokenType("$");
+  IElementType DOLLAR_START = new MbELTokenType("#{");
   IElementType DOT = new MbELTokenType(".");
   IElementType EQ = new MbELTokenType("=");
   IElementType HASH = new MbELTokenType("#");
+  IElementType HASH_START = new MbELTokenType("HASH_START");
   IElementType IDENTIFIER = new MbELTokenType("IDENTIFIER");
   IElementType INTEGER_LITERAL = new MbELTokenType("INTEGER_LITERAL");
   IElementType JAVA_TYPE_KEYWORD = new MbELTokenType("javaType");
