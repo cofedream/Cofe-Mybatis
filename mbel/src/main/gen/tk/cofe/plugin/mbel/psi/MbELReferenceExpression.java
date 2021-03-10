@@ -19,11 +19,10 @@ package tk.cofe.plugin.mbel.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 public interface MbELReferenceExpression extends MbELPsiCompositeElement {
 
-  //WARNING: getReferences(...) is skipped
-  //matching getReferences(MbELReferenceExpression, ...)
-  //methods are not found in MbELPsiUtil
+  @NotNull PsiReference[] getReferences();
 
 }

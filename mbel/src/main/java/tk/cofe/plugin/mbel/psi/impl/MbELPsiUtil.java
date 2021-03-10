@@ -17,10 +17,20 @@
 
 package tk.cofe.plugin.mbel.psi.impl;
 
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
+
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
 public class MbELPsiUtil {
+
+    @NotNull
+    public static PsiReference[] getReferences(MbELReferenceExpression element) {
+        return ReferenceProvidersRegistry.getReferencesFromProviders(element);
+    }
 
 }

@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tk.cofe.plugin.mbel.MbELTypes.*;
 import tk.cofe.plugin.mbel.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class MbELReferenceExpressionImpl extends MbELPsiCompositeElementBase implements MbELReferenceExpression {
 
@@ -39,6 +40,11 @@ public class MbELReferenceExpressionImpl extends MbELPsiCompositeElementBase imp
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof MbELVisitor) accept((MbELVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  public @NotNull PsiReference[] getReferences() {
+    return MbELPsiUtil.getReferences(this);
   }
 
 }
