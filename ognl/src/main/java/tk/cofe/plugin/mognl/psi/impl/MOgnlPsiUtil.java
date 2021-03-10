@@ -123,11 +123,6 @@ public class MOgnlPsiUtil {
     }
 
     @Nullable
-    public static PsiElement getOriginElement(final PsiElement element) {
-        return InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
-    }
-
-    @Nullable
     static Object getConstantValue(MOgnlLiteralExpression expression) {
         final ASTNode node = expression.getNode();
         final IElementType type = node.getFirstChildNode().getElementType();

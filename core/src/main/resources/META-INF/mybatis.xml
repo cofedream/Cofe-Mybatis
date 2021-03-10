@@ -54,8 +54,8 @@
 
         <completion.contributor language="MbEL"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>
-        <!--<psi.referenceContributor language="MbEL"-->
-        <!--                          implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>-->
+        <psi.referenceContributor language="MbEL"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.MbELReferenceContributor"/>
         <colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MbELColorSettingsPage"/>
 
     </extensions>

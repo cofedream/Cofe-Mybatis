@@ -18,36 +18,38 @@
 package tk.cofe.plugin.mybatis.psi.reference;
 
 import com.intellij.codeInsight.completion.CompletionUtilCore;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.common.utils.*;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiMethodUtils;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mognl.psi.MOgnlDotReference;
 import tk.cofe.plugin.mognl.psi.MOgnlIdentifierReference;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author : zhengrf
  * @date : 2020-01-19
  */
-public class MOgnlReferenceProvider extends PsiReferenceProvider {
+public class MbELReferenceProvider extends PsiReferenceProvider {
     @NotNull
     @Override
     public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull final ProcessingContext context) {
@@ -60,43 +62,12 @@ public class MOgnlReferenceProvider extends PsiReferenceProvider {
         }
         String text = element.getText().replace(CompletionUtilCore.DUMMY_IDENTIFIER, "");
         final String[] splitTextArr = text.split("\\.");
-        // bind 标签
-        final List<PsiReference> binds = getBinds(element, originElement, text);
-        // foreach 标签
-        final List<PsiReference> foreach = getForeach(element, originElement, text);
         // 方法参数
-        final List<PsiReference> methodParam = getMethodParam(element, originElement, splitTextArr);
-        List<PsiReference> res = new ArrayList<>(binds.size() + methodParam.size() + foreach.size());
-        res.addAll(binds);
-        res.addAll(foreach);
-        res.addAll(methodParam);
-        return res.toArray(PsiReference.EMPTY_ARRAY);
+        return build(element, originElement, splitTextArr).toArray(PsiReference.EMPTY_ARRAY);
     }
 
-    private List<PsiReference> getBinds(@NotNull final PsiElement element, final PsiElement originElement, final String text) {
-        return DomUtils.getParents(originElement, XmlTag.class, BindInclude.class).stream()
-                .flatMap(info -> info.getBinds().stream())
-                .map(NameAttribute::getName)
-                .filter(bind -> Objects.equals(text, DomUtils.getAttributeValue(bind)))
-                .map(GenericAttributeValue::getXmlAttributeValue)
-                .filter(Objects::nonNull)
-                .map(bind -> PsiReferenceBase.createSelfReference(element, new TextRange(0, bind.getTextLength()), bind))
-                .collect(Collectors.toList());
-    }
-
-    private List<PsiReference> getForeach(@NotNull final PsiElement element, final PsiElement originElement, final String text) {
-        return DomUtils.getParents(originElement, XmlTag.class, Foreach.class).stream()
-                .map(Foreach::getItem)
-                .filter(Objects::nonNull)
-                .filter(item -> Objects.equals(text, DomUtils.getAttributeValue(item)))
-                .map(GenericAttributeValue::getXmlAttributeValue)
-                .filter(Objects::nonNull)
-                .map(bind -> PsiReferenceBase.createSelfReference(element, new TextRange(0, bind.getTextLength()), bind))
-                .collect(Collectors.toList());
-    }
-
-    private List<PsiReference> getMethodParam(@NotNull final PsiElement element, final PsiElement originElement, final String[] prefixArr) {
-        ClassElement classElement = DomUtils.getDomElement(originElement, ClassElement.class).orElse(null);
+    private List<PsiReference> build(@NotNull final PsiElement element, final PsiElement xmlElement, final String[] prefixArr) {
+        ClassElement classElement = DomUtils.getDomElement(xmlElement, ClassElement.class).orElse(null);
         if (classElement == null) {
             return Collections.emptyList();
         }
@@ -104,47 +75,69 @@ public class MOgnlReferenceProvider extends PsiReferenceProvider {
         if (psiMethod == null) {
             return Collections.emptyList();
         }
-        PsiParameter[] psiParameters = psiMethod.getParameterList().getParameters();
-        if (psiParameters.length == 0) {
-            return Collections.emptyList();
-        }
-        String prefix0 = prefixArr[0];
-        Matcher matcher = CompletionUtils.PARAM_PATTERN.matcher(prefix0);
-        if (matcher.matches()) {
-            int num = Integer.parseInt(matcher.group("num")) - 1;
-            if (num > psiParameters.length) {
-                return Collections.emptyList();
+        List<PsiReference> references = new ArrayList<>(prefixArr.length + 1);
+        String prefix0 = prefixArr[0]; // 第一个参数
+        // 先查询XML标签
+        final List<PsiElement> resolveResults = new ArrayList<>();
+        for (Bind bind : MybatisXMLUtils.getTheBindTagInParents(xmlElement)) {
+            if (Objects.equals(DomUtils.getAttributeValue(bind.getName()), prefix0)) {
+                Optional.ofNullable(bind.getName())
+                        .map(GenericAttributeValue::getXmlAttributeValue)
+                        .ifPresent(resolveResults::add);
             }
-            PsiParameter psiParameter = psiParameters[num];
         }
-        List<PsiReference> references = new ArrayList<>(psiParameters.length);
-        if (psiParameters.length == 1) {
-            // 如果方法只有一个参数
-            PsiParameter firstParameter = psiParameters[0];
-            Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
-            if (value == null) {
-                if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
-                    PsiMember targetElement = CompletionUtils.getTargetElement(prefix0, firstParameter.getType(), psiField -> psiField, psiMethod1 -> psiMethod1);
-                    references.add(PsiReferenceBase.createSelfReference(element, new TextRange(0, element.getTextLength()), targetElement));
+        for (Foreach foreach : MybatisXMLUtils.getTheForeachTagInParents(xmlElement)) {
+            if (Objects.equals(DomUtils.getAttributeValue(foreach.getItem()), prefix0)) {
+                Optional.ofNullable(foreach.getItem())
+                        .map(GenericAttributeValue::getXmlAttributeValue)
+                        .ifPresent(resolveResults::add);
+            }
+            if (Objects.equals(DomUtils.getAttributeValue(foreach.getIndex()), prefix0)) {
+                Optional.ofNullable(foreach.getIndex())
+                        .map(GenericAttributeValue::getXmlAttributeValue)
+                        .ifPresent(resolveResults::add);
+            }
+        }
+        final PsiParameterList parameterList = psiMethod.getParameterList();
+        if (parameterList.getParametersCount() > 0) {
+            PsiParameter[] psiParameters = parameterList.getParameters();
+            Matcher matcher = CompletionUtils.PARAM_PATTERN.matcher(prefix0);
+            if (matcher.matches()) {
+                int num = Integer.parseInt(matcher.group("num")) - 1;
+                if (num <= psiParameters.length) {
+                    resolveResults.add(psiParameters[num]);
                 }
-            } else if (value.getValue().equals(prefix0)) {
-                references.addAll(buildReference(element, prefixArr, firstParameter));
             }
-        } else {
-            // 如果方法有多个参数
-            // if (psiParameters.length > 1) {
-            //     for (int i = 0; i < psiParameters.length; i++) {
-            //         PsiParameter psiParameter = psiParameters[i];
-            //         Annotation.PARAM.getValue(firstParameter);
-            //     }
-            // }
+            if (psiParameters.length == 1) {
+                // 如果方法只有一个参数
+                PsiParameter firstParameter = psiParameters[0];
+                Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
+                if (value == null) {
+                    if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
+                        resolveResults.add(CompletionUtils.getTargetElement(prefix0, firstParameter.getType(), psiField -> psiField, psiMethod1 -> psiMethod1));
+                    }
+                } else if (value.getValue().equals(prefix0)) {
+                    resolveResults.add(firstParameter);
+                    // references.addAll(buildReference(element, prefixArr, firstParameter));
+                }
+            } else if (psiParameters.length > 1) {
+                // 如果方法有多个参数
+                for (int i = 0; i < psiParameters.length; i++) {
+                    PsiParameter psiParameter = psiParameters[i];
+                    final Annotation.Value value = Annotation.PARAM.getValue(psiParameter);
+                    if (value != null && value.getValue().equals(prefix0)) {
+                        resolveResults.add(psiParameter);
+                    }
+                }
+            }
         }
+        references.add(new PsiReferenceBase.Poly<>(element, new TextRange(0, prefix0.length()), false) {
+            @Override
+            public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
+                return PsiElementResolveResult.createResults(resolveResults);
+            }
+        });
         return references;
-        // return DomUtils.getDomElement(originElement, ClassElement.class)
-        //         .flatMap(ClassElement::getIdMethod)
-        //         .map(psiMethod -> CompletionUtils.getPrefixElement(prefixArr, psiMethod.getParameterList().getParameters()))
-        //         .map(resolveTo -> Collections.<PsiReference>singletonList(new PsiReferenceBase.Immediate<>(element, new TextRange(0, element.getTextLength()), resolveTo)))
-        //         .orElse(Collections.emptyList());
     }
 
     public static List<PsiReference> buildReference(@NotNull PsiElement sourceElement, String[] textArr, PsiParameter psiParameter) {
@@ -169,7 +162,7 @@ public class MOgnlReferenceProvider extends PsiReferenceProvider {
             }
             offsetStart = offsetStart + 1 + offsetEnd; // textArr[i-1].
             offsetEnd = offsetStart + text.length();
-            references.add(new MOgnlIdentifierReference(sourceElement, new TextRange(offsetStart, offsetEnd),text, ((PsiMethod) psiMember)));
+            references.add(new MOgnlIdentifierReference(sourceElement, new TextRange(offsetStart, offsetEnd), text, ((PsiMethod) psiMember)));
             PsiType psiType;
             if (psiMember instanceof PsiField) {
                 psiType = ((PsiField) psiMember).getType();

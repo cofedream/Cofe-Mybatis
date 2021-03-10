@@ -18,36 +18,18 @@
 package tk.cofe.plugin.mybatis.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlFile;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomFileElement;
-import com.intellij.util.xml.DomManager;
-import com.intellij.util.xml.DomService;
-import com.intellij.util.xml.XmlFileHeader;
+import com.intellij.util.xml.*;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.model.tag.Update;
+import tk.cofe.plugin.mybatis.dom.model.tag.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -182,4 +164,5 @@ public class MybatisUtils {
     public static Optional<PsiClass> getPsiClass(ClassElement classElement) {
         return Optional.ofNullable(DomUtils.getParentOfType(classElement, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
+
 }
