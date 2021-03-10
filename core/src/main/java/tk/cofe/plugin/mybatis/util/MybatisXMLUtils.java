@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class MybatisXMLUtils {
 
     /**
-     * 获取父类中包含的所有 {@code <bind/>} 标签
+     * 获取父类中包含的所有 {@link Bind#TAG} 标签
      *
      * @param psiElement Psi元素
      */
@@ -53,7 +53,7 @@ public class MybatisXMLUtils {
     }
 
     /**
-     * 获取父类中包含的所有 {@code <foreach/>} 标签
+     * 获取父类中包含的所有 {@link Foreach#TAG} 标签
      *
      * @param psiElement Psi元素
      */

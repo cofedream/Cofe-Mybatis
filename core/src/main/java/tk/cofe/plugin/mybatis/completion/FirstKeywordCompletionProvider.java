@@ -68,7 +68,7 @@ class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParame
             DomUtils.getAttributeValueOpt(bind.getName()).ifPresent(bindName -> {
                 result.addElement(LookupElementBuilder.create(bindName)
                         .withTailText(DomUtils.getAttributeValueOpt(bind.getValue()).map(v -> "value=\"" + v + "\"").orElse(null), true)
-                        .withTypeText("<bind/>")
+                        .withTypeText(Bind.TAG)
                         .withIcon(PlatformIcons.XML_TAG_ICON)
                         .bold());
             });
@@ -77,14 +77,14 @@ class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParame
             DomUtils.getAttributeValueOpt(foreach.getItem()).ifPresent(itemName -> {
                 result.addElement(LookupElementBuilder.create(itemName)
                         .withTailText(DomUtils.getAttributeValueOpt(foreach.getCollection()).map(v -> "collection=\"" + v + "\"").orElse(null), true)
-                        .withTypeText("<foreach/>")
+                        .withTypeText(Foreach.TAG)
                         .withIcon(PlatformIcons.XML_TAG_ICON)
                         .bold());
             });
             DomUtils.getAttributeValueOpt(foreach.getIndex()).ifPresent(itemName -> {
                 result.addElement(LookupElementBuilder.create(itemName)
                         .withTailText(DomUtils.getAttributeValueOpt(foreach.getCollection()).map(v -> "collection=\"" + v + "\"").orElse(null), true)
-                        .withTypeText("<foreach/>")
+                        .withTypeText(Foreach.TAG)
                         .withIcon(PlatformIcons.XML_TAG_ICON)
                         .bold());
             });
