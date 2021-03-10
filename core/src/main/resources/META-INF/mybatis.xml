@@ -30,8 +30,8 @@
 
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlConditionInject"/>
 
-        <!--<completion.contributor language="MOgnl"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>-->
+        <completion.contributor language="MOgnl"
+                                implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>
         <!--<completion.contributor language="MOgnl"-->
         <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
         <psi.referenceContributor language="MOgnl"
@@ -54,8 +54,6 @@
 
         <completion.contributor language="MbEL"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>
-        <!--<completion.contributor language="MbEL"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
         <!--<psi.referenceContributor language="MbEL"-->
         <!--                          implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>-->
         <colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MbELColorSettingsPage"/>
