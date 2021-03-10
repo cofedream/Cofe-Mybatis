@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.common.utils;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomTarget;
 import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
@@ -145,21 +144,33 @@ public final class DomUtils extends DomUtil {
      * 获取 {@code GenericAttributeValue<String> } 属性值值
      *
      * @param attributeValue 属性值对象
+     * @return NULL 则返回默认值 defaultValue
+     */
+    public static String getAttributeValue(@Nullable GenericAttributeValue<?> attributeValue) {
+        return getAttributeValue(attributeValue, null);
+    }
+
+    /**
+     * 获取 {@code GenericAttributeValue<String> } 属性值值
+     *
+     * @param attributeValue 属性值对象
+     * @return NULL 则返回默认值 defaultValue
+     */
+    public static String getAttributeValue(@Nullable GenericAttributeValue<?> attributeValue, String defaultValue) {
+        return getAttributeValueOpt(attributeValue).orElse(defaultValue);
+    }
+
+    /**
+     * 获取 {@code GenericAttributeValue<String> } 属性值值
+     *
+     * @param attributeValue 属性值对象
      * @return NULL 则返回 {@code Optional.empty()}
      */
-    public static Optional<String> getAttributeVlaue(@Nullable GenericAttributeValue<?> attributeValue) {
-        if (attributeValue == null) {
-            return Optional.empty();
-        }
-        final XmlAttributeValue xmlAttributeValue = attributeValue.getXmlAttributeValue();
-        if (xmlAttributeValue == null) {
-            return Optional.empty();
-        }
-        String value = xmlAttributeValue.getValue().trim();
-        if (StringUtil.isEmpty(value)) {
-            return Optional.empty();
-        }
-        return Optional.of(value.trim());
+    public static Optional<String> getAttributeValueOpt(@Nullable GenericAttributeValue<?> attributeValue) {
+        return Optional.ofNullable(attributeValue)
+                .map(GenericAttributeValue::getXmlAttributeValue)
+                .map(XmlAttributeValue::getValue)
+                .map(String::trim);
     }
 
     public static XmlTag getXmlTag(@Nullable final PsiElement element) {

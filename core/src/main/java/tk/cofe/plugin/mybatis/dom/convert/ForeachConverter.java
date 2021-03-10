@@ -156,7 +156,7 @@ public class ForeachConverter {
         private Set<String> getBindTags(@Nullable final XmlElement element) {
             return DomUtils.getParents(element, XmlTag.class, BindInclude.class).stream()
                     .flatMap(info -> info.getBinds().stream())
-                    .map(info -> DomUtils.getAttributeVlaue(info.getName()).orElse(null))
+                    .map(info -> DomUtils.getAttributeValue(info.getName()))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
         }
@@ -164,7 +164,7 @@ public class ForeachConverter {
         @NotNull
         private Set<String> getForeachTags(@Nullable final XmlElement element) {
             return DomUtils.getParents(element, XmlTag.class, Foreach.class).stream()
-                    .map(info -> DomUtils.getAttributeVlaue(info.getItem()).orElse(null))
+                    .map(info -> DomUtils.getAttributeValue(info.getItem()))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
         }
@@ -195,7 +195,7 @@ public class ForeachConverter {
         private XmlAttributeValue getBindName(final String text, final XmlElement xmlElement) {
             return DomUtils.getParents(xmlElement, XmlTag.class, BindInclude.class).stream()
                     .flatMap(info -> info.getBinds().stream())
-                    .filter(info -> DomUtils.getAttributeVlaue(info.getName()).map(name -> Objects.equals(name, text)).orElse(false))
+                    .filter(info -> DomUtils.getAttributeValueOpt(info.getName()).map(name -> Objects.equals(name, text)).orElse(false))
                     .map(bind -> bind.getName().getXmlAttributeValue())
                     .filter(Objects::nonNull)
                     .findFirst()
@@ -204,7 +204,7 @@ public class ForeachConverter {
 
         private XmlAttributeValue getItem(final String text, final XmlElement xmlElement) {
             return DomUtils.getParents(xmlElement, XmlTag.class, Foreach.class).stream()
-                    .filter(info -> DomUtils.getAttributeVlaue(info.getItem()).map(name -> Objects.equals(name, text)).orElse(false))
+                    .filter(info -> DomUtils.getAttributeValueOpt(info.getItem()).map(name -> Objects.equals(name, text)).orElse(false))
                     .map(Foreach::getItem)
                     .filter(Objects::nonNull)
                     .map(GenericAttributeValue::getXmlAttributeValue)

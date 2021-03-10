@@ -254,6 +254,9 @@ public class CompletionUtils {
         if (psiClass == null) {
             return Collections.emptyMap();
         }
+        if (PsiJavaUtils.isObjectClass(psiClass)) {
+            return Collections.emptyMap();
+        }
         Map<String, PsiMember> res = new HashMap<>();
         for (PsiMethod method : psiClass.getMethods()) {
             if (PsiMethodUtils.isGetMethod(method)) {

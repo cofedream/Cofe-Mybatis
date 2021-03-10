@@ -23,7 +23,6 @@ import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 
-import javax.annotation.ParametersAreNullableByDefault;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Optional;

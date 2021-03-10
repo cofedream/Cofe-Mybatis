@@ -73,7 +73,7 @@ public class ResultMapReference {
     }
 
     private Stream<ResultMap> getResultMapStream(final String rawText, final Mapper mapper) {
-        return mapper.getResultMaps().stream().filter(resultMap -> !resultMap.isEqualsId(rawText) && Objects.equals(rawText, DomUtils.getAttributeVlaue(resultMap.getExtends()).orElse(null)));
+        return mapper.getResultMaps().stream().filter(resultMap -> !resultMap.isEqualsId(rawText) && Objects.equals(rawText, DomUtils.getAttributeValue(resultMap.getExtends())));
     }
 
     private PsiReference[] processSteam(final PsiElement element, final Stream<GenericAttributeValue<ResultMap>> stream) {

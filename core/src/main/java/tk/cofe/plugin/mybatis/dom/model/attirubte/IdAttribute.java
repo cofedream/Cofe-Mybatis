@@ -43,7 +43,7 @@ public interface IdAttribute extends DomElement {
      */
     @NotNull
     default Optional<String> getIdValue() {
-        return DomUtils.getAttributeVlaue(getId());
+        return DomUtils.getAttributeValueOpt(getId());
     }
 
     /**

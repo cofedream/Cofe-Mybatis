@@ -24,17 +24,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.*;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
+import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -74,16 +72,15 @@ public class MOgnlFileSqlParameterCompletionContributor extends CompletionContri
      * 处理 &lt;bind&gt; 标签
      */
     private void bindTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
-        DomUtils.getParents(targetElement, XmlTag.class, BindInclude.class).stream()
-                .flatMap(info -> info.getBinds().stream())
-                .map(bind -> DomUtils.getAttributeVlaue(bind.getName()).orElse(null))
+        MybatisXMLUtils.getTheBindTagInParents(targetElement).stream()
+                .map(bind -> DomUtils.getAttributeValue(bind.getName()))
                 .filter(Objects::nonNull)
                 .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
     }
 
     private void foreachTag(@NotNull final CompletionResultSet result, final PsiElement targetElement) {
-        DomUtils.getParents(targetElement, XmlTag.class, Foreach.class).stream()
-                .map(foreach -> DomUtils.getAttributeVlaue(foreach.getItem()).orElse(null))
+        MybatisXMLUtils.getTheForeachTagInParents(targetElement).stream()
+                .map(foreach -> DomUtils.getAttributeValue(foreach.getItem()))
                 .filter(Objects::nonNull)
                 .forEach(bind -> result.addElement(createLookupElement(bind, "", null)));
     }

@@ -17,23 +17,14 @@
 
 package tk.cofe.plugin.mybatis.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiMember;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +38,10 @@ import tk.cofe.plugin.mbel.psi.MbELModeConfig;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -55,9 +49,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static tk.cofe.plugin.mbel.MbELKeyword.JdbcType;
-import static tk.cofe.plugin.mbel.MbELKeyword.Mode;
-import static tk.cofe.plugin.mbel.MbELKeyword.STRINGS;
+import static tk.cofe.plugin.mbel.MbELKeyword.*;
 
 /**
  * @author : zhengrf
@@ -95,6 +87,31 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
                     return;
                 }
                 PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+                for (Bind bind : MybatisXMLUtils.getTheBindTagInParents(injectionHost)) {
+                    DomUtils.getAttributeValueOpt(bind.getName()).ifPresent(bindName -> {
+                        result.addElement(LookupElementBuilder.create(bindName)
+                                .withTailText(DomUtils.getAttributeValueOpt(bind.getValue()).map(v -> "value=\"" + v + "\"").orElse(null), true)
+                                .withTypeText("<bind/>")
+                                .withIcon(PlatformIcons.XML_TAG_ICON)
+                                .bold());
+                    });
+                }
+                for (Foreach foreach : MybatisXMLUtils.getTheForeachTagInParents(injectionHost)) {
+                    DomUtils.getAttributeValueOpt(foreach.getItem()).ifPresent(itemName -> {
+                        result.addElement(LookupElementBuilder.create(itemName)
+                                .withTailText(DomUtils.getAttributeValueOpt(foreach.getCollection()).map(v -> "collection=\"" + v + "\"").orElse(null), true)
+                                .withTypeText("<foreach/>")
+                                .withIcon(PlatformIcons.XML_TAG_ICON)
+                                .bold());
+                    });
+                    DomUtils.getAttributeValueOpt(foreach.getIndex()).ifPresent(itemName -> {
+                        result.addElement(LookupElementBuilder.create(itemName)
+                                .withTailText(DomUtils.getAttributeValueOpt(foreach.getCollection()).map(v -> "collection=\"" + v + "\"").orElse(null), true)
+                                .withTypeText("<foreach/>")
+                                .withIcon(PlatformIcons.XML_TAG_ICON)
+                                .bold());
+                    });
+                }
                 DomUtils.getDomElement(injectionHost, ClassElement.class).flatMap(ClassElement::getIdMethod).ifPresent(psiMethod -> {
                     // 方法参数
                     if (!psiMethod.hasParameters()) {
@@ -107,8 +124,11 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
                             if (value != null) {
                                 result.addElement(LookupElementBuilder.create(value.getAnnotation(), value.getValue())
                                         .withIcon(AllIcons.Nodes.Annotationtype)
+                                        .withTypeText(Optional.of(parameter.getType())
+                                                .map(PsiType::getPresentableText)
+                                                .orElse(""))
                                         .bold());
-                                result.addElement(LookupElementBuilder.create("param1").bold());
+                                result.addElement(LookupElementBuilder.create("param1").withIcon(AllIcons.Nodes.Parameter).bold());
                             } else {
                                 for (Map.Entry<String, PsiMember> entry : Optional.of(parameter.getType())
                                         .filter(PsiTypeUtils::notPrimitiveType) // 非基础类型
@@ -128,11 +148,14 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
                     } else if (parameterList.getParametersCount() > 1) {
                         final PsiParameter[] parameters = parameterList.getParameters();
                         for (int i = 0; i < parameters.length; i++) {
-                            result.addElement(LookupElementBuilder.create("param" + (i + 1)).bold());
+                            result.addElement(LookupElementBuilder.create("param" + (i + 1)).withIcon(AllIcons.Nodes.Parameter).bold());
                             final Annotation.Value value = Annotation.PARAM.getValue(parameters[i]);
                             if (value != null) {
                                 result.addElement(LookupElementBuilder.create(value.getAnnotation(), value.getValue())
                                         .withIcon(AllIcons.Nodes.Annotationtype)
+                                        .withTypeText(Optional.of(parameters[i].getType())
+                                                .map(PsiType::getPresentableText)
+                                                .orElse(""))
                                         .bold());
                             }
                         }
