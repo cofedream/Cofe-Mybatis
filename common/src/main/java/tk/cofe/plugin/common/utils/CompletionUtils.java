@@ -19,14 +19,7 @@ package tk.cofe.plugin.common.utils;
 
 import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMember;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 
@@ -81,7 +74,7 @@ public class CompletionUtils {
             if (i == 0) {
                 getPrefixType(prefix[0], psiParameters,
                         psiParameter -> prefixClass.setElement(psiParameter).setPsiType(psiParameter.getType()),
-                        psiParameter -> prefixClass.setElement(getTargetElement(prefix[0], psiParameter.getType(), psiField -> psiField, psiMethod -> psiMethod)).setPsiType(getPrefixPsiType(prefix[0], psiParameter.getType())));
+                        psiParameter -> prefixClass.setElement(getTheGetMethodOrField(prefix[0], psiParameter.getType())).setPsiType(getPrefixPsiType(prefix[0], psiParameter.getType())));
             } else {
                 final String prefixStr = prefix[i];
                 PsiTypeUtils.isCustomType(prefixClass.psiType, psiClassType -> customTypeProcessor(prefixClass, prefixStr, psiClassType), psiType -> prefixClass.clear());
@@ -109,8 +102,8 @@ public class CompletionUtils {
             if (target == null) {
                 return null;
             }
-            target = getTargetElement(prefixs[i], target,
-                    psiField -> PsiTypeUtils.isCustomType(psiField.getType()), psiMethod -> PsiTypeUtils.isCustomType(psiMethod.getReturnType()),
+            target = getTheGetMethodOrField(prefixs[i], target,
+                    psiMethod -> PsiTypeUtils.isCustomType(psiMethod.getReturnType()), psiField -> PsiTypeUtils.isCustomType(psiField.getType()),
                     PsiField::getType, PsiMethod::getReturnType);
         }
         return target instanceof PsiClassType ? ((PsiClassType) target) : null;
@@ -142,49 +135,6 @@ public class CompletionUtils {
             return EMPTY_STRING_ARRAY;
         }
         return prefix.substring(0, prefix.lastIndexOf(".")).split("\\.");
-    }
-
-    /**
-     * 根据前缀获取目标类中字段的类型或方法的返回值类型
-     *
-     * @param prefix  前缀
-     * @param psiType 类对象
-     */
-
-    public static PsiType getPrefixPsiType(String prefix, PsiType psiType) {
-        return getTargetElement(prefix, psiType, PsiField::getType, PsiMethod::getReturnType);
-    }
-
-
-    public static <T> T getTargetElement(String prefix, PsiType psiType,
-                                         Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
-        return getTargetElement(prefix, psiType, psiField -> true, psiMethod -> true, fieldProcessor, methodProcessor);
-    }
-
-
-    public static <T> T getTargetElement(String prefix, PsiType psiType,
-                                         Predicate<PsiField> fieldCondition, Predicate<PsiMethod> methodCondition,
-                                         Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
-        if (!(psiType instanceof PsiClassType)) {
-            return null;
-        }
-        final PsiClass psiClass = ((PsiClassType) psiType).resolve();
-        if (psiClass == null) {
-            return null;
-        }
-        for (PsiField field : psiClass.getAllFields()) {
-            // 字段名与前缀匹配 且 为自定义类型
-            if (prefix.equals(field.getName()) && fieldCondition.test(field)) {
-                return fieldProcessor.apply(field);
-            }
-        }
-        // 字段名和前缀匹配
-        for (PsiMethod method : psiClass.getAllMethods()) {
-            if (prefix.equals(PsiMethodUtils.replaceGetPrefix(method)) && PsiMethodUtils.isGetMethod(method) && methodCondition.test(method)) {
-                return methodProcessor.apply(method);
-            }
-        }
-        return null;
     }
 
 
@@ -241,6 +191,95 @@ public class CompletionUtils {
             this.element = null;
             this.psiType = null;
         }
+    }
+
+    /**
+     * 根据前缀获取目标类中字段的类型或方法的返回值类型
+     *
+     * @param prefix  前缀
+     * @param psiType 类对象
+     * @see #getTheGetMethodOrField(String, PsiType, Predicate, Predicate, Function, Function)
+     */
+    public static PsiType getPrefixPsiType(String prefix, PsiType psiType) {
+        return getTheGetMethodOrField(prefix, psiType, PsiMethod::getReturnType, PsiField::getType);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素
+     *
+     * @param name    名称
+     * @param psiType 类
+     * @see #getTheGetMethodOrField(String, PsiType, Predicate, Predicate, Function, Function)
+     */
+    public static PsiMember getTheGetMethodOrField(String name, PsiType psiType) {
+        return getTheGetMethodOrField(name, psiType, psiMethod -> true, psiField -> true, field -> field, method -> method);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素,子类方法、字段优先
+     *
+     * @param name    名称
+     * @param psiType 类
+     * @see #getTheGetMethodOrField(String, PsiType, Predicate, Predicate, Function, Function)
+     */
+    public static <T> T getTheGetMethodOrField(String name, PsiType psiType,
+                                               Function<PsiMethod, T> methodProcessor, Function<PsiField, T> fieldProcessor) {
+        return getTheGetMethodOrField(name, psiType, psiMethod -> true, psiField -> true, fieldProcessor, methodProcessor);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素,子类方法、字段优先
+     *
+     * @param name            名称
+     * @param psiType         类型
+     * @param methodCondition 判断方法是否符合
+     * @param fieldCondition  判断字段是否符合
+     * @param fieldProcessor  字段处理
+     * @param methodProcessor 方法处理
+     * @see #getTheGetMethodOrField(String, PsiType, Predicate, Predicate, Function, Function)
+     */
+    public static <T> T getTheGetMethodOrField(String name, PsiType psiType,
+                                               Predicate<PsiMethod> methodCondition, Predicate<PsiField> fieldCondition,
+                                               Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+        if (!(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        return getTheGetMethodOrField(name, ((PsiClassType) psiType).resolve(), methodCondition, fieldCondition, fieldProcessor, methodProcessor);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素,子类方法、字段优先
+     *
+     * @param name            名称
+     * @param psiClass        类
+     * @param methodCondition 判断方法是否符合
+     * @param fieldCondition  判断字段是否符合
+     * @param fieldProcessor  字段处理
+     * @param methodProcessor 方法处理
+     * @see #getTheGetMethodOrField(String, PsiType, Predicate, Predicate, Function, Function)
+     */
+    public static <T> T getTheGetMethodOrField(String name, PsiClass psiClass,
+                                               Predicate<PsiMethod> methodCondition, Predicate<PsiField> fieldCondition,
+                                               Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+        if (psiClass == null) {
+            return null;
+        }
+        // 字段名和前缀匹配
+        for (PsiMethod method : psiClass.getMethods()) {
+            if (PsiMethodUtils.isGetMethod(method)
+                    && name.equals(PsiMethodUtils.replaceGetPrefix(method))
+                    && methodCondition.test(method)) {
+                return methodProcessor.apply(method);
+            }
+        }
+        //
+        for (PsiField field : psiClass.getFields()) {
+            // 字段名与前缀匹配 且 为自定义类型
+            if (name.equals(field.getName()) && fieldCondition.test(field)) {
+                return fieldProcessor.apply(field);
+            }
+        }
+        return getTheGetMethodOrField(name, psiClass.getSuperClass(), methodCondition, fieldCondition, fieldProcessor, methodProcessor);
     }
 
     public static Map<String, PsiMember> getTheGetMethodAndField(@Nullable PsiClassType psiClassType) {

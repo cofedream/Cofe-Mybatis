@@ -89,7 +89,7 @@ public class MbELReferenceProvider extends PsiReferenceProvider {
                 final String text = prefixArr[i];
                 offsetStart = offsetStart + 1 + offsetEnd; // textArr[i-1].
                 offsetEnd = offsetStart + text.length();
-                references.add(PsiReferenceBase.createSelfReference(element, new TextRange(offsetStart, offsetEnd), CompletionUtils.getTargetElement(text, psiType, field -> field, method -> method)));
+                references.add(PsiReferenceBase.createSelfReference(element, new TextRange(offsetStart, offsetEnd), CompletionUtils.getTheGetMethodOrField(text, psiType)));
             }
         }
         return references;
@@ -149,7 +149,7 @@ public class MbELReferenceProvider extends PsiReferenceProvider {
                 Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
                 if (value == null) {
                     if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
-                        final PsiMember psiMember = CompletionUtils.getTargetElement(name, firstParameter.getType(), field -> field, method -> method);
+                        final PsiMember psiMember = CompletionUtils.getTheGetMethodOrField(name, firstParameter.getType());
                         if (psiMember != null) {
                             return Collections.singletonList(psiMember);
                         }

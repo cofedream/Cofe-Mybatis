@@ -124,7 +124,7 @@ public class MOgnlReferenceProvider extends PsiReferenceProvider {
             Annotation.Value value = Annotation.PARAM.getValue(firstParameter);
             if (value == null) {
                 if (PsiTypeUtils.isCustomType(firstParameter.getType())) {
-                    PsiMember targetElement = CompletionUtils.getTargetElement(prefix0, firstParameter.getType(), psiField -> psiField, psiMethod1 -> psiMethod1);
+                    PsiMember targetElement = CompletionUtils.getTheGetMethodOrField(prefix0, firstParameter.getType());
                     references.add(PsiReferenceBase.createSelfReference(element, new TextRange(0, element.getTextLength()), targetElement));
                 }
             } else if (value.getValue().equals(prefix0)) {
