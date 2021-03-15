@@ -32,10 +32,8 @@
 
         <completion.contributor language="MOgnl"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>
-        <!--<completion.contributor language="MOgnl"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlFileSqlParameterCompletionContributor"/>-->
-        <!--<psi.referenceContributor language="MOgnl"-->
-                                  <!--implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>-->
+        <psi.referenceContributor language="MOgnl"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>
         <!--<colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MOgnlColorSettingsPage"/>-->
 
     </extensions>

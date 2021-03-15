@@ -264,22 +264,96 @@ public class CompletionUtils {
         if (psiClass == null) {
             return null;
         }
-        // 字段名和前缀匹配
+        return getTheMethodOrField(psiClass,
+                method -> PsiMethodUtils.isGetMethod(method)
+                        && name.equals(PsiMethodUtils.replaceGetPrefix(method))
+                        && methodCondition.test(method),
+                field -> name.equals(field.getName()) && fieldCondition.test(field),
+                fieldProcessor, methodProcessor);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素
+     *
+     * @param name    名称
+     * @param psiType 类
+     * @see #getTheMethodOrField(String, PsiClass, Predicate, Predicate, Function, Function)
+     */
+    public static PsiMember getTheMethodOrField(String name, PsiType psiType) {
+        return getTheMethodOrField(name, psiType, psiMethod -> true, psiField -> true, field -> field, method -> method);
+    }
+
+    /**
+     * 获取名称对应的Get方法和字段元素,子类方法、字段优先
+     *
+     * @param name    名称
+     * @param psiType 类
+     * @see #getTheMethodOrField(String, PsiClass, Predicate, Predicate, Function, Function)
+     */
+    public static <T> T getTheMethodOrField(String name, PsiType psiType,
+                                            Function<PsiMethod, T> methodProcessor, Function<PsiField, T> fieldProcessor) {
+        return getTheMethodOrField(name, psiType, psiMethod -> true, psiField -> true, fieldProcessor, methodProcessor);
+    }
+
+    /**
+     * 获取名称对应的方法和字段元素,子类方法、字段优先
+     *
+     * @param name            名称
+     * @param psiType         类型
+     * @param methodCondition 判断方法是否符合
+     * @param fieldCondition  判断字段是否符合
+     * @param fieldProcessor  字段处理
+     * @param methodProcessor 方法处理
+     * @see #getTheMethodOrField(String, PsiClass, Predicate, Predicate, Function, Function)
+     */
+    public static <T> T getTheMethodOrField(String name, PsiType psiType,
+                                            Predicate<PsiMethod> methodCondition, Predicate<PsiField> fieldCondition,
+                                            Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+        if (!(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        return getTheMethodOrField(name, ((PsiClassType) psiType).resolve(), methodCondition, fieldCondition, fieldProcessor, methodProcessor);
+    }
+
+    /**
+     * 获取名称对应的方法和字段元素,子类方法、字段优先
+     *
+     * @param name            名称
+     * @param psiClass        类
+     * @param methodCondition 判断方法是否符合
+     * @param fieldCondition  判断字段是否符合
+     * @param fieldProcessor  字段处理
+     * @param methodProcessor 方法处理
+     */
+    public static <T> T getTheMethodOrField(String name, PsiClass psiClass,
+                                            Predicate<PsiMethod> methodCondition, Predicate<PsiField> fieldCondition,
+                                            Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+        if (psiClass == null) {
+            return null;
+        }
+        return getTheMethodOrField(psiClass,
+                method -> name.equals(method.getName()) && methodCondition.test(method),
+                field -> name.equals(field.getName()) && fieldCondition.test(field),
+                fieldProcessor, methodProcessor);
+    }
+
+    private static <T> T getTheMethodOrField(PsiClass psiClass,
+                                             Predicate<PsiMethod> methodCondition, Predicate<PsiField> fieldCondition,
+                                             Function<PsiField, T> fieldProcessor, Function<PsiMethod, T> methodProcessor) {
+        if (psiClass == null) {
+            return null;
+        }
         for (PsiMethod method : psiClass.getMethods()) {
-            if (PsiMethodUtils.isGetMethod(method)
-                    && name.equals(PsiMethodUtils.replaceGetPrefix(method))
-                    && methodCondition.test(method)) {
+            if (methodCondition.test(method)) {
                 return methodProcessor.apply(method);
             }
         }
-        //
         for (PsiField field : psiClass.getFields()) {
-            // 字段名与前缀匹配 且 为自定义类型
-            if (name.equals(field.getName()) && fieldCondition.test(field)) {
+            if (fieldCondition.test(field)) {
                 return fieldProcessor.apply(field);
             }
         }
-        return getTheGetMethodOrField(name, psiClass.getSuperClass(), methodCondition, fieldCondition, fieldProcessor, methodProcessor);
+        return getTheMethodOrField(psiClass.getSuperClass(), methodCondition, fieldCondition, fieldProcessor, methodProcessor);
     }
 
     public static Map<String, PsiMember> getTheGetMethodAndField(@Nullable PsiClassType psiClassType) {
