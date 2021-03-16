@@ -22,9 +22,7 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
@@ -56,11 +54,14 @@ public class FirstKeywordCompletionProvider extends CompletionProvider<Completio
     @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
         final PsiElement position = completionParameters.getPosition();
-        // 获取前缀
-        if (Optional.of(position)
-                .map(info -> PsiTreeUtil.getParentOfType(info, elementClass))
-                .map(expr -> expr.textContains('.'))
-                .orElse(false)) {
+        // // 获取前缀
+        // if (Optional.of(position)
+        //         .map(info -> PsiTreeUtil.getParentOfType(info, elementClass))
+        //         .map(expr -> expr.textContains('.'))
+        //         .orElse(false)) {
+        //     return;
+        // }
+        if (position.getPrevSibling() != null) {
             return;
         }
         final PsiLanguageInjectionHost injectionHost = MybatisXMLUtils.getOriginElement(position);
