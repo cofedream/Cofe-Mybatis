@@ -199,11 +199,7 @@ public final class PsiTypeUtils {
      * @param psiType 类型
      */
     public static boolean isCustomType(PsiType psiType) {
-        if (isPrimitiveOrBoxType(psiType)
-                || isString(psiType)
-                || isCollectionOrMapType(psiType)
-                || isDateType(psiType)
-        ) {
+        if (isPrimitiveOrBoxType(psiType)) {
             return false;
         }
         // 上述类型都不成立,且为类对象,则为自定义对象

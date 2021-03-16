@@ -17,23 +17,25 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.apache.commons.collections.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.CompletionUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,58 @@ import java.util.stream.Collectors;
  * @date : 2021-03-15
  */
 abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider {
+
+    @NotNull
+    @Override
+    public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull final ProcessingContext context) {
+        if (element.getTextLength() <= 0) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+        final PsiElement originElement = MybatisXMLUtils.getOriginElement(element);
+        if (originElement == null) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+        // 方法参数
+        return build(element, originElement, element.getText().split("\\."))
+                .toArray(PsiReference.EMPTY_ARRAY);
+    }
+
+    List<PsiReference> build(@NotNull final PsiElement element, final PsiElement originElement, final String[] prefixArr) {
+        List<PsiReference> references = new ArrayList<>(prefixArr.length);
+        int offsetStart = 0;
+        int offsetEnd = prefixArr[0].length();
+        // 获取到第一个引用
+        final List<? extends PsiElement> firstReferences = getTargetElement(prefixArr[0], originElement);
+        references.add(new PsiReferenceBase.Poly<>(element, new TextRange(offsetStart, offsetEnd), false) {
+            @Override
+            public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
+                return PsiElementResolveResult.createResults(firstReferences);
+            }
+        });
+        if (firstReferences.size() == 1 && prefixArr.length > 1) {
+            final PsiElement firstReference = firstReferences.get(0);
+            PsiType psiType;
+            if (firstReference instanceof PsiMember) {
+                psiType = PsiJavaUtils.getPsiMemberType((PsiMember) firstReference);
+            } else if (firstReference instanceof PsiParameter) {
+                psiType = ((PsiParameter) firstReference).getType();
+            } else {
+                return references;
+            }
+            for (int i = 1; i < prefixArr.length; i++) {
+                // 从第二个开始
+                if (!PsiTypeUtils.isCustomType(psiType)) {
+                    break;
+                }
+                final String text = prefixArr[i];
+                offsetStart = offsetStart + 1 + offsetEnd; // textArr[i-1].
+                offsetEnd = offsetStart + text.length();
+                references.add(PsiReferenceBase.createSelfReference(element, new TextRange(offsetStart, offsetEnd), getSuffixElement(psiType, text)));
+            }
+        }
+        return references;
+    }
+
     List<? extends PsiElement> getTargetElement(String name, PsiElement element) {
         final PsiElement parent = element.getParent();
         if (parent == null) {
@@ -120,4 +174,6 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         }
         return Collections.emptyList();
     }
+
+    abstract PsiMember getSuffixElement(PsiType psiType, String text);
 }
