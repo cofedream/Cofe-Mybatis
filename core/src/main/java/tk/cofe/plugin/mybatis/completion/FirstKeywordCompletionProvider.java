@@ -46,7 +46,7 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2021-03-10
  */
-class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParameters> {
+public class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParameters> {
     private final Class<? extends PsiElement> elementClass;
 
     FirstKeywordCompletionProvider(Class<? extends PsiElement> elementClass) {
@@ -63,7 +63,7 @@ class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParame
                 .orElse(false)) {
             return;
         }
-        PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+        final PsiLanguageInjectionHost injectionHost = MybatisXMLUtils.getOriginElement(position);
         for (Bind bind : MybatisXMLUtils.getTheBindTagInParents(injectionHost)) {
             DomUtils.getAttributeValueOpt(bind.getName()).ifPresent(bindName -> {
                 result.addElement(LookupElementBuilder.create(bindName)

@@ -21,15 +21,20 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiType;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.common.utils.*;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiMethodUtils;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.provider.VariantsProvider;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
@@ -58,7 +63,7 @@ public class MOgnlFileSqlParameterCompletionContributor extends CompletionContri
         if (parameters.getCompletionType() != CompletionType.BASIC) {
             return;
         }
-        final PsiElement targetElement = getTargetElement(parameters, result);
+        final PsiElement targetElement = MybatisXMLUtils.getOriginElement(parameters);
         DomUtils.getDomElement(targetElement, ClassElement.class).flatMap(ClassElement::getIdMethod)
                 .ifPresent(psiMethod -> {
                     bindTag(result, targetElement);
@@ -161,11 +166,6 @@ public class MOgnlFileSqlParameterCompletionContributor extends CompletionContri
     @NotNull
     private LookupElement createLookupElement(String lookupString, String type, @Nullable Icon icon, double priority) {
         return PrioritizedLookupElement.withPriority(LookupElementBuilder.create(lookupString).withPresentableText(lookupString).withTypeText(type).bold().withIcon(icon), priority);
-    }
-
-    PsiElement getTargetElement(final CompletionParameters parameters, final CompletionResultSet result) {
-        PsiElement position = parameters.getPosition();
-        return InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
     }
 
     /**

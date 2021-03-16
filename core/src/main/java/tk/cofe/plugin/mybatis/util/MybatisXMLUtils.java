@@ -17,11 +17,12 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
@@ -66,8 +67,10 @@ public class MybatisXMLUtils {
         return DomUtils.getParents(psiElement, XmlTag.class, Foreach.class);
     }
 
-    @Nullable
-    public static PsiElement getOriginElement(final PsiElement element) {
+    public static PsiLanguageInjectionHost getOriginElement(final PsiElement element) {
         return InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
+    }
+    public static PsiLanguageInjectionHost getOriginElement(final CompletionParameters parameters) {
+        return getOriginElement(parameters.getPosition());
     }
 }

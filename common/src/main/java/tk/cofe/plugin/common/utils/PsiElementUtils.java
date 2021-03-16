@@ -17,15 +17,11 @@
 
 package tk.cofe.plugin.common.utils;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Element 工具类
@@ -72,8 +68,4 @@ public class PsiElementUtils {
         return PsiTreeUtil.getParentOfType(element, target);
     }
 
-    public static PsiLanguageInjectionHost getInjectionHost(@NotNull CompletionParameters parameters) {
-        PsiElement position = parameters.getPosition();
-        return InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
-    }
 }

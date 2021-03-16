@@ -19,9 +19,9 @@ package tk.cofe.plugin.mybatis.completion;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.util.ProcessingContext;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +32,7 @@ import tk.cofe.plugin.mbel.psi.MbELModeConfig;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -76,8 +77,7 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
 
     private void installResultMap() {
         extendCompletion(RESULT_MAP_EXPRESSION, parameters -> {
-            PsiElement position = parameters.getPosition();
-            PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(position.getProject()).getInjectionHost(position);
+            PsiLanguageInjectionHost injectionHost = MybatisXMLUtils.getOriginElement(parameters);
             Optional<Mapper> domElement = DomUtils.getDomElement(injectionHost, Mapper.class);
             return domElement
                     .map(Mapper::getResultMaps)

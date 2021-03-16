@@ -51,7 +51,7 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         if (element.getTextLength() <= 0) {
             return PsiReference.EMPTY_ARRAY;
         }
-        final PsiElement originElement = MybatisXMLUtils.getOriginElement(element);
+        final PsiLanguageInjectionHost originElement = MybatisXMLUtils.getOriginElement(element);
         if (originElement == null) {
             return PsiReference.EMPTY_ARRAY;
         }
