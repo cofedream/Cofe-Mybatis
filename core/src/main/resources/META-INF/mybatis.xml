@@ -24,6 +24,8 @@
         <fileType name="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
                   fieldName="INSTANCE" language="MOgnl" extensions="MOgnl"/>
 
+
+        <lang.ast.factory language="MOgnl" implementationClass="tk.cofe.plugin.mognl.psi.impl.MOgnlASTFactory"/>
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
         <!--<lang.syntaxHighlighterFactory language="MOgnl"-->
         <!--                               implementationClass="tk.cofe.plugin.mbel.highlight.MOgnlSyntaxHighlighterFactory"/>-->

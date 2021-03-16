@@ -387,30 +387,6 @@ public class CompletionUtils {
         return res;
     }
 
-    public static Map<String, PsiMember> getTheMethodAndField(@Nullable final PsiClass psiClass) {
-        if (psiClass == null) {
-            return Collections.emptyMap();
-        }
-        if (PsiJavaUtils.isObjectClass(psiClass)) {
-            return Collections.emptyMap();
-        }
-        Map<String, PsiMember> res = new HashMap<>();
-        for (PsiMethod method : psiClass.getMethods()) {
-            if (PsiMethodUtils.isGetMethod(method)) {
-                res.putIfAbsent(PsiMethodUtils.replaceGetPrefix(method), method);
-            } else {
-                res.putIfAbsent(method.getName(), method);
-            }
-        }
-        for (PsiField field : psiClass.getFields()) {
-            if (PsiFieldUtils.notSerialField(field)) {
-                res.putIfAbsent(field.getName(), field);
-            }
-        }
-        res.putAll(getTheMethodAndField(psiClass.getSuperClass()));
-        return res;
-    }
-
     /**
      * 获取类字段提示
      *
