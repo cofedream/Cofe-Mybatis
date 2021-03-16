@@ -14,20 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package tk.cofe.plugin.mognl.psi;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+package tk.cofe.plugin.mognl.psi.impl;
 
-public interface MOgnlReferenceExpression extends MOgnlExpression {
+import com.intellij.lang.ASTFactory;
+import com.intellij.psi.impl.source.tree.LeafElement;
+import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mognl.MOgnlTypes;
 
-  @NotNull
-  List<MOgnlExpression> getExpressionList();
+/**
+ * @author : zhengrf
+ * @date : 2021-03-16
+ */
+public class MOgnlASTFactory extends ASTFactory {
 
-  @NotNull PsiReference[] getReferences();
-
-  @NotNull PsiElement[] getChildren();
-
+    @Override
+    public LeafElement createLeaf(@NotNull final IElementType type, @NotNull CharSequence text) {
+        if (type == MOgnlTypes.DOT || type == MOgnlTypes.IDENTIFIER) {
+            return new MOgnlTokenImpl(type, text);
+        }
+        return null;
+    }
 }

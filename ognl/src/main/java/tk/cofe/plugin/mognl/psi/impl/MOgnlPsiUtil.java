@@ -25,6 +25,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mognl.MOgnlTypes;
@@ -38,6 +39,9 @@ import tk.cofe.plugin.mognl.psi.MOgnlParameterList;
 import tk.cofe.plugin.mognl.psi.MOgnlParenthesizedExpression;
 import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
 import tk.cofe.plugin.mognl.psi.MOgnlUnaryExpression;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : zhengrf
@@ -120,6 +124,21 @@ public class MOgnlPsiUtil {
     @NotNull
     public static PsiReference[] getReferences(MOgnlReferenceExpression element) {
         return ReferenceProvidersRegistry.getReferencesFromProviders(element);
+    }
+
+    @NotNull
+    public static PsiElement[] getChildren(MOgnlReferenceExpression element) {
+        PsiElement psiChild = element.getFirstChild();
+        if (psiChild == null) return PsiElement.EMPTY_ARRAY;
+
+        List<PsiElement> result = new ArrayList<>();
+        while (psiChild != null) {
+            if (psiChild.getNode() instanceof MOgnlTokenImpl) {
+                result.add(psiChild);
+            }
+            psiChild = psiChild.getNextSibling();
+        }
+        return PsiUtilCore.toPsiElementArray(result);
     }
 
     @Nullable

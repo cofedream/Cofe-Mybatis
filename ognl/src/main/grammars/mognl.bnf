@@ -184,13 +184,15 @@ selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
   ]
 }
 
+private referenceRecover ::= !(binaryOperations)
 referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
                         ('.' IDENTIFIER)* ('@' IDENTIFIER)?
                         ('.' selectionExpression)?
                         ('.' projectionExpression)?
 {
   mixin="tk.cofe.plugin.mognl.psi.impl.MOgnlReferenceExpressionBase"
-  methods=[getReferences]
+  methods=[getReferences getChildren]
+  recoverWhile="referenceRecover"
 }
 
 private conditionalExpressionTail ::= ':' expression {pin=1}

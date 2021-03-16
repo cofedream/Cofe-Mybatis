@@ -267,6 +267,27 @@ public class MOgnlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // !(binaryOperations)
+  static boolean referenceRecover(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "referenceRecover")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !referenceRecover_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (binaryOperations)
+  private static boolean referenceRecover_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "referenceRecover_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = binaryOperations(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // '<'  | "<="  | '>'  | ">=" |
   //                                  "lt" | "lte" | "gt" | "gte"
   static boolean relationalOperations(PsiBuilder b, int l) {
@@ -516,7 +537,7 @@ public class MOgnlParser implements PsiParser, LightPsiParser {
     r = r && referenceExpression_2(b, l + 1);
     r = r && referenceExpression_3(b, l + 1);
     r = r && referenceExpression_4(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, l, m, r, false, MOgnlParser::referenceRecover);
     return r;
   }
 
@@ -658,8 +679,10 @@ public class MOgnlParser implements PsiParser, LightPsiParser {
   private static boolean indexedExpression_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "indexedExpression_0")) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = referenceExpression(b, l + 1);
     if (!r) r = variableExpression(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 

@@ -53,4 +53,9 @@ public class MOgnlReferenceExpressionImpl extends MOgnlReferenceExpressionBase i
     return MOgnlPsiUtil.getReferences(this);
   }
 
+  @Override
+  public @NotNull PsiElement[] getChildren() {
+    return MOgnlPsiUtil.getChildren(this);
+  }
+
 }
