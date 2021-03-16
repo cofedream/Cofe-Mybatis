@@ -47,4 +47,9 @@ public class MbELReferenceExpressionImpl extends MbELPsiCompositeElementBase imp
     return MbELPsiUtil.getReferences(this);
   }
 
+  @Override
+  public @NotNull PsiElement[] getChildren() {
+    return MbELPsiUtil.getChildren(this);
+  }
+
 }

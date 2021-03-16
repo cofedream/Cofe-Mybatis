@@ -25,4 +25,6 @@ public interface MbELReferenceExpression extends MbELPsiCompositeElement {
 
   @NotNull PsiReference[] getReferences();
 
+  @NotNull PsiElement[] getChildren();
+
 }

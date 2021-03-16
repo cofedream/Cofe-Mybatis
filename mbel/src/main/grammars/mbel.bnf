@@ -78,7 +78,7 @@ private referenceRecover ::= !('}' | ',')
 referenceExpression ::= classNameExpression
 {
   mixin="tk.cofe.plugin.mbel.psi.impl.MbELPsiCompositeElementBase"
-  methods=[getReferences]
+  methods=[getReferences getChildren]
   recoverWhile="referenceRecover"
 }
 

@@ -17,10 +17,15 @@
 
 package tk.cofe.plugin.mbel.psi.impl;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : zhengrf
@@ -31,6 +36,21 @@ public class MbELPsiUtil {
     @NotNull
     public static PsiReference[] getReferences(MbELReferenceExpression element) {
         return ReferenceProvidersRegistry.getReferencesFromProviders(element);
+    }
+
+    @NotNull
+    public static PsiElement[] getChildren(MbELReferenceExpression element) {
+        PsiElement psiChild = element.getFirstChild();
+        if (psiChild == null) return PsiElement.EMPTY_ARRAY;
+
+        List<PsiElement> result = new ArrayList<>();
+        while (psiChild != null) {
+            if (psiChild.getNode() instanceof MbELTokenImpl) {
+                result.add(psiChild);
+            }
+            psiChild = psiChild.getNextSibling();
+        }
+        return PsiUtilCore.toPsiElementArray(result);
     }
 
 }
