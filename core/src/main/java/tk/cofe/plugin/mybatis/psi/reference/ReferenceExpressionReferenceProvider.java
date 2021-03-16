@@ -17,9 +17,11 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
+import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,8 +35,10 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -55,48 +59,54 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         if (originElement == null) {
             return PsiReference.EMPTY_ARRAY;
         }
-        // 方法参数
-        return build(element, originElement, element.getText().split("\\."))
-                .toArray(PsiReference.EMPTY_ARRAY);
+        return build(element, originElement).toArray(PsiReference.EMPTY_ARRAY);
     }
 
-    List<PsiReference> build(@NotNull final PsiElement element, final PsiElement originElement, final String[] prefixArr) {
-        List<PsiReference> references = new ArrayList<>(prefixArr.length);
-        int offsetStart = 0;
-        int offsetEnd = prefixArr[0].length();
+    List<PsiReference> build(@NotNull final PsiElement element, final PsiElement originElement) {
+        final PsiElement[] children = element.getChildren();
+        if (ArrayUtil.isEmpty(children)) {
+            return Collections.emptyList();
+        }
+        final PsiElement firstChild = children[0];
+        List<PsiReference> references = new ArrayList<>(children.length);
+        int startOffset = 0;
+        int endOffset = firstChild.getTextLength();
         // 获取到第一个引用
-        final List<? extends PsiElement> firstReferences = getTargetElement(prefixArr[0], originElement);
-        references.add(new PsiReferenceBase.Poly<>(element, new TextRange(offsetStart, offsetEnd), false) {
+        final List<? extends PsiElement> firstReferences = getTargetElement(firstChild.getText(), originElement);
+        references.add(new PsiReferenceBase.Poly<>(element, new TextRange(startOffset, endOffset), false) {
             @Override
             public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
                 return PsiElementResolveResult.createResults(firstReferences);
             }
         });
-        if (firstReferences.size() == 1 && prefixArr.length > 1) {
-            final PsiElement firstReference = firstReferences.get(0);
-            PsiType psiType;
-            if (firstReference instanceof PsiMember) {
-                psiType = PsiJavaUtils.getPsiMemberType((PsiMember) firstReference);
-            } else if (firstReference instanceof PsiParameter) {
-                psiType = ((PsiParameter) firstReference).getType();
-            } else {
-                return references;
-            }
-            for (int i = 1; i < prefixArr.length; i++) {
-                // 从第二个开始
-                if (!PsiTypeUtils.isCustomType(psiType)) {
-                    break;
+        if (firstReferences.size() == 1) {
+            PsiElement psiElement = firstReferences.get(0);
+            for (int i = 1; i < children.length; i++) {
+                PsiType psiType;
+                if (psiElement instanceof PsiMember) {
+                    psiType = PsiJavaUtils.getPsiMemberType((PsiMember) psiElement);
+                } else if (psiElement instanceof PsiParameter) {
+                    psiType = ((PsiParameter) psiElement).getType();
+                } else {
+                    return references;
                 }
-                final String text = prefixArr[i];
-                offsetStart = offsetStart + 1 + offsetEnd; // textArr[i-1].
-                offsetEnd = offsetStart + text.length();
-                references.add(PsiReferenceBase.createSelfReference(element, new TextRange(offsetStart, offsetEnd), getSuffixElement(psiType, text)));
+                final PsiElement child = children[i];
+                if (isDOTElement(child)) {
+                    endOffset += 1; // '.' 的长度
+                    continue;
+                }
+                startOffset = endOffset;
+                endOffset = startOffset + child.getTextLength();
+                final String childText = child.getText();
+                final PsiMember suffixElement = childText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED) ? null : getSuffixElement(psiType, childText);
+                references.add(createReference(element, psiType, suffixElement, new TextRange(startOffset, endOffset)));
+                psiElement = suffixElement;
             }
         }
         return references;
     }
 
-    List<? extends PsiElement> getTargetElement(String name, PsiElement element) {
+    protected List<? extends PsiElement> getTargetElement(String name, PsiElement element) {
         final PsiElement parent = element.getParent();
         if (parent == null) {
             return Collections.emptyList();
@@ -175,5 +185,10 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         return Collections.emptyList();
     }
 
-    abstract PsiMember getSuffixElement(PsiType psiType, String text);
+    protected abstract boolean isDOTElement(PsiElement element);
+
+    protected abstract PsiMember getSuffixElement(PsiType psiType, String text);
+
+    @Nonnull
+    protected abstract IdentifierReference createReference(@Nonnull PsiElement element, PsiType psiType, PsiMember suffixElement, final TextRange textRange);
 }

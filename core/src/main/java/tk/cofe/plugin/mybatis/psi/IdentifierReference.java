@@ -15,75 +15,72 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mognl.psi;
+package tk.cofe.plugin.mybatis.psi;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiMember;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiMethodUtils;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author : zhengrf
  * @date : 2021-03-06
  */
-public class MOgnlDotReference extends PsiReferenceBase<PsiElement> {
-    private static final String prefixStr = ".";
-    private final PsiClass psiClass;
+public abstract class IdentifierReference extends PsiReferenceBase<PsiElement> {
+    protected final PsiClass psiClass;
+    private final PsiElement targetElement;
 
-    public MOgnlDotReference(@NotNull PsiElement element, int offsetStart, PsiClass psiClass) {
-        super(element, new TextRange(offsetStart, offsetStart + 1), true);
-        this.psiClass = psiClass;
+    public IdentifierReference(@NotNull PsiElement element, final TextRange rangeInElement, PsiElement targetElement, PsiType psiType) {
+        super(element, rangeInElement);
+        this.targetElement = targetElement;
+        this.psiClass = PsiTypeUtils.isCustomType(psiType) ? ((PsiClassType) psiType).resolve() : null;
     }
 
     @Override
     public @Nullable PsiElement resolve() {
-        return null;
+        return targetElement;
     }
 
     @Override
     public Object @NotNull [] getVariants() {
         List<LookupElementBuilder> list = new ArrayList<>();
-        for (PsiMember member : findPsiMember(psiClass).values()) {
-            list.add(createLookup((PsiMethod) member));
+        for (PsiMember member : getClassMember()) {
+            if (member instanceof PsiMethod) {
+                list.add(createLookup(((PsiMethod) member)));
+            }
+            if (member instanceof PsiField) {
+                list.add(createLookup(((PsiField) member)));
+            }
         }
-        // CompletionUtils.getPsiClassTypeVariants(psiClass,
-        //         field -> {
-        //             // list.add(creatLookup(field))
-        //         },
-        //         method -> list.add(creatLookup(method)));
         return list.toArray(LookupElementBuilder[]::new);
     }
 
+    protected abstract Collection<PsiMember> getClassMember();
+
     @Nonnull
     private LookupElementBuilder createLookup(PsiField psiField) {
-        return LookupElementBuilder.create(psiField, prefixStr + psiField.getName())
-                // .withTypeText(psiField.getName())
+        return LookupElementBuilder.create(psiField, psiField.getName())
+                .withIcon(PlatformIcons.FIELD_ICON)
                 // .withTailText(psiField.getName())
                 .withPresentableText(psiField.getName())
+                .withTypeText(psiField.getType().getPresentableText())
                 ;
     }
 
     @Nonnull
     private LookupElementBuilder createLookup(PsiMethod psiMethod) {
         String methodName = PsiMethodUtils.replaceGetPrefix(psiMethod);
-        return LookupElementBuilder.create(psiMethod, prefixStr + methodName)
+        return LookupElementBuilder.create(psiMethod, methodName)
                 // .withTypeText(psiMethod.getName())
                 .withIcon(PlatformIcons.METHOD_ICON)
                 .withPresentableText(methodName)
@@ -92,20 +89,4 @@ public class MOgnlDotReference extends PsiReferenceBase<PsiElement> {
                 ;
     }
 
-    public static Map<String, PsiMember> findPsiMember(PsiClass psiClass) {
-        if (psiClass == null) {
-            return Collections.emptyMap();
-        }
-        Map<String, PsiMember> res = new HashMap<>();
-        for (PsiMethod method : psiClass.getMethods()) {
-            if (method.isConstructor()
-                    || PsiMethodUtils.isVoidMethod(method)
-                    || PsiMethodUtils.isSetMethod(method)) {
-                continue;
-            }
-            res.putIfAbsent(PsiMethodUtils.replaceGetPrefix(method), method);
-        }
-        res.putAll(findPsiMember(psiClass.getSuperClass()));
-        return res;
-    }
 }

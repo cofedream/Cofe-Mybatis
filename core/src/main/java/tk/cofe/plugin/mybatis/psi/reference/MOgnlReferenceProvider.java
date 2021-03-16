@@ -17,9 +17,17 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiType;
 import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
+import tk.cofe.plugin.mognl.MOgnlTypes;
+import tk.cofe.plugin.mybatis.psi.IdentifierReference;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author : zhengrf
@@ -28,7 +36,23 @@ import tk.cofe.plugin.common.utils.CompletionUtils;
 public class MOgnlReferenceProvider extends ReferenceExpressionReferenceProvider {
 
     @Override
-    PsiMember getSuffixElement(PsiType psiType, String text) {
+    protected boolean isDOTElement(PsiElement element) {
+        return MOgnlTypes.DOT == PsiElementUtils.getElementType(element);
+    }
+
+    @Nonnull
+    @Override
+    protected IdentifierReference createReference(@Nonnull PsiElement element, PsiType psiType, PsiMember suffixElement, TextRange textRange) {
+        return new IdentifierReference(element, textRange, suffixElement, psiType) {
+            @Override
+            protected Collection<PsiMember> getClassMember() {
+                return CompletionUtils.getTheMethodAndField(psiClass).values();
+            }
+        };
+    }
+
+    @Override
+    protected PsiMember getSuffixElement(PsiType psiType, String text) {
         return CompletionUtils.getTheMethodOrField(text, psiType);
     }
 

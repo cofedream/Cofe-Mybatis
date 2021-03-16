@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.common.utils;
 
-import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +31,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.intellij.codeInsight.completion.CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED;
+
 
 /**
  * 代码完成相关工具类
@@ -116,7 +118,7 @@ public class CompletionUtils {
      */
     public static String getPrefixStr(final String text) {
         if (StringUtil.isNotEmpty(text)) {
-            String[] prefixArr = text.trim().split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED);
+            String[] prefixArr = text.trim().split(DUMMY_IDENTIFIER_TRIMMED);
             if (prefixArr.length > 0) {
                 return prefixArr[0];
             }
@@ -385,6 +387,30 @@ public class CompletionUtils {
         return res;
     }
 
+    public static Map<String, PsiMember> getTheMethodAndField(@Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return Collections.emptyMap();
+        }
+        if (PsiJavaUtils.isObjectClass(psiClass)) {
+            return Collections.emptyMap();
+        }
+        Map<String, PsiMember> res = new HashMap<>();
+        for (PsiMethod method : psiClass.getMethods()) {
+            if (PsiMethodUtils.isGetMethod(method)) {
+                res.putIfAbsent(PsiMethodUtils.replaceGetPrefix(method), method);
+            } else {
+                res.putIfAbsent(method.getName(), method);
+            }
+        }
+        for (PsiField field : psiClass.getFields()) {
+            if (PsiFieldUtils.notSerialField(field)) {
+                res.putIfAbsent(field.getName(), field);
+            }
+        }
+        res.putAll(getTheMethodAndField(psiClass.getSuperClass()));
+        return res;
+    }
+
     /**
      * 获取类字段提示
      *
@@ -435,4 +461,5 @@ public class CompletionUtils {
             }
         }
     }
+
 }

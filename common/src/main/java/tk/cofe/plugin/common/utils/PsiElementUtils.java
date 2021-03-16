@@ -20,8 +20,10 @@ package tk.cofe.plugin.common.utils;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Element 工具类
@@ -66,6 +68,14 @@ public class PsiElementUtils {
             return null;
         }
         return PsiTreeUtil.getParentOfType(element, target);
+    }
+
+    /**
+     * 获取元素类型
+     */
+    @NotNull
+    public static IElementType getElementType(PsiElement element) {
+        return element.getNode().getElementType();
     }
 
 }
