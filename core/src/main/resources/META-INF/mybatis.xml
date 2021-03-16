@@ -44,6 +44,8 @@
         <fileType name="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
                   fieldName="INSTANCE" language="MbEL" extensions="MbEL"/>
 
+        <lang.ast.factory language="MbEL" implementationClass="tk.cofe.plugin.mbel.psi.impl.MbELASTFactory"/>
+
         <lang.parserDefinition language="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELParserDefinition"/>
         <lang.syntaxHighlighterFactory language="MbEL"
                                        implementationClass="tk.cofe.plugin.mbel.highlight.MbELSyntaxHighlighterFactory"/>
