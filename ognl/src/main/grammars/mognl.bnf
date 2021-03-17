@@ -128,15 +128,16 @@ private rootElement ::= expression {
   recoverWhile="rootRecover"
 }
 
-expression ::= literalExpression |
+expression ::=
             unaryExpression |
             parenthesizedExpression |
-            variableExpression |
             conditionalExpression |
             binaryExpression |
-            referenceExpression |
             methodCallExpression |
-            indexedExpression
+            indexedExpression |
+            referenceExpression |
+            variableExpression |
+            literalExpression
 {
   methods=[
     getType
@@ -165,7 +166,9 @@ unaryExpression ::= unaryOperator expression {
   ]
 }
 
-parenthesizedExpression ::= LPARENTH expression RPARENTH { pin=1 }
+parenthesizedExpression ::= '(' expression ')' {
+//  pin=1
+}
 
 variableExpression ::= '#' IDENTIFIER {
   mixin="tk.cofe.plugin.mognl.psi.impl.MOgnlVariableExpressionBase"
@@ -184,7 +187,6 @@ selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
   ]
 }
 
-private referenceRecover ::= !(binaryOperations)
 referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
                         ('.' IDENTIFIER)* ('@' IDENTIFIER)?
                         ('.' selectionExpression)?
@@ -192,7 +194,6 @@ referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
 {
   mixin="tk.cofe.plugin.mognl.psi.impl.MOgnlReferenceExpressionBase"
   methods=[getReferences getChildren]
-  recoverWhile="referenceRecover"
 }
 
 private conditionalExpressionTail ::= ':' expression {pin=1}
@@ -240,13 +241,11 @@ binaryExpression ::= expression binaryOperations expression {
   ]
 }
 
-private parameterRecover ::= !(')')
 parameterList ::= expression? (',' expression)* {
   methods=[
     parametersList="expression"
     getParameterCount
   ]
-  recoverWhile="parameterRecover"
 }
 
 methodCallExpression ::= referenceExpression '(' parameterList ')' {
