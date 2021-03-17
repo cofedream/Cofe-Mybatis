@@ -53,8 +53,18 @@ public class MOgnlReferenceProvider extends ReferenceExpressionReferenceProvider
     }
 
     @Override
-    protected PsiMember getSuffixElement(PsiType psiType, String text) {
-        return CompletionUtils.getTheMethodOrField(text, psiType);
+    protected PsiMember findSuffixElement(String name, PsiType psiType) {
+        if (!(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        final PsiClass psiClass = ((PsiClassType) psiType).resolve();
+        if (psiClass == null) {
+            return null;
+        }
+        return CompletionUtils.getTheMethodOrField(psiClass,
+                method -> name.equals(method.getName()) || name.equals(PsiMethodUtils.replaceGetPrefix(method)),
+                field -> name.equals(field.getName()),
+                field -> field, method -> method);
     }
 
     private Map<String, PsiMember> getTheMethodAndField(@Nullable final PsiClass psiClass) {

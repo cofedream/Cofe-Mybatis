@@ -98,7 +98,7 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
                 startOffset = endOffset;
                 endOffset = startOffset + child.getTextLength();
                 final String childText = child.getText();
-                final PsiMember suffixElement = childText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED) ? null : getSuffixElement(psiType, childText);
+                final PsiMember suffixElement = childText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED) ? null : findSuffixElement(childText, psiType);
                 references.add(createReference(element, psiType, suffixElement, new TextRange(startOffset, endOffset)));
                 psiElement = suffixElement;
             }
@@ -187,7 +187,7 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
 
     protected abstract boolean isDOTElement(PsiElement element);
 
-    protected abstract PsiMember getSuffixElement(PsiType psiType, String text);
+    protected abstract PsiMember findSuffixElement(String text, PsiType psiType);
 
     @Nonnull
     protected abstract IdentifierReference createReference(@Nonnull PsiElement element, PsiType psiType, PsiMember suffixElement, final TextRange textRange);

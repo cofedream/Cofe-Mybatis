@@ -52,7 +52,7 @@ public class MbELReferenceProvider extends ReferenceExpressionReferenceProvider 
     }
 
     @Override
-    protected PsiMember getSuffixElement(PsiType psiType, String text) {
+    protected PsiMember findSuffixElement(String text, PsiType psiType) {
         return CompletionUtils.getTheGetMethodOrField(text, psiType);
     }
 }
