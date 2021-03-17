@@ -110,7 +110,7 @@ public class FirstKeywordCompletionProvider extends CompletionProvider<Completio
                     } else {
                         for (Map.Entry<String, PsiMember> entry : Optional.of(parameter.getType())
                                 .filter(PsiTypeUtils::notPrimitiveType) // 非基础类型
-                                .map(psiType -> CompletionUtils.getTheGetMethodAndField(((PsiClassType) psiType)))
+                                .map(psiType -> CompletionUtils.getTheGetMethodAndField(((PsiClassType) psiType).resolve()))
                                 .orElse(Collections.emptyMap()).entrySet()) {
                             final String k = entry.getKey();
                             final PsiMember v = entry.getValue();

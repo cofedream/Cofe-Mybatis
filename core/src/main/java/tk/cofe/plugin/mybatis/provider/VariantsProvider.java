@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ public interface VariantsProvider<T> {
         } else {
             emptyPrefix(prefix, prefixArr, parameters, res);
         }
-        beforeReturn(prefix, prefixArr, parameters, res);
         return res;
     }
 
@@ -53,7 +52,4 @@ public interface VariantsProvider<T> {
 
     void emptyPrefix(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T res);
 
-    default void beforeReturn(final String prefixText, final String[] prefixArr, final PsiParameter[] parameters, final T result) {
-
-    }
 }
