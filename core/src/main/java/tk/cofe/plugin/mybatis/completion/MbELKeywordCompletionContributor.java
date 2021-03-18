@@ -64,7 +64,7 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
     }
 
     private void installParam() {
-        extend(CompletionType.BASIC, REFERENCE_EXPRESSION, new FirstKeywordCompletionProvider(MbELReferenceExpression.class));
+        extend(CompletionType.BASIC, REFERENCE_EXPRESSION, new FirstKeywordCompletionProvider());
     }
 
     private void installMode() {

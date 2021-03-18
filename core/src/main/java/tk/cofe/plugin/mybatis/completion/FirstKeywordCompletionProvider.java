@@ -45,11 +45,6 @@ import java.util.Optional;
  * @date : 2021-03-10
  */
 public class FirstKeywordCompletionProvider extends CompletionProvider<CompletionParameters> {
-    private final Class<? extends PsiElement> elementClass;
-
-    FirstKeywordCompletionProvider(Class<? extends PsiElement> elementClass) {
-        this.elementClass = elementClass;
-    }
 
     @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {

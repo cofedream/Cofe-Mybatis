@@ -38,6 +38,6 @@ public class MOgnlKeywordCompletionContributor extends CompletionContributor {
     }
 
     private void installParam() {
-        extend(CompletionType.BASIC, REFERENCE_EXPRESSION, new FirstKeywordCompletionProvider(MOgnlReferenceExpression.class));
+        extend(CompletionType.BASIC, REFERENCE_EXPRESSION, new FirstKeywordCompletionProvider());
     }
 }
