@@ -27,32 +27,21 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.utils.CompletionUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.mbel.psi.MbELJdbcTypeConfig;
-import tk.cofe.plugin.mbel.psi.MbELModeConfig;
-import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
-import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
+import tk.cofe.plugin.mybatis.constant.ElementPattern;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static tk.cofe.plugin.mbel.MbELKeyword.*;
+import static tk.cofe.plugin.mybatis.constant.ElementPattern.MbEL;
 
 /**
  * @author : zhengrf
  * @date : 2021-02-20
  */
 public class MbELKeywordCompletionContributor extends CompletionContributor {
-
-    //
-    private static final PsiElementPattern.Capture<PsiElement> MODE_EXPRESSION = psiElement().inside(MbELModeConfig.class);
-    private static final PsiElementPattern.Capture<PsiElement> JDBC_TYPE_EXPRESSION = psiElement().inside(MbELJdbcTypeConfig.class);
-    private static final PsiElementPattern.Capture<PsiElement> RESULT_MAP_EXPRESSION = psiElement().inside(MbELResultMapConfig.class);
-    //
-    private static final PsiElementPattern.Capture<PsiElement> PARAM_CONFIG_EXPRESSION = psiElement()
-            .afterLeafSkipping(psiElement(MbELReferenceExpression.class), psiElement().withText(","));
 
     public MbELKeywordCompletionContributor() {
         installMode();
@@ -62,15 +51,15 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
     }
 
     private void installMode() {
-        extendCompletion(MODE_EXPRESSION, Mode.STRINGS);
+        extendCompletion(MbEL.MODE_EXPRESSION, Mode.STRINGS);
     }
 
     private void installJdbcType() {
-        extendCompletion(JDBC_TYPE_EXPRESSION, JdbcType.STRINGS);
+        extendCompletion(MbEL.JDBC_TYPE_EXPRESSION, JdbcType.STRINGS);
     }
 
     private void installResultMap() {
-        extendCompletion(RESULT_MAP_EXPRESSION, parameters -> {
+        extendCompletion(ElementPattern.MbEL.RESULT_MAP_EXPRESSION, parameters -> {
             PsiLanguageInjectionHost injectionHost = MybatisXMLUtils.getOriginElement(parameters);
             Optional<Mapper> domElement = DomUtils.getDomElement(injectionHost, Mapper.class);
             return domElement
@@ -84,7 +73,7 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
     }
 
     private void installParamConfig() {
-        extendCompletion(PARAM_CONFIG_EXPRESSION, STRINGS);
+        extendCompletion(MbEL.PARAM_CONFIG_EXPRESSION, STRINGS);
     }
 
     private void extendCompletion(final PsiElementPattern.Capture<PsiElement> pattern,

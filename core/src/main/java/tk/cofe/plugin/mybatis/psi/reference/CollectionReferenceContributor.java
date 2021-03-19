@@ -17,37 +17,19 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
-
+import static tk.cofe.plugin.mybatis.constant.ElementPattern.XML;
 /**
  * @author : zhengrf
  * @date : 2020-01-19
  */
 public class CollectionReferenceContributor extends PsiReferenceContributor {
 
-    /**
-     * 匹配 foreach 标签
-     *
-     * @see tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach#TAG
-     */
-    public static final PsiElementPattern.Capture<XmlTag> FOREACH_PATTERN = psiElement(XmlTag.class)
-            .withText(StandardPatterns.string().startsWith("<foreach").endsWith("</foreach>"));
-    public static final PsiElementPattern.Capture<XmlAttributeValue> COLLECTION_PATTERN = psiElement(XmlAttributeValue.class)
-            .withParent(psiElement(XmlAttribute.class)
-                    .withText(StandardPatterns.string().startsWith("collection"))
-                    .withParent(FOREACH_PATTERN));
-
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
-        registrar.registerReferenceProvider(COLLECTION_PATTERN, new CollectionReferenceProvider());
+        registrar.registerReferenceProvider(XML.COLLECTION_PATTERN, new CollectionReferenceProvider());
     }
 }
