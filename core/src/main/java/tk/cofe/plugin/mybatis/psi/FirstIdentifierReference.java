@@ -20,14 +20,17 @@ package tk.cofe.plugin.mybatis.psi;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.util.ArrayUtil;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiMethodUtils;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.Optional;
 
 /**
@@ -38,16 +41,30 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
     private static final FirstElementSearchProvider<LookupElementBuilder> VARIANTS_PROVIDER = new FirstElementSearchProvider<>() {
         @Nonnull
         @Override
-        public LookupElementBuilder mapper(String name, XmlAttributeValue xmlAttributeValue) {
-            return LookupElementBuilder.create(xmlAttributeValue, xmlAttributeValue.getValue())
-                    .withIcon(PlatformIcons.XML_TAG_ICON);
+        public LookupElementBuilder mapper(XmlAttributeValue xmlAttributeValue, XmlAttributeValue tipsElement) {
+            LookupElementBuilder builder = LookupElementBuilder.create(xmlAttributeValue, xmlAttributeValue.getValue());
+            if (tipsElement != null) {
+                final XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(tipsElement, XmlAttribute.class);
+                if (xmlAttribute != null) {
+                    builder = builder.withTailText(xmlAttribute.getName() + "=\"" + tipsElement.getValue() + "\"", true);
+                    final XmlTag xmlTag = PsiTreeUtil.getParentOfType(tipsElement, XmlTag.class);
+                    if (xmlTag != null) {
+                        builder = builder.withTypeText("<" + xmlTag.getName() + "/>");
+                    }
+                }
+            }
+            return builder.withIcon(PlatformIcons.XML_TAG_ICON).bold();
         }
 
         @Nonnull
         @Override
-        public LookupElementBuilder mapper(String name, PsiParameter psiParameter) {
+        public LookupElementBuilder mapper(String name, PsiParameter psiParameter, final Icon icon) {
             return LookupElementBuilder.create(psiParameter, name)
-                    .withIcon(PlatformIcons.PARAMETER_ICON);
+                    .withTypeText(Optional.of(psiParameter.getType())
+                            .map(PsiType::getPresentableText)
+                            .orElse(""))
+                    .withIcon(icon)
+                    .bold();
         }
 
         @Nonnull

@@ -20,17 +20,18 @@ package tk.cofe.plugin.mybatis.psi;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.GenericAttributeValue;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.CompletionUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,18 +56,19 @@ public abstract class FirstElementSearchProvider<T> {
         List<T> res = new ArrayList<>();
         // 查询元素中包含的Bind
         res.addAll(bindInclude.getBinds().stream()
-                .map(NameAttribute::getName)
-                .map(GenericAttributeValue::getXmlAttributeValue)
-                .filter(Objects::nonNull)
-                .map(val -> mapper(val.getValue(), val))
+                .map(bind -> mapper(
+                        bind.getName().getXmlAttributeValue(),
+                        bind.getValue().getXmlAttributeValue()))
                 .collect(Collectors.toList()));
         // 如果是Foreach标签则判断item是否符合
         if (bindInclude instanceof Foreach) {
-            res.addAll(Optional.ofNullable(((Foreach) bindInclude).getItem())
-                    .map(GenericAttributeValue::getXmlAttributeValue)
-                    .map(val -> mapper(val.getValue(), val))
-                    .map(Collections::singletonList)
-                    .orElse(Collections.emptyList()));
+            // foreach collection标签
+            final Foreach foreach = (Foreach) bindInclude;
+            final GenericAttributeValue<String> collection = foreach.getCollection();
+            Optional.ofNullable(foreach.getItem())
+                    .ifPresent(item -> res.add(mapper(item.getXmlAttributeValue(), collection.getXmlAttributeValue())));
+            Optional.ofNullable(foreach.getIndex())
+                    .ifPresent(index -> res.add(mapper(index.getXmlAttributeValue(), collection.getXmlAttributeValue())));
         }
         if (bindInclude instanceof ClassElement) {
             // 如果是ClassElement且没有bind标签,则查询对应的方法参数
@@ -76,7 +78,7 @@ public abstract class FirstElementSearchProvider<T> {
                     .map(PsiParameterList::getParameters)
                     .ifPresent(psiParameters -> {
                         for (int i = 0; i < psiParameters.length; i++) {
-                            res.add(mapper("param" + (i + 1), psiParameters[i]));
+                            res.add(mapper("param" + (i + 1), psiParameters[i], PlatformIcons.PARAMETER_ICON));
                         }
                         if (psiParameters.length == 1) {
                             // 如果方法只有一个参数
@@ -91,14 +93,14 @@ public abstract class FirstElementSearchProvider<T> {
                                 }
                             } else {
                                 // todo 需要调整
-                                res.add(mapper(value.getValue(), firstParameter));
+                                res.add(mapper(value.getValue(), firstParameter, PlatformIcons.ANNOTATION_TYPE_ICON));
                             }
                         } else if (psiParameters.length > 1) {
                             // 如果方法有多个参数
                             for (PsiParameter psiParameter : psiParameters) {
                                 final Annotation.Value value = Annotation.PARAM.getValue(psiParameter);
                                 if (value != null && StringUtil.isNotEmpty(value.getValue())) {
-                                    res.add(mapper(value.getValue(), psiParameter));
+                                    res.add(mapper(value.getValue(), psiParameter, PlatformIcons.ANNOTATION_TYPE_ICON));
                                 }
                             }
                         }
@@ -111,10 +113,10 @@ public abstract class FirstElementSearchProvider<T> {
     }
 
     @Nonnull
-    public abstract T mapper(String name, XmlAttributeValue xmlAttributeValue);
+    public abstract T mapper(XmlAttributeValue xmlAttributeValue, XmlAttributeValue tipsElement);
 
     @Nonnull
-    public abstract T mapper(String name, PsiParameter psiParameter);
+    public abstract T mapper(String name, PsiParameter psiParameter, final Icon icon);
 
     @Nonnull
     public abstract T mapper(String name, PsiMember psiMember);
