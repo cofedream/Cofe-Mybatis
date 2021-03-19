@@ -18,17 +18,16 @@
 package tk.cofe.plugin.mybatis.psi.reference;
 
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.common.utils.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiType;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
 import tk.cofe.plugin.mognl.MOgnlTypes;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author : zhengrf
@@ -47,57 +46,14 @@ public class MOgnlReferenceProvider extends ReferenceExpressionReferenceProvider
         return new IdentifierReference(element, textRange, suffixElement, psiType) {
             @Override
             protected Collection<PsiMember> getClassMember() {
-                return getTheMethodAndField(psiClass).values();
+                return CompletionUtils.getTheMethodAndField(psiClass).values();
             }
         };
     }
 
     @Override
     protected PsiMember findSuffixElement(String name, PsiType psiType) {
-        if (!(psiType instanceof PsiClassType)) {
-            return null;
-        }
-        final PsiClass psiClass = ((PsiClassType) psiType).resolve();
-        if (psiClass == null) {
-            return null;
-        }
-        return CompletionUtils.getTheMethodOrField(psiClass,
-                method -> name.equals(method.getName()) || name.equals(PsiMethodUtils.replaceGetPrefix(method)),
-                field -> name.equals(field.getName()),
-                field -> field, method -> method);
-    }
-
-    private Map<String, PsiMember> getTheMethodAndField(@Nullable final PsiClass psiClass) {
-        if (psiClass == null) {
-            return Collections.emptyMap();
-        }
-        if (PsiJavaUtils.isObjectClass(psiClass)) {
-            return Collections.emptyMap();
-        }
-        Map<String, PsiMember> res = new HashMap<>();
-        for (PsiMethod method : psiClass.getMethods()) {
-            if (method.isConstructor()
-                    || !PsiMethodUtils.isPublicMethod(method)
-                    || PsiMethodUtils.isVoidMethod(method)) {
-                // 是构造函数、非公共函数、没有返回值
-                // 则不进行提示
-                continue;
-            }
-            String methodName = method.getName();
-            if (PsiMethodUtils.nameStartWithGet(method)) {
-                methodName = PsiMethodUtils.replaceGetPrefix(method);
-            } else if (PsiMethodUtils.nameStartWithIs(method)) {
-                methodName = PsiMethodUtils.replaceIsPrefix(method);
-            }
-            res.putIfAbsent(methodName, method);
-        }
-        for (PsiField field : psiClass.getFields()) {
-            if (PsiFieldUtils.notSerialField(field)) {
-                res.putIfAbsent(field.getName(), field);
-            }
-        }
-        res.putAll(getTheMethodAndField(psiClass.getSuperClass()));
-        return res;
+        return CompletionUtils.getTheMethodOrField(name, psiType);
     }
 
 }

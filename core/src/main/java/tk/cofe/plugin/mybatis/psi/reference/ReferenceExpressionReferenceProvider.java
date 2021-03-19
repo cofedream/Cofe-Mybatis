@@ -26,7 +26,7 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.psi.FirstElementProvider;
+import tk.cofe.plugin.mybatis.psi.SuffixElementProvider;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
@@ -40,7 +40,7 @@ import java.util.List;
  * @date : 2021-03-15
  */
 abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider {
-    private static final FirstElementProvider<PsiElement> PROVIDER = new FirstElementProvider<>() {
+    private static final SuffixElementProvider<PsiElement> PROVIDER = new SuffixElementProvider<>() {
         @Nonnull
         @Override
         public PsiElement mapper(PsiElement injectElement, XmlAttributeValue xmlAttributeValue) {

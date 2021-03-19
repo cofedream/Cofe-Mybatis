@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @author : zhengrf
  * @date : 2021-03-18
  */
-public abstract class FirstElementProvider<T> {
+public abstract class SuffixElementProvider<T> {
 
     public List<? extends T> getTargetElement(String name, PsiElement injectElement, final PsiElement searchElement) {
         if (searchElement == null) {

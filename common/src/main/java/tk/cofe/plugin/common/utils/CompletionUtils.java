@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.common.utils;
 
+import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.Nullable;
@@ -193,6 +194,21 @@ public class CompletionUtils {
                 fieldProcessor, methodProcessor);
     }
 
+    public static PsiMember getTheMethodOrField(String name, PsiType psiType) {
+        if (name.contains(DUMMY_IDENTIFIER_TRIMMED)
+                || !(psiType instanceof PsiClassType)) {
+            return null;
+        }
+        final PsiClass psiClass = ((PsiClassType) psiType).resolve();
+        if (psiClass == null) {
+            return null;
+        }
+        return getTheMethodOrField(psiClass,
+                method -> name.equals(method.getName()) || name.equals(PsiMethodUtils.replaceGetPrefix(method)),
+                field -> name.equals(field.getName()),
+                field -> field, method -> method);
+    }
+
     /**
      * 类字段元素,子类方法、字段优先
      *
@@ -243,4 +259,36 @@ public class CompletionUtils {
         return res;
     }
 
+    public static Map<String, PsiMember> getTheMethodAndField(@Nullable final PsiClass psiClass) {
+        if (psiClass == null) {
+            return Collections.emptyMap();
+        }
+        if (PsiJavaUtils.isObjectClass(psiClass)) {
+            return Collections.emptyMap();
+        }
+        Map<String, PsiMember> res = new HashMap<>();
+        for (PsiMethod method : psiClass.getMethods()) {
+            if (method.isConstructor()
+                    || !PsiMethodUtils.isPublicMethod(method)
+                    || PsiMethodUtils.isVoidMethod(method)) {
+                // 是构造函数、非公共函数、没有返回值
+                // 则不进行提示
+                continue;
+            }
+            String methodName = method.getName();
+            if (PsiMethodUtils.nameStartWithGet(method)) {
+                methodName = PsiMethodUtils.replaceGetPrefix(method);
+            } else if (PsiMethodUtils.nameStartWithIs(method)) {
+                methodName = PsiMethodUtils.replaceIsPrefix(method);
+            }
+            res.putIfAbsent(methodName, method);
+        }
+        for (PsiField field : psiClass.getFields()) {
+            if (PsiFieldUtils.notSerialField(field)) {
+                res.putIfAbsent(field.getName(), field);
+            }
+        }
+        res.putAll(getTheMethodAndField(psiClass.getSuperClass()));
+        return res;
+    }
 }
