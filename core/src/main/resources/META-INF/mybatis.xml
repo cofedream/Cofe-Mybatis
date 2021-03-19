@@ -62,4 +62,9 @@
 
     </extensions>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <psi.referenceContributor language="XML" order="first"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.CollectionReferenceContributor"/>
+    </extensions>
+
 </idea-plugin>

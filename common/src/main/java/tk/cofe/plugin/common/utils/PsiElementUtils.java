@@ -78,4 +78,24 @@ public class PsiElementUtils {
         return element.getNode().getElementType();
     }
 
+    /**
+     * 获取目标子元素
+     *
+     * @param element      父元素
+     * @param iElementType 元素类型
+     * @return 子元素
+     */
+    public static PsiElement getSubElement(PsiElement element, IElementType iElementType) {
+        if (element == null || iElementType == null) {
+            return null;
+        }
+        PsiElement child = element.getFirstChild();
+        while (child != null) {
+            if (getElementType(child) == iElementType) {
+                return child;
+            }
+            child = child.getNextSibling();
+        }
+        return null;
+    }
 }
