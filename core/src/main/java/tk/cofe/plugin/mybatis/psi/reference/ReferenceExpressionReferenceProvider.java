@@ -20,12 +20,15 @@ package tk.cofe.plugin.mybatis.psi.reference;
 import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.psi.FirstIdentifierReference;
 import tk.cofe.plugin.mybatis.psi.SuffixElementProvider;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
@@ -40,25 +43,6 @@ import java.util.List;
  * @date : 2021-03-15
  */
 abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider {
-    private static final SuffixElementProvider<PsiElement> PROVIDER = new SuffixElementProvider<>() {
-        @Nonnull
-        @Override
-        public PsiElement mapper(PsiElement injectElement, XmlAttributeValue xmlAttributeValue) {
-            return xmlAttributeValue;
-        }
-
-        @Nonnull
-        @Override
-        public PsiElement mapper(PsiElement injectElement, PsiParameter psiParameter) {
-            return psiParameter;
-        }
-
-        @Nonnull
-        @Override
-        public PsiElement mapper(PsiElement injectElement, String name, PsiElement targetElement, @Nullable PsiType type) {
-            return targetElement;
-        }
-    };
 
     @NotNull
     @Override
@@ -83,15 +67,10 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         int startOffset = 0;
         int endOffset = firstChild.getTextLength();
         // 获取到第一个引用
-        final List<? extends PsiElement> firstReferences = PROVIDER.getTargetElement(firstChild.getText(), originElement, originElement);
-        references.add(new PsiReferenceBase.Poly<>(element, new TextRange(startOffset, endOffset), false) {
-            @Override
-            public ResolveResult @NotNull [] multiResolve(boolean incompleteCode) {
-                return PsiElementResolveResult.createResults(firstReferences);
-            }
-        });
-        if (firstReferences.size() == 1) {
-            PsiElement psiElement = firstReferences.get(0);
+        final FirstIdentifierReference reference = new FirstIdentifierReference(firstChild.getText(), element, TextRange.create(startOffset, endOffset), originElement);
+        references.add(reference);
+        PsiElement psiElement = reference.resolve();
+        if (psiElement != null) {
             for (int i = 1; i < children.length; i++) {
                 PsiType psiType;
                 if (psiElement instanceof PsiMember) {

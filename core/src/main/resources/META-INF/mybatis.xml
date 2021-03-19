@@ -32,8 +32,6 @@
 
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlConditionInject"/>
 
-        <completion.contributor language="MOgnl"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.MOgnlKeywordCompletionContributor"/>
         <psi.referenceContributor language="MOgnl"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>
         <!--<colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MOgnlColorSettingsPage"/>-->

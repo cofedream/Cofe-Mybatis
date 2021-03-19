@@ -46,7 +46,6 @@ import static tk.cofe.plugin.mbel.MbELKeyword.*;
  */
 public class MbELKeywordCompletionContributor extends CompletionContributor {
 
-    public static final PsiElementPattern.Capture<PsiElement> REFERENCE_EXPRESSION = psiElement().inside(MbELReferenceExpression.class);
     //
     private static final PsiElementPattern.Capture<PsiElement> MODE_EXPRESSION = psiElement().inside(MbELModeConfig.class);
     private static final PsiElementPattern.Capture<PsiElement> JDBC_TYPE_EXPRESSION = psiElement().inside(MbELJdbcTypeConfig.class);
@@ -56,15 +55,10 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
             .afterLeafSkipping(psiElement(MbELReferenceExpression.class), psiElement().withText(","));
 
     public MbELKeywordCompletionContributor() {
-        installParam();
         installMode();
         installJdbcType();
         installResultMap();
         installParamConfig();
-    }
-
-    private void installParam() {
-        extend(CompletionType.BASIC, REFERENCE_EXPRESSION, new FirstKeywordCompletionProvider());
     }
 
     private void installMode() {
