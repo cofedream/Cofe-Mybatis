@@ -37,7 +37,7 @@ import java.util.Optional;
  * @date : 2021-03-06
  */
 public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiElement> {
-    private static final FirstElementSearchProvider<LookupElementBuilder> VARIANTS_PROVIDER = new FirstElementSearchProvider<>() {
+    private static final FirstElementSearchProvider<LookupElementBuilder> VARIANTS_PROVIDER = new FirstElementSearchProvider() {
         @Override
         public LookupElementBuilder mapper(XmlAttributeValue xmlAttributeValue, XmlAttributeValue tipsElement) {
             LookupElementBuilder builder = LookupElementBuilder.create(xmlAttributeValue, xmlAttributeValue.getValue());
@@ -97,7 +97,7 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
                     ;
         }
     };
-    private static final SuffixElementProvider<PsiElement> RESOLVE_PROVIDER = new SuffixElementProvider<>() {
+    private static final SuffixElementProvider<PsiElement> RESOLVE_PROVIDER = new SuffixElementProvider() {
         @Override
         public PsiElement mapper(PsiElement injectElement, XmlAttributeValue xmlAttributeValue) {
             return xmlAttributeValue;
