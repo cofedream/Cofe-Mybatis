@@ -1,18 +1,22 @@
-# Mybatis_Plugin
+# 前言
 
-感谢 [JetBrains](https://www.jetbrains.com/?from=Cofe-Mybatis) 对此项目的支持
+感谢 [JetBrains](https://www.jetbrains.com/?from=Cofe-Mybatis) 对此项目的支持。
 
-## 介绍
+# 相关地址 
 
-现已发布至Jetbrains插件仓库,地址[cofe-mybatis](https://plugins.jetbrains.com/plugin/12808-cofe-mybatis)
+[Gitee](https://gitee.com/cofedream/Cofe-Mybatis) | [GitHub](https://github.com/cofedream/Cofe-Mybatis) | [Jetbrains Marketplace](https://plugins.jetbrains.com/plugin/12808-cofe-mybatis)
 
-免费的 IDEA Mybatis插件。
+# 介绍
 
-因为觉得现有的不满足自己的需求，所以自己写一个。
+本项目最早基于 [free-idea-mybatis](https://github.com/wuzhizhan/free-idea-mybatis) 修改，但因后续功能实现与原本差异较大，便于2018年11月份重新立项。
 
-项目源起于2018年11月份,原本 fork 自 [free-idea-mybatis](https://github.com/wuzhizhan/free-idea-mybatis),但后续写着觉得难受就删了重来
+# 功能完成度
 
-## 相关快捷键
+| 介绍 | 完成情况 |
+| :---: | :---: |
+| XMapper.java 跳转至 XMapper.XML | ✓ |
+
+# 相关快捷键
 
 | 说明| IDEA默认快捷键| 
 | --- | --- | 
@@ -23,7 +27,7 @@
 | XML中参数跳转定义 | Ctrl+B |
 | XML中参数提示 | Ctrl+空格(Completion Base) |
 
-## 功能演示
+# 功能演示
 
 1. 支持Spring注入提示<br/> ![SpringInject](/images/SpringInject.gif)
 2. 支持Mybatis接口与XMl互相跳转<br/> ![](/images/NavigateToXml.gif)<br/>![](/images/NavigateToMethod.gif)
