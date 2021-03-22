@@ -24,7 +24,7 @@
     <h1>Cofe Mybatis</h1>
     <p>
         <b>
-            <a href="https://gitee.com/cofedream/Cofe_Mybatis">Gitee</a> |
+            <a href="https://gitee.com/cofedream/Cofe-Mybatis">Gitee</a> |
             <a href="https://github.com/cofedream/Cofe-Mybatis">GitHub</a>
         </b>
     </p>
@@ -46,10 +46,10 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>参数提示中添加bind标签name</li>
-            <li>foreach标签,item添加提示</li>
-            <li>语法优化调整</li>
-            <li>README调整</li>
+            <li>语法调整,支持#{}中的jdbcType等参数配置</li>
+            <li>调整语法注入</li>
+            <li>参数配置添加高亮处理</li>
+            <li>调整mbsp为mbl(Mybatis Language)</li>
         </ul>
     ]]></change-notes>
 
@@ -69,7 +69,7 @@
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
 
-    <xi:include href="mybatis-language.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="mybatis.xml"/>
     <!-- Extension points defined by the plugin.
     Extension points are registered by a plugin so that other
     plugins can provide this plugin with certain data. The
@@ -115,10 +115,10 @@
 
         <!--代码检查-->
         <localInspection implementationClass="tk.cofe.plugin.mybatis.dom.inspection.MapperXmlInspection"
-                         language="XML" displayName="mapper xml validate" level="ERROR" enabledByDefault="true"
+                         language="XML" displayName="Mapper xml validate" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.xml.text" groupPath="Mybatis"/>
         <localInspection implementationClass="tk.cofe.plugin.mybatis.inspection.MapperInterfaceMethodInspection"
-                         language="JAVA" displayName="unmapped statement" level="ERROR" enabledByDefault="true"
+                         language="JAVA" displayName="Unmapped statement" level="ERROR" enabledByDefault="true"
                          groupKey="action.group.interface.text" groupPath="Mybatis"/>
         <!--<implicitUsageProvider implementation=""-->
         <!--<lang.inspectionSuppressor-->

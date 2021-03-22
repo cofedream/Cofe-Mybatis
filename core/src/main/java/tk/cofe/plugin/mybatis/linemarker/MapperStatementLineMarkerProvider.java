@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Collection;
