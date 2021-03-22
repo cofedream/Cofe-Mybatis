@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,11 +30,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.PsiElementUtils;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 
 import java.util.Arrays;
 

@@ -1,0 +1,26 @@
+name: Gitee Sync
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Git Infomation
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'cofedream@outlook.com'
+      - name: Setup SSH Private Key
+        env:
+          token_Private_Keys: ${{ secrets.GITEE_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$token_Private_Keys" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan gitee.com >> ~/.ssh/known_hosts
+      - name: Git Push commit
+        run: |
+          git remote add mirror git@gitee.com:$GITHUB_REPOSITORY
+          git push --tags --force --prune mirror "refs/remotes/origin/*:refs/heads/*"

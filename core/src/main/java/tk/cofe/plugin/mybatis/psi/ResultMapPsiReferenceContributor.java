@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.util.DomUtils;
+import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Objects;
@@ -74,11 +74,11 @@ public class ResultMapPsiReferenceContributor extends PsiReferenceContributor {
                             return MybatisUtils.getMapper(xmlTag)
                                     .map(Mapper::getResultMaps)
                                     .map(resultMaps -> resultMaps.stream()
-                                            .filter(resultMap -> !resultMap.isEqualsId(value) && Objects.equals(value, DomUtils.getAttributeVlaue(resultMap.getExtends()).orElse(null)))
+                                            .filter(resultMap -> !resultMap.isEqualsId(value) && Objects.equals(value, DomUtils.getAttributeValue(resultMap.getExtends())))
                                             .map((Function<ResultMap, Object>) ResultMap::getExtends)
                                             .map(o -> ((GenericAttributeValue) o).getXmlAttributeValue())
                                             .filter(Objects::nonNull)
-                                            .map(xmlAttributeValue -> new PsiReferenceBase.Immediate<>(element, xmlAttributeValue)).toArray(PsiReference[]::new)).orElse(PsiReference.EMPTY_ARRAY);
+                                            .map(xmlAttributeValue -> PsiReferenceBase.createSelfReference(element, xmlAttributeValue)).toArray(PsiReference[]::new)).orElse(PsiReference.EMPTY_ARRAY);
                         }
                         break;
                 }
