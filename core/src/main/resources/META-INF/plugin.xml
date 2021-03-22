@@ -69,7 +69,7 @@
        `action.[pluginID].[ActionID].text` -->
     <resource-bundle>messages.MyBatisBundle</resource-bundle>
 
-    <xi:include href="mybatis.xml"/>
+    <xi:include href="mybatis.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!-- Extension points defined by the plugin.
     Extension points are registered by a plugin so that other
     plugins can provide this plugin with certain data. The
