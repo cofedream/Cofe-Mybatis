@@ -32,7 +32,6 @@ import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -130,12 +129,9 @@ public abstract class SuffixElementProvider<T> {
         return Collections.emptyList();
     }
 
-    @Nonnull
     public abstract T mapper(PsiElement injectElement, XmlAttributeValue xmlAttributeValue);
 
-    @Nonnull
     public abstract T mapper(PsiElement injectElement, PsiParameter psiParameter);
 
-    @Nonnull
     public abstract T mapper(PsiElement injectElement, final String name, PsiElement targetElement, @Nullable final PsiType type);
 }

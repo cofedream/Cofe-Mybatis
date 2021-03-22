@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiMethodUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -67,7 +66,6 @@ public abstract class IdentifierReference extends PsiReferenceBase<PsiElement> {
 
     protected abstract Collection<PsiMember> getClassMember();
 
-    @Nonnull
     private LookupElementBuilder createLookup(PsiField psiField) {
         return LookupElementBuilder.create(psiField, psiField.getName())
                 .withIcon(PlatformIcons.FIELD_ICON)
@@ -77,7 +75,6 @@ public abstract class IdentifierReference extends PsiReferenceBase<PsiElement> {
                 ;
     }
 
-    @Nonnull
     private LookupElementBuilder createLookup(PsiMethod psiMethod) {
         String methodName = PsiMethodUtils.replaceGetPrefix(psiMethod);
         return LookupElementBuilder.create(psiMethod, methodName)

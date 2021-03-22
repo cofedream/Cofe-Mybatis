@@ -26,7 +26,6 @@ import tk.cofe.plugin.common.utils.PsiElementUtils;
 import tk.cofe.plugin.mognl.MOgnlTypes;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -40,9 +39,8 @@ public class MOgnlReferenceProvider extends ReferenceExpressionReferenceProvider
         return MOgnlTypes.DOT == PsiElementUtils.getElementType(element);
     }
 
-    @Nonnull
     @Override
-    protected IdentifierReference createReference(@Nonnull PsiElement element, PsiType psiType, PsiMember suffixElement, TextRange textRange) {
+    protected IdentifierReference createReference(PsiElement element, PsiType psiType, PsiMember suffixElement, TextRange textRange) {
         return new IdentifierReference(element, textRange, suffixElement, psiType) {
             @Override
             protected Collection<PsiMember> getClassMember() {

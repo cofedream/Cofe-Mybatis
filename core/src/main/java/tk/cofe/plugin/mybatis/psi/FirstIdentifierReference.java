@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiMethodUtils;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiElement> {
     private static final FirstElementSearchProvider<LookupElementBuilder> VARIANTS_PROVIDER = new FirstElementSearchProvider<>() {
-        @Nonnull
         @Override
         public LookupElementBuilder mapper(XmlAttributeValue xmlAttributeValue, XmlAttributeValue tipsElement) {
             LookupElementBuilder builder = LookupElementBuilder.create(xmlAttributeValue, xmlAttributeValue.getValue());
@@ -56,7 +54,6 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
             return builder.withIcon(PlatformIcons.XML_TAG_ICON).bold();
         }
 
-        @Nonnull
         @Override
         public LookupElementBuilder mapper(String name, PsiParameter psiParameter, final Icon icon) {
             return LookupElementBuilder.create(psiParameter, name)
@@ -67,7 +64,6 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
                     .bold();
         }
 
-        @Nonnull
         @Override
         public LookupElementBuilder mapper(String name, PsiMember member) {
             if (member instanceof PsiMethod) {
@@ -79,7 +75,7 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
             return LookupElementBuilder.create(member, name);
         }
 
-        @Nonnull
+        @NotNull
         private LookupElementBuilder createLookup(PsiField psiField) {
             return LookupElementBuilder.create(psiField, psiField.getName())
                     .withIcon(PlatformIcons.FIELD_ICON)
@@ -89,7 +85,7 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
                     ;
         }
 
-        @Nonnull
+        @NotNull
         private LookupElementBuilder createLookup(PsiMethod psiMethod) {
             String methodName = PsiMethodUtils.replaceGetPrefix(psiMethod);
             return LookupElementBuilder.create(psiMethod, methodName)
@@ -102,19 +98,16 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
         }
     };
     private static final SuffixElementProvider<PsiElement> RESOLVE_PROVIDER = new SuffixElementProvider<>() {
-        @Nonnull
         @Override
         public PsiElement mapper(PsiElement injectElement, XmlAttributeValue xmlAttributeValue) {
             return xmlAttributeValue;
         }
 
-        @Nonnull
         @Override
         public PsiElement mapper(PsiElement injectElement, PsiParameter psiParameter) {
             return psiParameter;
         }
 
-        @Nonnull
         @Override
         public PsiElement mapper(PsiElement injectElement, String name, PsiElement targetElement, @Nullable PsiType type) {
             return targetElement;

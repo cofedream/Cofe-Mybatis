@@ -20,20 +20,14 @@ package tk.cofe.plugin.mybatis.psi.reference;
 import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.psi.FirstIdentifierReference;
-import tk.cofe.plugin.mybatis.psi.SuffixElementProvider;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
 import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -100,6 +94,5 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
 
     protected abstract PsiMember findSuffixElement(String text, PsiType psiType);
 
-    @Nonnull
-    protected abstract IdentifierReference createReference(@Nonnull PsiElement element, PsiType psiType, PsiMember suffixElement, final TextRange textRange);
+    protected abstract IdentifierReference createReference(PsiElement element, PsiType psiType, PsiMember suffixElement, final TextRange textRange);
 }

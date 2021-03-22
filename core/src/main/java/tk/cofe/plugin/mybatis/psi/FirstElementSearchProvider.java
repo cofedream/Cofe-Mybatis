@@ -30,7 +30,6 @@ import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
 import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -112,12 +111,9 @@ public abstract class FirstElementSearchProvider<T> {
         return res;
     }
 
-    @Nonnull
     public abstract T mapper(XmlAttributeValue xmlAttributeValue, XmlAttributeValue tipsElement);
 
-    @Nonnull
     public abstract T mapper(String name, PsiParameter psiParameter, final Icon icon);
 
-    @Nonnull
     public abstract T mapper(String name, PsiMember psiMember);
 }
