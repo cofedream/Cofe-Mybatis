@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 
 import java.util.Collections;
 import java.util.List;

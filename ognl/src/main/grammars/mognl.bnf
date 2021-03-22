@@ -1,0 +1,267 @@
+/*
+ * Copyright (C) 2019-2021 cofe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+{
+  classHeader="gpl.txt"
+
+  parserClass="tk.cofe.plugin.mognl.parser.MOgnlParser"
+
+  implements="tk.cofe.plugin.mognl.psi.MOgnlPsiCompositeElement"
+  extends="tk.cofe.plugin.mognl.psi.impl.MOgnlPsiCompositeElementBase"
+
+  psiClassPrefix="MOgnl"
+  psiImplClassSuffix="Impl"
+  psiPackage="tk.cofe.plugin.mognl.psi"
+  psiImplPackage="tk.cofe.plugin.mognl.psi.impl"
+
+  elementTypeHolderClass="tk.cofe.plugin.mognl.MOgnlTypes"
+  elementTypePrefix=""
+  elementTypeClass="tk.cofe.plugin.mognl.psi.MOgnlElementType"
+  tokenTypeClass="tk.cofe.plugin.mognl.psi.MOgnlTokenType"
+
+  psiImplUtilClass="tk.cofe.plugin.mognl.psi.impl.MOgnlPsiUtil"
+
+  extends(".*(Expression|Literal)")="expression"
+  tokens=[
+    EXPRESSION_START="%{"
+//    EXPRESSION_END="}"
+
+    DOT="."
+    COMMA=","
+    COLON=":"
+
+    LPARENTH="("
+    RPARENTH=")"
+    LBRACKET="["
+    RBRACKET="]"
+    LBRACE="{"
+    RBRACE="}"
+
+    PLUS="+"
+    MINUS="-"
+    MULTIPLY="*"
+    DIVISION="/"
+    MODULO="%"
+
+    NEGATE="!"
+    NOT_EQUAL="!="
+    EQUAL="=="
+    EQ="="
+    LESS="<"
+    LESS_EQUAL="<="
+    GREATER=">"
+    GREATER_EQUAL=">="
+
+    EQ_KEYWORD="eq"
+    NEQ_KEYWORD="neq"
+    LT_KEYWORD="lt"
+    LT_EQ_KEYWORD="lte"
+    GT_KEYWORD="gt"
+    GT_EQ_KEYWORD="gte"
+
+    AND_AND="&&"
+    OR_OR="||"
+    AND_KEYWORD="and"
+    OR_KEYWORD="or"
+    NOT_KEYWORD="not"
+
+    OR="|"
+    XOR="^"
+    AND="&"
+    NOT="~"
+
+    BAND_KEYWORD="band"
+    BOR_KEYWORD="bor"
+    XOR_KEYWORD="xor"
+
+    NEW_KEYWORD="new"
+    TRUE_KEYWORD="true"
+    FALSE_KEYWORD="false"
+    NULL_KEYWORD="null"
+
+    INSTANCEOF_KEYWORD="instanceof"
+    NOT_IN_KEYWORD="not in"
+    IN_KEYWORD="in"
+
+    SHIFT_LEFT="<<"
+    SHIFT_RIGHT=">>"
+    SHIFT_RIGHT_LOGICAL=">>>"
+
+    SHIFT_LEFT_KEYWORD="shl"
+    SHIFT_RIGHT_KEYWORD="shr"
+    SHIFT_RIGHT_LOGICAL_KEYWORD="ushr"
+
+    AT="@"
+    QUESTION="?"
+    DOLLAR="$"
+    HASH="#"
+
+    WHITE_SPACE_CHAR='regexp:\p{Space}+'
+
+    INTEGER_LITERAL="regexp:\p{Digit}*" // [0-9]
+    DOUBLE_LITERAL="regexp:\p{Digit}+\.\p{Digit}+" // [0-9]+\.[0-9]+
+
+    CHARACTER_LITERAL="regexp:'[^\r\n]*'"
+    STRING_LITERAL="regexp:\"[^\r\n]*\""
+
+    IDENTIFIER="regexp:\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*"
+  ]
+}
+
+root ::= EXPRESSION_START rootElement RBRACE {pin=1}
+private rootRecover ::= !(RBRACE)
+private rootElement ::= expression {
+  recoverWhile="rootRecover"
+}
+
+expression ::=
+            unaryExpression |
+            parenthesizedExpression |
+            conditionalExpression |
+            binaryExpression |
+            methodCallExpression |
+            indexedExpression |
+            referenceExpression |
+            variableExpression |
+            literalExpression
+{
+  methods=[
+    getType
+  ]
+}
+
+private numberLiteralExpression ::= INTEGER_LITERAL | DOUBLE_LITERAL
+private textLiteralExpression ::= STRING_LITERAL | CHARACTER_LITERAL
+private booleanLiteralExpression ::= TRUE_KEYWORD | FALSE_KEYWORD
+literalExpression ::= numberLiteralExpression |
+                      textLiteralExpression |
+                      booleanLiteralExpression |
+                      NULL_KEYWORD {
+  methods=[
+    getConstantValue
+  ]
+}
+
+private bitwiseOperations ::= '!' | '~'
+private unaryOperator ::= bitwiseOperations |
+                          '+' | '-' | 'not'
+unaryExpression ::= unaryOperator expression {
+  pin=1
+  methods=[
+    getUnaryOperator
+  ]
+}
+
+parenthesizedExpression ::= '(' expression ')' {
+//  pin=1
+}
+
+variableExpression ::= '#' IDENTIFIER {
+  mixin="tk.cofe.plugin.mognl.psi.impl.MOgnlVariableExpressionBase"
+}
+
+projectionExpression ::= '{' expression '}'
+{
+  methods=[
+    projectionExpression="expression"
+  ]
+}
+selectionExpression ::= '{' ('?' | '^' | '$') expression '}'
+{
+  methods=[
+    selectorExpression="expression"
+  ]
+}
+
+referenceExpression ::= (variableExpression | ['@'] IDENTIFIER)
+                        ('.' IDENTIFIER)* ('@' IDENTIFIER)?
+                        ('.' selectionExpression)?
+                        ('.' projectionExpression)?
+{
+  mixin="tk.cofe.plugin.mognl.psi.impl.MOgnlReferenceExpressionBase"
+  methods=[getReferences getChildren]
+}
+
+private conditionalExpressionTail ::= ':' expression {pin=1}
+conditionalExpression ::= expression '?' expression conditionalExpressionTail {
+  methods=[
+    expression=""
+    condition="expression[0]"
+    then="expression[1]"
+    else="expression[2]"
+  ]
+}
+
+// binary ----------------------------------------------------------------
+private plusMinusOperations ::= '+' | '-'
+private divideMultiplyOperations ::=  '*' | '/' | '%'
+private booleanOperations ::= "&&" | "||" |
+                              "and" | "or" |
+                              "not"
+private bitwiseBooleanOperations ::=  "|" | "^" | "&" | "band" | "bor" | "xor"
+private equalityOperations ::= "==" | "!=" |
+                               "eq" | "neq"
+private relationalOperations ::= '<'  | "<="  | '>'  | ">=" |
+                                 "lt" | "lte" | "gt" | "gte"
+private shiftOperations ::= "<<" | ">>" | ">>>" |
+                            "shl" | "shr" | "ushr"
+private instanceOfOperation ::= "instanceof"
+private setOperations ::= "not in" | "in"
+private binaryOperations ::=
+                           plusMinusOperations |
+                           divideMultiplyOperations |
+                           bitwiseBooleanOperations |
+                           instanceOfOperation |
+                           shiftOperations |
+                           booleanOperations |
+                           equalityOperations |
+                           relationalOperations |
+                           setOperations
+                           { name="operator" }
+binaryExpression ::= expression binaryOperations expression {
+  methods=[
+    expression=""
+    left="expression[0]"
+    right="expression[1]"
+    getOperator
+  ]
+}
+
+parameterList ::= expression? (',' expression)* {
+  methods=[
+    parametersList="expression"
+    getParameterCount
+  ]
+}
+
+methodCallExpression ::= referenceExpression '(' parameterList ')' {
+  methods=[
+    method="expression"
+  ]
+  pin(".*")="'\('"
+}
+
+indexedExpression ::= (referenceExpression | variableExpression) '[' expression ']'
+                      ('.' IDENTIFIER)*
+                      ('.'  selectionExpression | projectionExpression)? {
+  methods=[
+    expression=""
+    referenceQualifier="expression[0]"
+    indexExpression="expression[1]"
+  ]
+  pin=2
+}

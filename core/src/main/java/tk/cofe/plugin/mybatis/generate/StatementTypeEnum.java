@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.annotation.Annotation;
+import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;

@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.icons.MybatisIcons;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.mybatis.util.PsiJavaUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 
 import javax.swing.*;
 import java.util.Collection;
