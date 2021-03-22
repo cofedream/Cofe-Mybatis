@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,5 +25,7 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
  * @date : 2019-01-21
  */
 public interface Bind extends DynamicTag, NameAttribute, ValueAttribute {
+
+    String TAG = "<bind/>";
 
 }

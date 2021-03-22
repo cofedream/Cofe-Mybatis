@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) 2019-2021 cofe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+{
+  classHeader="gpl.txt"
+
+  parserClass="tk.cofe.plugin.mbel.parser.MbELParser"
+
+  implements="tk.cofe.plugin.mbel.psi.MbELPsiCompositeElement"
+  extends="tk.cofe.plugin.mbel.psi.impl.MbELPsiCompositeElementBase"
+
+  psiClassPrefix="MbEL"
+  psiImplClassSuffix="Impl"
+  psiPackage="tk.cofe.plugin.mbel.psi"
+  psiImplPackage="tk.cofe.plugin.mbel.psi.impl"
+
+  elementTypeHolderClass="tk.cofe.plugin.mbel.MbELTypes"
+  elementTypePrefix=""
+  elementTypeClass="tk.cofe.plugin.mbel.psi.MbELElementType"
+  tokenTypeClass="tk.cofe.plugin.mbel.psi.MbELTokenType"
+
+  psiImplUtilClass="tk.cofe.plugin.mbel.psi.impl.MbELPsiUtil"
+
+  pin(".*Config")=1
+  tokens=[
+    HASH_START="#{"
+    DOLLAR_START="#{"
+
+    DOLLAR_KEYWORD="$"
+    HASH="#"
+
+    LBRACE="{"
+    RBRACE="}"
+
+    DOT="."
+    COMMA=","
+    EQ="="
+
+    MODE_KEYWORD='mode'
+    JAVA_TYPE_KEYWORD='javaType'
+    JDBC_TYPE_KEYWORD='jdbcType'
+    JDBC_TYPE_KEYWORD_NAME='jdbcTypeName'
+    NUMERIC_SCALE_KEYWORD='numericScale'
+    TYPE_HANDLER_KEYWORD='typeHandler'
+    RESULT_MAP_KEYWORD='resultMap'
+
+    WHITE_SPACE_CHAR='regexp:\p{Space}+'
+
+    INTEGER_LITERAL="regexp:\p{Digit}*" // [0-9]
+
+    IDENTIFIER="regexp:\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*"
+  ]
+}
+
+root ::= (HASH_START | DOLLAR_START) rootElement RBRACE {pin=1}
+private rootRecover ::= !(RBRACE | ',')
+private rootElement ::= referenceExpression paramConfigList? {
+  recoverWhile="rootRecover"
+}
+// a.b.c.d
+private classNameExpression ::= IDENTIFIER ('.' IDENTIFIER)*
+
+private referenceRecover ::= !('}' | ',')
+referenceExpression ::= classNameExpression
+{
+  mixin="tk.cofe.plugin.mbel.psi.impl.MbELPsiCompositeElementBase"
+  methods=[getReferences getChildren]
+  recoverWhile="referenceRecover"
+}
+
+//https://mybatis.org/mybatis-3/sqlmap-xml.html#Parameters
+modeConfig ::= 'mode' '=' IDENTIFIER
+javaTypeConfig ::= 'javaType' '=' classNameExpression
+jdbcTypeConfig ::= 'jdbcType' '=' IDENTIFIER
+jdbcTypeNameConfig ::= 'jdbcTypeName' '=' IDENTIFIER
+numericScaleConfig ::= 'numericScale' '=' INTEGER_LITERAL
+typeHandlerConfig ::= 'typeHandler' '=' classNameExpression
+resultMapConfig ::= 'resultMap' '=' IDENTIFIER
+private configRecover ::= !('}' | ',')
+private paramConfig ::= ',' (modeConfig | javaTypeConfig | jdbcTypeConfig | jdbcTypeNameConfig | numericScaleConfig | typeHandlerConfig | resultMapConfig){
+  recoverWhile = "configRecover"
+}
+paramConfigList ::= paramConfig+

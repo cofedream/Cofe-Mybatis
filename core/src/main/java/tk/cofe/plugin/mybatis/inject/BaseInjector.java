@@ -1,13 +1,16 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -29,6 +32,12 @@ import java.util.List;
  */
 public abstract class BaseInjector implements MultiHostInjector {
 
+    private final Class<? extends PsiElement> targetElement;
+
+    public BaseInjector(Class<? extends PsiElement> targetElement) {
+        this.targetElement = targetElement;
+    }
+
     @Override
     public void getLanguagesToInject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context) {
         if (!MybatisUtils.isMapperXmlFile(context.getContainingFile())) {
@@ -40,10 +49,9 @@ public abstract class BaseInjector implements MultiHostInjector {
     @NotNull
     @Override
     public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Collections.singletonList(targetElement());
+        return Collections.singletonList(targetElement);
     }
 
     abstract void inject(@NotNull final MultiHostRegistrar registrar, @NotNull final PsiElement context);
 
-    abstract Class<? extends PsiElement> targetElement();
 }
