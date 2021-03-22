@@ -25,12 +25,12 @@ intellij {
     sandboxDirectory = "$rootDir.path/.idea-sandbox"
 }
 patchPluginXml {
-    version pluginVersion
+    version pluginVersion + "-" + sdkSinceBuild
     sinceBuild sdkSinceBuild
     untilBuild sdkUntilBuild
 }
 buildPlugin {
-    archiveName pluginName + "-" + pluginVersion + ".zip"
+    archiveName pluginName + "-" + pluginVersion + "-" + sdkSinceBuild + ".zip"
 }
 
 runPluginVerifier {

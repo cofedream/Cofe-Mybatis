@@ -39,7 +39,7 @@ allprojects {
     }
 }
 group 'tk.cofedream.plugin'
-version pluginVersion
+version pluginVersion + "-" + sdkSinceBuild
 
 task cleanJar(type: Delete,dependsOn: [':common:clean',':ognl:clean',':mbel:clean',':core:clean'])
 task copyJar(type: Copy,dependsOn:[':common:jar',':ognl:jar',':mbel:clean',':core:jar']) {
@@ -50,7 +50,7 @@ task preRelease(type: Zip,dependsOn:['cleanJar','copyJar']){
     from 'build/zip'
     destinationDir file('/')
     baseName pluginName
-    version pluginVersion
+    version pluginVersion + "-" + sdkSinceBuild
     extension 'zip'
     doLast {
         delete 'common/build','ognl/build','mbel/build','core/build'
