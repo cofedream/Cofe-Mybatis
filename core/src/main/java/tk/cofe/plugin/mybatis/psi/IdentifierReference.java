@@ -20,6 +20,7 @@ package tk.cofe.plugin.mybatis.psi;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +62,7 @@ public abstract class IdentifierReference extends PsiReferenceBase<PsiElement> {
                 list.add(createLookup(((PsiField) member)));
             }
         }
-        return list.toArray(LookupElementBuilder[]::new);
+        return list.toArray(ArrayUtilRt.EMPTY_OBJECT_ARRAY);
     }
 
     protected abstract Collection<PsiMember> getClassMember();

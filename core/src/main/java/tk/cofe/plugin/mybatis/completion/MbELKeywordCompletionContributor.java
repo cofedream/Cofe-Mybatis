@@ -83,7 +83,7 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
 
     private void extendCompletion(final PsiElementPattern.Capture<PsiElement> pattern,
                                   final Function<CompletionParameters, String[]> getKeywords) {
-        extend(CompletionType.BASIC, pattern, new CompletionProvider<>() {
+        extend(CompletionType.BASIC, pattern, new CompletionProvider() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
                 String[] keywords = getKeywords.apply(parameters);
