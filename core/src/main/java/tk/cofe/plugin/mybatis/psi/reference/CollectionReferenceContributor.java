@@ -17,9 +17,23 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
-import com.intellij.psi.PsiReferenceContributor;
-import com.intellij.psi.PsiReferenceRegistrar;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.xml.XmlTokenType;
+import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.psi.FirstIdentifierReference;
+import tk.cofe.plugin.mybatis.psi.IdentifierReference;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static tk.cofe.plugin.mybatis.constant.ElementPattern.XML;
 /**
@@ -31,5 +45,61 @@ public class CollectionReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(XML.COLLECTION_PATTERN, new CollectionReferenceProvider());
+    }
+
+    /**
+     * @author : zhengrf
+     * @date : 2021-03-18
+     */
+    public static class CollectionReferenceProvider extends PsiReferenceProvider {
+
+        @Override
+        public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+            if (element.getTextLength() <= 0) {
+                return PsiReference.EMPTY_ARRAY;
+            }
+            return build(element).toArray(PsiReference.EMPTY_ARRAY);
+        }
+
+        static List<PsiReference> build(@NotNull final PsiElement element) {
+            final PsiElement valueToken = PsiElementUtils.getSubElement(element, XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN);
+            if (valueToken == null || valueToken.getTextLength() <= 0) {
+                return Collections.emptyList();
+            }
+            final String tokenText = valueToken.getText();
+            final String[] textArr = tokenText.split("\\.");
+            // // 获取到第一个引用
+            List<PsiReference> references = new ArrayList<>(textArr.length);
+            int startOffset = 1;
+            int endOffset = startOffset + textArr[0].length();
+            final FirstIdentifierReference reference = new FirstIdentifierReference(textArr[0], element, TextRange.create(startOffset, endOffset), PsiTreeUtil.getParentOfType(element, XmlTag.class));
+            references.add(reference);
+            // 如果没有解析多个引用
+            PsiElement psiElement = reference.resolve();
+            if (psiElement != null) {
+                for (int i = 1; i < textArr.length; i++) {
+                    final String child = textArr[i];
+                    startOffset = endOffset + 1;  // '.' 的长度
+                    endOffset = startOffset + child.length();
+                    //
+                    PsiType psiType = null;
+                    if (psiElement instanceof PsiMember) {
+                        psiType = PsiJavaUtils.getPsiMemberType((PsiMember) psiElement);
+                    } else if (psiElement instanceof PsiParameter) {
+                        psiType = ((PsiParameter) psiElement).getType();
+                    }
+                    // 如果能查询到引用
+                    psiElement = CompletionUtils.getTheMethodOrField(child, psiType);
+                    references.add(new IdentifierReference(element, TextRange.create(startOffset, endOffset), psiElement, psiType) {
+                        @Override
+                        protected Collection<PsiMember> getClassMember() {
+                            return CompletionUtils.getTheMethodAndField(psiClass).values();
+                        }
+                    });
+                }
+            }
+            return references;
+        }
+
     }
 }
