@@ -38,7 +38,6 @@
   pin(".*Config")=1
   tokens=[
     HASH_START="#{"
-    DOLLAR_START="#{"
 
     DOLLAR_KEYWORD="$"
     HASH="#"
@@ -66,7 +65,7 @@
   ]
 }
 
-root ::= (HASH_START | DOLLAR_START) rootElement RBRACE {pin=1}
+root ::= HASH_START rootElement RBRACE {pin=1}
 private rootRecover ::= !(RBRACE | ',')
 private rootElement ::= referenceExpression paramConfigList? {
   recoverWhile="rootRecover"
