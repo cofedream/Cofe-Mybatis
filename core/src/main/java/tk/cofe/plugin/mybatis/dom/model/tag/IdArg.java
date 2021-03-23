@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JavaTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JdbcTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.SelectAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TypeHandlerAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
 
 /**
  * {@code <idArg/>}
@@ -31,5 +25,5 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.TypeHandlerAttribute;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface IdArg extends JavaTypeAttribute, ColumnAttribute, JdbcTypeAttribute, TypeHandlerAttribute, SelectAttribute, ResultTypeAttribute, NameAttribute {
+public interface IdArg extends JavaTypeAttribute, ColumnAttribute, JdbcTypeAttribute, TypeHandlerAttribute, SelectAttribute, NameAttribute {
 }

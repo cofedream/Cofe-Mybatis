@@ -49,7 +49,7 @@
             <li>语法调整,支持#{}中的jdbcType等参数配置</li>
             <li>调整语法注入</li>
             <li>参数配置添加高亮处理</li>
-            <li>调整mbsp为mbl(Mybatis Language)</li>
+            <li>去除标签冗余属性</li>
         </ul>
     ]]></change-notes>
 
