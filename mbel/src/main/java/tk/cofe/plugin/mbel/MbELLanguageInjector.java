@@ -44,18 +44,14 @@ public final class MbELLanguageInjector {
         if (textLength < 1) {
             return;
         }
-        if (!(element.textContains('{') && element.textContains('}'))) {
-            return;
-        }
         String text = element.getText();
-        int index = 0;
-        while (text.indexOf('{', index) != -1 && text.indexOf('}', index) != -1) {
-            int lbrace = text.indexOf('{', index);
-            int rbrace = text.indexOf('}', lbrace);
+        int lbrace;
+        int rbrace = 0;
+        // #{....}
+        while ((lbrace = text.indexOf("#{", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
             registrar.startInjecting(MbELLanguage.INSTANCE)
-                    .addPlace(null, null, element, new TextRange(lbrace - 1, rbrace + 1))
+                    .addPlace(null, null, element, new TextRange(lbrace, ++rbrace)) // 包住尾部
                     .doneInjecting();
-            index = rbrace + 1;
         }
     }
 }

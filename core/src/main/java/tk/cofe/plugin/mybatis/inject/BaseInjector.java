@@ -30,7 +30,7 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2020-01-20
  */
-public abstract class BaseInjector implements MultiHostInjector {
+abstract class BaseInjector implements MultiHostInjector {
 
     private final Class<? extends PsiElement> targetElement;
 
