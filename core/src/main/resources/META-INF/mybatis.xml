@@ -60,6 +60,8 @@
         <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MybatisConditionInject"/>
         <psi.referenceContributor language="XML" order="first"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.CollectionReferenceContributor"/>
+        <psi.referenceContributor language="XML" order="first"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.ResultTypeReferenceContributor"/>
     </extensions>
 
 </idea-plugin>

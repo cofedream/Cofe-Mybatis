@@ -28,8 +28,11 @@ import tk.cofe.plugin.mbel.psi.MbELModeConfig;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
 import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static com.intellij.patterns.StandardPatterns.or;
+import static com.intellij.patterns.StandardPatterns.string;
 
 /**
  * @author : zhengrf
@@ -60,11 +63,41 @@ public final class ElementPattern {
          * @see tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach#TAG
          */
         public static final PsiElementPattern.Capture<XmlTag> FOREACH_PATTERN = psiElement(XmlTag.class)
-                .withText(StandardPatterns.string().startsWith("<foreach").endsWith("</foreach>"));
+                .withText(or(string().startsWith("<foreach").endsWith("/>"), string().startsWith("<foreach").endsWith("</foreach>")));
+        /**
+         * 匹配 select 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> SELECT_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<select").endsWith("/>"), string().startsWith("<select").endsWith("</select>")));
+        /**
+         * 匹配 selectKey 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> SELECT_KEY_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<selectKey").endsWith("/>"), string().startsWith("<selectKey").endsWith("</selectKey>")));
+        /**
+         * 匹配 case 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> CASE_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<case").endsWith("/>"), string().startsWith("<case").endsWith("</case>")));
+
         public static final PsiElementPattern.Capture<XmlAttributeValue> COLLECTION_PATTERN = psiElement(XmlAttributeValue.class)
                 .withParent(psiElement(XmlAttribute.class)
                         .withText(StandardPatterns.string().startsWith("collection"))
                         .withParent(FOREACH_PATTERN));
+        /**
+         * resultType
+         */
+        private static final PsiElementPattern.Capture<XmlAttribute> RESULT_TYPE_ATTRIBUTE = psiElement(XmlAttribute.class)
+                .withText(StandardPatterns.string().startsWith("resultType"));
+        /**
+         * resultTypeValue
+         *
+         * @see ResultTypeAttribute
+         */
+        public static final PsiElementPattern.Capture<XmlAttributeValue> RESULT_TYPE_PATTERN = psiElement(XmlAttributeValue.class)
+                .withParent(or(RESULT_TYPE_ATTRIBUTE.withParent(XML.SELECT_PATTERN),
+                        RESULT_TYPE_ATTRIBUTE.withParent(XML.SELECT_KEY_PATTERN),
+                        RESULT_TYPE_ATTRIBUTE.withParent(XML.CASE_PATTERN)));
     }
 
 }

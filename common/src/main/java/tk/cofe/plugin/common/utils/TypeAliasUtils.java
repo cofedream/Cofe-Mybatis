@@ -106,7 +106,7 @@ public class TypeAliasUtils {
     private static void registerAlias(String alias, Class<?> aClass) {
         TYPE_ALIASES_NAME.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
         TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
-            (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias));
+            (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias).withTypeText(key));
             return value;
         });
     }

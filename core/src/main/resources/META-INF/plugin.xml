@@ -107,8 +107,8 @@
         <!--<psi.referenceContributor language="XML" implementation="tk.cofe.plugin.mybatis.psi.ResultMapPsiReferenceContributor"/>-->
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.MapperXmlReferenceSearch$ResultMapId"/>
 
-        <completion.contributor language="XML"
-                                implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>
+        <!--<completion.contributor language="XML"-->
+        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
 
         <!--纯提示-->
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>

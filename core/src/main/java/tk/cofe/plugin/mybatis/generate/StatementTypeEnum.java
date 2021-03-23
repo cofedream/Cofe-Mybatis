@@ -52,7 +52,7 @@ public enum StatementTypeEnum {
         @Override
         public Select addClassElement(Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
-            GenericAttributeValue<PsiClass> resultTypeValue = select.getResultType();
+            GenericAttributeValue<String> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
                 List<String> resultType = MybatisUtils.getResultType(method.getReturnType());
                 if (resultType.isEmpty()) {
