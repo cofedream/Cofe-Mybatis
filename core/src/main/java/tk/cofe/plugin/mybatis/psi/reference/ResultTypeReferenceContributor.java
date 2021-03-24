@@ -25,17 +25,12 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.common.utils.PsiElementUtils;
-import tk.cofe.plugin.common.utils.PsiMethodUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
+import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static tk.cofe.plugin.mybatis.constant.ElementPattern.XML;
 
@@ -70,7 +65,7 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                     .map(PsiElement::getText)
                     .map(valueText -> {
                         final TypeAliasService typeAliasService = TypeAliasService.getInstance(element.getProject());
-                        final PsiElement psiElement;
+                        PsiElement psiElement;
                         if (typeAliasService.isPsiPrimitiveTypeAlias(valueText)) {
                             psiElement = DomUtils.getDomElement(element, ClassElement.class)
                                     .flatMap(ClassElement::getIdMethod)
@@ -78,7 +73,26 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                                     .map(PsiMethod::getReturnTypeElement)
                                     .orElse(null);
                         } else {
-                            psiElement = typeAliasService.getAliasPsiClass(valueText);
+                            psiElement = Optional.ofNullable(typeAliasService.getAliasPsiClass(valueText))
+                                    // 从方法的returnType中获取
+                                    .or(() -> DomUtils.getDomElement(element, ClassElement.class)
+                                            .flatMap(ClassElement::getIdMethod)
+                                            .filter(info -> !PsiMethodUtils.isVoidMethod(info))
+                                            .map(PsiMethod::getReturnType)
+                                            .filter(PsiClassType.class::isInstance)
+                                            .map(PsiClassType.class::cast)
+                                            .map(PsiClassType::resolve)
+                                            .filter(psiClass -> {
+                                                if (!PsiJavaUtils.hasAnnotation(psiClass, Annotation.ALIAS)) {
+                                                    return false;
+                                                }
+                                                final Annotation.Value value = Annotation.ALIAS.getValue(psiClass);
+                                                if (value == null) {
+                                                    return false;
+                                                }
+                                                return Objects.equals(value.getValue(), valueText);
+                                            }))
+                                    .orElse(null);
                         }
                         return new ResultTypeReference(element, TextRange.from(1, valueToken.getTextLength()), psiElement);
                     }).map(Collections::singletonList).orElse(Collections.emptyList());
@@ -100,6 +114,7 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
 
         @Override
         public Object @NotNull [] getVariants() {
+            final TypeAliasService instance = TypeAliasService.getInstance(myElement.getProject());
             return DomUtils.getDomElement(myElement, ClassElement.class)
                     .flatMap(ClassElement::getIdMethod)
                     .filter(info -> !PsiMethodUtils.isVoidMethod(info))
@@ -110,8 +125,7 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                         PsiType targetType = type.getDeepComponentType();
                         if (PsiTypeUtils.isPrimitiveOrBoxType(targetType)) {
                             final String canonicalText = type.getCanonicalText();
-                            for (String lookupString : TypeAliasService.getInstance(myElement.getProject())
-                                    .getTypeLookup(canonicalText)) {
+                            for (String lookupString : instance.getTypeLookup(canonicalText)) {
                                 builders.add(LookupElementBuilder.create(typeElement, lookupString)
                                         .withTypeText(canonicalText)
                                         .withIcon(PlatformIcons.METHOD_ICON)

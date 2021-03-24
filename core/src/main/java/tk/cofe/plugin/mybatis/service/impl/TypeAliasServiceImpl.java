@@ -17,12 +17,16 @@
 
 package tk.cofe.plugin.mybatis.service.impl;
 
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiType;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTypesUtil;
+import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
@@ -165,4 +169,24 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
     public List<String> getTypeLookup(String text) {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
+
+    // @Override
+    // public Map<String, PsiClass> findAllRegiserType() {
+    //     Map<String, PsiClass> all = new HashMap<>();
+    //     final Collection<VirtualFile> files = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
+    //     final PsiManager psiManager = PsiManager.getInstance(project);
+    //     for (VirtualFile file : files) {
+    //         PsiJavaFile javaFile = (PsiJavaFile) psiManager.findFile(file);
+    //         if (javaFile != null) {
+    //             for (PsiClass aClass : javaFile.getClasses()) {
+    //                 if (PsiJavaUtils.hasAnnotation(aClass, Annotation.ALIAS)) {
+    //                     Optional.ofNullable(Annotation.ALIAS.getValue(aClass))
+    //                             .map(Annotation.Value::getValue)
+    //                             .ifPresent(value -> all.put(value, aClass));
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return all;
+    // }
 }

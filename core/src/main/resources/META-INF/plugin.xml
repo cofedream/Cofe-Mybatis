@@ -50,7 +50,7 @@
             <li>调整语法注入</li>
             <li>参数配置添加高亮处理</li>
             <li>去除标签冗余属性</li>
-            <li>优化ResultType索引</li>
+            <li>优化ResultType索引,添加@Alias支持</li>
         </ul>
     ]]></change-notes>
 

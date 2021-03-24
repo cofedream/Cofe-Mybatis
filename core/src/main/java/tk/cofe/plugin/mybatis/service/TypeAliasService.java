@@ -41,4 +41,5 @@ public interface TypeAliasService {
     boolean isPsiPrimitiveTypeAlias(String alias);
 
     List<String> getTypeLookup(String text);
+
 }

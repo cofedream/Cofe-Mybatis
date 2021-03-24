@@ -20,7 +20,7 @@ package tk.cofe.plugin.common.annotation;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiModifierListOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,11 +83,11 @@ public class Annotation implements Cloneable {
     }
 
     @Nullable
-    public Value getValue(PsiParameter psiParameter) {
-        if (psiParameter == null) {
+    public Value getValue(PsiModifierListOwner psiModifierListOwner) {
+        if (psiModifierListOwner == null) {
             return null;
         }
-        PsiAnnotation annotation = psiParameter.getAnnotation(this.qualifiedName);
+        PsiAnnotation annotation = psiModifierListOwner.getAnnotation(this.qualifiedName);
         if (annotation != null) {
             String value = AnnotationUtil.getStringAttributeValue(annotation, Value.getName());
             if (StringUtil.isNotEmpty(value)) {
@@ -98,8 +98,8 @@ public class Annotation implements Cloneable {
     }
 
     @NotNull
-    public Value getValue(@NotNull PsiParameter psiParameter, @NotNull Supplier<String> defaultValue) {
-        Value value = getValue(psiParameter);
+    public Value getValue(@NotNull PsiModifierListOwner psiModifierListOwner, @NotNull Supplier<String> defaultValue) {
+        Value value = getValue(psiModifierListOwner);
         return value == null ? new Value(defaultValue.get()) : value;
     }
 
