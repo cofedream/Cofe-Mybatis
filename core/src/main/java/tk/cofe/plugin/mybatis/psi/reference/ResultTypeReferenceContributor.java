@@ -25,7 +25,10 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.common.utils.*;
+import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
+import tk.cofe.plugin.common.utils.PsiMethodUtils;
+import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
@@ -100,12 +103,20 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
             return DomUtils.getDomElement(myElement, ClassElement.class)
                     .flatMap(ClassElement::getIdMethod)
                     .filter(info -> !PsiMethodUtils.isVoidMethod(info))
-                    .map(PsiMethod::getReturnType)
-                    .map(type -> {
+                    .map(PsiMethod::getReturnTypeElement)
+                    .map(typeElement -> {
+                        final PsiType type = typeElement.getType();
                         List<LookupElementBuilder> builders = new ArrayList<>();
                         PsiType targetType = type.getDeepComponentType();
                         if (PsiTypeUtils.isPrimitiveOrBoxType(targetType)) {
-                            builders.addAll(TypeAliasRegister.getTypeLookupElement(type.getCanonicalText()));
+                            final String canonicalText = type.getCanonicalText();
+                            for (String lookupString : TypeAliasService.getInstance(myElement.getProject())
+                                    .getTypeLookup(canonicalText)) {
+                                builders.add(LookupElementBuilder.create(typeElement, lookupString)
+                                        .withTypeText(canonicalText)
+                                        .withIcon(PlatformIcons.METHOD_ICON)
+                                        .bold());
+                            }
                         } else if (targetType instanceof PsiClassType) {
                             final PsiClass psiClass = ((PsiClassType) targetType).resolve();
                             if (psiClass != null) {

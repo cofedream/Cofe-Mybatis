@@ -40,6 +40,8 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
      * 别名的全限定名
      */
     private static final Map<String, String> TYPE_ALIASES_CANONICAL_TEXT = new HashMap<>();
+
+    private static final Map<String, List<String>> TYPE_LOOKUP = new HashMap<>();
     private static final Map<String, PsiPrimitiveType> ALIASES_TYPE = new HashMap<>();
 
     static {
@@ -129,6 +131,10 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
 
     private static void registerAlias(String alias, Class<?> aClass) {
         TYPE_ALIASES_CANONICAL_TEXT.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
+        TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
+            (value = value == null ? new LinkedList<>() : value).add(alias);
+            return value;
+        });
     }
 
     @Override
@@ -156,7 +162,7 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
     }
 
     @Override
-    public PsiType getAliasPsiType(String alias) {
-        return ALIASES_TYPE.get(alias.toLowerCase(Locale.ENGLISH));
+    public List<String> getTypeLookup(String text) {
+        return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
 }

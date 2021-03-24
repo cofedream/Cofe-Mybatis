@@ -20,8 +20,9 @@ package tk.cofe.plugin.mybatis.service;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author : zhengrf
@@ -39,5 +40,5 @@ public interface TypeAliasService {
 
     boolean isPsiPrimitiveTypeAlias(String alias);
 
-    PsiType getAliasPsiType(String alias);
+    List<String> getTypeLookup(String text);
 }
