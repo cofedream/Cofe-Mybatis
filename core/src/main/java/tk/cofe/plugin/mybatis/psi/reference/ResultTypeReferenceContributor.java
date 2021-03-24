@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.psi.reference;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.PlatformIcons;
@@ -65,19 +66,16 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                     .map(PsiElement::getText)
                     .map(valueText -> {
                         final TypeAliasService typeAliasService = TypeAliasService.getInstance(element.getProject());
+                        final Optional<PsiMethod> psiMethod = DomUtils.getDomElement(element, ClassElement.class)
+                                .flatMap(ClassElement::getIdMethod)
+                                .filter(info -> !PsiMethodUtils.isVoidMethod(info));
                         PsiElement psiElement;
                         if (typeAliasService.isPsiPrimitiveTypeAlias(valueText)) {
-                            psiElement = DomUtils.getDomElement(element, ClassElement.class)
-                                    .flatMap(ClassElement::getIdMethod)
-                                    .filter(info -> !PsiMethodUtils.isVoidMethod(info))
-                                    .map(PsiMethod::getReturnTypeElement)
-                                    .orElse(null);
+                            psiElement = psiMethod.map(PsiMethod::getReturnTypeElement).orElse(null);
                         } else {
                             psiElement = Optional.ofNullable(typeAliasService.getAliasPsiClass(valueText))
                                     // 从方法的returnType中获取
-                                    .or(() -> DomUtils.getDomElement(element, ClassElement.class)
-                                            .flatMap(ClassElement::getIdMethod)
-                                            .filter(info -> !PsiMethodUtils.isVoidMethod(info))
+                                    .or(() -> psiMethod
                                             .map(PsiMethod::getReturnType)
                                             .filter(PsiClassType.class::isInstance)
                                             .map(PsiClassType.class::cast)
@@ -134,7 +132,12 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                         } else if (targetType instanceof PsiClassType) {
                             final PsiClass psiClass = ((PsiClassType) targetType).resolve();
                             if (psiClass != null) {
-                                builders.add(LookupElementBuilder.create(psiClass, targetType.getCanonicalText())
+                                String lookupString = targetType.getCanonicalText();
+                                Annotation.Value value = Annotation.ALIAS.getValue(psiClass);
+                                if (value != null && StringUtil.isNotEmpty(value.getValue())) {
+                                    lookupString = value.getValue();
+                                }
+                                builders.add(LookupElementBuilder.create(psiClass, lookupString)
                                         .withPresentableText(targetType.getPresentableText())
                                         .withTypeText(type.getPresentableText())
                                         .withIcon(PlatformIcons.CLASS_ICON));
