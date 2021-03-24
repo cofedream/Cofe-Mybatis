@@ -23,23 +23,14 @@ import com.intellij.psi.util.PsiTypesUtil;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author : zhengrf
  * @date : 2019-09-20
  */
-public class TypeAliasUtils {
+public class TypeAliasRegister {
 
-    private static final Map<String, String> TYPE_ALIASES_NAME = new HashMap<>();
     private static final Map<String, List<LookupElementBuilder>> TYPE_LOOKUP = new HashMap<>();
 
     static {
@@ -104,18 +95,14 @@ public class TypeAliasUtils {
     }
 
     private static void registerAlias(String alias, Class<?> aClass) {
-        TYPE_ALIASES_NAME.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
         TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
             (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias).withTypeText(key));
             return value;
         });
     }
 
-    public static String getTypeName(String alias) {
-        return TYPE_ALIASES_NAME.get(alias);
-    }
-
     public static List<LookupElementBuilder> getTypeLookupElement(String text) {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
+
 }

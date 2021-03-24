@@ -25,11 +25,10 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.Converter;
 import com.intellij.util.xml.CustomReferenceConverter;
-import com.intellij.util.xml.DomJavaUtil;
 import com.intellij.util.xml.GenericDomValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.common.utils.TypeAliasUtils;
+import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
 /**
  * @author : zhengrf
@@ -42,14 +41,7 @@ public class ClassTypeConverter extends Converter<PsiClass> implements CustomRef
         if (StringUtil.isEmptyOrSpaces(s)) {
             return null;
         }
-        String str = s;
-        if (StringUtil.isNotEmpty(s)) {
-            String typeName = TypeAliasUtils.getTypeName(s);
-            if (typeName != null) {
-                str = typeName;
-            }
-        }
-        return DomJavaUtil.findClass(str.trim(), context.getInvocationElement());
+        return TypeAliasService.getInstance(context.getProject()).getAliasPsiClass(s);
     }
 
     @Nullable

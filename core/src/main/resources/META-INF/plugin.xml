@@ -50,6 +50,7 @@
             <li>调整语法注入</li>
             <li>参数配置添加高亮处理</li>
             <li>去除标签冗余属性</li>
+            <li>优化ResultType索引</li>
         </ul>
     ]]></change-notes>
 
@@ -80,6 +81,8 @@
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.JavaPsiService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.JavaPsiServiceImpl"/>
+        <projectService serviceInterface="tk.cofe.plugin.mybatis.service.TypeAliasService"
+                        serviceImplementation="tk.cofe.plugin.mybatis.service.impl.TypeAliasServiceImpl"/>
         <!--If your plugin targets 2019.1 or later,
         please use extension point com.intellij.dom.fileMetaData instead and specify rootTagName and domVersion/stubVersion in plugin.xml-->
         <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.MapperXmlDescription" rootTagName="mapper"/>

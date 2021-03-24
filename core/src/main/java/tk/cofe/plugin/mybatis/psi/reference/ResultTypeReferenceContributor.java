@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.psi.reference;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.ProcessingContext;
@@ -28,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.*;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,10 +47,6 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
         registrar.registerReferenceProvider(XML.RESULT_TYPE_PATTERN, new ResultTypeReferenceProvider());
     }
 
-    /**
-     * @author : zhengrf
-     * @date : 2021-03-18
-     */
     public static class ResultTypeReferenceProvider extends PsiReferenceProvider {
 
         @Override
@@ -65,21 +60,25 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
 
         static List<? extends PsiReference> build(@NotNull final PsiElement element) {
             final PsiElement valueToken = PsiElementUtils.getSubElement(element, XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN);
-            // if (valueToken == null || valueToken.getTextLength() <= 0) {
-            //     // DomUtils.getDomElement(element, ClassElement.class)
-            //     return Collections.emptyList();
-            // }
-            final JavaPsiService service = JavaPsiService.getInstance(element.getProject());
-            return Collections.singletonList(Optional.ofNullable(valueToken)
-                    // .filter(t -> t.getTextLength() <= 0)
+            if (valueToken == null) {
+                return Collections.emptyList();
+            }
+            return Optional.of(valueToken)
                     .map(PsiElement::getText)
-                    .map(TypeAliasUtils::getTypeName)
-                    .flatMap(service::findPsiClass)
-                    .map(psiClass -> new ResultTypeReference(element, TextRange.from(1, valueToken.getTextLength()), psiClass))
-                    // .map(psiClass -> PsiReferenceBase.createSelfReference(element, TextRange.from(1, valueToken.getTextLength()), psiClass))
-                    // .map(Collections::singletonList)
-                    // .orElse(Collections.emptyList());
-                    .orElse(new ResultTypeReference(element, TextRange.from(1, 0), null)));
+                    .map(valueText -> {
+                        final TypeAliasService typeAliasService = TypeAliasService.getInstance(element.getProject());
+                        final PsiElement psiElement;
+                        if (typeAliasService.isPsiPrimitiveTypeAlias(valueText)) {
+                            psiElement = DomUtils.getDomElement(element, ClassElement.class)
+                                    .flatMap(ClassElement::getIdMethod)
+                                    .filter(info -> !PsiMethodUtils.isVoidMethod(info))
+                                    .map(PsiMethod::getReturnTypeElement)
+                                    .orElse(null);
+                        } else {
+                            psiElement = typeAliasService.getAliasPsiClass(valueText);
+                        }
+                        return new ResultTypeReference(element, TextRange.from(1, valueToken.getTextLength()), psiElement);
+                    }).map(Collections::singletonList).orElse(Collections.emptyList());
         }
     }
 
@@ -104,15 +103,17 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                     .map(PsiMethod::getReturnType)
                     .map(type -> {
                         List<LookupElementBuilder> builders = new ArrayList<>();
-                        String internalCanonicalText = type.getInternalCanonicalText();
                         PsiType targetType = type.getDeepComponentType();
-                        if (PsiTypeUtils.isPrimitiveType(targetType)) {
-                            builders.addAll(TypeAliasUtils.getTypeLookupElement(internalCanonicalText));
-                        } else if (targetType instanceof PsiClassReferenceType) {
-                            final PsiClass psiClass = ((PsiClassReferenceType) targetType).resolve();
-                            builders.add(LookupElementBuilder.create(psiClass, targetType.getPresentableText())
-                                    .withTypeText(internalCanonicalText)
-                                    .withIcon(PlatformIcons.CLASS_ICON));
+                        if (PsiTypeUtils.isPrimitiveOrBoxType(targetType)) {
+                            builders.addAll(TypeAliasRegister.getTypeLookupElement(type.getCanonicalText()));
+                        } else if (targetType instanceof PsiClassType) {
+                            final PsiClass psiClass = ((PsiClassType) targetType).resolve();
+                            if (psiClass != null) {
+                                builders.add(LookupElementBuilder.create(psiClass, targetType.getCanonicalText())
+                                        .withPresentableText(targetType.getPresentableText())
+                                        .withTypeText(type.getPresentableText())
+                                        .withIcon(PlatformIcons.CLASS_ICON));
+                            }
                         }
                         return builders.toArray(LookupElementBuilder.EMPTY_ARRAY);
                     }).orElse(LookupElementBuilder.EMPTY_ARRAY);
