@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static tk.cofe.plugin.mybatis.constant.ElementPattern.XML;
+
 /**
  * @author : zhengrf
  * @date : 2020-01-19
@@ -44,7 +45,7 @@ public class CollectionReferenceContributor extends PsiReferenceContributor {
 
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
-        registrar.registerReferenceProvider(XML.COLLECTION_PATTERN, new CollectionReferenceProvider());
+        registrar.registerReferenceProvider(XML.AttributeVlaue.COLLECTION, new CollectionReferenceProvider());
     }
 
     /**

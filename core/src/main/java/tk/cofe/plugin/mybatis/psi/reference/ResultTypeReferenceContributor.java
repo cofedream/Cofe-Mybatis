@@ -43,7 +43,7 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
 
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
-        registrar.registerReferenceProvider(XML.RESULT_TYPE_PATTERN, new ResultTypeReferenceProvider());
+        registrar.registerReferenceProvider(XML.AttributeVlaue.RESULT_TYPE, new ResultTypeReferenceProvider());
     }
 
     public static class ResultTypeReferenceProvider extends PsiReferenceProvider {
