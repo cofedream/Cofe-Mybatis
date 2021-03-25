@@ -28,6 +28,7 @@ import tk.cofe.plugin.mbel.psi.MbELModeConfig;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
 import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
@@ -70,6 +71,21 @@ public final class ElementPattern {
         public static final PsiElementPattern.Capture<XmlTag> SELECT_PATTERN = psiElement(XmlTag.class)
                 .withText(or(string().startsWith("<select").endsWith("/>"), string().startsWith("<select").endsWith("</select>")));
         /**
+         * 匹配 insert 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> INSERT_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<insert").endsWith("/>"), string().startsWith("<insert").endsWith("</insert>")));
+        /**
+         * 匹配 update 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> UPDATE_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<update").endsWith("/>"), string().startsWith("<update").endsWith("</update>")));
+        /**
+         * 匹配 delete 标签
+         */
+        public static final PsiElementPattern.Capture<XmlTag> DELETE_PATTERN = psiElement(XmlTag.class)
+                .withText(or(string().startsWith("<delete").endsWith("/>"), string().startsWith("<delete").endsWith("</delete>")));
+        /**
          * 匹配 selectKey 标签
          */
         public static final PsiElementPattern.Capture<XmlTag> SELECT_KEY_PATTERN = psiElement(XmlTag.class)
@@ -89,6 +105,7 @@ public final class ElementPattern {
          */
         private static final PsiElementPattern.Capture<XmlAttribute> RESULT_TYPE_ATTRIBUTE = psiElement(XmlAttribute.class)
                 .withText(StandardPatterns.string().startsWith("resultType"));
+        // 属性
         /**
          * resultTypeValue
          *
@@ -98,6 +115,16 @@ public final class ElementPattern {
                 .withParent(or(RESULT_TYPE_ATTRIBUTE.withParent(XML.SELECT_PATTERN),
                         RESULT_TYPE_ATTRIBUTE.withParent(XML.SELECT_KEY_PATTERN),
                         RESULT_TYPE_ATTRIBUTE.withParent(XML.CASE_PATTERN)));
+        /**
+         * parameterType
+         *
+         * @see ParameterTypeAttribute
+         */
+        public static final PsiElementPattern.Capture<XmlAttributeValue> PARAMETER_TYPE_PATTERN = psiElement(XmlAttributeValue.class)
+                .withParent(or(RESULT_TYPE_ATTRIBUTE.withParent(XML.SELECT_PATTERN),
+                        RESULT_TYPE_ATTRIBUTE.withParent(XML.INSERT_PATTERN),
+                        RESULT_TYPE_ATTRIBUTE.withParent(XML.UPDATE_PATTERN),
+                        RESULT_TYPE_ATTRIBUTE.withParent(XML.DELETE_PATTERN)));
     }
 
 }
