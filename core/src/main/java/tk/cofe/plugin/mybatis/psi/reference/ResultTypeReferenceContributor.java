@@ -73,24 +73,25 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                         if (typeAliasService.isPsiPrimitiveTypeAlias(valueText)) {
                             psiElement = psiMethod.map(PsiMethod::getReturnTypeElement).orElse(null);
                         } else {
-                            psiElement = Optional.ofNullable(typeAliasService.getAliasPsiClass(valueText))
-                                    // 从方法的returnType中获取
-                                    .or(() -> psiMethod
-                                            .map(PsiMethod::getReturnType)
-                                            .filter(PsiClassType.class::isInstance)
-                                            .map(PsiClassType.class::cast)
-                                            .map(PsiClassType::resolve)
-                                            .filter(psiClass -> {
-                                                if (!PsiJavaUtils.hasAnnotation(psiClass, Annotation.ALIAS)) {
-                                                    return false;
-                                                }
-                                                final Annotation.Value value = Annotation.ALIAS.getValue(psiClass);
-                                                if (value == null) {
-                                                    return false;
-                                                }
-                                                return Objects.equals(value.getValue(), valueText);
-                                            }))
-                                    .orElse(null);
+                            psiElement = typeAliasService.getAliasPsiClass(valueText);
+                            if (psiElement == null) {
+                                // 从方法的returnType中获取
+                                psiElement = psiMethod
+                                        .map(PsiMethod::getReturnType)
+                                        .filter(PsiClassType.class::isInstance)
+                                        .map(PsiClassType.class::cast)
+                                        .map(PsiClassType::resolve)
+                                        .filter(psiClass -> {
+                                            if (!PsiJavaUtils.hasAnnotation(psiClass, Annotation.ALIAS)) {
+                                                return false;
+                                            }
+                                            final Annotation.Value value = Annotation.ALIAS.getValue(psiClass);
+                                            if (value == null) {
+                                                return false;
+                                            }
+                                            return Objects.equals(value.getValue(), valueText);
+                                        }).orElse(null);
+                            }
                         }
                         return new ResultTypeReference(element, TextRange.from(1, valueToken.getTextLength()), psiElement);
                     }).map(Collections::singletonList).orElse(Collections.emptyList());
