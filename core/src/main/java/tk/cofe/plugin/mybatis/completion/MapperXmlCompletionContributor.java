@@ -20,21 +20,14 @@ package tk.cofe.plugin.mybatis.completion;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.common.utils.TypeAliasUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
-import tk.cofe.plugin.common.utils.PsiTypeUtils;
 
 import java.util.Optional;
 
@@ -71,25 +64,25 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
                 if (classElement == null) {
                     return;
                 }
-                classElement.getIdMethod()
-                        .filter(info -> info.getReturnType() != null)
-                        .map(PsiMethod::getReturnType)
-                        .ifPresent(type -> {
-                            if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
-                                result.addAllElements(TypeAliasUtils.getTypeLookupElement(type.getInternalCanonicalText()));
-                            } else if (type instanceof PsiClassReferenceType) {
-                                PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
-                                String name = reference.getQualifiedName();
-                                if (StringUtil.isEmpty(name)) {
-                                    return;
-                                }
-                                if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
-                                    result.addAllElements(TypeAliasUtils.getTypeLookupElement(name));
-                                } else {
-                                    result.addElement(LookupElementBuilder.create(name));
-                                }
-                            }
-                        });
+                // classElement.getIdMethod()
+                //         .filter(info -> info.getReturnType() != null)
+                //         .map(PsiMethod::getReturnType)
+                //         .ifPresent(type -> {
+                //             if (PsiTypeUtils.isPrimitiveOrBoxType(type)) {
+                //                 result.addAllElements(TypeAliasUtils.getTypeLookupElement(type.getInternalCanonicalText()));
+                //             } else if (type instanceof PsiClassReferenceType) {
+                //                 PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
+                //                 String name = reference.getQualifiedName();
+                //                 if (StringUtil.isEmpty(name)) {
+                //                     return;
+                //                 }
+                //                 if (PsiTypeUtils.isPrimitiveOrBoxType(type) || PsiTypeUtils.isCollectionOrMapType(type)) {
+                //                     result.addAllElements(TypeAliasUtils.getTypeLookupElement(name));
+                //                 } else {
+                //                     result.addElement(LookupElementBuilder.create(name));
+                //                 }
+                //             }
+                //         });
                 result.stopHere();
             }
         };

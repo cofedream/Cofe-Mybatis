@@ -24,19 +24,21 @@ import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlText;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbel.MbELLanguageInjector;
+import tk.cofe.plugin.mognl.MOgnlLanguageInjector;
 
 /**
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MOgnlParamInject extends BaseInjector implements DumbAware {
-    public MOgnlParamInject() {
+public class MybatisParamInject extends BaseInjector implements DumbAware {
+    public MybatisParamInject() {
         super(XmlText.class);
     }
 
     @Override
     void inject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
         MbELLanguageInjector.inject(registrar, (PsiLanguageInjectionHost) context);
+        MOgnlLanguageInjector.injectOccurrences(registrar, (PsiLanguageInjectionHost) context);
     }
 
 }

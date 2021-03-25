@@ -17,30 +17,26 @@
   -->
 
 <idea-plugin>
-
+    <!--MOgnl-->
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
-        <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
         <fileType name="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
                   fieldName="INSTANCE" language="MOgnl" extensions="MOgnl"/>
-
 
         <lang.ast.factory language="MOgnl" implementationClass="tk.cofe.plugin.mognl.psi.impl.MOgnlASTFactory"/>
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
         <!--<lang.syntaxHighlighterFactory language="MOgnl"-->
         <!--                               implementationClass="tk.cofe.plugin.mbel.highlight.MOgnlSyntaxHighlighterFactory"/>-->
 
-        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlConditionInject"/>
 
         <psi.referenceContributor language="MOgnl"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.MOgnlReferenceContributor"/>
         <!--<colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MOgnlColorSettingsPage"/>-->
 
     </extensions>
-
+    <!--MbEL-->
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
-        <!--<fileTypeFactory implementation="tk.cofe.plugin.mbl.MblFileTypeFactory"/>-->
         <fileType name="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
                   fieldName="INSTANCE" language="MbEL" extensions="MbEL"/>
 
@@ -50,7 +46,6 @@
         <lang.syntaxHighlighterFactory language="MbEL"
                                        implementationClass="tk.cofe.plugin.mbel.highlight.MbELSyntaxHighlighterFactory"/>
 
-        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MOgnlParamInject"/>
 
         <completion.contributor language="MbEL"
                                 implementationClass="tk.cofe.plugin.mybatis.completion.MbELKeywordCompletionContributor"/>
@@ -59,10 +54,14 @@
         <colorSettingsPage implementation="tk.cofe.plugin.mbel.highlight.MbELColorSettingsPage"/>
 
     </extensions>
-
+    <!--Shared-->
     <extensions defaultExtensionNs="com.intellij">
+        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MybatisParamInject"/>
+        <multiHostInjector implementation="tk.cofe.plugin.mybatis.inject.MybatisConditionInject"/>
         <psi.referenceContributor language="XML" order="first"
                                   implementation="tk.cofe.plugin.mybatis.psi.reference.CollectionReferenceContributor"/>
+        <psi.referenceContributor language="XML" order="first"
+                                  implementation="tk.cofe.plugin.mybatis.psi.reference.ResultTypeReferenceContributor"/>
     </extensions>
 
 </idea-plugin>

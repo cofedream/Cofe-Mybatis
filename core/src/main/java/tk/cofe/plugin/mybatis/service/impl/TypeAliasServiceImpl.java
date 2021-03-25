@@ -15,32 +15,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.common.utils;
+package tk.cofe.plugin.mybatis.service.impl;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTypesUtil;
+import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author : zhengrf
- * @date : 2019-09-20
+ * @date : 2021-03-24
  */
-public class TypeAliasUtils {
+public final class TypeAliasServiceImpl implements TypeAliasService {
+    /**
+     * 别名的全限定名
+     */
+    private static final Map<String, String> TYPE_ALIASES_CANONICAL_TEXT = new HashMap<>();
 
-    private static final Map<String, String> TYPE_ALIASES_NAME = new HashMap<>();
-    private static final Map<String, List<LookupElementBuilder>> TYPE_LOOKUP = new HashMap<>();
+    private static final Map<String, List<String>> TYPE_LOOKUP = new HashMap<>();
+    private static final Map<String, PsiPrimitiveType> ALIASES_TYPE = new HashMap<>();
 
     static {
         registerAlias("string", String.class);
@@ -101,21 +107,67 @@ public class TypeAliasUtils {
         registerAlias("iterator", Iterator.class);
 
         registerAlias("ResultSet", ResultSet.class);
+
+        registerAlias(PsiType.BYTE, "_byte", "_byte[]");
+        registerAlias(PsiType.LONG, "_long", "_long[]");
+        registerAlias(PsiType.SHORT, "_short", "_short[]");
+        registerAlias(PsiType.INT, "_int", "_int[]");
+        registerAlias(PsiType.INT, "_integer", "_integer[]");
+        registerAlias(PsiType.DOUBLE, "_double", "_double[]");
+        registerAlias(PsiType.FLOAT, "_float", "_float[]");
+        registerAlias(PsiType.BOOLEAN, "_boolean", "_boolean[]");
+    }
+
+    private final Project project;
+
+    public TypeAliasServiceImpl(Project project) {
+        this.project = project;
+    }
+
+    private static void registerAlias(PsiPrimitiveType psiType, String... aliases) {
+        for (String alias : aliases) {
+            if (StringUtil.isEmptyOrSpaces(alias)) {
+                continue;
+            }
+            ALIASES_TYPE.put(alias.toLowerCase(Locale.ENGLISH), psiType);
+        }
     }
 
     private static void registerAlias(String alias, Class<?> aClass) {
-        TYPE_ALIASES_NAME.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
+        TYPE_ALIASES_CANONICAL_TEXT.put(alias, PsiTypesUtil.boxIfPossible(aClass.getTypeName()));
         TYPE_LOOKUP.compute(aClass.getTypeName(), (key, value) -> {
-            (value = value == null ? new LinkedList<>() : value).add(LookupElementBuilder.create(alias));
+            (value = value == null ? new LinkedList<>() : value).add(alias);
             return value;
         });
     }
 
-    public static String getTypeName(String alias) {
-        return TYPE_ALIASES_NAME.get(alias);
+    @Override
+    public String getAliasTypeCanonicalText(String alias) {
+        return TYPE_ALIASES_CANONICAL_TEXT.get(alias);
     }
 
-    public static List<LookupElementBuilder> getTypeLookupElement(String text) {
+    @Override
+    public PsiClass getAliasPsiClass(String alias) {
+        final JavaPsiService instance = JavaPsiService.getInstance(project);
+        final String aliasTypeCanonicalText = getAliasTypeCanonicalText(alias);
+        return Optional.ofNullable(aliasTypeCanonicalText)
+                .flatMap(instance::findPsiClass)
+                .orElseGet(() -> {
+                    if (StringUtil.isNotEmpty(aliasTypeCanonicalText) && aliasTypeCanonicalText.contains(".")) {
+                        return instance.findPsiClass(aliasTypeCanonicalText.replace("[]", "")).orElse(null);
+                    }
+                    return null;
+                });
+    }
+
+    @Override
+    public boolean isPsiPrimitiveTypeAlias(String alias) {
+        return ALIASES_TYPE.containsKey(alias);
+    }
+
+    @Override
+    public List<String> getTypeLookup(String text) {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
+
 }

@@ -17,10 +17,15 @@
 
 package tk.cofe.plugin.mybatis.psi.reference;
 
-import com.intellij.psi.PsiReferenceContributor;
-import com.intellij.psi.PsiReferenceRegistrar;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.common.utils.CompletionUtils;
+import tk.cofe.plugin.common.utils.PsiElementUtils;
 import tk.cofe.plugin.mbel.MbELTypes;
+import tk.cofe.plugin.mybatis.psi.IdentifierReference;
+
+import java.util.Collection;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
@@ -32,5 +37,32 @@ public class MbELReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(psiElement(MbELTypes.REFERENCE_EXPRESSION), new MbELReferenceProvider());
+    }
+
+    /**
+     * @author : zhengrf
+     * @date : 2020-01-19
+     */
+    public static class MbELReferenceProvider extends ReferenceExpressionReferenceProvider {
+
+        @Override
+        protected boolean isDOTElement(PsiElement element) {
+            return MbELTypes.DOT == PsiElementUtils.getElementType(element);
+        }
+
+        @Override
+        protected IdentifierReference createReference(PsiElement element, PsiType psiType, PsiMember suffixElement, TextRange textRange) {
+            return new IdentifierReference(element, textRange, suffixElement, psiType) {
+                @Override
+                protected Collection<PsiMember> getClassMember() {
+                    return CompletionUtils.getTheGetMethodAndField(psiClass).values();
+                }
+            };
+        }
+
+        @Override
+        protected PsiMember findSuffixElement(String text, PsiType psiType) {
+            return CompletionUtils.getTheGetMethodOrField(text, psiType);
+        }
     }
 }

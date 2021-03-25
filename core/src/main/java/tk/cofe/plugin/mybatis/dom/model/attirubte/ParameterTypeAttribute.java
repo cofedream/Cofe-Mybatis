@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,9 @@
 
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
-import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Referencing;
-import tk.cofe.plugin.mybatis.dom.convert.ClassTypeConverter;
 
 /**
  * parameterType 属性
@@ -34,7 +30,6 @@ import tk.cofe.plugin.mybatis.dom.convert.ClassTypeConverter;
 public interface ParameterTypeAttribute extends DomElement {
 
     @Attribute("parameterType")
-    @Convert(ClassTypeConverter.class)
-    @Referencing(ClassTypeConverter.class)
-    GenericAttributeValue<PsiClass> getParameterType();
+    GenericAttributeValue<String> getParameterType();
+
 }
