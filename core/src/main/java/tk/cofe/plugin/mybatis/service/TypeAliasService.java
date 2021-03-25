@@ -15,15 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.tag;
+package tk.cofe.plugin.mybatis.service;
 
-import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
- * {@code <idArg/>}
- *
  * @author : zhengrf
- * @date : 2019-01-21
+ * @date : 2021-03-24
  */
-public interface IdArg extends JavaTypeAttribute, ColumnAttribute, JdbcTypeAttribute, TypeHandlerAttribute, SelectAttribute, NameAttribute {
+public interface TypeAliasService {
+
+    static TypeAliasService getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, TypeAliasService.class);
+    }
+
+    String getAliasTypeCanonicalText(String alias);
+
+    PsiClass getAliasPsiClass(String alias);
+
+    boolean isPsiPrimitiveTypeAlias(String alias);
+
+    List<String> getTypeLookup(String text);
+
 }
