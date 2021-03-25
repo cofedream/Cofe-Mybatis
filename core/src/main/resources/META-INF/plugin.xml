@@ -47,6 +47,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>添加中文化资源文件</li>
+            <li>修正一些已知BUG</li>
         </ul>
     ]]></change-notes>
 

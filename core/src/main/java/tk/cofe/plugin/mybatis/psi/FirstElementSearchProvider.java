@@ -65,9 +65,11 @@ public abstract class FirstElementSearchProvider<T> {
             final Foreach foreach = (Foreach) bindInclude;
             final GenericAttributeValue<String> collection = foreach.getCollection();
             Optional.ofNullable(foreach.getItem())
-                    .ifPresent(item -> res.add(mapper(item.getXmlAttributeValue(), collection.getXmlAttributeValue())));
+                    .map(GenericAttributeValue::getXmlAttributeValue)
+                    .ifPresent(item -> res.add(mapper(item, collection.getXmlAttributeValue())));
             Optional.ofNullable(foreach.getIndex())
-                    .ifPresent(index -> res.add(mapper(index.getXmlAttributeValue(), collection.getXmlAttributeValue())));
+                    .map(GenericAttributeValue::getXmlAttributeValue)
+                    .ifPresent(index -> res.add(mapper(index, collection.getXmlAttributeValue())));
         }
         if (bindInclude instanceof ClassElement) {
             // 如果是ClassElement且没有bind标签,则查询对应的方法参数
