@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,10 @@
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.psi.PsiClass;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTag;
-import com.intellij.util.xml.SubTagList;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnPrefixAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ForeignColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JavaTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JdbcTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.NotNullColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultSetAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.SelectAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TypeHandlerAttribute;
+import com.intellij.util.xml.*;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
+import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
 
 import java.util.List;
 
@@ -45,7 +32,8 @@ import java.util.List;
  * @date : 2019-01-21
  */
 public interface Association extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
-        SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
+        SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute,
+        IdOrResultInclude {
 
     @Required
     @Attribute("javaType")
@@ -56,12 +44,6 @@ public interface Association extends PropertyAttribute, ColumnAttribute, JavaTyp
 
     @SubTag("discriminator")
     Discriminator getDiscriminator();
-
-    @SubTagList("id")
-    List<Id> getIds();
-
-    @SubTagList("result")
-    List<Result> getResult();
 
     @SubTagList("association")
     List<Association> getAssociations();

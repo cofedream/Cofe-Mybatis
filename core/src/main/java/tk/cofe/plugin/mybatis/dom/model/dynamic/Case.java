@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,10 @@ import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
+import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
-import tk.cofe.plugin.mybatis.dom.model.tag.Id;
-import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 
 import java.util.List;
 
@@ -36,19 +35,14 @@ import java.util.List;
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface Case extends ValueAttribute, ResultMapAttribute, ResultTypeAttribute {
+public interface Case extends ValueAttribute, ResultMapAttribute, ResultTypeAttribute,
+        IdOrResultInclude {
 
     @SubTag("constructor")
     Constructor getConstructor();
 
     @SubTag("discriminator")
     Discriminator getDiscriminator();
-
-    @SubTag("id")
-    List<Id> getIds();
-
-    @SubTagList("result")
-    List<Result> getResults();
 
     @SubTagList("association")
     List<Association> getAssociations();

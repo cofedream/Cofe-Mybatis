@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,39 +18,26 @@
 package tk.cofe.plugin.mybatis.dom.model.dynamic;
 
 import com.intellij.psi.PsiClass;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTag;
-import com.intellij.util.xml.SubTagList;
+import com.intellij.util.xml.*;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ColumnPrefixAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ForeignColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JavaTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.JdbcTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.NotNullColumnAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultSetAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.SelectAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TypeHandlerAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
+import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
-import tk.cofe.plugin.mybatis.dom.model.tag.Id;
-import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
  * collection 标签
+ *
  * @author : zhengrf
  * @date : 2019-01-21
  */
 public interface Collection extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
-        SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute {
+        SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute,
+        IdOrResultInclude {
 
     @Required
     @Attribute("ofType")
@@ -61,12 +48,6 @@ public interface Collection extends PropertyAttribute, ColumnAttribute, JavaType
 
     @SubTag("discriminator")
     Discriminator getDiscriminator();
-
-    @SubTagList("id")
-    List<Id> getIds();
-
-    @SubTagList("result")
-    List<Result> getResults();
 
     @SubTagList("association")
     List<Association> getAssociations();
