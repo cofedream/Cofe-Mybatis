@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,18 @@
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Referencing;
-import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTag;
-import com.intellij.util.xml.SubTagList;
+import com.intellij.util.xml.*;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
+import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ResultMap 标签
@@ -42,7 +37,8 @@ import java.util.Optional;
  * @author : zhengrf
  * @date : 2019-01-15
  */
-public interface ResultMap extends IdAttribute {
+public interface ResultMap extends IdAttribute,
+        IdOrResultInclude {
 
     @NotNull
     @Required
@@ -63,12 +59,6 @@ public interface ResultMap extends IdAttribute {
     @SubTag("discriminator")
     Discriminator getDiscriminator();
 
-    @SubTagList("id")
-    List<Id> getIds();
-
-    @SubTagList("result")
-    List<Result> getResults();
-
     @SubTagList("association")
     List<Association> getAssociations();
 
@@ -87,14 +77,7 @@ public interface ResultMap extends IdAttribute {
 
     @NotNull
     default List<PropertyAttribute> getPropertyAttributes() {
-        return new ArrayList<PropertyAttribute>() {
-            private static final long serialVersionUID = 3671821261060933651L;
-
-            {
-                this.addAll(getIds());
-                this.addAll(getResults());
-            }
-        };
+        return Stream.concat(getIds().stream(), getResults().stream()).collect(Collectors.toList());
     }
 
 }
