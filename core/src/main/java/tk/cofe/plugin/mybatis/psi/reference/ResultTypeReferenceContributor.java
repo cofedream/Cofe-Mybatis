@@ -101,7 +101,8 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
         private final PsiElement myResolveTo;
 
         public ResultTypeReference(@NotNull PsiElement element, TextRange rangeInElement, PsiElement myResolveTo) {
-            super(element, rangeInElement, false);
+            // 如果查询不到则不视为错误
+            super(element, rangeInElement, true);
             this.myResolveTo = myResolveTo;
         }
 

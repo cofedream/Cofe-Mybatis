@@ -170,23 +170,4 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
         return TYPE_LOOKUP.getOrDefault(text, Collections.emptyList());
     }
 
-    // @Override
-    // public Map<String, PsiClass> findAllRegiserType() {
-    //     Map<String, PsiClass> all = new HashMap<>();
-    //     final Collection<VirtualFile> files = FileTypeIndex.getFiles(JavaFileType.INSTANCE, GlobalSearchScope.projectScope(project));
-    //     final PsiManager psiManager = PsiManager.getInstance(project);
-    //     for (VirtualFile file : files) {
-    //         PsiJavaFile javaFile = (PsiJavaFile) psiManager.findFile(file);
-    //         if (javaFile != null) {
-    //             for (PsiClass aClass : javaFile.getClasses()) {
-    //                 if (PsiJavaUtils.hasAnnotation(aClass, Annotation.ALIAS)) {
-    //                     Optional.ofNullable(Annotation.ALIAS.getValue(aClass))
-    //                             .map(Annotation.Value::getValue)
-    //                             .ifPresent(value -> all.put(value, aClass));
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return all;
-    // }
 }
