@@ -40,6 +40,11 @@ public final class MOgnlLanguageInjector {
                 .injectXmlAttributeValue();
     }
 
+    public static void injectOccurrences(final MultiHostRegistrar registrar,
+                                         final PsiLanguageInjectionHost element) {
+        new MOgnlLanguageInjector(registrar, element).injectOccurrences();
+    }
+
     private void injectXmlAttributeValue() {
         final int textLength = element.getTextLength();
         if (textLength < 1) {
@@ -50,4 +55,18 @@ public final class MOgnlLanguageInjector {
                 .doneInjecting();
     }
 
+    private void injectOccurrences() {
+        if (element.getTextLength() < 1) {
+            return;
+        }
+        String text = element.getText();
+        int lbrace;
+        int rbrace = 0;
+        // ${....}
+        while ((lbrace = text.indexOf("${", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
+            registrar.startInjecting(MOgnlLanguage.INSTANCE)
+                    .addPlace("%", null, element, new TextRange(lbrace + 1, ++rbrace)) // 包住尾部
+                    .doneInjecting();
+        }
+    }
 }

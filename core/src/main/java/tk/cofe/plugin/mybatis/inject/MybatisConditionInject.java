@@ -32,9 +32,9 @@ import tk.cofe.plugin.common.utils.DomUtils;
  * @author : zhengrf
  * @date : 2019-10-26
  */
-public class MOgnlConditionInject extends BaseInjector implements DumbAware {
+public class MybatisConditionInject extends BaseInjector implements DumbAware {
 
-    public MOgnlConditionInject() {
+    public MybatisConditionInject() {
         super(XmlAttributeValue.class);
     }
 
