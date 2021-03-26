@@ -51,7 +51,7 @@ public class MOgnlFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "MOgnl";
+        return "mognl";
     }
 
     @Nullable

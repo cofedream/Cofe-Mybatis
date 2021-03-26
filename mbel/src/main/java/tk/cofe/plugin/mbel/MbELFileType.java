@@ -51,7 +51,7 @@ public class MbELFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "MbEL";
+        return "mbel";
     }
 
     @Nullable
