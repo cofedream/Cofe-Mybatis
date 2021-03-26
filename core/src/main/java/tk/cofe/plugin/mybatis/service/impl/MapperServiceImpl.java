@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.service.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.xml.DomFileElement;
@@ -26,10 +27,10 @@ import com.intellij.util.xml.DomService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -74,14 +75,11 @@ public class MapperServiceImpl implements MapperService {
 
     @Override
     public Optional<ClassElement> findStatement(PsiMethod method) {
-        if (method == null) {
-            return Optional.empty();
-        }
-        PsiClass psiClass = method.getContainingClass();
-        if (psiClass == null) {
-            return Optional.empty();
-        }
-        return findStatementsStream(psiClass).filter(classElement -> classElement.isTargetMethod(method)).findFirst();
+        return Optional.ofNullable(method)
+                .map(PsiMember::getContainingClass)
+                .flatMap(psiClass -> findStatementsStream(psiClass)
+                        .filter(classElement -> classElement.isTargetMethod(method))
+                        .findFirst());
     }
 
     @Override
