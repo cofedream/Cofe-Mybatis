@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,10 @@ import com.intellij.openapi.application.QueryExecutorBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.Processor;
+import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 /**
@@ -33,17 +34,21 @@ import tk.cofe.plugin.mybatis.service.MapperService;
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public class MethodToStatementImplementationsSearch extends QueryExecutorBase<XmlAttributeValue, DefinitionsScopedSearch.SearchParameters> {
-    public MethodToStatementImplementationsSearch() {
+public class MethodDefinitionsSearch extends QueryExecutorBase<PsiElement, DefinitionsScopedSearch.SearchParameters> {
+    public MethodDefinitionsSearch() {
         super(true);
     }
 
     @Override
-    public void processQuery(@NotNull DefinitionsScopedSearch.SearchParameters queryParameters, @NotNull Processor<? super XmlAttributeValue> consumer) {
+    public void processQuery(@NotNull DefinitionsScopedSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiElement> consumer) {
         PsiElement element = queryParameters.getElement();
         if (!(element instanceof PsiMethod)) {
             return;
         }
-        MapperService.getInstance(element.getProject()).findStatement((PsiMethod) element).ifPresent(classElement -> consumer.process(classElement.getId().getXmlAttributeValue()));
+        MapperService.getInstance(element.getProject())
+                .findStatement((PsiMethod) element)
+                .map(ClassElement::getId)
+                .map(GenericAttributeValue::getXmlAttributeValue)
+                .ifPresent(consumer::process);
     }
 }
