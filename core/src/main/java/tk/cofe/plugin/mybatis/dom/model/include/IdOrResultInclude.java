@@ -19,10 +19,14 @@ package tk.cofe.plugin.mybatis.dom.model.include;
 
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.SubTagList;
+import org.jetbrains.annotations.NotNull;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.tag.Id;
 import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 标记包含 {@code <id/>} 或 {@code <result/>} 的标签
@@ -36,4 +40,9 @@ public interface IdOrResultInclude extends DomElement {
 
     @SubTagList("result")
     List<Result> getResults();
+
+    @NotNull
+    default List<PropertyAttribute> getPropertyAttributes() {
+        return Stream.concat(getIds().stream(), getResults().stream()).collect(Collectors.toList());
+    }
 }

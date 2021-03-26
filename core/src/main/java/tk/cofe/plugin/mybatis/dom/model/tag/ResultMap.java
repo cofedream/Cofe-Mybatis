@@ -22,14 +22,11 @@ import com.intellij.util.xml.*;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * ResultMap 标签
@@ -73,11 +70,6 @@ public interface ResultMap extends IdAttribute,
     @NotNull
     default Optional<PsiClass> getTypeValue() {
         return Optional.ofNullable(getType().getValue());
-    }
-
-    @NotNull
-    default List<PropertyAttribute> getPropertyAttributes() {
-        return Stream.concat(getIds().stream(), getResults().stream()).collect(Collectors.toList());
     }
 
 }

@@ -26,7 +26,8 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
+import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.List;
@@ -60,22 +61,42 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         }
         MapperService.getInstance(queryParameters.getProject()).getMapperStream()
                 .flatMap(mapper -> mapper.getResultMaps().stream())
-                .filter(resultMap -> resultMap.getTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false))
-                .map(ResultMap::getPropertyAttributes)
-                .forEach(attributes -> process(attributes, psiField, consumer));
+                .forEach(resultMap -> {
+                    if (resultMap.getTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false)) {
+                        process(resultMap.getPropertyAttributes(), psiField, consumer);
+                    }
+                    process(resultMap.getAssociations(), resultMap.getCollections(), classQualifiedName, psiField, consumer);
+                });
+    }
+
+    private void process(List<Association> associations, List<Collection> collections, String classQualifiedName, PsiField psiField, Processor<? super PsiReference> consumer) {
+        for (Association association : associations) {
+            if (association.getJavaTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false)) {
+                process(association.getPropertyAttributes(), psiField, consumer);
+            }
+            process(association.getAssociations(), association.getCollections(), classQualifiedName, psiField, consumer);
+        }
+        for (Collection collection : collections) {
+            if (collection.getOfTypeValue().map(type -> isTarget(type, classQualifiedName)).orElse(false)) {
+                process(collection.getPropertyAttributes(), psiField, consumer);
+            }
+            process(collection.getAssociations(), collection.getCollections(), classQualifiedName, psiField, consumer);
+        }
     }
 
     private void process(List<? extends PropertyAttribute> attributes, PsiField psiField, Processor<? super PsiReference> consumer) {
         final String fieldName = psiField.getName();
-        attributes.forEach(id -> Optional.ofNullable(id.getProperty())
-                .map(GenericAttributeValue::getXmlAttributeValue)
-                .filter(val -> Objects.equals(fieldName, val.getValue()))
-                .ifPresent(val -> consumer.process(new PsiReferenceBase<>(val) {
-                    @Override
-                    public @NotNull PsiElement resolve() {
-                        return psiField;
-                    }
-                })));
+        for (PropertyAttribute id : attributes) {
+            Optional.ofNullable(id.getProperty())
+                    .map(GenericAttributeValue::getXmlAttributeValue)
+                    .filter(val -> Objects.equals(fieldName, val.getValue()))
+                    .ifPresent(val -> consumer.process(new PsiReferenceBase<>(val) {
+                        @Override
+                        public @NotNull PsiElement resolve() {
+                            return psiField;
+                        }
+                    }));
+        }
     }
 
     private boolean isTarget(PsiClass targetClass, String currentClassQualifiedName) {
