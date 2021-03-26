@@ -20,23 +20,24 @@ package tk.cofe.plugin.mybatis.dom.convert;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.util.ArrayUtil;
+import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.CustomReferenceConverter;
+import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.GenericDomValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.psi.ResultMapReference;
 import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
+import tk.cofe.plugin.mybatis.dom.model.tag.Association;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 与 ResultMap 有关的标签或属性
@@ -66,35 +67,67 @@ public class ResultMapConverter {
         @Nullable
         @Override
         public String toString(@Nullable final ResultMap resultMap, final ConvertContext context) {
-            return resultMap == null ? null : resultMap.getIdValue(null);
+            return Optional.ofNullable(resultMap)
+                    .flatMap(IdAttribute::getIdValue)
+                    .orElse(null);
         }
 
         @Nullable
         @Override
         public PsiElement resolve(final ResultMap o, final ConvertContext context) {
-            return o == null ? null : o.getId().getXmlAttributeValue();
+            return Optional.ofNullable(o)
+                    .map(ResultMap::getId)
+                    .map(GenericAttributeValue::getXmlAttributeValue)
+                    .orElse(null);
         }
 
     }
 
     /**
-     * ID引
+     * id引用查询
      */
-    public static class IdReferencing implements CustomReferenceConverter {
-        private static final ResultMapReference RESULT_MAP_REFERENCE = new ResultMapReference((xmlAttributeValue, element) -> PsiReferenceBase.createSelfReference(element, xmlAttributeValue));
+    public static class IdReferencing implements CustomReferenceConverter<String> {
 
         @NotNull
         @Override
-        public PsiReference[] createReferences(final GenericDomValue value, final PsiElement element, final ConvertContext context) {
+        public PsiReference[] createReferences(final GenericDomValue<String> value, final PsiElement element, final ConvertContext context) {
             String rawText = value.getRawText();
-            Optional<Mapper> mapperFile = MybatisUtils.getMapper(((XmlAttributeValue) element));
-            // resultMap extends
-            PsiReference[] extendsReference = mapperFile.map(RESULT_MAP_REFERENCE.getResultMapFunction(element, rawText)).orElse(new PsiReference[0]);
-            // select resultMap
-            PsiReference[] psiReferences = mapperFile.map(RESULT_MAP_REFERENCE.getSelectFunction(element, rawText)).orElse(new PsiReference[0]);
-            // resultMap inside resultMap Attributes
-            PsiReference[] resultMapAttributes = mapperFile.map(RESULT_MAP_REFERENCE.getResultMapAttributeFunction(element, rawText)).orElse(new PsiReference[0]);
-            return ArrayUtil.mergeArrays(ArrayUtil.mergeArrays(extendsReference, psiReferences), resultMapAttributes);
+            return MybatisUtils.getMapper(((XmlElement) element))
+                    .map(mapper -> {
+                        List<PsiReference> ref = new ArrayList<>();
+                        // 所有的select 标签中的 resultMap属性
+                        ref.addAll(mapper.getSelects().stream()
+                                .map(ResultMapAttribute::getResultMap)
+                                .filter(resultMap -> Objects.equals(rawText, DomUtils.getAttributeValue(resultMap)))
+                                .map(GenericAttributeValue::getXmlAttributeValue)
+                                .map(val -> PsiReferenceBase.createSelfReference(element, val))
+                                .collect(Collectors.toList()));
+                        // 除了当前的其他的resultMap中的 extends属性
+                        ref.addAll(mapper.getResultMaps().stream()
+                                .filter(resultMap -> !resultMap.isEqualsId(rawText)) // 与当前id不同的resultMap
+                                .flatMap(resultMap -> {
+                                    final Stream.Builder<GenericAttributeValue<?>> builder = Stream.builder();
+                                    builder.accept(resultMap.getExtends());
+                                    process(resultMap.getAssociations(), resultMap.getCollections(), builder);
+                                    return builder.build();
+                                })
+                                .filter(e -> Objects.equals(rawText, DomUtils.getAttributeValue(e))) // extends等于当前的id
+                                .map(GenericAttributeValue::getXmlAttributeValue)
+                                .map(val -> PsiReferenceBase.createSelfReference(element, val))
+                                .collect(Collectors.toList()));
+                        return ref.toArray(PsiReference.EMPTY_ARRAY);
+                    }).orElse(PsiReference.EMPTY_ARRAY);
+        }
+
+        private void process(List<Association> associations, List<tk.cofe.plugin.mybatis.dom.model.dynamic.Collection> collections, Stream.Builder<GenericAttributeValue<?>> builder) {
+            for (Association association : associations) {
+                builder.accept(association.getResultMap());
+                process(association.getAssociations(), association.getCollections(), builder);
+            }
+            for (tk.cofe.plugin.mybatis.dom.model.dynamic.Collection collection : collections) {
+                builder.accept(collection.getResultMap());
+                process(collection.getAssociations(), collection.getCollections(), builder);
+            }
         }
 
     }
