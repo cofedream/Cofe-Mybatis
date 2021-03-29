@@ -15,14 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
 import com.intellij.util.xml.SubTag;
 import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
-import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
@@ -36,7 +36,7 @@ import java.util.List;
  * @date : 2019-01-21
  */
 public interface Case extends ValueAttribute, ResultMapAttribute, ResultTypeAttribute,
-        IdOrResultInclude {
+        IdOrResultMix {
 
     @SubTag("constructor")
     Constructor getConstructor();

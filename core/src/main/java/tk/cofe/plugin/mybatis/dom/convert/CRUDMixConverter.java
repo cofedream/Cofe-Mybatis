@@ -27,9 +27,9 @@ import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
-import tk.cofe.plugin.common.utils.PsiMethodUtils;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiMethodUtils;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.Collections;
  * @author : zhengrf
  * @date : 2019-01-23
  */
-public class ClassElementConverter {
+public class CRUDMixConverter {
 
     public static class Id extends ResolvingConverter<PsiMethod> {
         @Override
@@ -51,11 +51,11 @@ public class ClassElementConverter {
         @NotNull
         @Override
         public Collection<? extends PsiMethod> getVariants(ConvertContext context) {
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class);
-            if (classElement == null) {
+            CRUDMix CRUDMix = DomUtils.getParentOfType(context.getInvocationElement(), CRUDMix.class);
+            if (CRUDMix == null) {
                 return Collections.emptyList();
             }
-            return MybatisUtils.getPsiClass(classElement)
+            return MybatisUtils.getPsiClass(CRUDMix)
                     .map(psiClass -> Arrays.asList(psiClass.getMethods()))
                     .orElse(Collections.emptyList());
         }
@@ -66,11 +66,11 @@ public class ClassElementConverter {
             if (StringUtil.isEmpty(methodName)) {
                 return null;
             }
-            ClassElement classElement = DomUtils.getParentOfType(context.getInvocationElement(), ClassElement.class, true);
-            if (classElement == null) {
+            CRUDMix CRUDMix = DomUtils.getParentOfType(context.getInvocationElement(), CRUDMix.class, true);
+            if (CRUDMix == null) {
                 return null;
             }
-            return MybatisUtils.getPsiClass(classElement).flatMap(psiClass -> PsiMethodUtils.findPsiMethod(psiClass, methodName)).orElse(null);
+            return MybatisUtils.getPsiClass(CRUDMix).flatMap(psiClass -> PsiMethodUtils.findPsiMethod(psiClass, methodName)).orElse(null);
         }
 
         @Nullable

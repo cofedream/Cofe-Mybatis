@@ -20,8 +20,8 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.*;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
-import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import java.util.List;
  */
 public interface Association extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
         SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute,
-        IdOrResultInclude {
+        IdOrResultMix {
 
     @Required
     @Attribute("javaType")

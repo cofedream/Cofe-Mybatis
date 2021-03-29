@@ -19,11 +19,10 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.*;
-import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
-import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +34,8 @@ import java.util.Optional;
  * @date : 2019-01-15
  */
 public interface ResultMap extends IdAttribute,
-        IdOrResultInclude {
+        IdOrResultMix {
 
-    @NotNull
     @Required
     @Attribute("id")
     @Referencing(value = ResultMapConverter.IdReferencing.class)
@@ -67,7 +65,6 @@ public interface ResultMap extends IdAttribute,
      *
      * @return type 值 如果为Null 则返回 ""
      */
-    @NotNull
     default Optional<PsiClass> getTypeValue() {
         return Optional.ofNullable(getType().getValue());
     }

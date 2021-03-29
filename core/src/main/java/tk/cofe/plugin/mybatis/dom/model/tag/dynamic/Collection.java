@@ -15,13 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.*;
-import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
-import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
@@ -37,7 +36,7 @@ import java.util.Optional;
  */
 public interface Collection extends PropertyAttribute, ColumnAttribute, JavaTypeAttribute, JdbcTypeAttribute,
         SelectAttribute, ResultMapAttribute, TypeHandlerAttribute, NotNullColumnAttribute, ColumnPrefixAttribute, ResultSetAttribute, ForeignColumnAttribute,
-        IdOrResultInclude {
+        IdOrResultMix {
 
     @Required
     @Attribute("ofType")
@@ -61,7 +60,6 @@ public interface Collection extends PropertyAttribute, ColumnAttribute, JavaType
      *
      * @return ofType 值 如果为Null 则返回 ""
      */
-    @NotNull
     default Optional<PsiClass> getOfTypeValue() {
         return Optional.ofNullable(getOfType().getValue());
     }

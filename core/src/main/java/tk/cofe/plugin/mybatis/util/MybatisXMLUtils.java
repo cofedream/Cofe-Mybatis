@@ -24,9 +24,9 @@ import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Bind;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Bind;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Foreach;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +49,7 @@ public class MybatisXMLUtils {
         if (!(psiElement instanceof XmlElement)) {
             return Collections.emptyList();
         }
-        return DomUtils.getParents(psiElement, XmlTag.class, BindInclude.class)
+        return DomUtils.getParents(psiElement, XmlTag.class, BindMix.class)
                 .stream()
                 .flatMap(info -> info.getBinds().stream())
                 .collect(Collectors.toList());

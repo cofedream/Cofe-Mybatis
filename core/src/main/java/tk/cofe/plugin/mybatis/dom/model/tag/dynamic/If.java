@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
-import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
 
 /**
- * {@code <include></include} 标签
- *
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Include extends DynamicTag {
-
-    @Attribute("refid")
-    @Convert(IncludeConverter.class)
-    GenericAttributeValue<Sql> getRefId();
+public interface If extends DynamicTag, TestAttribute, DynamicSql, BindMix {
 }

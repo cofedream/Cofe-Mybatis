@@ -25,8 +25,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Optional;
@@ -60,8 +60,8 @@ public class MapperXmlCompletionContributor extends CompletionContributor {
         RESULT_TYPE("resultType") {
             @Override
             void process(XmlTag xmlTag, CompletionResultSet result) {
-                ClassElement classElement = (ClassElement) DomUtils.getDomElement(xmlTag);
-                if (classElement == null) {
+                CRUDMix CRUDMix = (CRUDMix) DomUtils.getDomElement(xmlTag);
+                if (CRUDMix == null) {
                     return;
                 }
                 // classElement.getIdMethod()

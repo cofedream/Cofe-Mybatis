@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@ package tk.cofe.plugin.mybatis.util;
 
 import org.apache.commons.collections.CollectionUtils;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
 
 import java.util.Collections;
 import java.util.LinkedList;

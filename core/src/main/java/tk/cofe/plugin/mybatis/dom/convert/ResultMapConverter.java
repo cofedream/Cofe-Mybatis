@@ -119,12 +119,12 @@ public class ResultMapConverter {
                     }).orElse(PsiReference.EMPTY_ARRAY);
         }
 
-        private void process(List<Association> associations, List<tk.cofe.plugin.mybatis.dom.model.dynamic.Collection> collections, Stream.Builder<GenericAttributeValue<?>> builder) {
+        private void process(List<Association> associations, List<tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection> collections, Stream.Builder<GenericAttributeValue<?>> builder) {
             for (Association association : associations) {
                 builder.accept(association.getResultMap());
                 process(association.getAssociations(), association.getCollections(), builder);
             }
-            for (tk.cofe.plugin.mybatis.dom.model.dynamic.Collection collection : collections) {
+            for (tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection collection : collections) {
                 builder.accept(collection.getResultMap());
                 process(collection.getAssociations(), collection.getCollections(), builder);
             }

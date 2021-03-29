@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,41 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.mix;
 
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.SubTagList;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
+import tk.cofe.plugin.mybatis.dom.model.tag.Id;
+import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * 标签
+ * 标记包含 {@code <id/>} 或 {@code <result/>} 的标签
  * @author : zhengrf
- * @date : 2019-01-20
+ * @date : 2021-03-25
  */
-public interface DynamicSql extends DomElement {
+public interface IdOrResultMix extends DomElement {
 
-    @SubTagList("include")
-    List<Include> getIncludes();
+    @SubTagList("id")
+    List<Id> getIds();
 
-    @SubTagList("trim")
-    List<Trim> getTrims();
+    @SubTagList("result")
+    List<Result> getResults();
 
-    @SubTagList("where")
-    List<Where> getWheres();
-
-    @SubTagList("set")
-    List<Set> getSets();
-
-    @SubTagList("foreach")
-    List<Foreach> getForeachs();
-
-    @SubTagList("choose")
-    List<Choose> getChooses();
-
-    @SubTagList("if")
-    List<If> getIfs();
-
-    @SubTagList("bind")
-    List<Bind> getBinds();
+    default List<PropertyAttribute> getPropertyAttributes() {
+        return Stream.concat(getIds().stream(), getResults().stream()).collect(Collectors.toList());
+    }
 }

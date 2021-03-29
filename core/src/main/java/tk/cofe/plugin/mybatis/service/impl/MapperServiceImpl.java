@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collections;
@@ -66,7 +66,7 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public List<ClassElement> findStatemtnts(@Nullable final PsiClass mapperClass) {
+    public List<CRUDMix> findStatemtnts(@Nullable final PsiClass mapperClass) {
         if (mapperClass == null) {
             return Collections.emptyList();
         }
@@ -74,7 +74,7 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @Override
-    public Optional<ClassElement> findStatement(PsiMethod method) {
+    public Optional<CRUDMix> findStatement(PsiMethod method) {
         return Optional.ofNullable(method)
                 .map(PsiMember::getContainingClass)
                 .flatMap(psiClass -> findStatementsStream(psiClass)
@@ -106,11 +106,11 @@ public class MapperServiceImpl implements MapperService {
     }
 
     @NotNull
-    private Stream<ClassElement> findStatementsStream(@Nullable final PsiClass mapperClass) {
+    private Stream<CRUDMix> findStatementsStream(@Nullable final PsiClass mapperClass) {
         if (mapperClass == null) {
             return Stream.empty();
         }
-        return getMapperStream(mapperClass).flatMap(mapper -> mapper.getClassElements().stream());
+        return getMapperStream(mapperClass).flatMap(mapper -> mapper.getCRUDMixs().stream());
     }
 
     @Override

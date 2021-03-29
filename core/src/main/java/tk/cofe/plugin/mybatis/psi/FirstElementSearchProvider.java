@@ -26,9 +26,9 @@ import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.CompletionUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Foreach;
 
 import javax.swing.*;
 import java.util.*;
@@ -48,21 +48,21 @@ public abstract class FirstElementSearchProvider<T> {
         if (parent == null) {
             return Collections.emptyList();
         }
-        final BindInclude bindInclude = DomUtils.getDomElement(parent, BindInclude.class).orElse(null);
-        if (bindInclude == null) {
+        final BindMix bindMix = DomUtils.getDomElement(parent, BindMix.class).orElse(null);
+        if (bindMix == null) {
             return Collections.emptyList();
         }
         List<T> res = new ArrayList<>();
         // 查询元素中包含的Bind
-        res.addAll(bindInclude.getBinds().stream()
+        res.addAll(bindMix.getBinds().stream()
                 .map(bind -> mapper(
                         bind.getName().getXmlAttributeValue(),
                         bind.getValue().getXmlAttributeValue()))
                 .collect(Collectors.toList()));
         // 如果是Foreach标签则判断item是否符合
-        if (bindInclude instanceof Foreach) {
+        if (bindMix instanceof Foreach) {
             // foreach collection标签
-            final Foreach foreach = (Foreach) bindInclude;
+            final Foreach foreach = (Foreach) bindMix;
             final GenericAttributeValue<String> collection = foreach.getCollection();
             Optional.ofNullable(foreach.getItem())
                     .map(GenericAttributeValue::getXmlAttributeValue)
@@ -71,9 +71,9 @@ public abstract class FirstElementSearchProvider<T> {
                     .map(GenericAttributeValue::getXmlAttributeValue)
                     .ifPresent(index -> res.add(mapper(index, collection.getXmlAttributeValue())));
         }
-        if (bindInclude instanceof ClassElement) {
+        if (bindMix instanceof CRUDMix) {
             // 如果是ClassElement且没有bind标签,则查询对应的方法参数
-            ((ClassElement) bindInclude).getIdMethod()
+            ((CRUDMix) bindMix).getIdMethod()
                     .map(PsiMethod::getParameterList)
                     .filter(parameterList -> parameterList.getParametersCount() > 0)
                     .map(PsiParameterList::getParameters)

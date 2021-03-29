@@ -15,17 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
 
 /**
  * @author : zhengrf
- * @date : 2019-01-21
+ * @date : 2019-01-20
  */
-public interface Bind extends DynamicTag, NameAttribute, ValueAttribute {
-
-    String TAG = "<bind/>";
-
+public interface Otherwise extends DynamicTag, DynamicSql, BindMix {
 }

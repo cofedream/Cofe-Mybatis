@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,27 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
 
 /**
+ * {@code <include></include} 标签
+ *
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Sql extends DomElement, DynamicSql, BindInclude, IdAttribute, LangAttribute, DatabaseIdAttribute {
+public interface Include extends DynamicTag {
 
-    @NotNull
-    @Required
-    @Attribute("id")
-    GenericAttributeValue<String> getId();
-
+    @Attribute("refid")
+    @Convert(IncludeConverter.class)
+    GenericAttributeValue<Sql> getRefId();
 }

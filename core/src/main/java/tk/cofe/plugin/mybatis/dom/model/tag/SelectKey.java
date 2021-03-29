@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyColumnAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.KeyPropertyAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-21
  */
-public interface SelectKey extends BindInclude, ResultTypeAttribute, KeyPropertyAttribute, KeyColumnAttribute, DatabaseIdAttribute {
+public interface SelectKey extends BindMix, ResultTypeAttribute, KeyPropertyAttribute, KeyColumnAttribute, DatabaseIdAttribute {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TestAttribute;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
 
 /**
  * @author : zhengrf
- * @date : 2019-01-20
+ * @date : 2019-01-21
  */
-public interface If extends DynamicTag, TestAttribute, DynamicSql, BindInclude {
+public interface Bind extends DynamicTag, NameAttribute, ValueAttribute {
+
+    String TAG = "<bind/>";
+
 }

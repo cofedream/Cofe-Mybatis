@@ -15,34 +15,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.include;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.SubTagList;
-import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.tag.Id;
-import tk.cofe.plugin.mybatis.dom.model.tag.Result;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * 标记包含 {@code <id/>} 或 {@code <result/>} 的标签
+ * 标签
  * @author : zhengrf
- * @date : 2021-03-25
+ * @date : 2019-01-20
  */
-public interface IdOrResultInclude extends DomElement {
+public interface DynamicSql extends DomElement {
 
-    @SubTagList("id")
-    List<Id> getIds();
+    @SubTagList("include")
+    List<Include> getIncludes();
 
-    @SubTagList("result")
-    List<Result> getResults();
+    @SubTagList("trim")
+    List<Trim> getTrims();
 
-    @NotNull
-    default List<PropertyAttribute> getPropertyAttributes() {
-        return Stream.concat(getIds().stream(), getResults().stream()).collect(Collectors.toList());
-    }
+    @SubTagList("where")
+    List<Where> getWheres();
+
+    @SubTagList("set")
+    List<Set> getSets();
+
+    @SubTagList("foreach")
+    List<Foreach> getForeachs();
+
+    @SubTagList("choose")
+    List<Choose> getChooses();
+
+    @SubTagList("if")
+    List<If> getIfs();
+
+    @SubTagList("bind")
+    List<Bind> getBinds();
 }

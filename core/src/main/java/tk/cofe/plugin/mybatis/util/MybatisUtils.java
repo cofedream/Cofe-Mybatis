@@ -27,7 +27,11 @@ import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.*;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
+import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
+import tk.cofe.plugin.mybatis.dom.model.tag.Select;
+import tk.cofe.plugin.mybatis.dom.model.tag.Update;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,7 +121,7 @@ public class MybatisUtils {
             return false;
         }
         DomElement domElement = DomUtils.getDomElement(xmlElement);
-        if (!(domElement instanceof ClassElement)) {
+        if (!(domElement instanceof CRUDMix)) {
             return false;
         }
         return Mapper.BASIC_OPERATION.stream().anyMatch(clazz -> clazz.isInstance(domElement));
@@ -158,11 +162,11 @@ public class MybatisUtils {
     /**
      * 获取当前 XML 对应的 Mapper 接口
      *
-     * @param classElement 基础CRUD元素
+     * @param CRUDMix 基础CRUD元素
      * @return PsiClass
      */
-    public static Optional<PsiClass> getPsiClass(ClassElement classElement) {
-        return Optional.ofNullable(DomUtils.getParentOfType(classElement, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
+    public static Optional<PsiClass> getPsiClass(CRUDMix CRUDMix) {
+        return Optional.ofNullable(DomUtils.getParentOfType(CRUDMix, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 
 }

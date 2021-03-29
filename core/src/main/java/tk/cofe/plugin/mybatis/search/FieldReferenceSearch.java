@@ -26,8 +26,8 @@ import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.List;

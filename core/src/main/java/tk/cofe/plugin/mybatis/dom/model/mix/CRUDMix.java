@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,41 +15,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.tag;
+package tk.cofe.plugin.mybatis.dom.model.mix;
 
 import com.intellij.psi.PsiMethod;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import com.intellij.util.xml.TagValue;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xml.*;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mybatis.dom.convert.ClassElementConverter;
+import tk.cofe.plugin.mybatis.dom.convert.CRUDMixConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.DynamicSql;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.DynamicSql;
 
 import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * 创建({@code <insert/>})、读取({@code <select/>})、更新({@code <update/>})、删除({@code <delete/>})标签的混合
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface ClassElement extends DynamicSql, BindInclude, IdAttribute, ParameterTypeAttribute {
+public interface CRUDMix extends DynamicSql, BindMix, IdAttribute, ParameterTypeAttribute {
 
-    @NotNull
     @Required
     @Attribute("id")
-    @Convert(ClassElementConverter.Id.class)
+    @Convert(CRUDMixConverter.Id.class)
     GenericAttributeValue<PsiMethod> getId();
 
     /**
      * 获取Id对应的PsiMethod
      */
-    @NotNull
     default Optional<PsiMethod> getIdMethod() {
         return Optional.ofNullable(getId().getValue());
     }

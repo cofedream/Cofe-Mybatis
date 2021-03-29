@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
 
 /**
- * 动态标签
  * @author : zhengrf
- * @date : 2019-06-30
+ * @date : 2019-01-20
  */
-public interface DynamicTag extends DomElement {
+public interface Foreach extends DynamicTag, DynamicSql, BindMix {
+
+    String TAG = "<foreach/>";
+
+    @Required
+    @Attribute("collection")
+    GenericAttributeValue<String> getCollection();
+
+    @Attribute("item")
+    GenericAttributeValue<String> getItem();
+
+    @Attribute("index")
+    GenericAttributeValue<String> getIndex();
+
 }

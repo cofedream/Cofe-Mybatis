@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import com.intellij.util.xml.ConvertContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Sql;
 
 import java.util.Collection;
 import java.util.List;

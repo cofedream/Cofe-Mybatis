@@ -33,7 +33,7 @@ import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiFieldUtils;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
-import tk.cofe.plugin.mybatis.dom.model.include.IdOrResultInclude;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
@@ -104,15 +104,15 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
         if (domElement == null) {
             return Optional.empty();
         }
-        final IdOrResultInclude include = DomUtils.getParentOfType(domElement, IdOrResultInclude.class, true);
+        final IdOrResultMix include = DomUtils.getParentOfType(domElement, IdOrResultMix.class, true);
         if (include instanceof ResultMap) {
             return ((ResultMap) include).getTypeValue();
         }
         if (include instanceof Association) {
             return ((Association) include).getJavaTypeValue();
         }
-        if (include instanceof tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) {
-            return ((tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) include).getOfTypeValue();
+        if (include instanceof tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) {
+            return ((tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) include).getOfTypeValue();
         }
         return Optional.empty();
     }

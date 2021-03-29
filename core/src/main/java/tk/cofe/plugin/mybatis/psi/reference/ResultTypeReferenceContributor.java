@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.*;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
 import java.util.*;
@@ -66,8 +66,8 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
                     .map(PsiElement::getText)
                     .map(valueText -> {
                         final TypeAliasService typeAliasService = TypeAliasService.getInstance(element.getProject());
-                        final Optional<PsiMethod> psiMethod = DomUtils.getDomElement(element, ClassElement.class)
-                                .flatMap(ClassElement::getIdMethod)
+                        final Optional<PsiMethod> psiMethod = DomUtils.getDomElement(element, CRUDMix.class)
+                                .flatMap(CRUDMix::getIdMethod)
                                 .filter(info -> !PsiMethodUtils.isVoidMethod(info));
                         PsiElement psiElement;
                         if (typeAliasService.isPsiPrimitiveTypeAlias(valueText)) {
@@ -114,8 +114,8 @@ public class ResultTypeReferenceContributor extends PsiReferenceContributor {
         @Override
         public Object @NotNull [] getVariants() {
             final TypeAliasService instance = TypeAliasService.getInstance(myElement.getProject());
-            return DomUtils.getDomElement(myElement, ClassElement.class)
-                    .flatMap(ClassElement::getIdMethod)
+            return DomUtils.getDomElement(myElement, CRUDMix.class)
+                    .flatMap(CRUDMix::getIdMethod)
                     .filter(info -> !PsiMethodUtils.isVoidMethod(info))
                     .map(PsiMethod::getReturnTypeElement)
                     .map(typeElement -> {

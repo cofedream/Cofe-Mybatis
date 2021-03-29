@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mybatis.dom.model.dynamic;
+package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
+import com.intellij.util.xml.SubTagList;
+
+import java.util.List;
 
 /**
- * {@code <trim></trim>} 标签
  * @author : zhengrf
  * @date : 2019-01-20
  */
-public interface Trim extends DynamicTag, DynamicSql, BindInclude {
+public interface Choose extends DynamicTag {
+
+    @SubTagList("when")
+    List<When> getWhens();
+
+    @SubTagList("otherwise")
+    List<Otherwise> getOtherwises();
 }

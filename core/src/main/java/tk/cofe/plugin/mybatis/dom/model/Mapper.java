@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,30 +18,15 @@
 package tk.cofe.plugin.mybatis.dom.model;
 
 import com.intellij.psi.PsiClass;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Namespace;
-import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTagList;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xml.*;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
-import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-import tk.cofe.plugin.mybatis.dom.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.model.tag.Update;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.*;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Sql;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author : zhengrf
@@ -52,9 +37,8 @@ public interface Mapper extends DomElement {
 
     String TAG_NAME = "mapper";
 
-    List<Class<? extends ClassElement>> BASIC_OPERATION = Collections.unmodifiableList(Arrays.asList(Select.class, Update.class, Insert.class, Delete.class));
+    List<Class<? extends CRUDMix>> BASIC_OPERATION = Collections.unmodifiableList(Arrays.asList(Select.class, Update.class, Insert.class, Delete.class));
 
-    @NotNull
     @Required
     @Attribute("namespace")
     GenericAttributeValue<PsiClass> getNamespace();
@@ -64,7 +48,6 @@ public interface Mapper extends DomElement {
      *
      * @return namespace属性值
      */
-    @NotNull
     default Optional<PsiClass> getNamespaceValue() {
         return Optional.ofNullable(getNamespace().getValue());
     }
@@ -81,23 +64,6 @@ public interface Mapper extends DomElement {
 
     @SubTagList("resultMap")
     List<ResultMap> getResultMaps();
-
-    default List<ClassElement> getClassElements() {
-        List<ClassElement> classElements = new LinkedList<>();
-        if (getInserts() != null) {
-            classElements.addAll(getInserts());
-        }
-        if (getUpdates() != null) {
-            classElements.addAll(getUpdates());
-        }
-        if (getDeletes() != null) {
-            classElements.addAll(getDeletes());
-        }
-        if (getSelects() != null) {
-            classElements.addAll(getSelects());
-        }
-        return classElements;
-    }
 
     /**
      * 获取ID标签对应的元素
@@ -137,26 +103,22 @@ public interface Mapper extends DomElement {
     @SubTagList("sql")
     List<Sql> getSqls();
 
-    @NotNull
     @SubTagList("select")
     Select addSelect();
 
-    @NotNull
     @SubTagList("update")
     Update addUpdate();
 
-    @NotNull
     @SubTagList("insert")
     Insert addInsert();
 
-    @NotNull
     @SubTagList("delete")
     Delete addDelete();
 
 
     // https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#children-collections
-    //@SubTagsList({"insert", "update", "delete", "select"})
-    //List<ClassElement> getClassElements();
+    @SubTagsList({"insert", "update", "delete", "select"})
+    List<CRUDMix> getCRUDMixs();
     //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "insert")
     //ClassElement addInsertElements();
     //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "update")
