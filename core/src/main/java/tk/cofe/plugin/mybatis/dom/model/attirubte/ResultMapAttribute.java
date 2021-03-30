@@ -18,10 +18,9 @@
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
+import com.intellij.util.xml.Resolve;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
 /**
@@ -33,7 +32,7 @@ import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 public interface ResultMapAttribute extends DomElement {
 
     @Attribute("resultMap")
-    @Convert(ResultMapConverter.Attribute.class)
+    @Resolve(ResultMap.class)
     GenericAttributeValue<ResultMap> getResultMap();
 
 }

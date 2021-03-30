@@ -17,10 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
+import com.intellij.util.xml.*;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
@@ -33,6 +30,7 @@ import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
 public interface Sql extends DomElement, DynamicSql, BindMix, IdAttribute, LangAttribute, DatabaseIdAttribute {
 
     @Required
+    @NameValue
     @Attribute("id")
     GenericAttributeValue<String> getId();
 

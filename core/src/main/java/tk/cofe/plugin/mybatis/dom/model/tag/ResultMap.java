@@ -19,7 +19,6 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.*;
-import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
@@ -37,15 +36,15 @@ public interface ResultMap extends IdAttribute,
         IdOrResultMix {
 
     @Required
+    @NameValue
     @Attribute("id")
-    @Referencing(value = ResultMapConverter.IdReferencing.class)
     GenericAttributeValue<String> getId();
 
     @Attribute("type")
     GenericAttributeValue<PsiClass> getType();
 
     @Attribute("extends")
-    @Convert(ResultMapConverter.Extends.class)
+    @Resolve(ResultMap.class)
     GenericAttributeValue<ResultMap> getExtends();
 
     @SubTag("constructor")

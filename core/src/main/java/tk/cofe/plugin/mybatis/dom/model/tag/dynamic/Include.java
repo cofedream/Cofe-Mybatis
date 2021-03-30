@@ -18,12 +18,11 @@
 package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
+import com.intellij.util.xml.Resolve;
 
 /**
- * {@code <include></include} 标签
+ * {@code <include/>} 标签
  *
  * @author : zhengrf
  * @date : 2019-01-20
@@ -31,6 +30,6 @@ import tk.cofe.plugin.mybatis.dom.convert.IncludeConverter;
 public interface Include extends DynamicTag {
 
     @Attribute("refid")
-    @Convert(IncludeConverter.class)
+    @Resolve(Sql.class)
     GenericAttributeValue<Sql> getRefId();
 }
