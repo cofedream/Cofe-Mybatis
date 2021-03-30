@@ -29,7 +29,7 @@ import tk.cofe.plugin.common.utils.CompletionUtils;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.constant.ElementPattern;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -60,7 +60,7 @@ public class MbELKeywordCompletionContributor extends CompletionContributor {
 
     private void installResultMap() {
         extendCompletion(ElementPattern.MbEL.RESULT_MAP_EXPRESSION, parameters -> {
-            PsiLanguageInjectionHost injectionHost = MybatisXMLUtils.getOriginElement(parameters);
+            PsiLanguageInjectionHost injectionHost = MybatisUtils.getOriginElement(parameters);
             Optional<Mapper> domElement = DomUtils.getDomElement(injectionHost, Mapper.class);
             return domElement
                     .map(Mapper::getResultMaps)

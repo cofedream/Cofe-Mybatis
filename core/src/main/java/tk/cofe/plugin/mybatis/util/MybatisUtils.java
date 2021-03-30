@@ -17,6 +17,8 @@
 
 package tk.cofe.plugin.mybatis.util;
 
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -141,7 +143,6 @@ public class MybatisUtils {
      *
      * @param type 类型
      */
-
     public static List<String> getResultType(PsiType type) {
         if (type == null) {
             return Collections.emptyList();
@@ -169,4 +170,11 @@ public class MybatisUtils {
         return Optional.ofNullable(DomUtils.getParentOfType(CRUDMix, Mapper.class, true)).flatMap(Mapper::getNamespaceValue);
     }
 
+    public static PsiLanguageInjectionHost getOriginElement(final PsiElement element) {
+        return InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
+    }
+
+    public static PsiLanguageInjectionHost getOriginElement(final CompletionParameters parameters) {
+        return getOriginElement(parameters.getPosition());
+    }
 }
