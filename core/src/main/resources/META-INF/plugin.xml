@@ -50,6 +50,7 @@
             <li>修正二级标签下的property无法正确索引至类属性的问题</li>
             <li>修正类字段无法深度索引collection/association的问题</li>
             <li>优化resultMap id属性引用查询</li>
+            <li>移除dtd文件</li>
             <li>修正其他一些已知BUG</li>
         </ul>
     ]]></change-notes>
