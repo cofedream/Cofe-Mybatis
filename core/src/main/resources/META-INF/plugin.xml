@@ -85,20 +85,22 @@
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.TypeAliasServiceImpl"/>
         <!--If your plugin targets 2019.1 or later,
         please use extension point com.intellij.dom.fileMetaData instead and specify rootTagName and domVersion/stubVersion in plugin.xml-->
-        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.MapperXmlDescription" rootTagName="mapper"/>
-        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.ConfigurationXmlDescription" rootTagName="configuration"/>
+        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.MapperXmlDescription"
+                          rootTagName="mapper"/>
+        <dom.fileMetaData implementation="tk.cofe.plugin.mybatis.dom.description.ConfigurationXmlDescription"
+                          rootTagName="configuration"/>
         <!-- Add your extensions here -->
 
         <codeInsight.lineMarkerProvider language="JAVA"
-        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
+                                        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperInterfaceLineMarkerProvider"/>
         <codeInsight.lineMarkerProvider language="XML"
-        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
+                                        implementationClass="tk.cofe.plugin.mybatis.linemarker.MapperStatementLineMarkerProvider"/>
 
         <!--文档提示-->
         <lang.documentationProvider language="XML" order="first"
-        implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"/>
+                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.SqlTagDocumentation"/>
         <lang.documentationProvider language="XML" order="first"
-        implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
+                                    implementationClass="tk.cofe.plugin.mybatis.dom.documentation.ResultMapTagDocumentation"/>
 
         <!--参考
             https://intellij-support.jetbrains.com/hc/en-us/community/posts/206126539-How-do-I-create-a-virtual-implementation-for-an-interface-from-an-xml-document-
