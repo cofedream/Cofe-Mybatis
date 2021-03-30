@@ -119,12 +119,4 @@ public interface Mapper extends DomElement {
     // https://www.jetbrains.org/intellij/sdk/docs/reference_guide/frameworks_and_external_apis/xml_dom_api.html#children-collections
     @SubTagsList({"insert", "update", "delete", "select"})
     List<CRUDMix> getCRUDMixs();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "insert")
-    //ClassElement addInsertElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "update")
-    //ClassElement addUpdateElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "delete")
-    //ClassElement addDeleteElements();
-    //@SubTagsList(value = {"insert", "update", "delete", "select"},tagName = "select")
-    //ClassElement addSelectElements();
 }

@@ -76,7 +76,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
         if (method.getNameIdentifier() != null) {
             List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).getMapperStream(psiClass)
                     .flatMap(mapperXml -> mapperXml.getCRUDMixs().stream())
-                    .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
+                    .filter(mix -> mix.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
             if (!xmlMethods.isEmpty()) {
                 result.add(NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)

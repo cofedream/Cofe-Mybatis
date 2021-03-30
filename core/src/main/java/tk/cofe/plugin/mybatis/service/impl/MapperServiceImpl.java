@@ -78,7 +78,7 @@ public class MapperServiceImpl implements MapperService {
         return Optional.ofNullable(method)
                 .map(PsiMember::getContainingClass)
                 .flatMap(psiClass -> findStatementsStream(psiClass)
-                        .filter(classElement -> classElement.isTargetMethod(method))
+                        .filter(mix -> mix.isTargetMethod(method))
                         .findFirst());
     }
 
@@ -95,7 +95,7 @@ public class MapperServiceImpl implements MapperService {
                 return true;
             }
         }
-        return findStatementsStream(method.getContainingClass()).anyMatch(classElement -> classElement.isTargetMethod(method));
+        return findStatementsStream(method.getContainingClass()).anyMatch(mix -> mix.isTargetMethod(method));
     }
 
     @Override
