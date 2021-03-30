@@ -24,7 +24,7 @@ import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 /**
@@ -47,7 +47,7 @@ public class MethodDefinitionsSearch extends QueryExecutorBase<PsiElement, Defin
         }
         MapperService.getInstance(element.getProject())
                 .findStatement((PsiMethod) element)
-                .map(ClassElement::getId)
+                .map(CRUDMix::getId)
                 .map(GenericAttributeValue::getXmlAttributeValue)
                 .ifPresent(consumer::process);
     }
