@@ -53,7 +53,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     @Nullable
     @Override
     public Icon getIcon() {
-        return MybatisIcons.MybatisInterface;
+        return MybatisIcons.INTERFACE;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
                     .filter(mix -> mix.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
             if (!xmlMethods.isEmpty()) {
-                result.add(NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.NAVIGATE_TO_STATEMENT)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
                         .setTargets(xmlMethods)
                         .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "statement"))
@@ -100,7 +100,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
                     .map(mapperXml -> mapperXml.getNamespace().getXmlTag())
                     .collect(Collectors.toList());
             if (!xmlTags.isEmpty()) {
-                result.add(NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.INTERFACE)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
                         .setTargets(xmlTags)
                         .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"))

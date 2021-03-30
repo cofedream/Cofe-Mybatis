@@ -32,9 +32,6 @@ import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Mapper Xml 行标记
  *
@@ -63,17 +60,12 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
             if (idValToken == null) {
                 return null;
             }
-            return NavigationGutterIconBuilder.create(MybatisIcons.NavigateToMethod)
+            return NavigationGutterIconBuilder.create(MybatisIcons.NAVIGATE_TO_METHOD)
                     .setAlignment(GutterIconRenderer.Alignment.CENTER)
                     .setTargets(method)
                     .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "method"))
                     .createLineMarkerInfo(idValToken.getPsi());
         }).orElse(null);
-    }
-
-    @Override
-    public void collectSlowLineMarkers(@NotNull List<? extends PsiElement> elements, @NotNull Collection<? super LineMarkerInfo<?>> result) {
-
     }
 
     private boolean isTarget(@NotNull PsiElement element) {
