@@ -108,9 +108,6 @@
         <definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.MethodDefinitionsSearch"/>
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
 
-        <!--<completion.contributor language="XML"-->
-        <!--                        implementationClass="tk.cofe.plugin.mybatis.completion.MapperXmlCompletionContributor"/>-->
-
         <!--纯提示-->
         <annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>
 
