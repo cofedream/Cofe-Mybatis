@@ -110,6 +110,7 @@
         <!--实现一致-->
         <definitionsScopedSearch implementation="tk.cofe.plugin.mybatis.search.MethodDefinitionsSearch"/>
         <referencesSearch implementation="tk.cofe.plugin.mybatis.search.FieldReferenceSearch"/>
+        <referencesSearch implementation="tk.cofe.plugin.mybatis.search.MethodParameterReferenceSearch"/>
 
         <!--纯提示-->
         <!--<annotator language="XML" implementationClass="tk.cofe.plugin.mybatis.annotator.MapperXmlAnnotator"/>-->
