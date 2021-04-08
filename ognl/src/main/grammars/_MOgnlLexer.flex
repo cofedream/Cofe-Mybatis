@@ -36,7 +36,7 @@ IDENTIFIER=[:jletter:][:jletterdigit:]*
 <YYINITIAL> {
   {WHITE_SPACE}            { return WHITE_SPACE; }
 
-  "%{"                     { return EXPRESSION_START; }
+  "${"                     { return EXPRESSION_START; }
   "."                      { return DOT; }
   ","                      { return COMMA; }
   ":"                      { return COLON; }

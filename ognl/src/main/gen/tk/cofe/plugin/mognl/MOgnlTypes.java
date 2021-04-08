@@ -55,7 +55,7 @@ public interface MOgnlTypes {
   IElementType EQ = new MOgnlTokenType("=");
   IElementType EQUAL = new MOgnlTokenType("==");
   IElementType EQ_KEYWORD = new MOgnlTokenType("eq");
-  IElementType EXPRESSION_START = new MOgnlTokenType("%{");
+  IElementType EXPRESSION_START = new MOgnlTokenType("${");
   IElementType FALSE_KEYWORD = new MOgnlTokenType("false");
   IElementType GREATER = new MOgnlTokenType(">");
   IElementType GREATER_EQUAL = new MOgnlTokenType(">=");
