@@ -45,6 +45,8 @@
         <lang.parserDefinition language="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELParserDefinition"/>
         <lang.syntaxHighlighterFactory language="MbEL"
                                        implementationClass="tk.cofe.plugin.mbel.highlight.MbELSyntaxHighlighterFactory"/>
+        <lang.elementManipulator forClass="tk.cofe.plugin.mbel.psi.MbELReferenceExpression"
+                                 implementationClass="tk.cofe.plugin.mbel.psi.manipulators.MbELReferenceExpressionManipulator"/>
 
 
         <completion.contributor language="MbEL"

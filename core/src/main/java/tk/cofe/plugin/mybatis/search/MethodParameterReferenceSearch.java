@@ -24,14 +24,20 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlText;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.mbel.MbELLanguage;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
+import java.util.Objects;
+
 /**
+ * Mapper接口方法参数使用查找
+ *
  * @author : zhengrf
  * @date : 2021-04-07
  */
@@ -47,6 +53,10 @@ public class MethodParameterReferenceSearch extends QueryExecutorBase<PsiReferen
             return;
         }
         PsiParameter psiParameter = (PsiParameter) elementToSearch;
+        final Annotation.Value value = Annotation.PARAM.getValue(psiParameter);
+        if (value == null) {
+            return;
+        }
         final PsiMethod psiMethod = PsiTreeUtil.getParentOfType(psiParameter, PsiMethod.class);
         if (psiMethod == null) {
             return;
@@ -55,32 +65,41 @@ public class MethodParameterReferenceSearch extends QueryExecutorBase<PsiReferen
         if (psiClass == null) {
             return;
         }
-        final String parameterName = Annotation.PARAM.getValue(psiParameter, psiParameter::getName).getValue();
-        MapperService.getInstance(psiClass.getProject()).findStatement(psiMethod).map(DomElement::getXmlTag)
-                .ifPresent(xmlTag -> {
-                    final InjectedLanguageManager languageManager = InjectedLanguageManager.getInstance(xmlTag.getProject());
-                    for (XmlText xmlText : PsiTreeUtil.getChildrenOfTypeAsList(xmlTag, XmlText.class)) {
-                        final String text = xmlText.getText();
-                        int lbrace;
-                        int rbrace = 0;
-                        while ((lbrace = text.indexOf("#{", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
-                            final int paramIndex = text.indexOf(parameterName, lbrace);
-                            if (paramIndex != -1 && paramIndex < rbrace) {
-                                final int offset = xmlText.getTextOffset() + paramIndex;
-                                final PsiElement injectedElementAt = languageManager.findInjectedElementAt(xmlTag.getContainingFile(), offset);
-                                final MbELReferenceExpression parent = PsiTreeUtil.getParentOfType(injectedElementAt, MbELReferenceExpression.class);
-                                if (parent != null && parent.getTextLength() == injectedElementAt.getTextLength()) {
-                                    consumer.process(new PsiReferenceBase<>(injectedElementAt, TextRange.allOf(parameterName)) {
-                                        @Override
-                                        public @NotNull PsiElement resolve() {
-                                            return psiParameter;
-                                        }
-                                    });
+        MapperService.getInstance(psiClass.getProject()).findStatement(psiMethod).map(DomElement::getXmlTag).ifPresent(xmlTag -> {
+            // 注解值与方法名不一致则不进行重命名
+            final boolean needRename = Objects.equals(value.getValue(), psiParameter.getName());
+            final String parameterName = value.getValue();
+            final InjectedLanguageManager languageManager = InjectedLanguageManager.getInstance(xmlTag.getProject());
+            for (XmlText xmlText : PsiTreeUtil.getChildrenOfTypeAsList(xmlTag, XmlText.class)) {
+                final String text = xmlText.getText();
+                int lbrace;
+                int rbrace = 0;
+                while ((lbrace = text.indexOf(MbELLanguage.EXPRESSION_PREFIX, rbrace)) != -1 && (rbrace = text.indexOf(MbELLanguage.EXPRESSION_SUFFIX, lbrace)) != -1) {
+                    final int paramIndex = text.indexOf(parameterName, lbrace);
+                    if (paramIndex != -1 && paramIndex < rbrace) {
+                        final int offset = xmlText.getTextOffset() + paramIndex;
+                        final PsiElement injectedElementAt = languageManager.findInjectedElementAt(xmlTag.getContainingFile(), offset);
+                        final MbELReferenceExpression parent = PsiTreeUtil.getParentOfType(injectedElementAt, MbELReferenceExpression.class);
+                        if (parent != null && parent.getTextLength() == injectedElementAt.getTextLength()) {
+                            consumer.process(new PsiReferenceBase<>(parent, TextRange.allOf(parameterName)) {
+                                @Override
+                                public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+                                    if (!needRename) {
+                                        return myElement;
+                                    }
+                                    return super.handleElementRename(newElementName);
                                 }
-                            }
+
+                                @Override
+                                public @NotNull PsiElement resolve() {
+                                    return psiParameter;
+                                }
+                            });
                         }
                     }
-                });
+                }
+            }
+        });
     }
 
 }

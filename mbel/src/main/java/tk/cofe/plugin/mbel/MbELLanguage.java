@@ -31,6 +31,11 @@ public class MbELLanguage extends Language implements InjectableLanguage {
     @NonNls
     public static final String ID = "MbEL";
 
+    @NonNls
+    public static final String EXPRESSION_PREFIX = "#{";
+    @NonNls
+    public static final String EXPRESSION_SUFFIX = "}";
+
     public static final MbELLanguage INSTANCE = new MbELLanguage();
 
     private MbELLanguage() {

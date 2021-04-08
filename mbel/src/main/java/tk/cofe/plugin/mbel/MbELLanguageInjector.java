@@ -48,7 +48,7 @@ public final class MbELLanguageInjector {
         int lbrace;
         int rbrace = 0;
         // #{....}
-        while ((lbrace = text.indexOf("#{", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
+        while ((lbrace = text.indexOf(MbELLanguage.EXPRESSION_PREFIX, rbrace)) != -1 && (rbrace = text.indexOf(MbELLanguage.EXPRESSION_SUFFIX, lbrace)) != -1) {
             registrar.startInjecting(MbELLanguage.INSTANCE)
                     .addPlace(null, null, element, new TextRange(lbrace, ++rbrace)) // 包住尾部
                     .doneInjecting();
