@@ -29,8 +29,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.mbel.MbELLanguage;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
+import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Objects;
@@ -66,40 +66,76 @@ public class MethodParameterReferenceSearch extends QueryExecutorBase<PsiReferen
             return;
         }
         MapperService.getInstance(psiClass.getProject()).findStatement(psiMethod).map(DomElement::getXmlTag).ifPresent(xmlTag -> {
+            final PsiFile xmlFile = xmlTag.getContainingFile();
             // 注解值与方法名不一致则不进行重命名
             final boolean needRename = Objects.equals(value.getValue(), psiParameter.getName());
             final String parameterName = value.getValue();
             final InjectedLanguageManager languageManager = InjectedLanguageManager.getInstance(xmlTag.getProject());
             for (XmlText xmlText : PsiTreeUtil.getChildrenOfTypeAsList(xmlTag, XmlText.class)) {
                 final String text = xmlText.getText();
-                int lbrace;
-                int rbrace = 0;
-                while ((lbrace = text.indexOf(MbELLanguage.EXPRESSION_PREFIX, rbrace)) != -1 && (rbrace = text.indexOf(MbELLanguage.EXPRESSION_SUFFIX, lbrace)) != -1) {
-                    final int paramIndex = text.indexOf(parameterName, lbrace);
-                    if (paramIndex != -1 && paramIndex < rbrace) {
-                        final int offset = xmlText.getTextOffset() + paramIndex;
-                        final PsiElement injectedElementAt = languageManager.findInjectedElementAt(xmlTag.getContainingFile(), offset);
-                        final MbELReferenceExpression parent = PsiTreeUtil.getParentOfType(injectedElementAt, MbELReferenceExpression.class);
-                        if (parent != null && parent.getTextLength() == injectedElementAt.getTextLength()) {
-                            consumer.process(new PsiReferenceBase<>(parent, TextRange.allOf(parameterName)) {
-                                @Override
-                                public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
-                                    if (!needRename) {
-                                        return myElement;
-                                    }
-                                    return super.handleElementRename(newElementName);
-                                }
-
-                                @Override
-                                public @NotNull PsiElement resolve() {
-                                    return psiParameter;
-                                }
-                            });
-                        }
-                    }
-                }
+                final int xmlTextOffset = xmlText.getTextOffset();
+                processMbEL(consumer, psiParameter, needRename, parameterName, languageManager, text, xmlFile, xmlTextOffset);
+                processMOgnl(consumer, psiParameter, needRename, parameterName, languageManager, text, xmlFile, xmlTextOffset);
             }
         });
+    }
+
+    private void processMbEL(@NotNull Processor<? super PsiReference> consumer, PsiParameter psiParameter, boolean needRename, String parameterName, InjectedLanguageManager languageManager, String text, final PsiFile xmlFile, final int xmlTextOffset) {
+        int lbrace;
+        int rbrace = 0;
+        while ((lbrace = text.indexOf("#{", rbrace)) != -1 && (rbrace = text.indexOf("}", lbrace)) != -1) {
+            final int paramIndex = text.indexOf(parameterName, lbrace);
+            if (paramIndex != -1 && paramIndex == lbrace + 2) {
+                final int offset = xmlTextOffset + paramIndex;
+                final PsiElement injectedElementAt = languageManager.findInjectedElementAt(xmlFile, offset);
+                final MbELReferenceExpression parent = PsiTreeUtil.getParentOfType(injectedElementAt, MbELReferenceExpression.class);
+                if (parent != null) {
+                    consumer.process(new PsiReferenceBase<>(parent, TextRange.allOf(parameterName)) {
+                        @Override
+                        public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+                            if (!needRename) {
+                                return myElement;
+                            }
+                            return super.handleElementRename(newElementName);
+                        }
+
+                        @Override
+                        public @NotNull PsiElement resolve() {
+                            return psiParameter;
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void processMOgnl(@NotNull Processor<? super PsiReference> consumer, PsiParameter psiParameter, boolean needRename, String parameterName, InjectedLanguageManager languageManager, String text, final PsiFile xmlFile, final int xmlTextOffset) {
+        int lbrace;
+        int rbrace = 0;
+        while ((lbrace = text.indexOf("${", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
+            final int paramIndex = text.indexOf(parameterName, lbrace);
+            if (paramIndex != -1 && paramIndex == lbrace + 2) {
+                final int offset = xmlTextOffset + paramIndex;
+                final PsiElement injectedElementAt = languageManager.findInjectedElementAt(xmlFile, offset);
+                final MOgnlReferenceExpression parent = PsiTreeUtil.getParentOfType(injectedElementAt, MOgnlReferenceExpression.class);
+                if (parent != null) {
+                    consumer.process(new PsiReferenceBase<>(parent, TextRange.allOf(parameterName)) {
+                        @Override
+                        public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+                            if (!needRename) {
+                                return myElement;
+                            }
+                            return super.handleElementRename(newElementName);
+                        }
+
+                        @Override
+                        public @NotNull PsiElement resolve() {
+                            return psiParameter;
+                        }
+                    });
+                }
+            }
+        }
     }
 
 }

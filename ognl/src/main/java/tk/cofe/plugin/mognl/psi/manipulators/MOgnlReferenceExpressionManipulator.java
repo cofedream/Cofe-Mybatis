@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package tk.cofe.plugin.mbel.psi.manipulators;
+package tk.cofe.plugin.mognl.psi.manipulators;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.AbstractElementManipulator;
@@ -25,21 +25,21 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.cofe.plugin.mbel.MbELFileType;
-import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
+import tk.cofe.plugin.mognl.MOgnlFileType;
+import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
 
 /**
  * @author : zhengrf
  * @date : 2021-04-08
  */
-public class MbELReferenceExpressionManipulator extends AbstractElementManipulator<MbELReferenceExpression> {
+public class MOgnlReferenceExpressionManipulator extends AbstractElementManipulator<MOgnlReferenceExpression> {
     @Override
-    public @Nullable MbELReferenceExpression handleContentChange(@NotNull MbELReferenceExpression element, @NotNull TextRange range, String newContent) throws IncorrectOperationException {
+    public @Nullable MOgnlReferenceExpression handleContentChange(@NotNull MOgnlReferenceExpression element, @NotNull TextRange range, String newContent) throws IncorrectOperationException {
         String newText = range.replace(element.getText(), newContent);
         PsiFile file = PsiFileFactory.getInstance(element.getProject())
-                .createFileFromText("mbel", MbELFileType.INSTANCE,
-                        "#{" + newText + "}");
+                .createFileFromText("mognl", MOgnlFileType.INSTANCE,
+                        "${" + newText + "}");
         final PsiElement newExpression = file.getChildren()[1];
-        return (MbELReferenceExpression) element.replace(newExpression);
+        return (MOgnlReferenceExpression) element.replace(newExpression);
     }
 }

@@ -27,6 +27,8 @@
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
         <!--<lang.syntaxHighlighterFactory language="MOgnl"-->
         <!--                               implementationClass="tk.cofe.plugin.mbel.highlight.MOgnlSyntaxHighlighterFactory"/>-->
+        <lang.elementManipulator forClass="tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression"
+                                 implementationClass="tk.cofe.plugin.mognl.psi.manipulators.MOgnlReferenceExpressionManipulator"/>
 
 
         <psi.referenceContributor language="MOgnl"
