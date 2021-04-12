@@ -82,7 +82,7 @@ public class MethodParameterReferenceSearch extends QueryExecutorBase<PsiReferen
             final InjectedLanguageManager languageManager = InjectedLanguageManager.getInstance(xmlTag.getProject());
             final Process process = new Process(element -> consumer.process(createRef(psiParameter, needRename, element, TextRange.allOf(parameterName))), parameterName, languageManager, xmlFile);
             for (XmlText xmlText : PsiTreeUtil.findChildrenOfType(xmlTag, XmlText.class)) {
-                process.init(xmlText).process("#{", MbELReferenceExpression.class).process("${", MbELReferenceExpression.class);
+                process.init(xmlText).process("#{", MbELReferenceExpression.class).process("${", MOgnlReferenceExpression.class);
             }
             for (XmlTag subTag : PsiTreeUtil.findChildrenOfType(xmlTag, XmlTag.class)) {
                 final DomElement domElement = DomUtils.getDomElement(subTag);
