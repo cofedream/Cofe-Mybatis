@@ -10,27 +10,25 @@
 
 本项目最早基于 [free-idea-mybatis](https://github.com/wuzhizhan/free-idea-mybatis) 修改，但因后续功能实现与原本差异较大，便于2018年11月份重新立项。
 
-# 功能完成度
+# 功能完成度与相关快捷键
 
-| 介绍 | 完成情况 |
-| :---: | :---: |
-| XMapper.java 跳转至 XMapper.XML | ✓ |
-
-# 相关快捷键
-
-| 说明| IDEA默认快捷键| 
-| --- | --- | 
-| 接口方法生成XML定义提示 | Alt+Enter |
-| 接口方法跳转XML定义 | Ctrl+B/Ctrl+Alt+B |
-| 接口方法生成@Param注解 | Alt+Enter |
-| XML跳转接口 | Ctrl+B |
-| XML中参数跳转定义 | Ctrl+B |
-| XML中参数提示 | Ctrl+空格(Completion Base) |
+| 说明 | 完成情况 | IDEA默认快捷键|
+| :---: | :---: | :---: |
+| Mapper.java 跳转至 Mapper.XML | ✓ | Ctrl+B |
+| Mapper.java 方法 跳转至 Mapper.XML CRUD语句 | ✓ | Ctrl+B / Ctrl+Alt+B |
+| Mapper.java 方法生成 `@Param` 注解 | ✓ | Alt+Enter |
+| Mapper.java 方法生成 Mapper.XML CRUD语句 | ✓ | Alt+Enter |
+| Mapper.XML 语句 跳转 Mapper.java 方法 | ✓ | Ctrl+B |
+| Mapper.XML 中参数 跳转定义来源 | ✓ | Ctrl+B |
+| Mapper.XML 中参数`#{}`/`${}`提示 | ✓ | Ctrl+空格(Completion Base) |
+| Mapper.XML 中`<if/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| Mapper.XML 中`<when/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| Mapper.XML 中`<include/>` 标签 `refid` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| Mapper.XML 中`<select/>` 等标签 `resultMap` 提示 | ✓ | Ctrl+空格(Completion Base) |
 
 # 功能演示
 
-1. 支持Spring注入提示<br/> ![SpringInject](/images/SpringInject.gif)
-2. 支持Mybatis接口与XMl互相跳转<br/> ![](/images/NavigateToXml.gif)<br/>![](/images/NavigateToMethod.gif)
-3. 支持Mybatis接口中Statement<br/>![](/images/GenerateStatement.gif)
-4. 支持Mybatis接口中@Param生成与XML代码提示<br/>![](/images/ParamCompletion.gif)
-5. XML文件中的 sql或resultMap标签的 Documentation
+1. 支持Spring注入提示<br/> ![SpringInject](images/SpringInject.gif)
+2. 支持Mybatis接口与XMl互相跳转<br/> ![](images/NavigateToXml.gif)<br/>![](images/NavigateToMethod.gif)
+3. 支持Mybatis接口中Statement<br/>![](images/GenerateStatement.gif)
+4. 支持Mybatis接口中@Param生成与XML代码提示<br/>![](images/ParamCompletion.gif)
