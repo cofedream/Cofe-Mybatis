@@ -21,10 +21,11 @@
 | Mapper.XML 语句 跳转 Mapper.java 方法 | ✓ | Ctrl+B |
 | Mapper.XML 中参数 跳转定义来源 | ✓ | Ctrl+B |
 | Mapper.XML 中参数`#{}`/`${}`提示 | ✓ | Ctrl+空格(Completion Base) |
-| Mapper.XML 中`<if/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
-| Mapper.XML 中`<when/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
-| Mapper.XML 中`<include/>` 标签 `refid` 提示 | ✓ | Ctrl+空格(Completion Base) |
-| Mapper.XML 中`<select/>` 等标签 `resultMap` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| `<if/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| `<when/>` 标签 `test` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| `<include/>` 标签 `refid` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| `<select/>` 等标签 `resultMap` 提示 | ✓ | Ctrl+空格(Completion Base) |
+| `<resultMap/>` 下 `</id>,<result/>` 等标签跳转至对应类字段 | ✓ | Ctrl+B |
 
 # 功能演示
 
