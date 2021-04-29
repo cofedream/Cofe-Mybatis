@@ -79,6 +79,10 @@
        "beanClass" attribute specifies the class the implementations
        of which can be used for the extension point. -->
     <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable groupId="tools" displayName="Cofe Mybatis"
+                                 id="tk.cofe.plugin.mybatis.settings.SettingsConfigurable"
+                                 instance="tk.cofe.plugin.mybatis.settings.SettingsConfigurable"/>
+        <applicationService serviceImplementation="tk.cofe.plugin.mybatis.settings.SettingsService"/>
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.MapperService"
                         serviceImplementation="tk.cofe.plugin.mybatis.service.impl.MapperServiceImpl"/>
         <projectService serviceInterface="tk.cofe.plugin.mybatis.service.JavaPsiService"
