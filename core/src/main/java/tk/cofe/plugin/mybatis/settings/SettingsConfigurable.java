@@ -31,13 +31,13 @@ import javax.swing.*;
  * @date : 2021-04-29
  */
 public class SettingsConfigurable implements Configurable {
-    private final SettingsService settingsService;
-    private final ApplicationSettings applicationSettings;
-    private GlobalSettingsForm settingsForm;
+    private SettingsService service;
+    private ApplicationSettings settings;
+    private GlobalSettingsForm form;
 
     public SettingsConfigurable() {
-        settingsService = SettingsService.getInstance();
-        applicationSettings = settingsService.getState();
+        service = SettingsService.getInstance();
+        settings = service.getState();
     }
 
     @Override
@@ -47,17 +47,18 @@ public class SettingsConfigurable implements Configurable {
 
     @Override
     public @Nullable JComponent createComponent() {
-        settingsForm = new GlobalSettingsForm();
-        return settingsForm.getRoot();
+        form = new GlobalSettingsForm(settings);
+        return form.getRoot();
     }
 
     @Override
     public boolean isModified() {
-        return false;
+        return form != null && form.isSettingsModified(settings);
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        final SettingsService instance = SettingsService.getInstance();
+        settings = form.getSettings().clone();
+        service.loadState(settings);
     }
 }

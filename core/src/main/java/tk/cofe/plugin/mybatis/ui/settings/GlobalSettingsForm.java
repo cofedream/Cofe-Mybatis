@@ -19,6 +19,9 @@ package tk.cofe.plugin.mybatis.ui.settings;
 
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import tk.cofe.plugin.mybatis.settings.model.ApplicationSettings;
 import tk.cofe.plugin.mybatis.settings.model.MapperScan;
 
 import javax.swing.*;
@@ -36,7 +39,8 @@ public class GlobalSettingsForm {
     private JPanel globalPanel;
     private JBList<MapperScan> mapperScanList;
 
-    public GlobalSettingsForm() {
+    public GlobalSettingsForm(ApplicationSettings settings) {
+        final ApplicationSettings clone = settings.clone();
         mapperScanModel = new DefaultListModel<>();
         mapperScanList = createJbList(mapperScanModel);
         globalPanel.add(ToolbarDecorator.createDecorator(mapperScanList)
@@ -47,6 +51,9 @@ public class GlobalSettingsForm {
                     }
                 })
                 .createPanel(), BorderLayout.CENTER);
+        for (MapperScan mapperScan : clone.getMapperScanList()) {
+            mapperScanModel.addElement(mapperScan);
+        }
     }
 
     private JBList<MapperScan> createJbList(final DefaultListModel<MapperScan> model) {
@@ -72,4 +79,11 @@ public class GlobalSettingsForm {
         return root;
     }
 
+    public boolean isSettingsModified(ApplicationSettings settings) {
+        return !getSettings().equals(settings);
+    }
+
+    public ApplicationSettings getSettings() {
+        return new ApplicationSettings(this.mapperScanList.getSelectedValuesList());
+    }
 }

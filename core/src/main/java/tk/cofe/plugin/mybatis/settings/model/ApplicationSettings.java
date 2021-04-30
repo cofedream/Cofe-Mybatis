@@ -17,9 +17,49 @@
 
 package tk.cofe.plugin.mybatis.settings.model;
 
+import com.rits.cloning.Cloner;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.List;
+
 /**
  * @author : zhengrf
  * @date : 2021-04-29
  */
-public class ApplicationSettings {
+public class ApplicationSettings implements Cloneable {
+
+    private List<MapperScan> mapperScanList;
+
+    public ApplicationSettings() {
+    }
+
+    public ApplicationSettings(List<MapperScan> mapperScanList) {
+        this.mapperScanList = mapperScanList;
+    }
+
+    public List<MapperScan> getMapperScanList() {
+        return mapperScanList;
+    }
+
+    public ApplicationSettings setMapperScanList(List<MapperScan> mapperScanList) {
+        this.mapperScanList = mapperScanList;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o, false);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public ApplicationSettings clone() {
+        final Cloner cloner = new Cloner();
+        return cloner.deepClone(this);
+    }
 }
