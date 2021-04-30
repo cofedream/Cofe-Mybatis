@@ -21,6 +21,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.Nullable;
+import tk.cofe.plugin.mybatis.settings.model.ApplicationSettings;
+import tk.cofe.plugin.mybatis.ui.settings.GlobalSettingsForm;
 
 import javax.swing.*;
 
@@ -29,6 +31,15 @@ import javax.swing.*;
  * @date : 2021-04-29
  */
 public class SettingsConfigurable implements Configurable {
+    private final SettingsService settingsService;
+    private final ApplicationSettings applicationSettings;
+    private GlobalSettingsForm settingsForm;
+
+    public SettingsConfigurable() {
+        settingsService = SettingsService.getInstance();
+        applicationSettings = settingsService.getState();
+    }
+
     @Override
     public @NlsContexts.ConfigurableName String getDisplayName() {
         return "Cofe Mybatis";
@@ -36,7 +47,8 @@ public class SettingsConfigurable implements Configurable {
 
     @Override
     public @Nullable JComponent createComponent() {
-        return null;
+        settingsForm = new GlobalSettingsForm();
+        return settingsForm.getRoot();
     }
 
     @Override
