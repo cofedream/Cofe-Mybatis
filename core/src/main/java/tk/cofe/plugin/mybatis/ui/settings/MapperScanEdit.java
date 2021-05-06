@@ -34,6 +34,11 @@ public class MapperScanEdit extends DialogWrapper {
     private JPanel root;
     private JTextField text;
 
+    @Override
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        return text;
+    }
+
     public MapperScanEdit(String title) {
         super(true);
         setTitle(title);
