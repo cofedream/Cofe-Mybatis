@@ -17,16 +17,20 @@
 
 package tk.cofe.plugin.mybatis.ui.settings;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mybatis.settings.model.ApplicationSettings;
 import tk.cofe.plugin.mybatis.settings.model.MapperScan;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -37,6 +41,9 @@ import java.util.List;
  * @date : 2021-04-30
  */
 public class GlobalSettingsForm {
+
+    private static final Logger LOGGER = Logger.getInstance(GlobalSettingsForm.class);
+
     private DefaultListModel<MapperScan> mapperScanModel;
 
     private JPanel root;
@@ -59,7 +66,34 @@ public class GlobalSettingsForm {
                         }
                     }
                 })
+                .setEditAction(anActionButton -> {
+                    final MapperScan selectedValue = mapperScanList.getSelectedValue();
+                    final MapperScanEdit edit = new MapperScanEdit("edit MapperScan", selectedValue.getCanonicalName());
+                    if (edit.showAndGet()) {
+                        final String text = edit.getTextString();
+                        if (StringUtil.isNotEmpty(text)) {
+                            selectedValue.setCanonicalName(text.trim());
+                        }
+                    }
+                })
                 .createPanel(), BorderLayout.CENTER);
+        new DoubleClickListener(){
+            @Override
+            protected boolean onDoubleClick(@NotNull MouseEvent event) {
+                final MapperScan selectedValue = mapperScanList.getSelectedValue();
+                if (selectedValue == null) {
+                    return false;
+                }
+                final MapperScanEdit edit = new MapperScanEdit("edit MapperScan", selectedValue.getCanonicalName());
+                if (edit.showAndGet()) {
+                    final String text = edit.getTextString();
+                    if (StringUtil.isNotEmpty(text)) {
+                        selectedValue.setCanonicalName(text.trim());
+                    }
+                }
+                return true;
+            }
+        }.installOn(mapperScanList);
     }
 
     private JBList<MapperScan> createJbList(final DefaultListModel<MapperScan> model) {

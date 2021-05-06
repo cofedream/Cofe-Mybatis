@@ -45,6 +45,13 @@ public class MapperScanEdit extends DialogWrapper {
         init();
     }
 
+    public MapperScanEdit(String title, String oldText) {
+        super(true);
+        setTitle(title);
+        text.setText(oldText);
+        init();
+    }
+
     public String getTextString() {
         if (text == null) {
             return "";
@@ -89,4 +96,5 @@ public class MapperScanEdit extends DialogWrapper {
     public JComponent $$$getRootComponent$$$() {
         return root;
     }
+
 }
