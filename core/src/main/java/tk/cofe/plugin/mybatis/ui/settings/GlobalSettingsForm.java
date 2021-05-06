@@ -17,6 +17,7 @@
 
 package tk.cofe.plugin.mybatis.ui.settings;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -47,7 +48,10 @@ public class GlobalSettingsForm {
                 .setAddAction(anActionButton -> {
                     final MapperScanEdit edit = new MapperScanEdit("new MapperScan");
                     if (edit.showAndGet()) {
-                        mapperScanModel.addElement(new MapperScan(edit.getTextString()));
+                        final String text = edit.getTextString();
+                        if (StringUtil.isNotEmpty(text)) {
+                            mapperScanModel.addElement(new MapperScan(text));
+                        }
                     }
                 })
                 .createPanel(), BorderLayout.CENTER);
