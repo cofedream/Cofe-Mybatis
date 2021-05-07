@@ -20,7 +20,9 @@ package tk.cofe.plugin.mybatis.settings.model;
 import com.rits.cloning.Cloner;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,12 +34,15 @@ public class ApplicationSettings implements Cloneable {
     private List<MapperScan> mapperScanList;
 
     public ApplicationSettings() {
+        this.mapperScanList = new ArrayList<>();
+        this.mapperScanList.add(new MapperScan("org.mybatis.spring.annotation.MapperScan"));
     }
 
     public ApplicationSettings(List<MapperScan> mapperScanList) {
         this.mapperScanList = mapperScanList;
     }
 
+    @NotNull
     public List<MapperScan> getMapperScanList() {
         return mapperScanList;
     }

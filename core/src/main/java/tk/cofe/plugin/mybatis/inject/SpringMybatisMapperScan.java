@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,17 +42,23 @@ import com.intellij.spring.contexts.model.LocalXmlModel;
 import com.intellij.spring.model.CommonSpringBean;
 import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
+import com.intellij.spring.model.jam.stereotype.SpringService;
+import com.intellij.spring.model.utils.SpringBeanUtils;
 import com.intellij.spring.model.utils.SpringCommonUtils;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
+import tk.cofe.plugin.mybatis.settings.SettingsService;
+import tk.cofe.plugin.mybatis.settings.model.ApplicationSettings;
+import tk.cofe.plugin.mybatis.settings.model.MapperScan;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -62,14 +68,10 @@ import java.util.stream.Stream;
  * @author : zhengrf
  * @date : 2018-12-31
  */
-public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
+public class SpringMybatisMapperScan extends SpringMyBatisBeansProvider {
     // tk 相关类
     private static final String TK_MAPPER_FACTORY_BEAN = "tk.mybatis.spring.mapper.MapperFactoryBean";
     private static final String TK_MAPPER_SCANNER_CONFIGURER = "tk.mybatis.spring.mapper.MapperScannerConfigurer";
-    private static final String TK_MAPPER_SCAN = "tk.mybatis.spring.annotation.MapperScan";
-    // 原生mybatis的接口
-    private static final String ORG_MAPPER_SCAN = "org.mybatis.spring.annotation.MapperScan";
-    private final ConcurrentMap<String, Pattern> PACKAGE_PATTERN = ContainerUtil.createConcurrentSoftValueMap();
 
     @NotNull
     @Override
@@ -82,8 +84,10 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
                 super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_FACTORY_BEAN);
                 super.collectMappers((LocalXmlModel) springModel, module, mappers, TK_MAPPER_SCANNER_CONFIGURER);
             } else if (springModel instanceof LocalAnnotationModel) {
-                this.collectMappers((LocalAnnotationModel) springModel, module, mappers, TK_MAPPER_SCAN);
-                this.collectMappers((LocalAnnotationModel) springModel, module, mappers, ORG_MAPPER_SCAN);
+                Optional.of(SettingsService.getInstance())
+                        .map(SettingsService::getState)
+                        .map(ApplicationSettings::getMapperScanList)
+                        .ifPresent(mapperScans -> mapperScans.forEach(mapperScan -> this.collectMappers((LocalAnnotationModel) springModel, module, mappers, mapperScan.getCanonicalName())));
             }
             return mappers;
         }
@@ -171,12 +175,12 @@ public class SpringBeansInjectProvider extends SpringMyBatisBeansProvider {
             return Stream.empty();
         }
         if (qualifiedName.contains("*")) {
-            PACKAGE_PATTERN.computeIfAbsent(qualifiedName, k -> Pattern.compile(qualifiedName
+            final Pattern pattern = Pattern.compile(qualifiedName
                     .replaceAll("\\.", "\\\\.")
                     .replaceAll("\\*\\*", ".*?")
-                    .replaceAll("\\*", "[^.]+") + ".*"));
+                    .replaceAll("\\*", "[^.]+") + ".*");
             return getLeafPsiPackage(facade.findPackage(qualifiedName.contains(".*") ? qualifiedName.substring(0, qualifiedName.indexOf(".*")) : qualifiedName))
-                    .filter(psiPackage -> PACKAGE_PATTERN.get(qualifiedName).matcher(psiPackage.getQualifiedName()).matches());
+                    .filter(psiPackage -> pattern.matcher(psiPackage.getQualifiedName()).matches());
         } else {
             PsiPackage psiPackage = facade.findPackage(qualifiedName);
             if (psiPackage != null) {
