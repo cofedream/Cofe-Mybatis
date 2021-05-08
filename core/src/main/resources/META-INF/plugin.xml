@@ -46,13 +46,14 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>新增中文化资源文件</li>
             <li>新增Mapper接口方法参数使用查找</li>
-            <li>优化resultMap id属性引用查询</li>
-            <li>移除dtd文件</li>
+            <li>新增MapperScan设置(路径Tools-Cofe Mybatis)</li>
+            <li>新增中文化资源文件</li>
             <li>修复二级标签下的property无法正确索引至类属性的问题</li>
             <li>修复类字段无法深度索引collection/association的问题</li>
             <li>修复其他一些已知BUG</li>
+            <li>优化resultMap id属性引用查询</li>
+            <li>移除dtd文件</li>
         </ul>
     ]]></change-notes>
 
