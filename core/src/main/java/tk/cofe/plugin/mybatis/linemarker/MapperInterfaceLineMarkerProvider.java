@@ -30,8 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.icons.MybatisIcons;
-import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.service.MapperService;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -53,7 +53,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     @Nullable
     @Override
     public Icon getIcon() {
-        return MybatisIcons.MybatisInterface;
+        return MybatisIcons.INTERFACE;
     }
 
     @Override
@@ -75,11 +75,11 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     private void markerMethod(PsiClass psiClass, PsiMethod method, Collection<? super RelatedItemLineMarkerInfo<PsiElement>> result) {
         if (method.getNameIdentifier() != null) {
             List<XmlTag> xmlMethods = MapperService.getInstance(method.getProject()).getMapperStream(psiClass)
-                    .flatMap(mapperXml -> mapperXml.getClassElements().stream())
-                    .filter(classElement -> classElement.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
+                    .flatMap(mapperXml -> mapperXml.getCRUDMixs().stream())
+                    .filter(mix -> mix.getIdMethod().map(psiMethod -> psiMethod.equals(method)).orElse(false))
                     .map(DomElement::getXmlTag).collect(Collectors.toList());
             if (!xmlMethods.isEmpty()) {
-                result.add(NavigationGutterIconBuilder.create(MybatisIcons.NavigateToStatement)
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.NAVIGATE_TO_STATEMENT)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
                         .setTargets(xmlMethods)
                         .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "statement"))
@@ -100,7 +100,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
                     .map(mapperXml -> mapperXml.getNamespace().getXmlTag())
                     .collect(Collectors.toList());
             if (!xmlTags.isEmpty()) {
-                result.add(NavigationGutterIconBuilder.create(MybatisIcons.MybatisInterface)
+                result.add(NavigationGutterIconBuilder.create(MybatisIcons.INTERFACE)
                         .setAlignment(GutterIconRenderer.Alignment.CENTER)
                         .setTargets(xmlTags)
                         .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "Mapper XML"))

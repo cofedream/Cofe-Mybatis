@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public interface MapperService {
      * @param mapperClass Mapper Interface
      * @return Mapper Statement
      */
-    List<ClassElement> findStatemtnts(@Nullable PsiClass mapperClass);
+    List<CRUDMix> findStatemtnts(@Nullable PsiClass mapperClass);
 
     /**
      * 找到 PsiMethod 对应的Mapper Statement
@@ -68,7 +68,7 @@ public interface MapperService {
      * @param method 方法
      * @return Statement 集合
      */
-    Optional<ClassElement> findStatement(PsiMethod method);
+    Optional<CRUDMix> findStatement(PsiMethod method);
 
     /**
      * 查询PsiMethod对应的Mapper Statement是否存在

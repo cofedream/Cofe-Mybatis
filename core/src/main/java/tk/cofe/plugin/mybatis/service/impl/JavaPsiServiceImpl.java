@@ -19,19 +19,13 @@ package tk.cofe.plugin.mybatis.service.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.PsiModifierListOwner;
-import com.intellij.psi.PsiPackage;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
 
 import java.util.Optional;
 
@@ -72,20 +66,20 @@ public class JavaPsiServiceImpl implements JavaPsiService {
         if (qualifiedName == null) {
             return Optional.empty();
         }
-        PsiClass aClass = facade.findClass(qualifiedName, GlobalSearchScope.projectScope(project));
-        return Optional.ofNullable(aClass == null ? facade.findClass(qualifiedName, GlobalSearchScope.allScope(project)) : aClass);
+        PsiClass psiClass = facade.findClass(qualifiedName, GlobalSearchScope.projectScope(project)); // 先搜索项目级别
+        if (psiClass == null) {
+            psiClass = facade.findClass(qualifiedName, GlobalSearchScope.allScope(project)); // 在搜索全部级别
+        }
+        return Optional.ofNullable(psiClass);
     }
 
     @Override
     public PsiPackage getPsiPackage(@Nullable final PsiClass psiClass) {
-        if (psiClass == null) {
-            return null;
-        }
-        final String qualifiedName = psiClass.getQualifiedName();
-        if (StringUtil.isEmpty(qualifiedName)) {
-            return null;
-        }
-        return facade.findPackage(qualifiedName.substring(0, qualifiedName.lastIndexOf(".")));
+        return Optional.ofNullable(psiClass)
+                .map(PsiClass::getQualifiedName)
+                .filter(StringUtil::isNotEmpty)
+                .map(qualifiedName -> facade.findPackage(qualifiedName.substring(0, qualifiedName.lastIndexOf("."))))
+                .orElse(null);
     }
 
     @Override

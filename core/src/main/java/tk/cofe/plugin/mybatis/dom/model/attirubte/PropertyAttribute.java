@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,8 @@
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
 import com.intellij.psi.PsiMember;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Required;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xml.*;
 import tk.cofe.plugin.mybatis.dom.convert.PropertyConverter;
-
-import java.util.Optional;
 
 /**
  * 字段属性
@@ -41,11 +34,4 @@ public interface PropertyAttribute extends DomElement {
     @Convert(PropertyConverter.class)
     GenericAttributeValue<PsiMember> getProperty();
 
-    /**
-     * 获取 property 对应的 PsiField
-     */
-    @NotNull
-    default Optional<PsiMember> getPropertyField() {
-        return Optional.ofNullable(getProperty().getValue());
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package tk.cofe.plugin.mybatis.dom.documentation;
 
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Sql;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Sql;
 
 /**
  * sql 标签的 documentation

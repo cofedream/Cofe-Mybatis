@@ -20,8 +20,6 @@ package tk.cofe.plugin.mybatis.dom.model.attirubte;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.utils.DomUtils;
 
 import java.util.Objects;
@@ -33,7 +31,6 @@ import java.util.Optional;
  */
 public interface IdAttribute extends DomElement {
 
-    @NotNull
     GenericAttributeValue<?> getId();
 
     /**
@@ -41,7 +38,6 @@ public interface IdAttribute extends DomElement {
      *
      * @return Id 值 如果为Null 则返回 ""
      */
-    @NotNull
     default Optional<String> getIdValue() {
         return DomUtils.getAttributeValueOpt(getId());
     }
@@ -52,7 +48,6 @@ public interface IdAttribute extends DomElement {
      * @param defaultValue 默认ID值
      * @return Id 值
      */
-    @Nullable
     default String getIdValue(final String defaultValue) {
         return getIdValue().orElse(defaultValue);
     }

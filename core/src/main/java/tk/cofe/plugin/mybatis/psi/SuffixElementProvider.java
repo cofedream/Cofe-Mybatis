@@ -28,9 +28,9 @@ import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Foreach;
-import tk.cofe.plugin.mybatis.dom.model.include.BindInclude;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.BindMix;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Foreach;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,12 +53,12 @@ public abstract class SuffixElementProvider<T> {
         if (parent == null) {
             return Collections.emptyList();
         }
-        final BindInclude bindInclude = DomUtils.getDomElement(parent, BindInclude.class).orElse(null);
-        if (bindInclude == null) {
+        final BindMix bindMix = DomUtils.getDomElement(parent, BindMix.class).orElse(null);
+        if (bindMix == null) {
             return Collections.emptyList();
         }
         // 查询元素中包含的Bind
-        final List<T> bindList = bindInclude.getBinds().stream()
+        final List<T> bindList = bindMix.getBinds().stream()
                 .map(NameAttribute::getName)
                 .filter(bindName -> Objects.equals(name, DomUtils.getAttributeValue(bindName)))
                 .map(GenericAttributeValue::getXmlAttributeValue)
@@ -68,8 +68,8 @@ public abstract class SuffixElementProvider<T> {
             return bindList;
         }
         // 如果是Foreach标签则判断item是否符合
-        if (bindInclude instanceof Foreach) {
-            Foreach foreach = (Foreach) bindInclude;
+        if (bindMix instanceof Foreach) {
+            Foreach foreach = (Foreach) bindMix;
             final String item = DomUtils.getAttributeValue(foreach.getItem());
             if (Objects.equals(item, name)) {
                 return Optional.ofNullable(foreach.getItem())
@@ -79,10 +79,10 @@ public abstract class SuffixElementProvider<T> {
                         .orElse(Collections.emptyList());
             }
         }
-        if (bindInclude instanceof ClassElement) {
+        if (bindMix instanceof CRUDMix) {
             // 如果是ClassElement且没有bind标签,则查询对应的方法参数
-            ClassElement classElement = (ClassElement) bindInclude;
-            final PsiMethod psiMethod = classElement.getIdMethod().orElse(null);
+            CRUDMix CRUDMix = (CRUDMix) bindMix;
+            final PsiMethod psiMethod = CRUDMix.getIdMethod().orElse(null);
             if (psiMethod == null) {
                 return Collections.emptyList();
             }

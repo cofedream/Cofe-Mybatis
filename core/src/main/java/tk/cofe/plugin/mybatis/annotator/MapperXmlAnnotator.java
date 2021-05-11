@@ -26,11 +26,9 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
-import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.common.utils.DomUtils;
-
-import java.util.Optional;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 /**
  * Mapper xml 提示,<a href="https://plugins.jetbrains.com/docs/intellij/annotator.html">详情</a>
@@ -56,7 +54,7 @@ public class MapperXmlAnnotator implements Annotator {
     }
 
     private void process(final AnnotationHolder holder, final IdAttribute domElement, final String errorMessage, final String id) {
-        Optional.ofNullable(DomUtils.getParentOfType(domElement, Mapper.class)).ifPresent(mapper -> {
+        MybatisUtils.getMapper(domElement).ifPresent(mapper -> {
             if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {

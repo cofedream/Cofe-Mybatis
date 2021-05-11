@@ -25,14 +25,13 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.annotation.Annotation;
+import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
 import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
 import tk.cofe.plugin.mybatis.dom.model.tag.Select;
@@ -50,7 +49,7 @@ import java.util.List;
 public enum StatementTypeEnum {
     SELECT(Annotation.SELECT, "Select") {
         @Override
-        public Select addClassElement(Mapper mapper, PsiMethod method) {
+        public Select addCRUDMix(Mapper mapper, PsiMethod method) {
             Select select = mapper.addSelect();
             GenericAttributeValue<String> resultTypeValue = select.getResultType();
             if (resultTypeValue != null) {
@@ -69,25 +68,25 @@ public enum StatementTypeEnum {
         }
     }, INSERT(Annotation.INSERT, "Insert") {
         @Override
-        public Insert addClassElement(Mapper mapper, PsiMethod method) {
+        public Insert addCRUDMix(Mapper mapper, PsiMethod method) {
             return mapper.addInsert();
         }
     }, UPDATE(Annotation.UPDATE, "Update") {
         @Override
-        public Update addClassElement(Mapper mapper, PsiMethod method) {
+        public Update addCRUDMix(Mapper mapper, PsiMethod method) {
             return mapper.addUpdate();
         }
     }, DELETE(Annotation.DELETE, "Delete") {
         @Override
-        public Delete addClassElement(Mapper mapper, PsiMethod method) {
+        public Delete addCRUDMix(Mapper mapper, PsiMethod method) {
             return mapper.addDelete();
         }
     },
     ;
 
-    private String desc;
+    private final String desc;
 
-    private Annotation annotation;
+    private final Annotation annotation;
 
     StatementTypeEnum(Annotation annotation, String desc) {
         this.annotation = annotation;
@@ -109,7 +108,7 @@ public enum StatementTypeEnum {
      * @param method Java方法
      * @return 要创建的元素
      */
-    public abstract ClassElement addClassElement(Mapper mapper, PsiMethod method);
+    public abstract CRUDMix addCRUDMix(Mapper mapper, PsiMethod method);
 
     /**
      * 指定元素动作
@@ -122,7 +121,7 @@ public enum StatementTypeEnum {
         if (mapper == null || method == null || project == null) {
             return;
         }
-        ClassElement element = addClassElement(mapper, method);
+        CRUDMix element = addCRUDMix(mapper, method);
         XmlTag tag = element.getXmlTag();
         if (tag == null) {
             return;

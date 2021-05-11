@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,14 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.GenericAttributeValue;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.TimeoutAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.*;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Select extends ClassElement, ResultMapAttribute, ResultTypeAttribute, TimeoutAttribute, DatabaseIdAttribute, LangAttribute {
+public interface Select extends CRUDMix, ResultMapAttribute, ResultTypeAttribute, TimeoutAttribute, DatabaseIdAttribute, LangAttribute {
 
     @Attribute("fetchSize")
     GenericAttributeValue<String> getFetchSize();
