@@ -24,6 +24,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -132,4 +133,21 @@ public class FirstIdentifierReference extends PsiPolyVariantReferenceBase<PsiEle
         return resolveResults;
     }
 
+    @Override
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+        String newStr = newElementName;
+        for (ResolveResult resolveResult : resolveResults) {
+            final PsiElement element = resolveResult.getElement();
+            if (element instanceof PsiMethod) {
+                PsiMethod method = (PsiMethod) element;
+                if (PsiMethodUtils.nameStartWithGet(method)) {
+                    newStr = PsiMethodUtils.replaceGetPrefix(newElementName);
+                } else if (PsiMethodUtils.nameStartWithIs(method)) {
+                    newStr = PsiMethodUtils.replaceIsPrefix(newElementName);
+                }
+                break;
+            }
+        }
+        return super.handleElementRename(newStr);
+    }
 }
