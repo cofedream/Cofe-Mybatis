@@ -21,12 +21,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
         <fileType name="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
-                  fieldName="INSTANCE" language="MOgnl" extensions="MOgnl"/>
+                  fieldName="INSTANCE" language="MOgnl" extensions="mognl"/>
 
         <lang.ast.factory language="MOgnl" implementationClass="tk.cofe.plugin.mognl.psi.impl.MOgnlASTFactory"/>
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
         <!--<lang.syntaxHighlighterFactory language="MOgnl"-->
         <!--                               implementationClass="tk.cofe.plugin.mbel.highlight.MOgnlSyntaxHighlighterFactory"/>-->
+        <lang.elementManipulator forClass="tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression"
+                                 implementationClass="tk.cofe.plugin.mognl.psi.manipulators.MOgnlReferenceExpressionManipulator"/>
 
 
         <psi.referenceContributor language="MOgnl"
@@ -38,13 +40,15 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
         <fileType name="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
-                  fieldName="INSTANCE" language="MbEL" extensions="MbEL"/>
+                  fieldName="INSTANCE" language="MbEL" extensions="mbel"/>
 
         <lang.ast.factory language="MbEL" implementationClass="tk.cofe.plugin.mbel.psi.impl.MbELASTFactory"/>
 
         <lang.parserDefinition language="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELParserDefinition"/>
         <lang.syntaxHighlighterFactory language="MbEL"
                                        implementationClass="tk.cofe.plugin.mbel.highlight.MbELSyntaxHighlighterFactory"/>
+        <lang.elementManipulator forClass="tk.cofe.plugin.mbel.psi.MbELReferenceExpression"
+                                 implementationClass="tk.cofe.plugin.mbel.psi.manipulators.MbELReferenceExpressionManipulator"/>
 
 
         <completion.contributor language="MbEL"

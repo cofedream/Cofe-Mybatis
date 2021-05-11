@@ -33,8 +33,8 @@ import java.util.ResourceBundle;
  * @date : 2019-01-20
  */
 public class MyBatisBundle {
-    private static Reference<ResourceBundle> ourBundle;
 
+    private static Reference<ResourceBundle> ourBundle;
     @NonNls
     private static final String BUNDLE = "messages.MyBatisBundle";
 

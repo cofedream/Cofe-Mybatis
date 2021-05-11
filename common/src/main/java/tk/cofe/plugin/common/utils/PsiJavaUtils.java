@@ -108,7 +108,7 @@ public final class PsiJavaUtils {
     public static boolean isObjectClass(PsiClass psiClass) {
         return Optional.ofNullable(psiClass)
                 .map(PsiClass::getQualifiedName)
-                .map("java.lang.Object"::equals)
+                .map(CommonClassNames.JAVA_LANG_OBJECT::equals)
                 .orElse(false);
     }
 

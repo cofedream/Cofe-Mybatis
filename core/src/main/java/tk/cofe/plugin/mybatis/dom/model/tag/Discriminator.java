@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 import com.intellij.util.xml.SubTagList;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.JavaTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.JdbcTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Case;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Case;
 
 import java.util.List;
 

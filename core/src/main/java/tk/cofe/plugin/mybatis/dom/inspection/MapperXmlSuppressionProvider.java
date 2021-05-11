@@ -23,11 +23,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
-import tk.cofe.plugin.mybatis.dom.model.dynamic.Collection;
 import tk.cofe.plugin.common.utils.DomUtils;
-import tk.cofe.plugin.mybatis.util.MybatisUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.PropertyAttribute;
+import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 /**
  * @author : zhengrf

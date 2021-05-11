@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,10 @@
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
-import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
+import com.intellij.util.xml.Resolve;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
-
-import java.util.Optional;
 
 /**
  * ResultMap 属性
@@ -36,21 +32,7 @@ import java.util.Optional;
 public interface ResultMapAttribute extends DomElement {
 
     @Attribute("resultMap")
-    @Convert(ResultMapConverter.Attribute.class)
+    @Resolve(ResultMap.class)
     GenericAttributeValue<ResultMap> getResultMap();
 
-    /**
-     * 获取 resultMap 对应的 ResultMap
-     */
-    @NotNull
-    default Optional<ResultMap> getResultMapValue() {
-        return Optional.ofNullable(getResultMap().getValue());
-    }
-
-    /**
-     * 判断是否为目标属性
-     */
-    default boolean isTargetResultMapAttribute(String value) {
-        return getResultMapValue().map(resultMap -> resultMap.isEqualsId(value)).orElse(false);
-    }
 }

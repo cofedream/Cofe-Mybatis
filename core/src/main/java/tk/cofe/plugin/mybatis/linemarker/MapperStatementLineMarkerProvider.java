@@ -23,21 +23,14 @@ import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlElement;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTokenType;
+import com.intellij.psi.xml.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.icons.MybatisIcons;
-import tk.cofe.plugin.mybatis.dom.model.tag.ClassElement;
 import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Mapper Xml 行标记
@@ -53,7 +46,7 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
         if (!isTarget(element)) {
             return null;
         }
-        return DomUtils.getDomElement(element, ClassElement.class).flatMap(ClassElement::getIdMethod).map(method -> {
+        return DomUtils.getDomElement(element, CRUDMix.class).flatMap(CRUDMix::getIdMethod).map(method -> {
             XmlAttribute id = ((XmlTag) element).getAttribute("id");
             if (id == null) {
                 return null;
@@ -67,17 +60,12 @@ public class MapperStatementLineMarkerProvider implements LineMarkerProvider {
             if (idValToken == null) {
                 return null;
             }
-            return NavigationGutterIconBuilder.create(MybatisIcons.NavigateToMethod)
+            return NavigationGutterIconBuilder.create(MybatisIcons.NAVIGATE_TO_METHOD)
                     .setAlignment(GutterIconRenderer.Alignment.CENTER)
                     .setTargets(method)
                     .setTooltipTitle(MyBatisBundle.message("action.navigate.tip", "method"))
                     .createLineMarkerInfo(idValToken.getPsi());
         }).orElse(null);
-    }
-
-    @Override
-    public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
-
     }
 
     private boolean isTarget(@NotNull PsiElement element) {

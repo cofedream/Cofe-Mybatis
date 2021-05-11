@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 
 /**
- * {@code <typeAliases></typeAliases>}
+ * {@code <typeAliases/>}
  *
  * @author : zhengrf
  * @date : 2019-01-21

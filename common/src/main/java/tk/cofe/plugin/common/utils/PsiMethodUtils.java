@@ -20,6 +20,7 @@ package tk.cofe.plugin.common.utils;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -62,6 +63,11 @@ public class PsiMethodUtils {
         if (!nameStartWithGet(method)) {
             return methodName;
         }
+        return replaceGetPrefix(methodName);
+    }
+
+    @NotNull
+    public static String replaceGetPrefix(String methodName) {
         char first = Character.toLowerCase(methodName.charAt(3));
         if (methodName.length() > 4) {
             return first + methodName.substring(4);
@@ -79,7 +85,11 @@ public class PsiMethodUtils {
         if (!nameStartWithIs(method)) {
             return "";
         }
-        String methodName = method.getName();
+        return replaceIsPrefix(method.getName());
+    }
+
+    @NotNull
+    public static String replaceIsPrefix(String methodName) {
         char first = Character.toLowerCase(methodName.charAt(2));
         if (methodName.length() > 3) {
             return first + methodName.substring(3);
