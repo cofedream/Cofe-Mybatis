@@ -19,8 +19,8 @@ dependencies {
     compile project(":mbel")
     compile project(":ognl")
     // https://mvnrepository.com/artifact/uk.com.robust-it/cloning
-    implementation group: 'uk.com.robust-it', name: 'cloning', version: '1.9.12'
-
+//    implementation group: 'uk.com.robust-it', name: 'cloning', version: '1.9.12'
+    compile group: 'uk.com.robust-it', name: 'cloning', version: '1.9.12'
 }
 intellij {
     pluginName pluginName
@@ -39,7 +39,20 @@ runIde {
 }
 runPluginVerifier {
     ideVersions sdkVersion
-    localPaths ["$rootDir.path/IDEA_SDK_HOME"]
+    localPaths["$rootDir.path/IDEA_SDK_HOME"]
     downloadDirectory "$rootDir.path/IDEA_SDK_HOME"
     verificationReportsDirectory "$rootDir.path/reports/pluginVerifier"
 }
+task copyToLib(type: Copy) {
+    into "${buildDir}/libs"
+//    from configurations.runtime
+//    from findJar('cloning'), findJar('objenesis')
+    from findJar('uk.com.robust-it')
+}
+
+def findJar(name) {
+//    configurations.runtime.filter { (it.name.startsWith(name)) }
+    configurations.compile.files { (it.group == name) }
+}
+
+jar.dependsOn(copyToLib)
