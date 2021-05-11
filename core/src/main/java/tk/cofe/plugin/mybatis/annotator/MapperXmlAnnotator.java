@@ -58,10 +58,7 @@ public class MapperXmlAnnotator implements Annotator {
             if (mapper.getIdElements(domElement).stream().filter(info -> info.isEqualsId(id)).count() > 1) {
                 XmlElement element = DomUtils.getValueElement(domElement.getId());
                 if (element != null) {
-                    holder.newAnnotation(HighlightSeverity.ERROR, errorMessage)
-                            .range(element)
-                            .tooltip(errorMessage)
-                            .create();
+                    holder.createErrorAnnotation(element, errorMessage);
                 }
             }
         });
