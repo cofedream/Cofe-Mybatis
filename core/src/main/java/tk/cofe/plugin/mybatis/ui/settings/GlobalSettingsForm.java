@@ -54,7 +54,9 @@ public class GlobalSettingsForm {
     public GlobalSettingsForm(ApplicationSettings settings) {
         final ApplicationSettings clone = settings.clone();
         mapperScanModel = new DefaultListModel<>();
-        mapperScanModel.addAll(clone.getMapperScanList());
+        for (int i = 0; i < clone.getMapperScanList().size(); i++) {
+            mapperScanModel.add(i, clone.getMapperScanList().get(i));
+        }
         mapperScanList = createJbList(mapperScanModel);
         globalPanel.add(ToolbarDecorator.createDecorator(mapperScanList)
                 .setAddAction(anActionButton -> {

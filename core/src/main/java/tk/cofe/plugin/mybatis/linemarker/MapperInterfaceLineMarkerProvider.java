@@ -57,7 +57,7 @@ public class MapperInterfaceLineMarkerProvider extends RelatedItemLineMarkerProv
     }
 
     @Override
-    protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
         if (PsiJavaUtils.isInterface(element)) {
             markerInterface(((PsiClass) element), result);
         } else if (PsiJavaUtils.isInterfaceMethod(element)) {
