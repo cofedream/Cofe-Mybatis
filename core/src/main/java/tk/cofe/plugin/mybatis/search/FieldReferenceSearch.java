@@ -90,7 +90,7 @@ public class FieldReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             Optional.ofNullable(id.getProperty())
                     .map(GenericAttributeValue::getXmlAttributeValue)
                     .filter(val -> Objects.equals(fieldName, val.getValue()))
-                    .ifPresent(val -> consumer.process(new PsiReferenceBase<>(val) {
+                    .ifPresent(val -> consumer.process(new PsiReferenceBase<PsiElement>(val) {
                         @Override
                         public @NotNull PsiElement resolve() {
                             return psiField;
