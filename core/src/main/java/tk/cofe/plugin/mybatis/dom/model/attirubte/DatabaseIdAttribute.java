@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package tk.cofe.plugin.mybatis.dom.model.attirubte;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : zhengrf
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DatabaseIdAttribute extends DomElement {
 
-    @Nullable
     @Attribute("databaseId")
     GenericAttributeValue<String> getDatabaseId();
 

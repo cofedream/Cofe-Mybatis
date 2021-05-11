@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.psi.FirstIdentifierReference;
 import tk.cofe.plugin.mybatis.psi.IdentifierReference;
-import tk.cofe.plugin.mybatis.util.MybatisXMLUtils;
+import tk.cofe.plugin.mybatis.util.MybatisUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,7 @@ abstract class ReferenceExpressionReferenceProvider extends PsiReferenceProvider
         if (element.getTextLength() <= 0) {
             return PsiReference.EMPTY_ARRAY;
         }
-        final PsiLanguageInjectionHost originElement = MybatisXMLUtils.getOriginElement(element);
+        final PsiLanguageInjectionHost originElement = MybatisUtils.getOriginElement(element);
         if (originElement == null) {
             return PsiReference.EMPTY_ARRAY;
         }

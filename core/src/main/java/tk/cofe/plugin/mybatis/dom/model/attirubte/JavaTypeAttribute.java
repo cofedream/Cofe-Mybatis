@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ public interface JavaTypeAttribute extends DomElement {
      *
      * @return javaType 值 如果为Null 则返回 ""
      */
-    @NotNull
     default Optional<PsiClass> getJavaTypeValue() {
         return Optional.ofNullable(getJavaType().getValue());
     }

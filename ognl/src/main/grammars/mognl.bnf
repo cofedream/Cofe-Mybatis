@@ -37,7 +37,7 @@
 
   extends(".*(Expression|Literal)")="expression"
   tokens=[
-    EXPRESSION_START="%{"
+    EXPRESSION_START="${"
 //    EXPRESSION_END="}"
 
     DOT="."

@@ -51,7 +51,7 @@ public final class MOgnlLanguageInjector {
             return;
         }
         registrar.startInjecting(MOgnlLanguage.INSTANCE)
-                .addPlace("%{", "}", element, new TextRange(1, textLength - 1))
+                .addPlace("${", "}", element, new TextRange(1, textLength - 1))
                 .doneInjecting();
     }
 
@@ -63,9 +63,9 @@ public final class MOgnlLanguageInjector {
         int lbrace;
         int rbrace = 0;
         // ${....}
-        while ((lbrace = text.indexOf("${", rbrace)) != -1 && (rbrace = text.indexOf('}', lbrace)) != -1) {
+        while ((lbrace = text.indexOf("${", rbrace)) != -1 && (rbrace = text.indexOf("}", lbrace)) != -1) {
             registrar.startInjecting(MOgnlLanguage.INSTANCE)
-                    .addPlace("%", null, element, new TextRange(lbrace + 1, ++rbrace)) // 包住尾部
+                    .addPlace(null, null, element, new TextRange(lbrace, ++rbrace)) // 包住尾部
                     .doneInjecting();
         }
     }
