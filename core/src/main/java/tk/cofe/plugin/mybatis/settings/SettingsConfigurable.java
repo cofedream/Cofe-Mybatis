@@ -19,7 +19,6 @@ package tk.cofe.plugin.mybatis.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.util.NlsContexts;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.settings.model.ApplicationSettings;
 import tk.cofe.plugin.mybatis.ui.settings.GlobalSettingsForm;
@@ -41,7 +40,7 @@ public class SettingsConfigurable implements Configurable {
     }
 
     @Override
-    public @NlsContexts.ConfigurableName String getDisplayName() {
+    public String getDisplayName() {
         return "Cofe Mybatis";
     }
 

@@ -21,7 +21,7 @@ plugins {
 
 def jdkVersion = sdkSinceBuild < '202' ? '1.8' : '11'
 
-allprojects {
+subprojects {
     apply plugin: 'java'
     apply plugin: 'org.jetbrains.intellij'
     sourceCompatibility = jdkVersion
@@ -41,18 +41,18 @@ allprojects {
 group 'tk.cofedream.plugin'
 version pluginVersion + "-" + sdkSinceBuild
 
-task cleanJar(type: Delete,dependsOn: [':resources_zh:clean',':common:clean',':ognl:clean',':mbel:clean',':core:clean'])
-task copyJar(type: Copy,dependsOn:[':resources_zh:jar',':common:jar',':ognl:jar',':mbel:jar',':core:jar']) {
-    from 'resources_zh/build/libs','common/build/libs','ognl/build/libs','mbel/build/libs','core/build/libs'
-    into('build/zip/'+pluginName+'/lib')
+task cleanJar(type: Delete, dependsOn: [':resources_zh:clean', ':common:clean', ':ognl:clean', ':mbel:clean', ':core:clean'])
+task copyJar(type: Copy, dependsOn: [':resources_zh:jar', ':common:jar', ':ognl:jar', ':mbel:jar', ':core:jar']) {
+    from 'resources_zh/build/libs', 'common/build/libs', 'ognl/build/libs', 'mbel/build/libs', 'core/build/libs'
+    into('build/zip/' + pluginName + '/lib')
 }
-task buildZip(type: Zip,dependsOn:['cleanJar','copyJar']){
+task buildZip(type: Zip, dependsOn: ['cleanJar', 'copyJar']) {
     from 'build/zip'
     destinationDir file('/')
     baseName pluginName
     version pluginVersion + "-" + sdkSinceBuild
     extension 'zip'
     doLast {
-        delete 'resources_zh/build','common/build','ognl/build','mbel/build','core/build'
+        delete 'resources_zh/build', 'common/build', 'ognl/build', 'mbel/build', 'core/build', 'build'
     }
 }

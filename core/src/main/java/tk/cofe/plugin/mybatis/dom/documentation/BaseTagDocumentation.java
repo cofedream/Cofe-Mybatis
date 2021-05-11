@@ -49,17 +49,19 @@ abstract class BaseTagDocumentation<T extends DomElement> implements Documentati
     @Nullable
     @Override
     public String generateDoc(final PsiElement element, @Nullable final PsiElement originalElement) {
-        return DomUtils.getDomElement(element, getTargetDomElement())
-                .or(() -> Optional.ofNullable(element)
-                        .filter(PomTargetPsiElement.class::isInstance)
-                        .map(PomTargetPsiElement.class::cast)
-                        .map(PomTargetPsiElement::getTarget)
-                        .filter(DomTarget.class::isInstance)
-                        .map(DomTarget.class::cast)
-                        .map(DomTarget::getDomElement)
-                        .filter(getTargetDomElement()::isInstance)
-                        .map(getTargetDomElement()::cast))
-                .map(DomElement::getXmlTag)
+        Optional<T> opt = DomUtils.getDomElement(element, getTargetDomElement());
+        if (!opt.isPresent()) {
+            opt = Optional.ofNullable(element)
+                    .filter(PomTargetPsiElement.class::isInstance)
+                    .map(PomTargetPsiElement.class::cast)
+                    .map(PomTargetPsiElement::getTarget)
+                    .filter(DomTarget.class::isInstance)
+                    .map(DomTarget.class::cast)
+                    .map(DomTarget::getDomElement)
+                    .filter(getTargetDomElement()::isInstance)
+                    .map(getTargetDomElement()::cast);
+        }
+        return opt.map(DomElement::getXmlTag)
                 .map(xmlTag -> {
                     String text = xmlTag.getText().replaceAll(">", "&gt;").replaceAll("<", "&lt;").replaceAll("\\n", "<br/>");
                     int index = text.lastIndexOf("&lt;");
