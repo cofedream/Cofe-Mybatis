@@ -19,7 +19,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.6.5' apply false
 }
 
-def jdkVersion = sdkSinceBuild < '203' ? '1.8' : '11'
+def jdkVersion = sdkSinceBuild < '202' ? '1.8' : '11'
 
 allprojects {
     apply plugin: 'java'

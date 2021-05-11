@@ -24,6 +24,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.util.ResourceBundle;
+
 /**
  * 消息资源
  *
@@ -34,13 +38,14 @@ public class MyBatisBundle extends DynamicBundle {
 
     @NonNls
     private static final String BUNDLE = "messages.MyBatisBundle";
+    private static final MyBatisBundle INSTANCE = new MyBatisBundle();
 
     public MyBatisBundle() {
         super(BUNDLE);
     }
 
     public static String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, @NotNull Object... params) {
-        return CommonBundle.message(getBundle(), key, params);
+        return INSTANCE.getMessage(key, params);
     }
 
 }

@@ -151,7 +151,7 @@ public class MethodParameterReferenceSearch extends QueryExecutorBase<PsiReferen
 
     @NotNull
     private PsiReferenceBase<PsiElement> createRef(PsiElement myResolveTo, boolean needRename, PsiElement parent, @NotNull final TextRange textRange) {
-        return new PsiReferenceBase<>(parent, textRange) {
+        return new PsiReferenceBase<PsiElement>(parent, textRange) {
             @Override
             public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
                 if (!needRename) {
