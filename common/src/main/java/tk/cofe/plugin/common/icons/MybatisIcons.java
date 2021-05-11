@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ import javax.swing.*;
  */
 public class MybatisIcons {
     public static final Icon MAIN = load("/icons/mybatis.png");
-    public static final Icon MybatisInterface = load("/icons/mybatisInterface.png");
-    public static final Icon NavigateToStatement = load("/icons/navigateToStatement.png");
-    public static final Icon NavigateToMethod = load("/icons/navigateToMethod.png");
+    public static final Icon INTERFACE = load("/icons/mybatisInterface.png");
+    public static final Icon NAVIGATE_TO_STATEMENT = load("/icons/navigateToStatement.png");
+    public static final Icon NAVIGATE_TO_METHOD = load("/icons/navigateToMethod.png");
 
     private static Icon load(final String path) {
         return IconLoader.getIcon(path, MybatisIcons.class);

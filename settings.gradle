@@ -16,6 +16,7 @@
  */
 
 rootProject.name = 'Cofe Mybatis'
+include 'resources_zh'
 include 'common'
 include 'ognl'
 include 'mbel'

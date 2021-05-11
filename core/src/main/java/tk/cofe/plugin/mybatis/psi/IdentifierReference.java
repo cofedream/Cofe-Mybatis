@@ -19,8 +19,16 @@ package tk.cofe.plugin.mybatis.psi;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.PsiType;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PlatformIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +57,21 @@ public abstract class IdentifierReference extends PsiReferenceBase<PsiElement> {
     @Override
     public @Nullable PsiElement resolve() {
         return targetElement;
+    }
+
+    @Override
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+        String newStr = newElementName;
+        final PsiElement element = resolve();
+        if (element instanceof PsiMethod) {
+            PsiMethod method = (PsiMethod) element;
+            if (PsiMethodUtils.nameStartWithGet(method)) {
+                newStr = PsiMethodUtils.replaceGetPrefix(newElementName);
+            } else if (PsiMethodUtils.nameStartWithIs(method)) {
+                newStr = PsiMethodUtils.replaceIsPrefix(newElementName);
+            }
+        }
+        return super.handleElementRename(newStr);
     }
 
     @Override

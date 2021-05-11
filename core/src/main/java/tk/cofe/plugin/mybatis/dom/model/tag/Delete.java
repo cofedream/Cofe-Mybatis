@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,11 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.DatabaseIdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.LangAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.TimeoutAttribute;
+import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 
 /**
  * @author : zhengrf
  * @date : 2019-01-03
  */
-public interface Delete extends ClassElement, ParameterTypeAttribute, TimeoutAttribute, LangAttribute, DatabaseIdAttribute {
+public interface Delete extends CRUDMix, ParameterTypeAttribute, TimeoutAttribute, LangAttribute, DatabaseIdAttribute {
 }

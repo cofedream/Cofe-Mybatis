@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 cofe
+ * Copyright (C) 2019-2021 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,21 @@ package tk.cofe.plugin.mybatis.dom.convert;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMember;
 import com.intellij.psi.PsiModifier;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.ConvertContext;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.ResolvingConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
+import tk.cofe.plugin.common.utils.DomUtils;
+import tk.cofe.plugin.common.utils.PsiFieldUtils;
+import tk.cofe.plugin.common.utils.PsiJavaUtils;
+import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
@@ -48,8 +51,6 @@ import java.util.stream.Collectors;
  */
 public class PropertyConverter extends ResolvingConverter<PsiMember> {
 
-    private static final RowIcon PRIVATE_FIELD_ICON = new RowIcon(PlatformIcons.FIELD_ICON, PlatformIcons.PRIVATE_ICON);
-
     @Override
     public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
         return MyBatisBundle.message("error.cannot.resolve.field.message", s);
@@ -58,9 +59,9 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
     @NotNull
     @Override
     public Collection<? extends PsiMember> getVariants(ConvertContext context) {
-        return PropertyType.parse(context.getInvocationElement())
+        return parse(context)
                 .map(psiClass -> Arrays.stream(psiClass.getAllFields())
-                        .filter(field -> !field.hasModifierProperty(PsiModifier.FINAL) || !field.hasModifierProperty(PsiModifier.STATIC))
+                        .filter(field -> !PsiFieldUtils.anyMatch(field, PsiModifier.FINAL, PsiModifier.STATIC))
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
@@ -68,7 +69,10 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
     @Nullable
     @Override
     public LookupElement createLookupElement(PsiMember psiMember) {
-        return psiMember == null || psiMember.getName() == null ? null : LookupElementBuilder.create(psiMember.getName()).withIcon(PRIVATE_FIELD_ICON);
+        return Optional.ofNullable(psiMember)
+                .map(NavigationItem::getName)
+                .map(name -> LookupElementBuilder.create(name).withIcon(PsiJavaUtils.getPsiMemberIcon(psiMember)))
+                .orElse(null);
     }
 
     @Nullable
@@ -77,64 +81,39 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
         if (StringUtil.isEmpty(member)) {
             return null;
         }
-        return PropertyType.parse(context.getInvocationElement())
-                .flatMap(psiClass -> Arrays.stream(psiClass.getAllFields()).filter(field -> member.equals(field.getName())).findFirst())
+        return parse(context)
+                .map(psiClass -> psiClass.findFieldByName(member, true))
                 .orElse(null);
     }
 
     @Nullable
     @Override
     public String toString(@Nullable final PsiMember psiMember, final ConvertContext context) {
-        return psiMember == null ? null : psiMember.getName();
+        return Optional.ofNullable(psiMember)
+                .map(NavigationItem::getName)
+                .orElse(null);
     }
 
-    private enum PropertyType {
-        RESULT_MAP(ResultMap.class) {
-            @Override
-            Optional<PsiClass> getType(DomElement domElement) {
-                return ((ResultMap) domElement).getTypeValue();
-            }
-        },
-        ASSOCIATION(Association.class) {
-            @Override
-            Optional<PsiClass> getType(DomElement domElement) {
-                return ((Association) domElement).getJavaTypeValue();
-            }
-        },
-        COLLECTION(tk.cofe.plugin.mybatis.dom.model.dynamic.Collection.class) {
-            @Override
-            Optional<PsiClass> getType(DomElement domElement) {
-                return ((tk.cofe.plugin.mybatis.dom.model.dynamic.Collection) domElement).getOfTypeValue();
-            }
-        },
-        ;
+    public static Optional<PsiClass> parse(ConvertContext context) {
+        final DomElement currentTagDomElement = context.getInvocationElement().getParent();
+        // 当前属性对应的标签
+        return parse(currentTagDomElement);
+    }
 
-        private Class<?> typeClass;
-
-        PropertyType(final Class<?> typeClass) {
-            this.typeClass = typeClass;
-        }
-
-        public static Optional<PsiClass> parse(final DomElement domElement) {
-            if (domElement == null) {
-                return Optional.empty();
-            }
-            for (DomElement curElement = domElement.getParent() == null ? null : domElement.getParent().getParent();
-                 curElement != null;
-                 curElement = curElement.getParent()) {
-                for (PropertyType type : values()) {
-                    if (type.getTypeClass().isInstance(curElement)) {
-                        return type.getType(curElement);
-                    }
-                }
-            }
+    public static Optional<PsiClass> parse(final DomElement domElement) {
+        if (domElement == null) {
             return Optional.empty();
         }
-
-        public Class<?> getTypeClass() {
-            return typeClass;
+        final IdOrResultMix include = DomUtils.getParentOfType(domElement, IdOrResultMix.class, true);
+        if (include instanceof ResultMap) {
+            return ((ResultMap) include).getTypeValue();
         }
-
-        abstract Optional<PsiClass> getType(DomElement domElement);
+        if (include instanceof Association) {
+            return ((Association) include).getJavaTypeValue();
+        }
+        if (include instanceof tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) {
+            return ((tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) include).getOfTypeValue();
+        }
+        return Optional.empty();
     }
 }

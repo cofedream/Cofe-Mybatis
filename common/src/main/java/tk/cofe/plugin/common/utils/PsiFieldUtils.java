@@ -32,4 +32,16 @@ public class PsiFieldUtils {
     public static boolean notSerialField(PsiField psiField) {
         return !"serialVersionUID".equals(psiField.getName());
     }
+
+    /**
+     * 判断是否有其中的任意一个修饰符
+     */
+    public static boolean anyMatch(PsiField psiField, String... psiModifiers) {
+        for (String psiModifier : psiModifiers) {
+            if (psiField.hasModifierProperty(psiModifier)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
