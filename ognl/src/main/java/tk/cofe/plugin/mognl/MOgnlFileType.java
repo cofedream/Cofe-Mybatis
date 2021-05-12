@@ -31,6 +31,7 @@ import javax.swing.*;
 public class MOgnlFileType extends LanguageFileType {
 
     public static final MOgnlFileType INSTANCE = new MOgnlFileType();
+    public static final String DEFAULT_EXTENSION = "mognl";
 
     private MOgnlFileType() {
         super(MOgnlLanguage.INSTANCE);
@@ -51,7 +52,7 @@ public class MOgnlFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "mognl";
+        return DEFAULT_EXTENSION;
     }
 
     @Nullable

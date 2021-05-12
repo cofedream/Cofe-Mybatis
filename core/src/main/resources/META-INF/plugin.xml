@@ -42,6 +42,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p><b>后续更新将不再兼容2019.1.4</b></p>
         <ul>
             <li>新增Mapper接口方法参数使用查找</li>
             <li>新增MapperScan设置(路径Tools-Cofe Mybatis)</li>

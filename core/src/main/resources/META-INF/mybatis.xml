@@ -20,8 +20,7 @@
     <!--MOgnl-->
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
-        <fileType name="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlFileType"
-                  fieldName="INSTANCE" language="MOgnl" extensions="mognl"/>
+        <fileTypeFactory implementation="tk.cofe.plugin.mognl.MOgnlFileTypeFactory"/>
 
         <lang.ast.factory language="MOgnl" implementationClass="tk.cofe.plugin.mognl.psi.impl.MOgnlASTFactory"/>
         <lang.parserDefinition language="MOgnl" implementationClass="tk.cofe.plugin.mognl.MOgnlParserDefinition"/>
@@ -39,8 +38,7 @@
     <!--MbEL-->
     <extensions defaultExtensionNs="com.intellij">
         <!--https://plugins.jetbrains.com/docs/intellij/registering-file-type.html-->
-        <fileType name="MbEL" implementationClass="tk.cofe.plugin.mbel.MbELFileType"
-                  fieldName="INSTANCE" language="MbEL" extensions="mbel"/>
+        <fileTypeFactory implementation="tk.cofe.plugin.mbel.MbELFileTypeFactory"/>
 
         <lang.ast.factory language="MbEL" implementationClass="tk.cofe.plugin.mbel.psi.impl.MbELASTFactory"/>
 

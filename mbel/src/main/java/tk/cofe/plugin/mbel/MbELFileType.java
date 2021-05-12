@@ -31,6 +31,7 @@ import javax.swing.*;
 public class MbELFileType extends LanguageFileType {
 
     public static final MbELFileType INSTANCE = new MbELFileType();
+    public static final String DEFAULT_EXTENSION = "mbel";
 
     private MbELFileType() {
         super(MbELLanguage.INSTANCE);
@@ -51,7 +52,7 @@ public class MbELFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "mbel";
+        return DEFAULT_EXTENSION;
     }
 
     @Nullable
