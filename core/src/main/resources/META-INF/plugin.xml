@@ -21,14 +21,12 @@
     <vendor email="cofedfream@outlook.com" url="https://github.com/cofedream">cofedream</vendor>
 
     <description><![CDATA[
-    <h1>Cofe Mybatis</h1>
     <p>
         <b>
             <a href="https://gitee.com/cofedream/Cofe-Mybatis">Gitee</a> |
             <a href="https://github.com/cofedream/Cofe-Mybatis">GitHub</a>
         </b>
     </p>
-    <p><b>Free Mybatis Plugin For Jetbrains <em>Created By Cofedream</em>.</b></p>
     <p><b>Features:</b>
     <ul>
         <li>Support Spring Inject.</li>
@@ -39,7 +37,6 @@
                 <li>Mapper XML Validate.</li>
             </ul>
         </li>
-        <li>Support <a href="https://gitee.com/free/Mapper">Mapper</a> MapperScan.</li>
         <li>More.</li>
     </ul>
     ]]></description>
