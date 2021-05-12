@@ -77,7 +77,7 @@ public class GlobalSettingsForm {
                     }
                 })
                 .createPanel(), BorderLayout.CENTER);
-        new DoubleClickListener(){
+        new DoubleClickListener() {
             @Override
             protected boolean onDoubleClick(@NotNull MouseEvent event) {
                 final MapperScan selectedValue = mapperScanList.getSelectedValue();
@@ -161,4 +161,5 @@ public class GlobalSettingsForm {
     public JComponent $$$getRootComponent$$$() {
         return root;
     }
+
 }

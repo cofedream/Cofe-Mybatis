@@ -14,9 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mbel.psi.impl;
 
-rootProject.name = 'Cofe Mybatis'
-include 'resources_zh'
-include 'lang'
-include 'core'
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import tk.cofe.plugin.mbel.psi.*;
 
+public class MbELJavaTypeConfigImpl extends MbELPsiCompositeElementBase implements MbELJavaTypeConfig {
+
+  public MbELJavaTypeConfigImpl(@NotNull ASTNode node) {
+    super(node);
+  }
+
+  public void accept(@NotNull MbELVisitor visitor) {
+    visitor.visitJavaTypeConfig(this);
+  }
+
+  @Override
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof MbELVisitor) accept((MbELVisitor)visitor);
+    else super.accept(visitor);
+  }
+
+}

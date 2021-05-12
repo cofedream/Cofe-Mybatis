@@ -15,8 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'Cofe Mybatis'
-include 'resources_zh'
-include 'lang'
-include 'core'
+plugins {
+    id 'java'
+}
 
+sourceSets {
+    main {
+        java{
+            srcDir 'src/main/gen'
+        }
+    }
+}

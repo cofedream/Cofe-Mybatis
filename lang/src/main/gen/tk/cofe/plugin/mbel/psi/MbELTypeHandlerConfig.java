@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mbel.psi;
 
-rootProject.name = 'Cofe Mybatis'
-include 'resources_zh'
-include 'lang'
-include 'core'
+public interface MbELTypeHandlerConfig extends MbELPsiCompositeElement {
 
+}

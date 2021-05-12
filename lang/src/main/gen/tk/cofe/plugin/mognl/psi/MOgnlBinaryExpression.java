@@ -14,9 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mognl.psi;
 
-rootProject.name = 'Cofe Mybatis'
-include 'resources_zh'
-include 'lang'
-include 'core'
+import org.jetbrains.annotations.*;
 
+public interface MOgnlBinaryExpression extends MOgnlExpression {
+
+  @NotNull
+  MOgnlExpression getLeft();
+
+  @Nullable
+  MOgnlExpression getRight();
+
+  @NotNull MOgnlTokenType getOperator();
+
+}

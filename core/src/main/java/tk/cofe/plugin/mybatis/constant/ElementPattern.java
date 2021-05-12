@@ -23,14 +23,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.jetbrains.annotations.NotNull;
 import tk.cofe.plugin.mbel.psi.MbELJdbcTypeConfig;
 import tk.cofe.plugin.mbel.psi.MbELModeConfig;
 import tk.cofe.plugin.mbel.psi.MbELReferenceExpression;
 import tk.cofe.plugin.mbel.psi.MbELResultMapConfig;
 import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ParameterTypeAttribute;
-import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;

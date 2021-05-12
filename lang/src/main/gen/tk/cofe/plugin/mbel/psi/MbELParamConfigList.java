@@ -14,9 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package tk.cofe.plugin.mbel.psi;
 
-rootProject.name = 'Cofe Mybatis'
-include 'resources_zh'
-include 'lang'
-include 'core'
+import java.util.List;
+import org.jetbrains.annotations.*;
 
+public interface MbELParamConfigList extends MbELPsiCompositeElement {
+
+  @NotNull
+  List<MbELJavaTypeConfig> getJavaTypeConfigList();
+
+  @NotNull
+  List<MbELJdbcTypeConfig> getJdbcTypeConfigList();
+
+  @NotNull
+  List<MbELJdbcTypeNameConfig> getJdbcTypeNameConfigList();
+
+  @NotNull
+  List<MbELModeConfig> getModeConfigList();
+
+  @NotNull
+  List<MbELNumericScaleConfig> getNumericScaleConfigList();
+
+  @NotNull
+  List<MbELResultMapConfig> getResultMapConfigList();
+
+  @NotNull
+  List<MbELTypeHandlerConfig> getTypeHandlerConfigList();
+
+}

@@ -17,16 +17,10 @@
 
 package tk.cofe.plugin.mybatis.service.impl;
 
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTypesUtil;
-import tk.cofe.plugin.common.annotation.Annotation;
-import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.TypeAliasService;
 
