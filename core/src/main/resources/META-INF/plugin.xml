@@ -58,7 +58,10 @@
          on how to target different products -->
     <!-- uncomment to enable plugin in all products -->
     <!--产品兼容性-->
-    <!--https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html-->
+    <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.xml</depends>
     <depends>com.intellij.modules.java</depends>
     <!-- Optional dependency on another plugin.
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
