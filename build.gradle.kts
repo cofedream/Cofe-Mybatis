@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 2019-2021 cofe
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+fun properties(key: String) = project.findProperty(key).toString()
+
+plugins {
+    java
+}
+
+group = properties("group")
+version = (properties("pluginVersion") + "-" + properties("sdkSinceBuild"))
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    tasks {
+        withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            sourceCompatibility = "11"
+            targetCompatibility = "11"
+        }
+    }
+}
+
+tasks {
+    create<Delete>("cleanJar") {
+        dependsOn(":resources_zh:clean", ":lang:clean", ":core:clean")
+    }
+    create<Zip>("buildZip") {
+        dependsOn(":core:copyToLib")
+        from("core/build/libs")
+        into("lib")
+        destinationDirectory.set(file("/"))
+        archiveBaseName.set(properties("pluginName"))
+        archiveVersion.set(properties("pluginVersion"))
+        archiveClassifier.set(properties("sdkSinceBuild"))
+        archiveExtension.set("zip")
+        doLast{
+            delete ("resources_zh/build", "lang/build", "core/build", "build")
+        }
+    }
+}

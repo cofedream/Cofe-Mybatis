@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-// 参考连接 https://plugins.jetbrains.com/docs/intellij/localization-guide.html
-plugins {
-    id 'java'
-}
+
+rootProject.name = ("Cofe Mybatis")
+include("resources_zh")
+include("lang")
+include("core")
+
