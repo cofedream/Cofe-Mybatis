@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.service;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
@@ -36,7 +35,7 @@ import java.util.stream.Stream;
  */
 public interface MapperService {
     static MapperService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, MapperService.class);
+        return project.getService(MapperService.class);
     }
 
     /**

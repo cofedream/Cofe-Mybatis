@@ -17,8 +17,8 @@
 
 package tk.cofe.plugin.mybatis.settings;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public class SettingsService implements PersistentStateComponent<ApplicationSett
     private ApplicationSettings settings = new ApplicationSettings();
 
     public static SettingsService getInstance() {
-        return ServiceManager.getService(SettingsService.class);
+        return ApplicationManager.getApplication().getService(SettingsService.class);
     }
 
     @Override

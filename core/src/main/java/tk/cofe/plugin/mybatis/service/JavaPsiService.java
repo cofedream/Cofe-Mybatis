@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.service;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiJavaFile;
@@ -36,7 +35,7 @@ import java.util.Optional;
  */
 public interface JavaPsiService {
     static JavaPsiService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, JavaPsiService.class);
+        return project.getService(JavaPsiService.class);
     }
 
     PsiPackage getPsiPackage(@Nullable PsiClass psiClass);

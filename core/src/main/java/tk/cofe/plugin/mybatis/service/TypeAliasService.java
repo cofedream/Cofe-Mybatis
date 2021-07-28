@@ -17,7 +17,6 @@
 
 package tk.cofe.plugin.mybatis.service;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,7 @@ import java.util.List;
 public interface TypeAliasService {
 
     static TypeAliasService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, TypeAliasService.class);
+        return project.getService(TypeAliasService.class);
     }
 
     String getAliasTypeCanonicalText(String alias);
