@@ -52,7 +52,8 @@ tasks {
 //        downloadDir.set("$rootDir.path/IDEA_SDK_HOME")
 //        verificationReportsDir.set("$rootDir.path/reports/pluginVerifier")
 //    }
-    register<Copy>("copyToLib") {
+    register<Copy>("copyDependenciesToLibs") {
+        dependsOn("jar")
         from(configurations.runtimeClasspath)
         into("${buildDir}/libs")
     }

@@ -45,8 +45,8 @@ tasks {
     create<Delete>("cleanJar") {
         dependsOn(":resources_zh:clean", ":lang:clean", ":core:clean")
     }
-    create<Zip>("buildZip") {
-        dependsOn(":core:copyToLib")
+    create<Zip>("releaseVersion") {
+        dependsOn(":core:copyDependenciesToLibs")
         from("core/build/libs")
         into("lib")
         destinationDirectory.set(file("/"))
@@ -54,8 +54,8 @@ tasks {
         archiveVersion.set(properties("pluginVersion"))
         archiveClassifier.set(properties("sdkSinceBuild"))
         archiveExtension.set("zip")
-        doLast{
-            delete ("resources_zh/build", "lang/build", "core/build", "build")
+        doLast {
+            delete("resources_zh/build", "lang/build", "core/build", "build")
         }
     }
 }
