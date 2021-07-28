@@ -32,6 +32,11 @@ allprojects {
             options.encoding = "UTF-8"
             sourceCompatibility = "11"
             targetCompatibility = "11"
+            options.compilerArgs.addAll(
+                listOf(
+                    "-Xlint:deprecation"
+                )
+            )
         }
     }
 }

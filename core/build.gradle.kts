@@ -18,7 +18,7 @@
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
-    id("org.jetbrains.intellij") version "1.0"
+    id("org.jetbrains.intellij") version "1.1.4"
 }
 
 dependencies {
@@ -46,12 +46,12 @@ tasks {
         sinceBuild.set(properties("sdkSinceBuild"))
         untilBuild.set(properties("sdkUntilBuild"))
     }
-    runPluginVerifier {
-        ideVersions.set(listOf((properties("platformType") + "-" + properties("platformVersion"))))
-        localPaths.setFrom(listOf("$rootDir.path/IDEA_SDK_HOME"))
-        downloadDir.set("$rootDir.path/IDEA_SDK_HOME")
-        verificationReportsDir.set("$rootDir.path/reports/pluginVerifier")
-    }
+//    runPluginVerifier {
+//        ideVersions.set(listOf((properties("platformType") + "-" + properties("platformVersion"))))
+//        localPaths.from("$rootDir.path/IDEA_SDK_HOME")
+//        downloadDir.set("$rootDir.path/IDEA_SDK_HOME")
+//        verificationReportsDir.set("$rootDir.path/reports/pluginVerifier")
+//    }
     register<Copy>("copyToLib") {
         from(configurations.runtimeClasspath)
         into("${buildDir}/libs")

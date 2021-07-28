@@ -62,7 +62,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xml</depends>
-    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.java</depends>
     <!-- Optional dependency on another plugin.
        If the plugin with the "com.MySecondPlugin" ID is installed, the contents of mysecondplugin.xml
        (the format of this file conforms to the format of plugin.xml) will be loaded. -->
