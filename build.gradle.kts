@@ -43,13 +43,10 @@ allprojects {
 }
 
 tasks {
-    create<Delete>("cleanJar") {
-        dependsOn(":resources_zh:clean", ":lang:clean", ":core:clean")
-    }
     create<Zip>("releaseVersion") {
         dependsOn(":core:copyDependenciesToLibs")
         from("core/build/libs")
-        into("lib")
+        into(properties("pluginName") + "/lib")
         destinationDirectory.set(file("/"))
         archiveBaseName.set(properties("pluginName"))
         archiveVersion.set(properties("pluginVersion"))

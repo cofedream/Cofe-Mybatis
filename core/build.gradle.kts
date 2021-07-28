@@ -33,7 +33,7 @@ intellij {
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
-    updateSinceUntilBuild.set(false)
+    updateSinceUntilBuild.set(true)
     sandboxDir.set("$rootDir.path/.idea-sandbox")
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
