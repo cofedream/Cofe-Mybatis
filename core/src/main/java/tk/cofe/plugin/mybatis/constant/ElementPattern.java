@@ -97,7 +97,7 @@ public final class ElementPattern {
                     .withText(StandardPatterns.string().startsWith("property"));
         }
 
-        public static final class AttributeVlaue {
+        public static final class AttributeValue {
             public static final PsiElementPattern.Capture<XmlAttributeValue> COLLECTION = psiElement(XmlAttributeValue.class)
                     .withParent(Attribute.COLLECTION.withParent(Tag.FOREACH));
             public static final PsiElementPattern.Capture<XmlAttributeValue> RESULT_TYPE = psiElement(XmlAttributeValue.class)
