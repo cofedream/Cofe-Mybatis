@@ -45,7 +45,7 @@ public class CollectionReferenceContributor extends PsiReferenceContributor {
 
     @Override
     public void registerReferenceProviders(@NotNull final PsiReferenceRegistrar registrar) {
-        registrar.registerReferenceProvider(XML.AttributeVlaue.COLLECTION, new CollectionReferenceProvider());
+        registrar.registerReferenceProvider(XML.AttributeValue.COLLECTION, new CollectionReferenceProvider());
     }
 
     /**
