@@ -96,6 +96,12 @@ public abstract class FirstElementSearchProvider<T> {
                                 // todo 需要调整
                                 res.add(mapper(value.getValue(), firstParameter, PlatformIcons.ANNOTATION_TYPE_ICON));
                             }
+                            if (PsiTypeUtils.isCollectionType(firstParameter.getType())) {
+                                res.add(mapper("list", firstParameter, PlatformIcons.PARAMETER_ICON));
+                            }
+                            if (PsiTypeUtils.isArrayType(firstParameter.getType())) {
+                                res.add(mapper("array", firstParameter, PlatformIcons.PARAMETER_ICON));
+                            }
                         } else if (psiParameters.length > 1) {
                             // 如果方法有多个参数
                             for (PsiParameter psiParameter : psiParameters) {
