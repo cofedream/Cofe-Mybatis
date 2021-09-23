@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.psi;
 
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.GenericAttributeValue;
 import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.Nullable;
@@ -112,6 +113,12 @@ public abstract class SuffixElementProvider<T> {
                     }
                 } else if (value.getValue().equals(name)) {
                     return Collections.singletonList(mapper(injectElement, name, firstParameter, firstParameter.getType()));
+                }
+                if (Objects.equals("list", name) && PsiTypeUtils.isCollectionType(firstParameter.getType())) {
+                    return Collections.singletonList(mapper(injectElement, firstParameter));
+                }
+                if (Objects.equals("array", name) && PsiTypeUtils.isArrayType(firstParameter.getType())) {
+                    return Collections.singletonList(mapper(injectElement, firstParameter));
                 }
             } else if (psiParameters.length > 1) {
                 // 如果方法有多个参数
