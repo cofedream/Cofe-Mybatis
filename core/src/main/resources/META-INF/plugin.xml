@@ -43,8 +43,8 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>修正单数情况下集合与数组未提示list/array的问题</li>
-            <li>修正list/array无法正确解析的问题</li>
+            <li>修正单参数情况下集合与数组未提示的问题(list、array)</li>
+            <li>修正list、array无法正确解析的问题</li>
         </ul>
     ]]></change-notes>
 
