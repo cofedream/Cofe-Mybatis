@@ -31,8 +31,8 @@ import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author : cofe
@@ -47,12 +47,19 @@ public class ExtendsConverter extends ResolvingConverter<ResultMap> {
 
     @Override
     public @NotNull Collection<? extends ResultMap> getVariants(ConvertContext context) {
-        return Collections.emptyList();
+        ResultMap currentResultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class);
+        return DomUtils.getParentOfType(currentResultMap, Mapper.class).getResultMaps()
+                .stream().filter(i -> !i.isEqualsId(currentResultMap.getIdValue("")))
+                .collect(Collectors.toList());
     }
 
     @Override
     public @Nullable ResultMap fromString(@Nullable @NonNls String s, ConvertContext context) {
         if (StringUtil.isEmpty(s)) {
+            return null;
+        }
+        ResultMap currentResultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class);
+        if (currentResultMap.isEqualsId(s)) {
             return null;
         }
         if (s.contains(".")) {
@@ -69,7 +76,7 @@ public class ExtendsConverter extends ResolvingConverter<ResultMap> {
                             .findFirst())
                     .orElse(null);
         }
-        Mapper mapper = DomUtils.getParentOfType(context.getInvocationElement().getParent(), Mapper.class);
+        Mapper mapper = DomUtils.getParentOfType(context.getInvocationElement(), Mapper.class);
         for (ResultMap resultMap : mapper.getResultMaps()) {
             if (resultMap.isEqualsId(s)) {
                 return resultMap;

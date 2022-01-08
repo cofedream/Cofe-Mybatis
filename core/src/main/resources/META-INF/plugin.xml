@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2019-2021 cofe
+  ~ Copyright (C) 2019-2022 cofe
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -43,8 +43,8 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>修正单参数情况下集合与数组未提示的问题(list、array)</li>
-            <li>修正list、array无法正确解析的问题</li>
+            <li>处理Mapper跨文件引用ResultMap问题</li>
+            <li>ResultMap#Extends添加提示</li>
         </ul>
     ]]></change-notes>
 

@@ -45,8 +45,6 @@ public interface ResultMap extends IdAttribute,
     GenericAttributeValue<PsiClass> getType();
 
     @Attribute("extends")
-    // @Resolve(ResultMap.class)
-    // @Referencing(ResultMapReferencing.class)
     @Convert(ExtendsConverter.class)
     GenericAttributeValue<ResultMap> getExtends();
 
