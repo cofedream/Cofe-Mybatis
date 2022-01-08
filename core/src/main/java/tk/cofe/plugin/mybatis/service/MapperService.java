@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,14 @@ public interface MapperService {
      * @return Statement 集合
      */
     Optional<CRUDMix> findStatement(PsiMethod method);
+
+    /**
+     * 找到 resultMap全路径名对应的 {@link ResultMap}
+     *
+     * @param resultMap resultMap全路径名
+     * @return {@link ResultMap}
+     */
+    ResultMap findResultMap(String resultMap);
 
     /**
      * 查询PsiMethod对应的Mapper Statement是否存在

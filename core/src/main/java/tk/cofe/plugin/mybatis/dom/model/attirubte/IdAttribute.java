@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,12 @@ import java.util.Optional;
  * @date : 2019-01-15
  */
 public interface IdAttribute extends DomElement {
+
+    static String getDomIdValue(DomElement domElement) {
+        return Optional.ofNullable(DomUtils.getParentOfType(domElement, IdAttribute.class))
+                .flatMap(IdAttribute::getIdValue)
+                .orElse("");
+    }
 
     GenericAttributeValue<?> getId();
 

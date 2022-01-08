@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.bundle.MyBatisBundle;
 import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultMapAttribute;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 import tk.cofe.plugin.mybatis.service.MapperService;
 import tk.cofe.plugin.mybatis.util.MybatisUtils;
@@ -38,7 +40,7 @@ import java.util.stream.Collectors;
  * @author : cofe
  * @date : 2022-01-08
  */
-public class ExtendsConverter extends ResolvingConverter<ResultMap> {
+public class ResultMapConverter extends ResolvingConverter<ResultMap> {
 
     @Override
     public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
@@ -53,9 +55,10 @@ public class ExtendsConverter extends ResolvingConverter<ResultMap> {
 
     @Override
     public @NotNull Collection<? extends ResultMap> getVariants(ConvertContext context) {
-        ResultMap currentResultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class);
-        return DomUtils.getParentOfType(currentResultMap, Mapper.class).getResultMaps()
-                .stream().filter(i -> !i.isEqualsId(currentResultMap.getIdValue("")))
+        ResultMapAttribute resultMapAttribute = DomUtils.getParentOfType(context.getInvocationElement(), ResultMapAttribute.class);
+        String resultMapId = IdAttribute.getDomIdValue(context.getInvocationElement());
+        return DomUtils.getParentOfType(resultMapAttribute, Mapper.class).getResultMaps()
+                .stream().filter(i -> !i.isEqualsId(resultMapId))
                 .collect(Collectors.toList());
     }
 

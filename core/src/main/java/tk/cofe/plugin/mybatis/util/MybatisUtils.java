@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,11 +29,9 @@ import tk.cofe.plugin.common.utils.DomUtils;
 import tk.cofe.plugin.common.utils.PsiTypeUtils;
 import tk.cofe.plugin.mybatis.config.MybatisConstants;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
+import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
-import tk.cofe.plugin.mybatis.dom.model.tag.Delete;
-import tk.cofe.plugin.mybatis.dom.model.tag.Insert;
-import tk.cofe.plugin.mybatis.dom.model.tag.Select;
-import tk.cofe.plugin.mybatis.dom.model.tag.Update;
+import tk.cofe.plugin.mybatis.dom.model.tag.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -176,5 +174,26 @@ public class MybatisUtils {
 
     public static PsiLanguageInjectionHost getOriginElement(final CompletionParameters parameters) {
         return getOriginElement(parameters.getPosition());
+    }
+
+    public static ResultMap findResultMap(String resultMapId, DomElement domElement) {
+        if (domElement == null || StringUtil.isEmpty(resultMapId)) {
+            return null;
+        }
+        Mapper mapper = DomUtils.getParentOfType(domElement, Mapper.class);
+        if (mapper == null) {
+            return null;
+        }
+        for (ResultMap resultMap : mapper.getResultMaps()) {
+            if (resultMap.isEqualsId(resultMapId)) {
+                return resultMap;
+            }
+        }
+        return null;
+    }
+
+    public static boolean existDomElement(String id, DomElement domElement, Class<? extends IdAttribute> clazz) {
+        IdAttribute currentResultMap = DomUtils.getParentOfType(domElement, clazz);
+        return currentResultMap != null && currentResultMap.isEqualsId(id);
     }
 }

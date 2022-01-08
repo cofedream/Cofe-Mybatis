@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@ import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.PsiJavaUtils;
 import tk.cofe.plugin.mybatis.dom.model.Mapper;
 import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
+import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
+import tk.cofe.plugin.mybatis.service.JavaPsiService;
 import tk.cofe.plugin.mybatis.service.MapperService;
 
 import java.util.Collections;
@@ -45,10 +47,12 @@ import java.util.stream.Stream;
 public class MapperServiceImpl implements MapperService {
     private final Project project;
     private final DomService domService;
+    private final JavaPsiService javaService;
 
     public MapperServiceImpl(Project project) {
         this.project = project;
         this.domService = DomService.getInstance();
+        this.javaService = JavaPsiService.getInstance(project);
     }
 
     @Override
@@ -80,6 +84,23 @@ public class MapperServiceImpl implements MapperService {
                 .flatMap(psiClass -> findStatementsStream(psiClass)
                         .filter(mix -> mix.isTargetMethod(method))
                         .findFirst());
+    }
+
+    @Override
+    public ResultMap findResultMap(String resultMap) {
+        if (!resultMap.contains(".")) {
+            return null;
+        }
+        int i = resultMap.lastIndexOf(".");
+        String pre = resultMap.substring(0, i);
+        String suf = resultMap.substring(i + 1);
+        return javaService.findPsiClass(pre)
+                .map(this::getMapperStream)
+                .flatMap(mapperStream -> mapperStream
+                        .flatMap(mapper -> mapper.getResultMaps().stream())
+                        .filter(item -> item.isEqualsId(suf))
+                        .findFirst())
+                .orElse(null);
     }
 
     @Override

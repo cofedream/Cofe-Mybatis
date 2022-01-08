@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
 package tk.cofe.plugin.mybatis.dom.model.attirubte;
 
 import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
-import com.intellij.util.xml.Resolve;
+import tk.cofe.plugin.mybatis.dom.convert.ResultMapConverter;
 import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 
 /**
@@ -32,7 +33,7 @@ import tk.cofe.plugin.mybatis.dom.model.tag.ResultMap;
 public interface ResultMapAttribute extends DomElement {
 
     @Attribute("resultMap")
-    @Resolve(ResultMap.class)
+    @Convert(ResultMapConverter.class)
     GenericAttributeValue<ResultMap> getResultMap();
 
 }
