@@ -42,6 +42,13 @@ public class ExtendsConverter extends ResolvingConverter<ResultMap> {
 
     @Override
     public String getErrorMessage(@Nullable final String s, final ConvertContext context) {
+        if (StringUtil.isEmpty(s)) {
+            return MyBatisBundle.message("error.missing.resultMap.message");
+        }
+        ResultMap currentResultMap = DomUtils.getParentOfType(context.getInvocationElement(), ResultMap.class);
+        if (currentResultMap.isEqualsId(s)) {
+            return MyBatisBundle.message("error.recursive.resultMap.message");
+        }
         return MyBatisBundle.message("error.cannot.resolve.resultMap.message", s);
     }
 
