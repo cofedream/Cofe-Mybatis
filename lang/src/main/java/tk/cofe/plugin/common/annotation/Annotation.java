@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class Annotation implements Cloneable {
     public static final Annotation ALIAS = new Annotation("@Alias", "org.apache.ibatis.type.Alias");
     public static final Annotation AUTOWIRED = new Annotation("@Autowired", "org.springframework.beans.factory.annotation.Autowired");
     public static final Annotation RESOURCE = new Annotation("@Resource", "javax.annotation.Resource");
-    public static final List<Annotation> STATEMENT_ANNOTATIONS = Collections.unmodifiableList(Arrays.asList(SELECT, UPDATE, INSERT, DELETE));
+    public static final List<Annotation> STATEMENT_ANNOTATIONS = Arrays.asList(SELECT, UPDATE, INSERT, DELETE);
 
     private final String label;
     private final String qualifiedName;

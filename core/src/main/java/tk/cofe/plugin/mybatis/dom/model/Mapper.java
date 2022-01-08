@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public interface Mapper extends DomElement {
 
     String TAG_NAME = "mapper";
 
-    List<Class<? extends CRUDMix>> BASIC_OPERATION = Collections.unmodifiableList(Arrays.asList(Select.class, Update.class, Insert.class, Delete.class));
+    List<Class<? extends CRUDMix>> BASIC_OPERATION = Arrays.asList(Select.class, Update.class, Insert.class, Delete.class);
 
     @Required
     @Attribute("namespace")
