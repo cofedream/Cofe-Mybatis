@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,8 +111,8 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
         if (include instanceof Association) {
             return ((Association) include).getJavaTypeValue();
         }
-        if (include instanceof tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) {
-            return ((tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection) include).getOfTypeValue();
+        if (include instanceof tk.cofe.plugin.mybatis.dom.model.tag.Collection) {
+            return ((tk.cofe.plugin.mybatis.dom.model.tag.Collection) include).getOfTypeValue();
         }
         return Optional.empty();
     }

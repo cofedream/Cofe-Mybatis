@@ -22,7 +22,6 @@ import com.intellij.util.xml.*;
 import tk.cofe.plugin.mybatis.dom.convert.ExtendsConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
-import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
 
 import java.util.List;
 import java.util.Optional;

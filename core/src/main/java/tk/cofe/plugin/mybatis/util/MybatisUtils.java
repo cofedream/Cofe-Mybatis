@@ -34,6 +34,7 @@ import tk.cofe.plugin.mybatis.dom.model.mix.CRUDMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.*;
 
 import java.util.*;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**

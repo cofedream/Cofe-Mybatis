@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.ResultTypeAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
 import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.Association;
+import tk.cofe.plugin.mybatis.dom.model.tag.Collection;
 import tk.cofe.plugin.mybatis.dom.model.tag.Constructor;
 import tk.cofe.plugin.mybatis.dom.model.tag.Discriminator;
 
