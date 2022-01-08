@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package tk.cofe.plugin.mybatis.dom.model.tag;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.util.xml.*;
+import tk.cofe.plugin.mybatis.dom.convert.ExtendsConverter;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.IdAttribute;
 import tk.cofe.plugin.mybatis.dom.model.mix.IdOrResultMix;
 import tk.cofe.plugin.mybatis.dom.model.tag.dynamic.Collection;
@@ -44,7 +45,9 @@ public interface ResultMap extends IdAttribute,
     GenericAttributeValue<PsiClass> getType();
 
     @Attribute("extends")
-    @Resolve(ResultMap.class)
+    // @Resolve(ResultMap.class)
+    // @Referencing(ResultMapReferencing.class)
+    @Convert(ExtendsConverter.class)
     GenericAttributeValue<ResultMap> getExtends();
 
     @SubTag("constructor")
