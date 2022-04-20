@@ -18,7 +18,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     java
-    id("org.jetbrains.intellij") version "1.1.4" apply (false)
+    id("org.jetbrains.intellij") version "1.5.2" apply (false)
 }
 
 group = properties("group")
