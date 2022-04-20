@@ -28,7 +28,6 @@ import com.intellij.util.xml.Required;
  */
 public interface NameAttribute extends DomElement {
 
-    @Required
     @Attribute("name")
     GenericAttributeValue<String> getName();
 

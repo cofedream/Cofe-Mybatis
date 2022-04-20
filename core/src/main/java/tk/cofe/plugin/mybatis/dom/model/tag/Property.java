@@ -17,6 +17,9 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag;
 
+import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
 
@@ -25,4 +28,8 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
  * @date : 2019-09-01
  */
 public interface Property extends NameAttribute, ValueAttribute {
+
+    @Required
+    @Attribute("name")
+    GenericAttributeValue<String> getName();
 }

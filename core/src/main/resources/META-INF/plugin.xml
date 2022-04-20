@@ -43,11 +43,7 @@
 
     <change-notes><![CDATA[
         <ul>
-            <li>处理Mapper跨文件引用ResultMap问题</li>
-            <li>ResultMap#Extends提供代码完成提示</li>
-            <li>Select等标签提供#ResultMap相关代码完成提示</li>
-            <li>增加ResultMap#Extends相关异常提示</li>
-            <li>Association、Collection取消强制属性</li>
+            <li>修正idArg与arg标签中name属性必填的问题</li>
         </ul>
     ]]></change-notes>
 

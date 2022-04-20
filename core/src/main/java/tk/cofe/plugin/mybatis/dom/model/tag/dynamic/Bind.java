@@ -17,6 +17,9 @@
 
 package tk.cofe.plugin.mybatis.dom.model.tag.dynamic;
 
+import com.intellij.util.xml.Attribute;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.NameAttribute;
 import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
 
@@ -27,5 +30,9 @@ import tk.cofe.plugin.mybatis.dom.model.attirubte.ValueAttribute;
 public interface Bind extends DynamicTag, NameAttribute, ValueAttribute {
 
     String TAG = "<bind/>";
+
+    @Required
+    @Attribute("name")
+    GenericAttributeValue<String> getName();
 
 }
