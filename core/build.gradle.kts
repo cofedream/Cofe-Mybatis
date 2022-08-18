@@ -58,4 +58,8 @@ tasks {
         into("${buildDir}/libs")
     }
 
+//    runIde {
+//        jvmArgs = listOf("")
+//    }
+
 }

@@ -95,7 +95,7 @@ public class MapperInterfaceMethodInspection extends AbstractBaseJavaLocalInspec
 
             @Override
             public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-                Editor editor = PsiEditorUtil.Service.getInstance().findEditorByPsiElement(method);
+                Editor editor = PsiEditorUtil.getInstance().findEditorByPsiElement(method);
                 if (editor == null) {
                     return;
                 }
