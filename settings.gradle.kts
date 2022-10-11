@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,3 +20,4 @@ include("resources_zh")
 include("lang")
 include("core")
 
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
