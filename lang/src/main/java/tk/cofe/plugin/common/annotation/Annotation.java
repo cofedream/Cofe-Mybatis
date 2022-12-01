@@ -67,7 +67,7 @@ public class Annotation implements Cloneable {
     public String toString() {
         StringBuilder builder = new StringBuilder(label).append("(");
         if (value != null) {
-            builder.append(value.toString());
+            builder.append(value);
         }
         return builder.append(")").toString();
     }

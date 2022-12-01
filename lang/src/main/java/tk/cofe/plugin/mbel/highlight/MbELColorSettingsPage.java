@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2022 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,6 @@ public class MbELColorSettingsPage implements ColorSettingsPage {
 
     @Override
     public @NotNull @NlsContexts.ConfigurableName String getDisplayName() {
-        return "Mybatis(expression language)";
+        return "Mybatis(Expression Language)";
     }
 }

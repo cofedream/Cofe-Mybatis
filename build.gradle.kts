@@ -35,7 +35,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     java
-    id("org.jetbrains.intellij") version "1.9.0" apply (false)
+    id("org.jetbrains.intellij") version "1.10.0" apply (false)
 }
 
 group = properties("group")
@@ -48,8 +48,8 @@ allprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = "UTF-8"
-            sourceCompatibility = "11"
-            targetCompatibility = "11"
+            sourceCompatibility = "17"
+            targetCompatibility = "17"
             options.compilerArgs.addAll(
                 listOf(
                     "-Xlint:deprecation"
