@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2022 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     java
-    id("org.jetbrains.intellij") version "1.10.0" apply (false)
+    id("org.jetbrains.intellij") version "1.13.0" apply (false)
 }
 
 group = properties("group")
@@ -43,6 +43,9 @@ version = (properties("pluginVersion") + "-" + properties("sdkSinceBuild"))
 
 allprojects {
     repositories {
+        maven("https://www.jetbrains.com/intellij-repository/releases")
+        maven("https://www.jetbrains.com/intellij-repository/snapshots")
+        maven("https://cache-redirector.jetbrains.com/intellij-dependencies")
         mavenCentral()
     }
     tasks {
