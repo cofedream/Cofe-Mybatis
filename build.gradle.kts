@@ -35,7 +35,7 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     java
-    id("org.jetbrains.intellij") version "1.13.0" apply (false)
+    id("org.jetbrains.intellij") version "1.15.0" apply (false)
 }
 
 group = properties("group")
@@ -54,9 +54,9 @@ allprojects {
             sourceCompatibility = "17"
             targetCompatibility = "17"
             options.compilerArgs.addAll(
-                listOf(
-                    "-Xlint:deprecation"
-                )
+                    listOf(
+                            "-Xlint:deprecation"
+                    )
             )
         }
     }
@@ -72,8 +72,8 @@ tasks {
         archiveVersion.set(properties("pluginVersion"))
         archiveClassifier.set(properties("sdkSinceBuild"))
         archiveExtension.set("zip")
-        doLast {
-            delete("resources_zh/build", "lang/build", "core/build", "build")
-        }
+//        doLast {
+//            delete("resources_zh/build", "lang/build", "core/build", "build")
+//        }
     }
 }

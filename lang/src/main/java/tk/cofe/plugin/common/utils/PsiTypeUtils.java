@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,7 @@
 
 package tk.cofe.plugin.common.utils;
 
-import com.intellij.psi.CommonClassNames;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiArrayType;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiPrimitiveType;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiUtil;
@@ -48,7 +42,7 @@ public final class PsiTypeUtils {
      * @param psiType 类型
      */
     public static boolean isVoid(PsiType psiType) {
-        return PsiPrimitiveType.VOID.equals(psiType);
+        return PsiTypes.voidType().equals(psiType);
     }
 
     /**
@@ -69,14 +63,14 @@ public final class PsiTypeUtils {
         if (psiType == null) {
             return false;
         }
-        return PsiPrimitiveType.CHAR.equals(psiType)
-                || PsiPrimitiveType.BOOLEAN.equals(psiType)
-                || PsiPrimitiveType.BYTE.equals(psiType)
-                || PsiPrimitiveType.SHORT.equals(psiType)
-                || PsiPrimitiveType.INT.equals(psiType)
-                || PsiPrimitiveType.LONG.equals(psiType)
-                || PsiPrimitiveType.FLOAT.equals(psiType)
-                || PsiPrimitiveType.DOUBLE.equals(psiType);
+        return PsiTypes.charType().equals(psiType)
+                || PsiTypes.booleanType().equals(psiType)
+                || PsiTypes.byteType().equals(psiType)
+                || PsiTypes.shortType().equals(psiType)
+                || PsiTypes.intType().equals(psiType)
+                || PsiTypes.longType().equals(psiType)
+                || PsiTypes.floatType().equals(psiType)
+                || PsiTypes.doubleType().equals(psiType);
     }
 
     /**

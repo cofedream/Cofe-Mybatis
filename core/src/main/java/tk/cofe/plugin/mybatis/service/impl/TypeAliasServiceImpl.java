@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,14 +102,14 @@ public final class TypeAliasServiceImpl implements TypeAliasService {
 
         registerAlias("ResultSet", ResultSet.class);
 
-        registerAlias(PsiType.BYTE, "_byte", "_byte[]");
-        registerAlias(PsiType.LONG, "_long", "_long[]");
-        registerAlias(PsiType.SHORT, "_short", "_short[]");
-        registerAlias(PsiType.INT, "_int", "_int[]");
-        registerAlias(PsiType.INT, "_integer", "_integer[]");
-        registerAlias(PsiType.DOUBLE, "_double", "_double[]");
-        registerAlias(PsiType.FLOAT, "_float", "_float[]");
-        registerAlias(PsiType.BOOLEAN, "_boolean", "_boolean[]");
+        registerAlias(PsiTypes.byteType(), "_byte", "_byte[]");
+        registerAlias(PsiTypes.longType(), "_long", "_long[]");
+        registerAlias(PsiTypes.shortType(), "_short", "_short[]");
+        registerAlias(PsiTypes.intType(), "_int", "_int[]");
+        registerAlias(PsiTypes.intType(), "_integer", "_integer[]");
+        registerAlias(PsiTypes.doubleType(), "_double", "_double[]");
+        registerAlias(PsiTypes.floatType(), "_float", "_float[]");
+        registerAlias(PsiTypes.booleanType(), "_boolean", "_boolean[]");
     }
 
     private final Project project;
