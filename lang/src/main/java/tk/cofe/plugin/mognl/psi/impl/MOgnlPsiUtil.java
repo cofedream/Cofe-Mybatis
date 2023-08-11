@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +18,18 @@
 package tk.cofe.plugin.mognl.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypes;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.mognl.MOgnlTypes;
-import tk.cofe.plugin.mognl.psi.MOgnlTokenGroups;
-import tk.cofe.plugin.mognl.psi.MOgnlTokenType;
-import tk.cofe.plugin.mognl.psi.MOgnlBinaryExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlConditionalExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlLiteralExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlParameterList;
-import tk.cofe.plugin.mognl.psi.MOgnlParenthesizedExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlReferenceExpression;
-import tk.cofe.plugin.mognl.psi.MOgnlUnaryExpression;
+import tk.cofe.plugin.mognl.psi.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,20 +76,20 @@ public class MOgnlPsiUtil {
             return PsiType.getJavaLangString(expression.getManager(), expression.getResolveScope());
         }
         if (type == MOgnlTypes.CHARACTER_LITERAL) {
-            return PsiType.CHAR;
+            return PsiTypes.charType();
         }
         if (type == MOgnlTypes.INTEGER_LITERAL) {
-            return PsiType.INT;
+            return PsiTypes.intType();
         }
         if (type == MOgnlTypes.DOUBLE_LITERAL) {
-            return PsiType.DOUBLE;
+            return PsiTypes.doubleType();
         }
         if (type == MOgnlTypes.TRUE_KEYWORD ||
                 type == MOgnlTypes.FALSE_KEYWORD) {
-            return PsiType.BOOLEAN;
+            return PsiTypes.booleanType();
         }
         if (type == MOgnlTypes.NULL_KEYWORD) {
-            return PsiType.NULL;
+            return PsiTypes.nullType();
         }
         throw new IllegalArgumentException("could not resolve type for literal " + type + " / " + expression.getText());
     }
