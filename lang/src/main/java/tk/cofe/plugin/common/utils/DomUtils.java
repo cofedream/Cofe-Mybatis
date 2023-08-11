@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomTarget;
-import com.intellij.util.xml.DomUtil;
-import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +36,9 @@ import java.util.Optional;
 /**
  * @author : zhengrf
  * @date : 2019-01-01
+ * @see DomUtil
  */
-public final class DomUtils extends DomUtil {
+public final class DomUtils {
 
     public static Optional<DomTarget> resolveToDomTarget(PsiElement element) {
         // if (element instanceof DomTarget) {
@@ -51,13 +49,6 @@ public final class DomUtils extends DomUtil {
             return target instanceof DomTarget ? Optional.of(((DomTarget) target)) : Optional.empty();
         }
         return Optional.empty();
-    }
-
-    /**
-     * strict default to true
-     */
-    public static <T> T getParentOfType(final DomElement domElement, final Class<T> requiredClass) {
-        return DomUtils.getParentOfType(domElement, requiredClass, true);
     }
 
     @NotNull
@@ -91,12 +82,12 @@ public final class DomUtils extends DomUtil {
 
     @SuppressWarnings("unchecked")
     public static <T extends DomElement> Optional<T> getDomElement(@Nullable PsiElement element, final Class<T> requiredClass, boolean scanParent) {
-        DomElement domElement = DomUtils.getDomElement(element);
+        DomElement domElement = DomUtil.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return Optional.of((T) domElement);
         }
         if (scanParent) {
-            return Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true));
+            return Optional.ofNullable(DomUtil.getParentOfType(domElement, requiredClass, true));
         }
         return Optional.empty();
     }
@@ -108,7 +99,7 @@ public final class DomUtils extends DomUtil {
      * @param requiredClass 目标类型
      */
     public static boolean isTargetDomElement(@Nullable XmlTag xmlTag, @NotNull Class<?> requiredClass) {
-        final DomElement domElement = DomUtils.getDomElement(xmlTag);
+        final DomElement domElement = DomUtil.getDomElement(xmlTag);
         if (domElement == null) {
             return false;
         }
@@ -133,11 +124,11 @@ public final class DomUtils extends DomUtil {
      * @param scanParent    是否扫描父级
      */
     public static boolean isTargetDomElement(PsiElement element, Class<?> requiredClass, boolean scanParent) {
-        DomElement domElement = DomUtils.getDomElement(element);
+        DomElement domElement = DomUtil.getDomElement(element);
         if (requiredClass.isInstance(domElement)) {
             return true;
         }
-        return scanParent && Optional.ofNullable(DomUtils.getParentOfType(domElement, requiredClass, true)).isPresent();
+        return scanParent && Optional.ofNullable(DomUtil.getParentOfType(domElement, requiredClass, true)).isPresent();
     }
 
     /**
@@ -177,10 +168,26 @@ public final class DomUtils extends DomUtil {
         if (!(element instanceof XmlElement)) {
             return null;
         }
-        final DomElement domElement = DomUtils.getDomElement(element);
+        final DomElement domElement = DomUtil.getDomElement(element);
         if (domElement == null) {
             return null;
         }
         return domElement.getXmlTag();
+    }
+
+    public static DomElement getDomElement(@Nullable PsiElement element) {
+        return DomUtil.getDomElement(element);
+    }
+
+    /**
+     * strict default to true
+     */
+    public static <T> T getParentOfType(final DomElement domElement, final Class<T> requiredClass) {
+        return DomUtil.getParentOfType(domElement, requiredClass, true);
+    }
+
+    @Nullable
+    public static XmlElement getValueElement(GenericDomValue<?> domValue) {
+        return DomUtil.getValueElement(domValue);
     }
 }

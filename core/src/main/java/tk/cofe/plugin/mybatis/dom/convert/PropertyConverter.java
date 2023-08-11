@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2022 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,7 +104,7 @@ public class PropertyConverter extends ResolvingConverter<PsiMember> {
         if (domElement == null) {
             return Optional.empty();
         }
-        final IdOrResultMix include = DomUtils.getParentOfType(domElement, IdOrResultMix.class, true);
+        final IdOrResultMix include = DomUtils.getParentOfType(domElement, IdOrResultMix.class);
         if (include instanceof ResultMap) {
             return ((ResultMap) include).getTypeValue();
         }

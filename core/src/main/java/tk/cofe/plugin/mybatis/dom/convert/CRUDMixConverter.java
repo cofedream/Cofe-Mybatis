@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ public class CRUDMixConverter {
             if (StringUtil.isEmpty(methodName)) {
                 return null;
             }
-            CRUDMix CRUDMix = DomUtils.getParentOfType(context.getInvocationElement(), CRUDMix.class, true);
+            CRUDMix CRUDMix = DomUtils.getParentOfType(context.getInvocationElement(), CRUDMix.class);
             if (CRUDMix == null) {
                 return null;
             }
