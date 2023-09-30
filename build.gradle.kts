@@ -65,7 +65,7 @@ allprojects {
 tasks {
     create<Zip>("releaseVersion") {
         dependsOn(":core:copyDependenciesToLibs")
-        from("core/build/libs")
+        from("core/build/release")
         into(properties("pluginName") + "/lib")
         destinationDirectory.set(file("/"))
         archiveBaseName.set(properties("pluginName"))

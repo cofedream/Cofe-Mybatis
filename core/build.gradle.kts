@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 cofe
+ * Copyright (C) 2019-2023 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,10 @@ tasks {
     register<Copy>("copyDependenciesToLibs") {
         dependsOn("jar")
         from(configurations.runtimeClasspath)
-        into("${buildDir}/libs")
+        from("${buildDir}/libs") {
+            include("${project.name}.jar")
+        }
+        into("${buildDir}/release")
     }
 
 //    runIde {
