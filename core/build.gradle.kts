@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 cofe
+ * Copyright (C) 2019-2024 cofe
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,9 @@ tasks {
     patchPluginXml {
         version.set(properties("pluginVersion") + "-" + properties("sdkSinceBuild"))
         sinceBuild.set(properties("sdkSinceBuild"))
-        untilBuild.set(properties("sdkUntilBuild"))
+//        untilBuild.set({ null })
+        untilBuild.set(provider { null })
+//        untilBuild.set(properties("sdkUntilBuild"))
     }
 //    runPluginVerifier {
 //        ideVersions.set(listOf((properties("platformType") + "-" + properties("platformVersion"))))
