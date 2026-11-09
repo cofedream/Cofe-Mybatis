@@ -27,7 +27,10 @@ intellij {
     type.set(properties("platformType"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
     updateSinceUntilBuild.set(false)
-    sandboxDir.set("$rootDir.path/.idea-sandbox")
+    // 每个模块一个 sandbox，否则 prepareSandbox 的输出会互相覆盖（Gradle 会报
+    // "uses this output of task ... without declaring an explicit dependency"）。
+    // 注意 Kotlin DSL 里要用 ${rootDir.path}，`$rootDir.path` 会被当成 "$rootDir" + ".path"。
+    sandboxDir.set("${rootDir.path}/.idea-sandbox/${project.name}")
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))

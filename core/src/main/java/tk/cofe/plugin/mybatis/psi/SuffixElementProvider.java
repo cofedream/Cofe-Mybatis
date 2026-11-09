@@ -21,7 +21,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.xml.GenericAttributeValue;
-import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.Nullable;
 import tk.cofe.plugin.common.annotation.Annotation;
 import tk.cofe.plugin.common.utils.CompletionUtils;
@@ -65,7 +64,7 @@ public abstract class SuffixElementProvider<T> {
                 .map(GenericAttributeValue::getXmlAttributeValue)
                 .map(resolve -> mapper(injectElement, resolve))
                 .collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(bindList)) {
+        if (!bindList.isEmpty()) {
             return bindList;
         }
         // 如果是Foreach标签则判断item是否符合

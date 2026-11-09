@@ -40,7 +40,7 @@ import com.intellij.spring.contexts.model.LocalAnnotationModel;
 import com.intellij.spring.contexts.model.LocalModel;
 import com.intellij.spring.contexts.model.LocalXmlModel;
 import com.intellij.spring.model.CommonSpringBean;
-import com.intellij.spring.model.extensions.myBatis.SpringMyBatisBeansProvider;
+import com.intellij.spring.core.analysis.jvm.providers.myBatis.SpringMyBatisBeansProvider;
 import com.intellij.spring.model.jam.stereotype.CustomSpringComponent;
 import com.intellij.spring.model.jam.stereotype.SpringService;
 import com.intellij.spring.model.utils.SpringBeanUtils;

@@ -43,6 +43,8 @@
 
     <change-notes><![CDATA[
         <ul>
+            <li>支持 IntelliJ IDEA 2026.2 (262)：修复 Spring 插件 MyBatis 扩展类包名迁移导致的 NoClassDefFoundError</li>
+            <li>移除对平台内部 commons-collections 的依赖，修复 XML 中 bind/foreach 提示时的 ClassNotFoundException</li>
             <li>修正idArg与arg标签中name属性必填的问题</li>
         </ul>
     ]]></change-notes>
